@@ -8,10 +8,11 @@ const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
 ---
 
 <BaseLayout title={site.author}>
-  <section class="hero" aria-labelledby="home-title">
+  <section class="hero" aria-labelledby="home-title" data-color-reveal>
     {headerCover && (
       <>
-        <img class="hero-backdrop" src={headerCover} alt="" fetchpriority="high" />
+        <img class="hero-backdrop hero-backdrop--mono" src={headerCover} alt="" fetchpriority="high" />
+        <img class="hero-backdrop hero-color-reveal" src={headerCover} alt="" aria-hidden="true" loading="eager" />
         <div class="hero-scrim" aria-hidden="true"></div>
       </>
     )}
@@ -32,4 +33,36 @@ const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
       ))}
     </div>
   </section>
+
+  <script>
+    /* Homepage color flashlight: desktop pointer only, reduced-motion safe. */
+    const hero = document.querySelector('.hero[data-color-reveal]');
+    const canReveal =
+      hero &&
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (canReveal) {
+      let frame = 0;
+
+      function moveReveal(event) {
+        const rect = hero.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          hero.style.setProperty('--reveal-x', x + '%');
+          hero.style.setProperty('--reveal-y', y + '%');
+          hero.classList.add('is-color-reveal-active');
+        });
+      }
+
+      hero.addEventListener('pointermove', moveReveal);
+      hero.addEventListener('pointerenter', moveReveal);
+      hero.addEventListener('pointerleave', () => {
+        hero.classList.remove('is-color-reveal-active');
+      });
+    }
+  </script>
 </BaseLayout>

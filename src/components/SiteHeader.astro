@@ -6,15 +6,32 @@ const currentPath = Astro.url.pathname;
 const homeHref = withBase('');
 const currentWithoutTrailing = currentPath.replace(/\/$/, '');
 const homeWithoutTrailing = homeHref.replace(/\/$/, '');
+
 const navItems = [
   {
     label: 'Cycles',
+    glyph: '◌',
     href: homeHref,
     active: currentWithoutTrailing === homeWithoutTrailing || currentPath.startsWith(withBase('cycles/'))
   },
-  { label: 'Chronology', href: withBase('chronology/'), active: currentPath.startsWith(withBase('chronology/')) },
-  { label: 'About', href: withBase('about/'), active: currentPath.startsWith(withBase('about/')) },
-  { label: 'Interview', href: withBase('interview/'), active: currentPath.startsWith(withBase('interview/')) }
+  {
+    label: 'Chronology',
+    glyph: '↓',
+    href: withBase('chronology/'),
+    active: currentPath.startsWith(withBase('chronology/'))
+  },
+  {
+    label: 'About',
+    glyph: '¶',
+    href: withBase('about/'),
+    active: currentPath.startsWith(withBase('about/'))
+  },
+  {
+    label: 'Elsewhere',
+    glyph: '✦',
+    href: withBase('elsewhere/'),
+    active: currentPath.startsWith(withBase('elsewhere/'))
+  }
 ];
 ---
 
@@ -23,7 +40,10 @@ const navItems = [
     <a class="brand" href={homeHref}>{site.author}</a>
     <nav class="main-nav" aria-label="Main navigation">
       {navItems.map((item) => (
-        <a href={item.href} aria-current={item.active ? 'page' : undefined}>{item.label}</a>
+        <a class="nav-link" href={item.href} aria-current={item.active ? 'page' : undefined}>
+          <span class="nav-glyph" aria-hidden="true">{item.glyph}</span>
+          <span>{item.label}</span>
+        </a>
       ))}
     </nav>
   </div>
