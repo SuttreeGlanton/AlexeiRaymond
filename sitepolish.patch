@@ -1,0 +1,86 @@
+diff --git a/README.md b/README.md
+index 739bf6f..c70b99f 100644
+--- a/README.md
++++ b/README.md
+@@ -57,7 +57,7 @@ The site is designed to look finished even before cover photos exist. Empty `cov
+ 
+ ## Deployment
+ 
+-The site deploys to GitHub Pages through `.github/workflows/deploy.yml` using the official Astro GitHub Action.
++The site deploys to GitHub Pages through `.github/workflows/deploy.yml`, which builds with Node 22 (`actions/setup-node`) and publishes with `actions/upload-pages-artifact` and `actions/deploy-pages`.
+ 
+ The project is configured as a GitHub Pages project site:
+ 
+diff --git a/src/components/SiteHeader.astro b/src/components/SiteHeader.astro
+index d521f0e..32ac5b6 100644
+--- a/src/components/SiteHeader.astro
++++ b/src/components/SiteHeader.astro
+@@ -7,7 +7,11 @@ const homeHref = withBase('');
+ const currentWithoutTrailing = currentPath.replace(/\/$/, '');
+ const homeWithoutTrailing = homeHref.replace(/\/$/, '');
+ const navItems = [
+-  { label: 'Cycles', href: homeHref, active: currentWithoutTrailing === homeWithoutTrailing },
++  {
++    label: 'Cycles',
++    href: homeHref,
++    active: currentWithoutTrailing === homeWithoutTrailing || currentPath.startsWith(withBase('cycles/'))
++  },
+   { label: 'About', href: withBase('about/'), active: currentPath.startsWith(withBase('about/')) },
+   { label: 'Interview', href: withBase('interview/'), active: currentPath.startsWith(withBase('interview/')) }
+ ];
+diff --git a/src/pages/404.astro b/src/pages/404.astro
+new file mode 100644
+index 0000000..bccb8d5
+--- /dev/null
++++ b/src/pages/404.astro
+@@ -0,0 +1,16 @@
++---
++import BaseLayout from '../layouts/BaseLayout.astro';
++import { site } from '../lib/data';
++import { withBase } from '../lib/paths';
++---
++
++<BaseLayout title={`Page not found — ${site.author}`}>
++  <section class="page-shell page-hero text-page" aria-labelledby="notfound-title">
++    <div class="overline">404</div>
++    <h1 class="page-title" id="notfound-title">Not found</h1>
++    <div class="prose">
++      <p>This page has wandered off, or never was.</p>
++      <p><a href={withBase('')}>Return to the cycles</a>.</p>
++    </div>
++  </section>
++</BaseLayout>
+diff --git a/src/pages/interview.astro b/src/pages/interview.astro
+index b344dae..b0e40d5 100644
+--- a/src/pages/interview.astro
++++ b/src/pages/interview.astro
+@@ -14,7 +14,7 @@ const cover = interview.cover ? assetPath(interview.cover) : '';
+     <article class="interview-card">
+       <div class="interview-media">
+         {cover ? (
+-          <img src={cover} alt={`${interview.title} image`} loading="lazy" />
++          <img src={cover} alt={interview.title} loading="lazy" />
+         ) : (
+           <div class="placeholder" aria-hidden="true"><span>{interview.publication}</span></div>
+         )}
+diff --git a/src/styles/global.css b/src/styles/global.css
+index 50ec2ce..988f55e 100644
+--- a/src/styles/global.css
++++ b/src/styles/global.css
+@@ -469,6 +469,16 @@ img {
+   margin: 0 0 1.25em;
+ }
+ 
++.prose a {
++  border-bottom: 1px solid var(--border-strong);
++  color: var(--text);
++  transition: border-color 240ms ease;
++}
++
++.prose a:hover {
++  border-color: var(--text);
++}
++
+ .social-block {
+   margin-top: 42px;
+ }
