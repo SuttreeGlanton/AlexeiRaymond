@@ -1,0 +1,365 @@
+diff --git a/site-data.json b/site-data.json
+index f7ed461..4849e5c 100644
+--- a/site-data.json
++++ b/site-data.json
+@@ -3,49 +3,58 @@
+     "author": "Alexei Raymond",
+     "bio": "Alexei Raymond, editor at Blood+Honey, offers his heart, shaped by life and love in the Middle East. He chases visions of unspeakable loveliness. Find pieces of him in a variety of publications.",
+     "email": "",
+-    "socials": []
++    "socials": [
++      {
++        "label": "X",
++        "url": "https://x.com/enemyofcruelty"
++      },
++      {
++        "label": "Instagram",
++        "url": "https://www.instagram.com/talexeiraymond"
++      }
++    ]
+   },
+   "cycles": [
+     {
+       "id": "mythbreaking",
+       "name": "Mythbreaking",
+-      "blurb": "",
++      "blurb": "The Anton persona; the shedding and breaking of old worlds, as a new world struggles to be born.",
+       "cover": ""
+     },
+     {
+       "id": "mythmaking",
+       "name": "Mythmaking",
+-      "blurb": "",
++      "blurb": "A psyche's architecture; foundations, early cataclysms, and experience prior to words.",
+       "cover": ""
+     },
+     {
+       "id": "fools-gold",
+       "name": "Fool's Gold",
+-      "blurb": "",
++      "blurb": "The Adam persona, its partitions, and the gold in the center.",
+       "cover": ""
+     },
+     {
+       "id": "dreams",
+       "name": "Dreams",
+-      "blurb": "Dreams or fragments — also the home for standalone pieces.",
++      "blurb": "Figments, dreams, and fragments bubbling up.",
+       "cover": ""
+     },
+     {
+       "id": "portici",
+       "name": "Portici",
+-      "blurb": "Set in Turin, under the city's porticoes.",
++      "blurb": "The Turin cycle; time of moths.",
+       "cover": ""
+     },
+     {
+       "id": "valentines-star",
+       "name": "Valentine's Star",
+-      "blurb": "",
++      "blurb": "The Valentin persona, tribulations of early love.",
+       "cover": ""
+     },
+     {
+       "id": "conscription",
+       "name": "Conscription",
+-      "blurb": "",
++      "blurb": "Hauntings of white and blue, of olive-drab and refusal.",
+       "cover": ""
+     }
+   ],
+@@ -721,6 +730,7 @@
+     "title": "Interview with Blood+Honey",
+     "publication": "Blood+Honey",
+     "date": "08/07/2025",
+-    "link": "https://www.bloodhoneylit.com/features/interview-with-writer-alexei-raymond"
++    "link": "https://www.bloodhoneylit.com/features/interview-with-writer-alexei-raymond",
++    "cover": ""
+   }
+ }
+diff --git a/src/components/SiteHeader.astro b/src/components/SiteHeader.astro
+index ca168f5..d521f0e 100644
+--- a/src/components/SiteHeader.astro
++++ b/src/components/SiteHeader.astro
+@@ -9,8 +9,7 @@ const homeWithoutTrailing = homeHref.replace(/\/$/, '');
+ const navItems = [
+   { label: 'Cycles', href: homeHref, active: currentWithoutTrailing === homeWithoutTrailing },
+   { label: 'About', href: withBase('about/'), active: currentPath.startsWith(withBase('about/')) },
+-  { label: 'Interview', href: withBase('interview/'), active: currentPath.startsWith(withBase('interview/')) },
+-  { label: 'Contact', href: withBase('contact/'), active: currentPath.startsWith(withBase('contact/')) }
++  { label: 'Interview', href: withBase('interview/'), active: currentPath.startsWith(withBase('interview/')) }
+ ];
+ ---
+ 
+diff --git a/src/lib/data.ts b/src/lib/data.ts
+index ca55acb..a97ccac 100644
+--- a/src/lib/data.ts
++++ b/src/lib/data.ts
+@@ -41,6 +41,7 @@ export interface Interview {
+   publication: string;
+   date: string;
+   link: string;
++  cover?: string;
+ }
+ 
+ export interface SiteData {
+diff --git a/src/pages/about.astro b/src/pages/about.astro
+index 76cf36b..84cff51 100644
+--- a/src/pages/about.astro
++++ b/src/pages/about.astro
+@@ -12,13 +12,16 @@ import { site, socialHref, socialLabel } from '../lib/data';
+     </div>
+ 
+     {site.socials.length > 0 && (
+-      <ul class="social-list" aria-label="Social links">
++      <section class="social-block" aria-labelledby="socials-title">
++        <h2 id="socials-title">Socials</h2>
++        <ul class="social-list" aria-label="Social links">
+         {site.socials.map((social) => {
+           const href = socialHref(social);
+           const label = socialLabel(social);
+           return <li>{href ? <a href={href} target="_blank" rel="noreferrer">{label}</a> : <span>{label}</span>}</li>;
+         })}
+-      </ul>
++        </ul>
++      </section>
+     )}
+   </section>
+ </BaseLayout>
+diff --git a/src/pages/contact.astro b/src/pages/contact.astro
+deleted file mode 100644
+index 061af19..0000000
+--- a/src/pages/contact.astro
++++ /dev/null
+@@ -1,27 +0,0 @@
+----
+-import BaseLayout from '../layouts/BaseLayout.astro';
+-import { site, socialHref, socialLabel } from '../lib/data';
+-
+-const hasEmail = Boolean(site.email);
+-const hasSocials = site.socials.length > 0;
+----
+-
+-<BaseLayout title={`Contact — ${site.author}`}>
+-  <section class="page-shell page-hero text-page" aria-labelledby="contact-title">
+-    <div class="overline">Contact</div>
+-    <h1 class="page-title" id="contact-title">Contact</h1>
+-
+-    {hasEmail || hasSocials ? (
+-      <ul class="contact-list">
+-        {hasEmail && <li><a href={`mailto:${site.email}`}>{site.email}</a></li>}
+-        {site.socials.map((social) => {
+-          const href = socialHref(social);
+-          const label = socialLabel(social);
+-          return <li>{href ? <a href={href} target="_blank" rel="noreferrer">{label}</a> : <span>{label}</span>}</li>;
+-        })}
+-      </ul>
+-    ) : (
+-      <p class="placeholder-copy">No public contact information is listed yet.</p>
+-    )}
+-  </section>
+-</BaseLayout>
+diff --git a/src/pages/index.astro b/src/pages/index.astro
+index 6204a87..c185f21 100644
+--- a/src/pages/index.astro
++++ b/src/pages/index.astro
+@@ -8,7 +8,7 @@ const publishedCount = pieces.length - upcomingPieces().length;
+ 
+ <BaseLayout title={site.author}>
+   <section class="page-shell hero" aria-labelledby="home-title">
+-    <div class="eyebrow">Author website</div>
++    <p class="hero-kicker">Short fiction, flash, poems, and the pursuit of unspeakable loveliness.</p>
+     <h1 id="home-title">{site.author}</h1>
+     <p class="hero-line">{publishedCount} published · {upcomingPieces().length} upcoming · {cycles.length} cycles</p>
+   </section>
+@@ -16,7 +16,7 @@ const publishedCount = pieces.length - upcomingPieces().length;
+   <section class="page-shell" aria-labelledby="cycles-title">
+     <div class="section-head">
+       <h2 id="cycles-title">Cycles</h2>
+-      <p class="section-note">Seven rooms for the work. Counts are drawn directly from the site data.</p>
++      <p class="section-note">Published and forthcoming work, arranged by recurring cycle rather than chronology.</p>
+     </div>
+     <div class="cycle-grid">
+       {cycles.map((cycle) => (
+diff --git a/src/pages/interview.astro b/src/pages/interview.astro
+index 72bac1c..b344dae 100644
+--- a/src/pages/interview.astro
++++ b/src/pages/interview.astro
+@@ -1,6 +1,9 @@
+ ---
+ import BaseLayout from '../layouts/BaseLayout.astro';
+ import { interview, site } from '../lib/data';
++import { assetPath } from '../lib/paths';
++
++const cover = interview.cover ? assetPath(interview.cover) : '';
+ ---
+ 
+ <BaseLayout title={`Interview — ${site.author}`}>
+@@ -9,9 +12,18 @@ import { interview, site } from '../lib/data';
+     <h1 class="page-title" id="interview-title">Interview</h1>
+ 
+     <article class="interview-card">
+-      <h2>{interview.title}</h2>
+-      <p class="interview-meta">{interview.publication} · {interview.date}</p>
+-      <a class="interview-link" href={interview.link} target="_blank" rel="noreferrer">Read interview</a>
++      <div class="interview-media">
++        {cover ? (
++          <img src={cover} alt={`${interview.title} image`} loading="lazy" />
++        ) : (
++          <div class="placeholder" aria-hidden="true"><span>{interview.publication}</span></div>
++        )}
++      </div>
++      <div class="interview-body">
++        <h2>{interview.title}</h2>
++        <p class="interview-meta">{interview.publication} · {interview.date}</p>
++        <a class="interview-link" href={interview.link} target="_blank" rel="noreferrer">Read interview</a>
++      </div>
+     </article>
+   </section>
+ </BaseLayout>
+diff --git a/src/styles/global.css b/src/styles/global.css
+index b0eedd7..50ec2ce 100644
+--- a/src/styles/global.css
++++ b/src/styles/global.css
+@@ -152,6 +152,16 @@ img {
+   text-transform: uppercase;
+ }
+ 
++.hero-kicker {
++  max-width: 760px;
++  margin: 0 auto;
++  color: var(--text-soft);
++  font-size: clamp(0.82rem, 1.35vw, 0.96rem);
++  letter-spacing: 0.14em;
++  line-height: 1.7;
++  text-transform: uppercase;
++}
++
+ .hero h1,
+ .page-title,
+ .cycle-title,
+@@ -197,10 +207,10 @@ img {
+ }
+ 
+ .section-note {
+-  max-width: 440px;
++  max-width: 520px;
+   margin: 0;
+   color: var(--muted);
+-  font-size: 0.86rem;
++  font-size: 0.92rem;
+   text-align: right;
+ }
+ 
+@@ -212,7 +222,7 @@ img {
+ }
+ 
+ .cycle-grid {
+-  grid-template-columns: repeat(7, minmax(0, 1fr));
++  grid-template-columns: repeat(4, minmax(0, 1fr));
+ }
+ 
+ .piece-grid {
+@@ -289,8 +299,9 @@ img {
+ .placeholder span {
+   max-width: 12ch;
+   font-family: var(--serif);
+-  font-size: clamp(1.75rem, 4vw, 3.8rem);
++  font-size: clamp(1.9rem, 3.2vw, 4.2rem);
+   font-style: italic;
++  overflow-wrap: normal;
+   line-height: 0.96;
+   opacity: 0.82;
+ }
+@@ -330,7 +341,7 @@ img {
+ }
+ 
+ .tile-title {
+-  font-size: clamp(1.35rem, 2.8vw, 2.15rem);
++  font-size: clamp(1.5rem, 2.3vw, 2.35rem);
+   line-height: 1.05;
+ }
+ 
+@@ -458,6 +469,17 @@ img {
+   margin: 0 0 1.25em;
+ }
+ 
++.social-block {
++  margin-top: 42px;
++}
++
++.social-block h2 {
++  margin: 0;
++  font-family: var(--serif);
++  font-size: clamp(1.8rem, 4vw, 3rem);
++  font-weight: 400;
++}
++
+ .contact-list,
+ .social-list {
+   display: grid;
+@@ -483,10 +505,35 @@ img {
+ }
+ 
+ .interview-card {
++  display: grid;
++  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1fr);
++  gap: clamp(22px, 5vw, 48px);
++  align-items: stretch;
+   margin-top: 36px;
+   border: 1px solid var(--border);
+-  padding: clamp(24px, 5vw, 46px);
+   background: var(--panel);
++  overflow: hidden;
++}
++
++.interview-media {
++  min-height: 300px;
++  border-right: 1px solid var(--border);
++  background: #080808;
++}
++
++.interview-media img,
++.interview-media .placeholder {
++  width: 100%;
++  height: 100%;
++}
++
++.interview-media img {
++  object-fit: cover;
++  filter: grayscale(1) brightness(0.72) contrast(1.08);
++}
++
++.interview-body {
++  padding: clamp(24px, 5vw, 46px);
+ }
+ 
+ .interview-card h2 {
+@@ -548,6 +595,16 @@ img {
+   .piece-grid {
+     grid-template-columns: repeat(2, minmax(0, 1fr));
+   }
++
++  .interview-card {
++    grid-template-columns: 1fr;
++  }
++
++  .interview-media {
++    min-height: 260px;
++    border-right: 0;
++    border-bottom: 1px solid var(--border);
++  }
+ }
+ 
+ @media (max-width: 640px) {
+@@ -573,7 +630,8 @@ img {
+     text-align: left;
+   }
+ 
+-  .hero-line {
++  .hero-line,
++  .hero-kicker {
+     margin-left: 0;
+   }
+ 
