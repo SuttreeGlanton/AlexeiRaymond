@@ -20,6 +20,11 @@ const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
       <p class="hero-kicker">Short fiction, flash, poems, and the pursuit of unspeakable&nbsp;loveliness.</p>
       <h1 id="home-title">{site.author}</h1>
     </div>
+
+    <button class="hero-sound-toggle" type="button" data-sound-toggle aria-pressed="false">
+      Sound: off
+    </button>
+    <audio data-ambient-audio src={assetPath('audio/ambient.mp3')} loop preload="none"></audio>
   </section>
 
   <section class="page-shell" aria-labelledby="cycles-title">
@@ -62,6 +67,36 @@ const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
       hero.addEventListener('pointerenter', moveReveal);
       hero.addEventListener('pointerleave', () => {
         hero.classList.remove('is-color-reveal-active');
+      });
+    }
+  </script>
+  <script>
+    /* Homepage local ambient sound toggle. */
+    const soundButton = document.querySelector('[data-sound-toggle]');
+    const ambientAudio = document.querySelector('[data-ambient-audio]');
+
+    if (soundButton && ambientAudio) {
+      ambientAudio.volume = 0.32;
+
+      soundButton.addEventListener('click', async () => {
+        const isOn = soundButton.getAttribute('aria-pressed') === 'true';
+
+        if (isOn) {
+          ambientAudio.pause();
+          soundButton.setAttribute('aria-pressed', 'false');
+          soundButton.textContent = 'Sound: off';
+          return;
+        }
+
+        try {
+          soundButton.textContent = 'Sound: loading';
+          await ambientAudio.play();
+          soundButton.setAttribute('aria-pressed', 'true');
+          soundButton.textContent = 'Sound: on';
+        } catch {
+          soundButton.setAttribute('aria-pressed', 'false');
+          soundButton.textContent = 'Sound unavailable';
+        }
       });
     }
   </script>

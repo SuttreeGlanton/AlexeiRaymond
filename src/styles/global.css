@@ -1265,3 +1265,122 @@ img {
     font-size: 1em;
   }
 }
+
+
+/* --- Cycle page switcher --- */
+
+.cycle-switcher {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  max-width: 920px;
+  margin-top: clamp(22px, 4vw, 36px);
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.cycle-switcher-label {
+  color: var(--dim);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.cycle-switcher-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+
+.cycle-switcher-links a {
+  border-bottom: 1px solid transparent;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: border-color 220ms ease, color 220ms ease;
+}
+
+.cycle-switcher-links a:hover,
+.cycle-switcher-links a:focus-visible {
+  border-color: var(--border-strong);
+  color: var(--text-soft);
+}
+
+.cycle-switcher-links a[aria-current='page'] {
+  border-color: var(--text-soft);
+  color: var(--text);
+}
+
+@media (max-width: 640px) {
+  .cycle-switcher {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cycle-switcher-links {
+    gap: 7px 12px;
+  }
+
+  .cycle-switcher-links a {
+    font-size: 0.68rem;
+  }
+}
+
+
+/* --- Homepage ambient sound toggle --- */
+
+.hero-sound-toggle {
+  position: absolute;
+  right: clamp(18px, 4vw, 54px);
+  bottom: clamp(18px, 4vw, 44px);
+  z-index: 3;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(10, 10, 10, 0.28);
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  padding: 8px 12px 7px;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  transition: border-color 220ms ease, color 220ms ease, background 220ms ease;
+}
+
+.hero-sound-toggle:hover,
+.hero-sound-toggle:focus-visible,
+.hero-sound-toggle[aria-pressed='true'] {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(10, 10, 10, 0.44);
+  color: var(--text-soft);
+}
+
+.hero-sound-frame {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-sound-frame iframe {
+  width: 1px;
+  height: 1px;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .hero-sound-toggle {
+    right: 16px;
+    bottom: 14px;
+    font-size: 0.56rem;
+    padding: 7px 10px 6px;
+  }
+}

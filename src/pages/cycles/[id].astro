@@ -21,6 +21,7 @@ const { cycle } = Astro.props;
 // Published pieces first, upcoming always at the bottom of the page.
 const allPieces = piecesForCycle(cycle.name);
 const cyclePieces = [...allPieces.filter((piece) => !isUpcoming(piece)), ...allPieces.filter(isUpcoming)];
+const otherCycles = cycles;
 ---
 
 <BaseLayout title={`${cycle.name} — ${site.author}`} description={cycle.blurb || site.bio}>
@@ -29,6 +30,20 @@ const cyclePieces = [...allPieces.filter((piece) => !isUpcoming(piece)), ...allP
       <a class="back-link" href={withBase('')}>&larr; All cycles</a>
       <h1 class="cycle-title" id="cycle-title"><CycleIcon id={cycle.id} />{cycle.name}</h1>
       {cycle.blurb && <p class="cycle-intro">{cycle.blurb}</p>}
+
+      <nav class="cycle-switcher" aria-label="Cycle navigation">
+        <span class="cycle-switcher-label">Cycles</span>
+        <div class="cycle-switcher-links">
+          {otherCycles.map((item) => (
+            <a
+              href={withBase(`cycles/${item.id}/`)}
+              aria-current={item.id === cycle.id ? 'page' : undefined}
+            >
+              {item.name}
+            </a>
+          ))}
+        </div>
+      </nav>
     </section>
 
     <section class="page-shell" aria-label={`${cycle.name} pieces`}>
