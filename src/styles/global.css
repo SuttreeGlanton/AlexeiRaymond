@@ -317,7 +317,7 @@ img {
 .tile:focus-visible img,
 .piece-card:hover img,
 .piece-card:focus-visible img {
-  filter: grayscale(1) brightness(0.86) contrast(1.08);
+  filter: grayscale(0) brightness(0.96) contrast(1.04);
   transform: scale(1.018);
 }
 

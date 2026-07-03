@@ -51,7 +51,6 @@ async function processOne(srcPath, destPath, { width, height }) {
   await sharp(srcPath)
     .rotate()
     .resize(width, height, { fit: 'cover', position: 'attention' })
-    .grayscale()
     .jpeg({ quality: 82, mozjpeg: true })
     .toFile(destPath);
 }
