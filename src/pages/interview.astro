@@ -22,6 +22,7 @@ const cover = interview.cover ? assetPath(interview.cover) : '';
       <div class="interview-body">
         <h2>{interview.title}</h2>
         <p class="interview-meta">{interview.publication} · {interview.date}</p>
+        {interview.excerpt && <p class="interview-excerpt">“{interview.excerpt}”</p>}
         <a class="interview-link" href={interview.link} target="_blank" rel="noreferrer">Read interview</a>
       </div>
     </article>

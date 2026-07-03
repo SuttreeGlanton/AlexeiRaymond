@@ -639,6 +639,16 @@ img {
   text-transform: uppercase;
 }
 
+.interview-excerpt {
+  margin: 22px 0 0;
+  color: var(--text-soft);
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  font-style: italic;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
 .interview-link {
   margin-top: 28px;
   font-size: 0.78rem;

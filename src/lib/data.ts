@@ -43,6 +43,7 @@ export interface Interview {
   date: string;
   link: string;
   cover?: string;
+  excerpt?: string;
 }
 
 export interface SiteData {
