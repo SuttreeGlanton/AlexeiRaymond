@@ -12,7 +12,8 @@
         "label": "Instagram",
         "url": "https://www.instagram.com/talexeiraymond"
       }
-    ]
+    ],
+    "headerCover": "covers/header.jpg"
   },
   "cycles": [
     {
@@ -141,7 +142,7 @@
         "Online"
       ],
       "link": "https://corev.ink/",
-      "cover": "",
+      "cover": "covers/pieces/from-home.jpg",
       "note": "published in Corvus Review as “He Works From Home”",
       "excerpt": "The room hung with stagnant air, and seemed final, somehow."
     },
@@ -166,7 +167,7 @@
         "Online"
       ],
       "link": "https://www.bloodhoneylit.com/fiction/of-lips-and-war",
-      "cover": "",
+      "cover": "covers/pieces/of-lips-and-war.jpg",
       "excerpt": "Break. Gasp. Now again."
     },
     {
@@ -179,8 +180,7 @@
         "Defunct"
       ],
       "link": "",
-      "cover": "",
-      "note": "originally published in Lowlife Lit Press (now defunct)",
+      "cover": "covers/pieces/she-loves-her-mother.jpg",
       "excerpt": "See the mother, age sixty-four. See her daughter, age thirty. They live alone…"
     },
     {
@@ -216,7 +216,7 @@
         "Online"
       ],
       "link": "https://www.bloodhoneylit.com/fiction/the-guests-are-here",
-      "cover": "",
+      "cover": "covers/pieces/the-guests-are-here.jpg",
       "excerpt": "The uninvited cannot discern their host in the dark though are seen themselves."
     },
     {
@@ -241,7 +241,7 @@
         "Online"
       ],
       "link": "https://everscribemag.com/issue-11",
-      "cover": "",
+      "cover": "covers/pieces/the-mourning-hounds.jpg",
       "excerpt": "The hounds are his wards and tethers."
     },
     {
@@ -254,7 +254,7 @@
         "Upcoming"
       ],
       "link": "",
-      "cover": "",
+      "cover": "covers/pieces/last-sight-of-her.jpg",
       "excerpt": "I can make it to the supermarket and back before more missiles."
     },
     {
@@ -266,7 +266,7 @@
         "Online"
       ],
       "link": "https://www.bloodhoneylit.com/fiction/alley-money",
-      "cover": "",
+      "cover": "covers/pieces/alley-money.jpg",
       "excerpt": "Red, pixelated violence beamed from the screen as a MIDI soundtrack crackled out of a pair of speakers,"
     },
     {
@@ -278,7 +278,7 @@
         "Online"
       ],
       "link": "https://euphemism.illinoisstate.edu/21-1/fiction/arboreal-queen",
-      "cover": "",
+      "cover": "covers/pieces/arboreal-queen.jpg",
       "excerpt": "Cat‑killer, pig‑faced hound, Arboreal Queen—Monroe."
     },
     {
@@ -329,7 +329,6 @@
       ],
       "link": "",
       "cover": "covers/pieces/god-underground.jpg",
-      "note": "originally published in Waffle Fried (now defunct)",
       "excerpt": "The threat of death couldn’t break the builder’s bond to his creation."
     },
     {
@@ -345,7 +344,7 @@
       "excerpt": "This afternoon will culminate in an ecstasy of violence."
     },
     {
-      "title": "She Is At the Window",
+      "title": "At the Window",
       "cycle": "Mythmaking",
       "publication": "Juste Literary",
       "date": "15/11/2025",
@@ -353,7 +352,7 @@
         "Online"
       ],
       "link": "https://justeliterary.com.ng/issue-iv/",
-      "cover": "",
+      "cover": "covers/pieces/at-the-window.jpg",
       "excerpt": "Why does the room tilt so?"
     },
     {
@@ -365,7 +364,7 @@
         "Online"
       ],
       "link": "https://citywidelunch.wordpress.com/the-duet-by-alexei-raymond/",
-      "cover": "",
+      "cover": "covers/pieces/the-duet.jpg",
       "excerpt": "The day is simple; it isn’t meant to be recollected."
     },
     {
@@ -401,7 +400,7 @@
         "In print"
       ],
       "link": "https://phylumpress.ca/current-issue/#issue-003-phoenix-moss",
-      "cover": "",
+      "cover": "covers/pieces/truth-or-its-evidence.jpg",
       "excerpt": "Somewhere in his besieged mind rattled an unassailable, choking truth."
     },
     {
@@ -475,7 +474,7 @@
       ],
       "link": "https://suburbanwitchcraft.com/issue10",
       "cover": "covers/pieces/the-pale-and-the-green.jpg",
-      "excerpt": "“Why were you up so late last night?”"
+      "excerpt": "Why were you up so late last night?"
     },
     {
       "title": "Witnesses",
@@ -487,7 +486,7 @@
       ],
       "link": "https://underbellypress.wixsite.com/home/issue-six",
       "cover": "covers/pieces/witnesses.jpg",
-      "excerpt": "“This Friday we can get tipsy; I’ll cry, you’ll tell me I’m beautiful, read to me…”"
+      "excerpt": "This Friday we can get tipsy; I’ll cry, you’ll tell me I’m beautiful, read to me…"
     },
     {
       "title": "Paradigm of the Tyrant",
@@ -524,7 +523,7 @@
         "Online"
       ],
       "link": "https://eulogy.press/#raymond-6080",
-      "cover": "",
+      "cover": "covers/pieces/6080.jpg",
       "excerpt": "Batter my heart, five-eye’d God"
     },
     {
@@ -548,7 +547,7 @@
         "Online"
       ],
       "link": "https://ricjournal.com/2025/08/27/how-it-ends-alexei-raymond/",
-      "cover": "",
+      "cover": "covers/pieces/how-it-ends.jpg",
       "excerpt": "I can never find my way back."
     },
     {
@@ -696,7 +695,7 @@
         "Upcoming"
       ],
       "link": "",
-      "cover": "",
+      "cover": "covers/pieces/speaking-terms.jpg",
       "excerpt": "A whisper-quiet treatment."
     },
     {
@@ -708,7 +707,7 @@
         "Online"
       ],
       "link": "https://euphemism.illinoisstate.edu/21-1/fiction/life-to-dragons",
-      "cover": "",
+      "cover": "covers/pieces/life-to-dragons.jpg",
       "excerpt": "He sees that the dragon’s tan appearance was the sun’s insistence; greenish scales declare its true color."
     },
     {
@@ -720,7 +719,7 @@
         "Online"
       ],
       "link": "https://zinniajournal.wixsite.com/the-zinnia-journal",
-      "cover": "",
+      "cover": "covers/pieces/star-crossed.jpg",
       "excerpt": "Another crazy couple disrupting the quiet night."
     },
     {
@@ -756,8 +755,7 @@
         "Online"
       ],
       "link": "https://minimag.substack.com/p/the-smartest-warriors",
-      "cover": "",
-      "note": "published as “The Smartest Warriors”",
+      "cover": "covers/pieces/nazi.jpg",
       "excerpt": "I can actually imagine going along with it. Giving in to it."
     },
     {

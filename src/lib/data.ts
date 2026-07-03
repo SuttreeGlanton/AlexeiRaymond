@@ -16,6 +16,7 @@ export interface SiteMeta {
   bio: string;
   email: string;
   socials: Social[];
+  headerCover?: string;
 }
 
 export interface Cycle {

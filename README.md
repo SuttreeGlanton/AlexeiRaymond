@@ -42,9 +42,8 @@ Rules:
 - Upcoming pieces use `"date": null`, include the `"Upcoming"` tag, and leave `link` empty until publication.
 - Defunct pieces include the `"Defunct"` tag, leave `link` empty, and add a `note`, for example: `"originally published in X (now defunct)"`.
 - `Online` and `In print` are independent tags. Use both when both apply.
-- `excerpt` (optional) — a short teaser sentence from the story. On desktop it fades in over the cover on hover; on mobile it shows under the card meta. Omit the field (or leave it empty) and nothing renders.
-
-Piece counts on the home page are computed automatically from `site-data.json`.
+- `excerpt` (optional) — a short teaser sentence from the story, without surrounding quotation marks (the site adds its own). On desktop it fades in over the cover on hover; on mobile it shows under the card meta. Omit the field (or leave it empty) and nothing renders.
+- `note` (optional) — a small italic line under the card, e.g. for pieces published under a different title. Defunct pieces don't need one; the Defunct tag plus the publication name already tell the story.
 
 ## Covers
 
@@ -56,6 +55,7 @@ The site is designed to look finished even before cover photos exist — empty `
 2. Drop raw photos, any size or format, into two folders at the repo root:
    - `raw-covers/cycles/` — name each file after the cycle, e.g. `Portici.jpg` or `Fool's Gold.png`.
    - `raw-covers/pieces/` — name each file after the exact piece title, e.g. `The Boxer.jpg`. A file named `interview.jpg` (any extension) becomes the interview page cover.
+   - A file named `header.jpg` (any extension) in `raw-covers/cycles/` becomes the home-page hero backdrop, processed wide (2400×1350).
 
    Re-running is always safe: replacing a photo in `raw-covers/` and running the script again overwrites the processed copy, and photos can be added in batches whenever they're ready.
 3. Run:

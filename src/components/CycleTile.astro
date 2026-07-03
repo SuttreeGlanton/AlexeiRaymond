@@ -4,13 +4,10 @@ import { assetPath, withBase } from '../lib/paths';
 
 interface Props {
   cycle: Cycle;
-  count: number;
 }
 
-const { cycle, count } = Astro.props;
+const { cycle } = Astro.props;
 const cover = cycle.cover ? assetPath(cycle.cover) : '';
-const countLabel = `${count} ${count === 1 ? 'piece' : 'pieces'}`;
-const blurb = cycle.blurb || countLabel;
 const href = withBase(`cycles/${cycle.id}/`);
 ---
 
@@ -21,13 +18,14 @@ const href = withBase(`cycles/${cycle.id}/`);
     ) : (
       <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
     )}
-    <div class="tile-overlay" aria-hidden="true">
-      <p class="tile-blurb">{blurb}</p>
-    </div>
+    {cycle.blurb && (
+      <div class="tile-overlay" aria-hidden="true">
+        <p class="tile-blurb">{cycle.blurb}</p>
+      </div>
+    )}
   </div>
   <div class="tile-body">
     <h3 class="tile-title">{cycle.name}</h3>
-    <div class="tile-count">{countLabel}</div>
-    <p class="tile-mobile-blurb">{blurb}</p>
+    {cycle.blurb && <p class="tile-mobile-blurb">{cycle.blurb}</p>}
   </div>
 </a>

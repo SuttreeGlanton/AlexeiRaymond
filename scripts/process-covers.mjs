@@ -8,8 +8,10 @@
 //      piece title, e.g. "The Boxer.jpg")
 //   3. Drop one interview photo into raw-covers/pieces/ named "interview.jpg"
 //      (or .jpeg/.png/.webp) — it's matched by that reserved name, not a title.
-//   4. npm run covers
-//   5. Review the console report and the site-data.json diff, then npm run build
+//   4. Drop one home header photo into raw-covers/cycles/ named "header.jpg"
+//      (any extension) — processed wide (2400x1350) as the hero backdrop.
+//   5. npm run covers
+//   6. Review the console report and the site-data.json diff, then npm run build
 import { readdir, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
@@ -25,6 +27,7 @@ const OUT_COVERS_DIR = path.join(ROOT, 'public', 'covers');
 
 const IMG_EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif', '.tif', '.tiff']);
 const INTERVIEW_SLUG = 'interview';
+const HEADER_SLUG = 'header';
 
 function slugify(input) {
   return input
@@ -58,13 +61,25 @@ async function run() {
   await mkdir(OUT_CYCLES_DIR, { recursive: true });
   await mkdir(OUT_PIECES_DIR, { recursive: true });
 
-  const report = { cycles: [], pieces: [], interview: [], unmatchedFiles: [] };
+  const report = { cycles: [], pieces: [], interview: [], header: [], unmatchedFiles: [] };
 
   const cycleFiles = await listImages(RAW_CYCLES_DIR);
   const cycleTargets = data.cycles.map((c) => ({ ref: c, slugs: [slugify(c.id), slugify(c.name)] }));
 
   for (const file of cycleFiles) {
     const fileSlug = slugify(path.basename(file, path.extname(file)));
+
+    if (fileSlug === HEADER_SLUG) {
+      const outName = 'header.jpg';
+      await processOne(path.join(RAW_CYCLES_DIR, file), path.join(OUT_COVERS_DIR, outName), {
+        width: 2400,
+        height: 1350
+      });
+      data.site.headerCover = `covers/${outName}`;
+      report.header.push(`${file}  ->  covers/${outName}`);
+      continue;
+    }
+
     const target = cycleTargets.find((t) => t.slugs.includes(fileSlug));
     if (!target) {
       report.unmatchedFiles.push(`raw-covers/cycles/${file}`);
@@ -126,6 +141,10 @@ async function run() {
   if (report.interview.length > 0) {
     console.log(`\nMatched interview cover:`);
     report.interview.forEach((l) => console.log('  ' + l));
+  }
+  if (report.header.length > 0) {
+    console.log(`\nMatched home header photo:`);
+    report.header.forEach((l) => console.log('  ' + l));
   }
 
   if (report.unmatchedFiles.length > 0) {

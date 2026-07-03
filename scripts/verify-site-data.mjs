@@ -33,10 +33,6 @@ for (const piece of data.pieces) {
   if (isDefunct && piece.link) {
     errors.push(`${piece.title}: Defunct pieces must not have an external link.`);
   }
-
-  if (isDefunct && !String(piece.note || '').toLowerCase().includes('originally published')) {
-    errors.push(`${piece.title}: Defunct pieces should include an "originally published" note.`);
-  }
 }
 
 const totalByCycle = new Map(data.cycles.map((cycle) => [cycle.name, 0]));

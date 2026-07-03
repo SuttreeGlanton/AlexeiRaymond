@@ -1,13 +1,11 @@
 ---
-import { site, pieces, upcomingPieces } from '../lib/data';
+import { site } from '../lib/data';
 
 const year = new Date().getFullYear();
-const publishedCount = pieces.length - upcomingPieces().length;
 ---
 
 <footer class="site-footer">
   <div class="page-shell footer-inner">
     <span>© {year} {site.author}</span>
-    <span>{publishedCount} published · {upcomingPieces().length} upcoming</span>
   </div>
 </footer>

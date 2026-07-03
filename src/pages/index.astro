@@ -1,16 +1,24 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CycleTile from '../components/CycleTile.astro';
-import { cycles, pieces, pieceCountForCycle, site, upcomingPieces } from '../lib/data';
+import { cycles, site } from '../lib/data';
+import { assetPath } from '../lib/paths';
 
-const publishedCount = pieces.length - upcomingPieces().length;
+const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
 ---
 
 <BaseLayout title={site.author}>
-  <section class="page-shell hero" aria-labelledby="home-title">
-    <p class="hero-kicker">Short fiction, flash, poems, and the pursuit of unspeakable&nbsp;loveliness.</p>
-    <h1 id="home-title">{site.author}</h1>
-    <p class="hero-line">{publishedCount} published · {upcomingPieces().length} upcoming · {cycles.length} cycles</p>
+  <section class="hero" aria-labelledby="home-title">
+    {headerCover && (
+      <>
+        <img class="hero-backdrop" src={headerCover} alt="" fetchpriority="high" />
+        <div class="hero-scrim" aria-hidden="true"></div>
+      </>
+    )}
+    <div class="page-shell hero-content">
+      <p class="hero-kicker">Short fiction, flash, poems, and the pursuit of unspeakable&nbsp;loveliness.</p>
+      <h1 id="home-title">{site.author}</h1>
+    </div>
   </section>
 
   <section class="page-shell" aria-labelledby="cycles-title">
@@ -20,7 +28,7 @@ const publishedCount = pieces.length - upcomingPieces().length;
     </div>
     <div class="cycle-grid">
       {cycles.map((cycle) => (
-        <CycleTile cycle={cycle} count={pieceCountForCycle(cycle.name)} />
+        <CycleTile cycle={cycle} />
       ))}
     </div>
   </section>
