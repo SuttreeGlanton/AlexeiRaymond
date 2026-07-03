@@ -10,9 +10,9 @@ const canLinkBloodHoney = typeof bioAfter === 'string';
 const aboutVisual = assetPath('page-visuals/about-portrait.jpg');
 ---
 
-<BaseLayout title={`About â€” ${site.author}`}>
-  <section class="page-shell page-hero text-page text-page-with-visual about-page" aria-labelledby="about-title">
-    <div class="text-page-copy">
+<BaseLayout title={`About — ${site.author}`}>
+  <div class="page-shell page-with-visual about-with-visual">
+    <section class="page-hero text-page page-copy" aria-labelledby="about-title">
       <h1 class="page-title" id="about-title">About</h1>
       <div class="prose">
         <p>
@@ -38,10 +38,10 @@ const aboutVisual = assetPath('page-visuals/about-portrait.jpg');
           </ul>
         </section>
       )}
-    </div>
+    </section>
 
     <aside class="page-visual about-visual" aria-hidden="true">
       <img src={aboutVisual} alt="" loading="lazy" />
     </aside>
-  </section>
+  </div>
 </BaseLayout>

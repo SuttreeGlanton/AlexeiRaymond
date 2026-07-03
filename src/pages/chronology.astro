@@ -7,11 +7,14 @@ import { assetPath } from '../lib/paths';
 const upcoming = upcomingPieces();
 const published = publishedNewestFirst();
 const chronologyVisual = assetPath('page-visuals/chronology-records.jpg');
-const sortValueFor = (date: string | null) => parseDate(date)?.getTime() ?? 0;
+
+function dateTimestamp(date) {
+  return parseDate(date)?.getTime() ?? 0;
+}
 ---
 
-<BaseLayout title={`Chronology â€” ${site.author}`} description="A chronological bibliography of published and forthcoming work.">
-  <div class="page-shell page-with-visual chronology-page">
+<BaseLayout title={`Chronology — ${site.author}`} description="A chronological bibliography of published and forthcoming work.">
+  <div class="page-shell page-with-visual chronology-with-visual">
     <div class="page-copy">
       <section class="page-hero" aria-labelledby="chronology-title">
         <h1 class="page-title" id="chronology-title">Chronology</h1>
@@ -25,7 +28,7 @@ const sortValueFor = (date: string | null) => parseDate(date)?.getTime() ?? 0;
             {upcoming.map((piece) => (
               <li class="chronology-item">
                 <p class="bibliography-line">
-                  â€œ{piece.title}â€ is forthcoming in <span class="pub">{piece.publication}</span>.
+                  <span aria-hidden="true">&ldquo;</span>{piece.title}<span aria-hidden="true">&rdquo;</span> is forthcoming in <span class="pub">{piece.publication}</span>.
                 </p>
                 <div class="chronology-tags">
                   <TagList tags={piece.tags} genre={piece.genre} />
@@ -36,27 +39,24 @@ const sortValueFor = (date: string | null) => parseDate(date)?.getTime() ?? 0;
         </section>
       )}
 
-      <section class="chronology-section chronology-published" aria-labelledby="published-title">
-        <div class="chronology-section-head">
+      <section class="chronology-section" aria-labelledby="published-title">
+        <div class="chronology-heading-row">
           <h2 id="published-title">Published</h2>
-          <button
-            class="chronology-sort"
-            type="button"
-            data-sort-toggle
-            aria-label="Sort published works. Currently latest first."
-          >
-            Latest first
-          </button>
+          <div class="chronology-sort" aria-label="Sort published pieces">
+            <button type="button" class="sort-button is-active" data-sort-order="newest" aria-pressed="true">Latest first</button>
+            <button type="button" class="sort-button" data-sort-order="oldest" aria-pressed="false">Earliest first</button>
+          </div>
         </div>
-        <ul class="chronology-list" data-published-list data-sort-direction="desc">
+
+        <ul class="chronology-list" data-published-list>
           {published.map((piece) => (
-            <li class="chronology-item" data-sort-value={sortValueFor(piece.date)}>
+            <li class="chronology-item" data-date={dateTimestamp(piece.date)}>
               <p class="bibliography-line">
-                {canLinkToPiece(piece) ? (
-                  <>â€œ<a href={piece.link} target="_blank" rel="noreferrer">{piece.title}</a>â€</>
+                <span aria-hidden="true">&ldquo;</span>{canLinkToPiece(piece) ? (
+                  <a href={piece.link} target="_blank" rel="noreferrer">{piece.title}</a>
                 ) : (
-                  <>â€œ{piece.title}â€</>
-                )}
+                  piece.title
+                )}<span aria-hidden="true">&rdquo;</span>
                 {' '}first appeared in <span class="pub">{piece.publication}</span>{formatMonthYear(piece.date) ? `, ${formatMonthYear(piece.date)}` : ''}.
               </p>
               <div class="chronology-tags">
@@ -73,36 +73,31 @@ const sortValueFor = (date: string | null) => parseDate(date)?.getTime() ?? 0;
     </aside>
   </div>
 
-  <script is:inline>
-    (() => {
-      const list = document.querySelector('[data-published-list]');
-      const toggle = document.querySelector('[data-sort-toggle]');
+  <script>
+    const list = document.querySelector('[data-published-list]');
+    const buttons = Array.from(document.querySelectorAll('[data-sort-order]'));
 
-      if (!list || !toggle) return;
+    function sortPublished(order) {
+      if (!list) return;
 
-      let latestFirst = true;
-
-      toggle.addEventListener('click', () => {
-        latestFirst = !latestFirst;
-
-        const items = Array.from(list.querySelectorAll('[data-sort-value]'));
-        items.sort((a, b) => {
-          const aDate = Number(a.dataset.sortValue || 0);
-          const bDate = Number(b.dataset.sortValue || 0);
-          return latestFirst ? bDate - aDate : aDate - bDate;
-        });
-
-        for (const item of items) {
-          list.appendChild(item);
-        }
-
-        toggle.textContent = latestFirst ? 'Latest first' : 'Earliest first';
-        toggle.setAttribute(
-          'aria-label',
-          `Sort published works. Currently ${latestFirst ? 'latest first' : 'earliest first'}.`
-        );
-        list.dataset.sortDirection = latestFirst ? 'desc' : 'asc';
+      const items = Array.from(list.querySelectorAll('.chronology-item'));
+      items.sort((a, b) => {
+        const first = Number(a.dataset.date || 0);
+        const second = Number(b.dataset.date || 0);
+        return order === 'oldest' ? first - second : second - first;
       });
-    })();
+
+      for (const item of items) list.appendChild(item);
+
+      for (const button of buttons) {
+        const active = button.dataset.sortOrder === order;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      }
+    }
+
+    for (const button of buttons) {
+      button.addEventListener('click', () => sortPublished(button.dataset.sortOrder || 'newest'));
+    }
   </script>
 </BaseLayout>
