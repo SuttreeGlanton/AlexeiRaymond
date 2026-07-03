@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { interview, site } from '../lib/data';
+import { assetPath } from '../lib/paths';
+
+const cover = interview.cover ? assetPath(interview.cover) : '';
+---
+
+<BaseLayout title={`Elsewhere — ${site.author}`}>
+  <section class="page-shell page-hero text-page" aria-labelledby="elsewhere-title">
+<h1 class="page-title" id="elsewhere-title">Elsewhere</h1>
+    <p class="page-intro cycle-intro">Interviews, conversations, and other traces outside the bibliography.</p>
+
+    <article class="interview-card">
+      <div class="interview-media">
+        {cover ? (
+          <img src={cover} alt={interview.title} loading="lazy" />
+        ) : (
+          <div class="placeholder" aria-hidden="true"><span>{interview.publication}</span></div>
+        )}
+      </div>
+      <div class="interview-body">
+        <h2>{interview.title}</h2>
+        <p class="interview-meta">{interview.publication} · {interview.date}</p>
+        {interview.excerpt && <p class="interview-excerpt">“{interview.excerpt}”</p>}
+        <a class="interview-link" href={interview.link} target="_blank" rel="noreferrer">Read interview</a>
+      </div>
+    </article>
+  </section>
+</BaseLayout>
