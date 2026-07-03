@@ -461,12 +461,18 @@ img {
   color: var(--text);
 }
 
-.page-title,
-.cycle-title {
+.page-title {
   max-width: 920px;
   margin-top: 14px;
   font-size: clamp(3rem, 9vw, 8rem);
   line-height: 0.93;
+}
+
+/* Sized so the longest cycle name plus its icon holds one line on desktop. */
+.cycle-title {
+  margin-top: 14px;
+  font-size: clamp(2.75rem, 8vw, 6.75rem);
+  line-height: 0.95;
 }
 
 .page-intro,
@@ -743,9 +749,28 @@ img {
     margin-left: 0;
   }
 
-  .cycle-grid,
-  .piece-grid {
+  .cycle-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* Cycle galleries swipe horizontally on mobile, one card at a time,
+     with the next card peeking in from the edge. */
+  .piece-grid {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .piece-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .piece-grid .piece-card {
+    flex: 0 0 85%;
+    scroll-snap-align: center;
   }
 
   .tile-overlay {
