@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { interview, site } from '../lib/data';
+import { assetPath } from '../lib/paths';
+
+const cover = interview.cover ? assetPath(interview.cover) : '';
 ---
 
 <BaseLayout title={`Interview — ${site.author}`}>
@@ -9,9 +12,18 @@ import { interview, site } from '../lib/data';
     <h1 class="page-title" id="interview-title">Interview</h1>
 
     <article class="interview-card">
-      <h2>{interview.title}</h2>
-      <p class="interview-meta">{interview.publication} · {interview.date}</p>
-      <a class="interview-link" href={interview.link} target="_blank" rel="noreferrer">Read interview</a>
+      <div class="interview-media">
+        {cover ? (
+          <img src={cover} alt={`${interview.title} image`} loading="lazy" />
+        ) : (
+          <div class="placeholder" aria-hidden="true"><span>{interview.publication}</span></div>
+        )}
+      </div>
+      <div class="interview-body">
+        <h2>{interview.title}</h2>
+        <p class="interview-meta">{interview.publication} · {interview.date}</p>
+        <a class="interview-link" href={interview.link} target="_blank" rel="noreferrer">Read interview</a>
+      </div>
     </article>
   </section>
 </BaseLayout>

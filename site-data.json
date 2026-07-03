@@ -3,49 +3,58 @@
     "author": "Alexei Raymond",
     "bio": "Alexei Raymond, editor at Blood+Honey, offers his heart, shaped by life and love in the Middle East. He chases visions of unspeakable loveliness. Find pieces of him in a variety of publications.",
     "email": "",
-    "socials": []
+    "socials": [
+      {
+        "label": "X",
+        "url": "https://x.com/enemyofcruelty"
+      },
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/talexeiraymond"
+      }
+    ]
   },
   "cycles": [
     {
       "id": "mythbreaking",
       "name": "Mythbreaking",
-      "blurb": "",
+      "blurb": "The Anton persona; the shedding and breaking of old worlds, as a new world struggles to be born.",
       "cover": ""
     },
     {
       "id": "mythmaking",
       "name": "Mythmaking",
-      "blurb": "",
+      "blurb": "A psyche's architecture; foundations, early cataclysms, and experience prior to words.",
       "cover": ""
     },
     {
       "id": "fools-gold",
       "name": "Fool's Gold",
-      "blurb": "",
+      "blurb": "The Adam persona, its partitions, and the gold in the center.",
       "cover": ""
     },
     {
       "id": "dreams",
       "name": "Dreams",
-      "blurb": "Dreams or fragments — also the home for standalone pieces.",
+      "blurb": "Figments, dreams, and fragments bubbling up.",
       "cover": ""
     },
     {
       "id": "portici",
       "name": "Portici",
-      "blurb": "Set in Turin, under the city's porticoes.",
+      "blurb": "The Turin cycle; time of moths.",
       "cover": ""
     },
     {
       "id": "valentines-star",
       "name": "Valentine's Star",
-      "blurb": "",
+      "blurb": "The Valentin persona, tribulations of early love.",
       "cover": ""
     },
     {
       "id": "conscription",
       "name": "Conscription",
-      "blurb": "",
+      "blurb": "Hauntings of white and blue, of olive-drab and refusal.",
       "cover": ""
     }
   ],
@@ -721,6 +730,7 @@
     "title": "Interview with Blood+Honey",
     "publication": "Blood+Honey",
     "date": "08/07/2025",
-    "link": "https://www.bloodhoneylit.com/features/interview-with-writer-alexei-raymond"
+    "link": "https://www.bloodhoneylit.com/features/interview-with-writer-alexei-raymond",
+    "cover": ""
   }
 }

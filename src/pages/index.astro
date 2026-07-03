@@ -8,7 +8,7 @@ const publishedCount = pieces.length - upcomingPieces().length;
 
 <BaseLayout title={site.author}>
   <section class="page-shell hero" aria-labelledby="home-title">
-    <div class="eyebrow">Author website</div>
+    <p class="hero-kicker">Short fiction, flash, poems, and the pursuit of unspeakable loveliness.</p>
     <h1 id="home-title">{site.author}</h1>
     <p class="hero-line">{publishedCount} published · {upcomingPieces().length} upcoming · {cycles.length} cycles</p>
   </section>
@@ -16,7 +16,7 @@ const publishedCount = pieces.length - upcomingPieces().length;
   <section class="page-shell" aria-labelledby="cycles-title">
     <div class="section-head">
       <h2 id="cycles-title">Cycles</h2>
-      <p class="section-note">Seven rooms for the work. Counts are drawn directly from the site data.</p>
+      <p class="section-note">Published and forthcoming work, arranged by recurring cycle rather than chronology.</p>
     </div>
     <div class="cycle-grid">
       {cycles.map((cycle) => (

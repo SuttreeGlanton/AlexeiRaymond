@@ -41,6 +41,7 @@ export interface Interview {
   publication: string;
   date: string;
   link: string;
+  cover?: string;
 }
 
 export interface SiteData {

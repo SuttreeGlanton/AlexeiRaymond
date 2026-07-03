@@ -12,13 +12,16 @@ import { site, socialHref, socialLabel } from '../lib/data';
     </div>
 
     {site.socials.length > 0 && (
-      <ul class="social-list" aria-label="Social links">
+      <section class="social-block" aria-labelledby="socials-title">
+        <h2 id="socials-title">Socials</h2>
+        <ul class="social-list" aria-label="Social links">
         {site.socials.map((social) => {
           const href = socialHref(social);
           const label = socialLabel(social);
           return <li>{href ? <a href={href} target="_blank" rel="noreferrer">{label}</a> : <span>{label}</span>}</li>;
         })}
-      </ul>
+        </ul>
+      </section>
     )}
   </section>
 </BaseLayout>
