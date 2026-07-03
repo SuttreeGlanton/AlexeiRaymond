@@ -2,6 +2,14 @@ import rawData from '../../site-data.json';
 
 export type Tag = 'Online' | 'In print' | 'Upcoming' | 'Defunct';
 
+export type Genre = 'Short fiction' | 'Flash fiction' | 'Poem' | 'Non-fiction' | 'Other';
+
+export interface PieceAccount {
+  slug: string;
+  label?: string;
+  title?: string;
+}
+
 export interface SocialObject {
   label?: string;
   name?: string;
@@ -36,6 +44,8 @@ export interface Piece {
   cover: string;
   note?: string;
   excerpt?: string;
+  genre?: Genre;
+  account?: PieceAccount;
 }
 
 export interface Interview {
@@ -89,6 +99,33 @@ export function publishedPieces(): Piece[] {
 
 export function upcomingPieces(): Piece[] {
   return pieces.filter(isUpcoming);
+}
+
+/** Parse a DD/MM/YYYY date string (European order, never month/day/year). */
+export function parseDate(date: string | null): Date | null {
+  if (!date) return null;
+  const [day, month, year] = date.split('/').map(Number);
+  if (!day || !month || !year) return null;
+  return new Date(year, month - 1, day);
+}
+
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+/** "Month Year" display for bibliography lines, e.g. "September 2025". */
+export function formatMonthYear(date: string | null): string {
+  const parsed = parseDate(date);
+  if (!parsed) return '';
+  return `${MONTHS[parsed.getMonth()]} ${parsed.getFullYear()}`;
+}
+
+/** Published pieces sorted newest first by full parsed date. */
+export function publishedNewestFirst(): Piece[] {
+  return publishedPieces()
+    .slice()
+    .sort((a, b) => (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0));
 }
 
 export function socialLabel(social: Social): string {

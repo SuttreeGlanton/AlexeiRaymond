@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TagList from '../components/TagList.astro';
+import { canLinkToPiece, formatMonthYear, publishedNewestFirst, site, upcomingPieces } from '../lib/data';
+
+const upcoming = upcomingPieces();
+const published = publishedNewestFirst();
+---
+
+<BaseLayout title={`Chronology — ${site.author}`} description="A chronological bibliography of published and forthcoming work.">
+  <div class="page-shell">
+    <section class="page-hero" aria-labelledby="chronology-title">
+      <h1 class="page-title" id="chronology-title">Chronology</h1>
+      <p class="page-intro cycle-intro">A chronological bibliography of published and forthcoming work.</p>
+    </section>
+
+    {upcoming.length > 0 && (
+      <section class="chronology-section chronology-upcoming" aria-labelledby="upcoming-title">
+        <h2 id="upcoming-title">Upcoming</h2>
+        <ul class="chronology-list">
+          {upcoming.map((piece) => (
+            <li class="chronology-item">
+              <p class="bibliography-line">
+                “{piece.title}” is forthcoming in <span class="pub">{piece.publication}</span>.
+              </p>
+              <div class="chronology-tags">
+                <TagList tags={piece.tags} genre={piece.genre} />
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <section class="chronology-section" aria-labelledby="published-title">
+      <h2 id="published-title">Published</h2>
+      <ul class="chronology-list">
+        {published.map((piece) => (
+          <li class="chronology-item">
+            <p class="bibliography-line">
+              {canLinkToPiece(piece) ? (
+                <>“<a href={piece.link} target="_blank" rel="noreferrer">{piece.title}</a>”</>
+              ) : (
+                <>“{piece.title}”</>
+              )}
+              {' '}first appeared in <span class="pub">{piece.publication}</span>{formatMonthYear(piece.date) ? `, ${formatMonthYear(piece.date)}` : ''}.
+            </p>
+            <div class="chronology-tags">
+              <TagList tags={piece.tags} genre={piece.genre} />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

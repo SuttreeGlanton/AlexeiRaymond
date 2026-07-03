@@ -1,0 +1,69 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { canLinkToPiece, cycleByName, pieces, site } from '../../lib/data';
+import { withBase } from '../../lib/paths';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('accounts');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const piece = pieces.find((p) => p.account?.slug === entry.id);
+const cycle = piece ? cycleByName.get(piece.cycle) : undefined;
+const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
+const backHref = cycle ? withBase(`cycles/${cycle.id}/`) : withBase('');
+const backLabel = cycle ? cycle.name : 'All cycles';
+const metaParts = piece ? [piece.title, piece.publication, piece.date].filter(Boolean) : [];
+---
+
+<BaseLayout title={`${title} — ${site.author}`}>
+  <article class="page-shell page-hero text-page" aria-labelledby="account-title">
+    <a class="back-link" href={backHref}>&larr; {backLabel}</a>
+    <div class="overline">Account</div>
+    <h1 class="page-title account-title" id="account-title">{title}</h1>
+    {metaParts.length > 0 && <p class="account-meta">{metaParts.join(' · ')}</p>}
+    <div class="prose">
+      <Content />
+    </div>
+    {piece && canLinkToPiece(piece) && (
+      <p class="account-outbound">
+        <a href={piece.link} target="_blank" rel="noreferrer">Read “{piece.title}” at {piece.publication} &rarr;</a>
+      </p>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .account-title {
+    font-size: clamp(2.4rem, 6vw, 5rem);
+  }
+
+  .account-meta {
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .account-outbound {
+    margin: 34px 0 0;
+    font-size: 0.9rem;
+  }
+
+  .account-outbound a {
+    border-bottom: 1px solid var(--border-strong);
+    color: var(--text-soft);
+    transition: border-color 240ms ease, color 240ms ease;
+  }
+
+  .account-outbound a:hover,
+  .account-outbound a:focus-visible {
+    border-color: var(--text);
+    color: var(--text);
+  }
+</style>

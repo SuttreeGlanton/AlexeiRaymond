@@ -1,13 +1,15 @@
 ---
 interface Props {
   tags: string[];
+  genre?: string;
 }
 
-const { tags } = Astro.props;
+const { tags, genre } = Astro.props;
 ---
 
-{tags.length > 0 && (
+{(tags.length > 0 || genre) && (
   <div class="tags" aria-label="Piece tags">
+    {genre && <span class="genre-chip">{genre}</span>}
     {tags.map((tag) => <span class="tag">{tag}</span>)}
   </div>
 )}

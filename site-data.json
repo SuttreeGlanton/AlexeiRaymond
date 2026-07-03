@@ -70,7 +70,8 @@
       ],
       "link": "https://www.thebloominonion.com/193-lines-of-sight-alexei-raymond",
       "cover": "covers/pieces/193-lines-of-sight.jpg",
-      "excerpt": "High and higher the translucent turns dim darker then void-black,"
+      "excerpt": "High and higher the translucent turns dim darker then void-black,",
+      "genre": "Short fiction"
     },
     {
       "title": "193 Thoughts of You",
@@ -82,7 +83,8 @@
       ],
       "link": "https://neonorigami.co/2025/07/14/issue-8-is-here/",
       "cover": "covers/pieces/193-thoughts-of-you.jpg",
-      "excerpt": "Hello, Ms. Tom Latin."
+      "excerpt": "Hello, Ms. Tom Latin.",
+      "genre": "Short fiction"
     },
     {
       "title": "Alpha",
@@ -94,7 +96,8 @@
       ],
       "link": "https://www.theargylelitmag.com/fiction-2/alpha",
       "cover": "covers/pieces/alpha.jpg",
-      "excerpt": "She was a nexus of love, a manifestation of it."
+      "excerpt": "She was a nexus of love, a manifestation of it.",
+      "genre": "Short fiction"
     },
     {
       "title": "Another Year of Love",
@@ -106,7 +109,8 @@
       ],
       "link": "https://www.querenciapress.com/querencia-summer-2025",
       "cover": "covers/pieces/another-year-of-love.jpg",
-      "excerpt": "Maudlin mother, do you not drown?"
+      "excerpt": "Maudlin mother, do you not drown?",
+      "genre": "Short fiction"
     },
     {
       "title": "Betrayal",
@@ -118,7 +122,8 @@
       ],
       "link": "https://minimag.substack.com/p/gnarly?r=242qoq&utm_campaign=post",
       "cover": "covers/pieces/betrayal.jpg",
-      "excerpt": "Tonight he is a nameless consciousness."
+      "excerpt": "Tonight he is a nameless consciousness.",
+      "genre": "Flash fiction"
     },
     {
       "title": "Deathwish",
@@ -130,7 +135,8 @@
       ],
       "link": "https://www.lulu.com/shop/mai-gooch-and-conor-hultman/loser-ii/paperback/product-zmn7542.html",
       "cover": "covers/pieces/deathwish.jpg",
-      "excerpt": "Never imagined strangling or killing her."
+      "excerpt": "Never imagined strangling or killing her.",
+      "genre": "Short fiction"
     },
     {
       "title": "From Home",
@@ -142,7 +148,8 @@
       ],
       "link": "https://corev.ink/",
       "cover": "covers/pieces/from-home.jpg",
-      "excerpt": "The room hung with stagnant air, and seemed final, somehow."
+      "excerpt": "The room hung with stagnant air, and seemed final, somehow.",
+      "genre": "Flash fiction"
     },
     {
       "title": "Now",
@@ -154,7 +161,8 @@
       ],
       "link": "https://eulogy.press/#now-raymond",
       "cover": "covers/pieces/now.jpg",
-      "excerpt": "I am here, this is Now,"
+      "excerpt": "I am here, this is Now,",
+      "genre": "Flash fiction"
     },
     {
       "title": "Of Lips and War",
@@ -166,7 +174,8 @@
       ],
       "link": "https://www.bloodhoneylit.com/fiction/of-lips-and-war",
       "cover": "covers/pieces/of-lips-and-war.jpg",
-      "excerpt": "Break. Gasp. Now again."
+      "excerpt": "Break. Gasp. Now again.",
+      "genre": "Short fiction"
     },
     {
       "title": "She Loves Her Mother",
@@ -178,7 +187,8 @@
       ],
       "link": "",
       "cover": "covers/pieces/she-loves-her-mother.jpg",
-      "excerpt": "See the mother, age sixty-four. See her daughter, age thirty. They live alone…"
+      "excerpt": "See the mother, age sixty-four. See her daughter, age thirty. They live alone…",
+      "genre": "Short fiction"
     },
     {
       "title": "Boxer",
@@ -190,7 +200,8 @@
       ],
       "link": "https://www.empyreanliterarymagazine.com/raymond-the-boxer.html",
       "cover": "covers/pieces/the-boxer.jpg",
-      "excerpt": "I broke my image in her eyes and became unlovable."
+      "excerpt": "I broke my image in her eyes and became unlovable.",
+      "genre": "Short fiction"
     },
     {
       "title": "Flagellant",
@@ -202,7 +213,8 @@
       ],
       "link": "https://citywidelunch.wordpress.com/the-flagellant-by-alexei-raymond/",
       "cover": "covers/pieces/the-flagellant.jpg",
-      "excerpt": "…the agony is no longer mere unseen sensation but a red serpent blooming out of the white void."
+      "excerpt": "…the agony is no longer mere unseen sensation but a red serpent blooming out of the white void.",
+      "genre": "Flash fiction"
     },
     {
       "title": "The Guests Are Here",
@@ -214,7 +226,8 @@
       ],
       "link": "https://www.bloodhoneylit.com/fiction/the-guests-are-here",
       "cover": "covers/pieces/the-guests-are-here.jpg",
-      "excerpt": "The uninvited cannot discern their host in the dark though are seen themselves."
+      "excerpt": "The uninvited cannot discern their host in the dark though are seen themselves.",
+      "genre": "Short fiction"
     },
     {
       "title": "The Hunt",
@@ -226,7 +239,8 @@
       ],
       "link": "https://www.livinapress.com/issues",
       "cover": "covers/pieces/the-hunt.jpg",
-      "excerpt": "I wake up at dawn, which means, I realize, that the hunt is on."
+      "excerpt": "I wake up at dawn, which means, I realize, that the hunt is on.",
+      "genre": "Non-fiction"
     },
     {
       "title": "The Mourning Hounds",
@@ -238,7 +252,8 @@
       ],
       "link": "https://everscribemag.com/issue-11",
       "cover": "covers/pieces/the-mourning-hounds.jpg",
-      "excerpt": "The hounds are his wards and tethers."
+      "excerpt": "The hounds are his wards and tethers.",
+      "genre": "Short fiction"
     },
     {
       "title": "Last Sight of Her",
@@ -251,7 +266,8 @@
       ],
       "link": "",
       "cover": "covers/pieces/last-sight-of-her.jpg",
-      "excerpt": "I can make it to the supermarket and back before more missiles."
+      "excerpt": "I can make it to the supermarket and back before more missiles.",
+      "genre": "Flash fiction"
     },
     {
       "title": "Alley Money",
@@ -263,7 +279,8 @@
       ],
       "link": "https://www.bloodhoneylit.com/fiction/alley-money",
       "cover": "covers/pieces/alley-money.jpg",
-      "excerpt": "Red, pixelated violence beamed from the screen as a MIDI soundtrack crackled out of a pair of speakers,"
+      "excerpt": "Red, pixelated violence beamed from the screen as a MIDI soundtrack crackled out of a pair of speakers,",
+      "genre": "Short fiction"
     },
     {
       "title": "Arboreal Queen",
@@ -275,7 +292,8 @@
       ],
       "link": "https://euphemism.illinoisstate.edu/21-1/fiction/arboreal-queen",
       "cover": "covers/pieces/arboreal-queen.jpg",
-      "excerpt": "Cat‑killer, pig‑faced hound, Arboreal Queen—Monroe."
+      "excerpt": "Cat‑killer, pig‑faced hound, Arboreal Queen—Monroe.",
+      "genre": "Short fiction"
     },
     {
       "title": "Blackbird",
@@ -287,7 +305,8 @@
       ],
       "link": "https://eunoiareview.wordpress.com/2025/07/26/blackbird/",
       "cover": "covers/pieces/blackbird.jpg",
-      "excerpt": "Brass and gold dominate as rich red vitreous enamel announces itself here and there as stars and flags."
+      "excerpt": "Brass and gold dominate as rich red vitreous enamel announces itself here and there as stars and flags.",
+      "genre": "Flash fiction"
     },
     {
       "title": "Clothesline Divorce",
@@ -299,7 +318,8 @@
       ],
       "link": "https://www.the-crawfish.com/features/clothesline-divorcealexei-raymond",
       "cover": "covers/pieces/clothesline-divorce.jpg",
-      "excerpt": "The yard is vast. Is it life’s luxury, where a cascade of sensations dazzles the boy."
+      "excerpt": "The yard is vast. Is it life’s luxury, where a cascade of sensations dazzles the boy.",
+      "genre": "Flash fiction"
     },
     {
       "title": "Death to Legions",
@@ -311,7 +331,8 @@
       ],
       "link": "https://www.theargylelitmag.com/fiction-3/death-of-legions",
       "cover": "covers/pieces/death-to-legions.jpg",
-      "excerpt": "He delivers death to legions—whence, he does not know, and why never crosses his mind. The only questions are how and to whom."
+      "excerpt": "He delivers death to legions—whence, he does not know, and why never crosses his mind. The only questions are how and to whom.",
+      "genre": "Flash fiction"
     },
     {
       "title": "God Underground",
@@ -324,7 +345,8 @@
       ],
       "link": "",
       "cover": "covers/pieces/god-underground.jpg",
-      "excerpt": "The threat of death couldn’t break the builder’s bond to his creation."
+      "excerpt": "The threat of death couldn’t break the builder’s bond to his creation.",
+      "genre": "Flash fiction"
     },
     {
       "title": "Minors' Militia",
@@ -336,7 +358,8 @@
       ],
       "link": "https://pixelatedshroud.wordpress.com/2025/06/12/minors-militia-alexei-raymond/",
       "cover": "covers/pieces/minors-militia.jpg",
-      "excerpt": "This afternoon will culminate in an ecstasy of violence."
+      "excerpt": "This afternoon will culminate in an ecstasy of violence.",
+      "genre": "Flash fiction"
     },
     {
       "title": "At the Window",
@@ -348,7 +371,8 @@
       ],
       "link": "https://justeliterary.com.ng/issue-iv/",
       "cover": "covers/pieces/at-the-window.jpg",
-      "excerpt": "Why does the room tilt so?"
+      "excerpt": "Why does the room tilt so?",
+      "genre": "Flash fiction"
     },
     {
       "title": "The Duet",
@@ -360,7 +384,8 @@
       ],
       "link": "https://citywidelunch.wordpress.com/the-duet-by-alexei-raymond/",
       "cover": "covers/pieces/the-duet.jpg",
-      "excerpt": "The day is simple; it isn’t meant to be recollected."
+      "excerpt": "The day is simple; it isn’t meant to be recollected.",
+      "genre": "Flash fiction"
     },
     {
       "title": "The Flower and the Beetle",
@@ -372,7 +397,8 @@
       ],
       "link": "https://euphemism.illinoisstate.edu/21-1/fiction/the-flower-and-the-beetle/",
       "cover": "covers/pieces/the-flower-and-the-beetle.jpg",
-      "excerpt": "In the passenger seat, Valentin felt the grandeur of movement."
+      "excerpt": "In the passenger seat, Valentin felt the grandeur of movement.",
+      "genre": "Short fiction"
     },
     {
       "title": "The Nutcracker's Charge",
@@ -384,7 +410,8 @@
       ],
       "link": "https://everscribemag.com/the-nutcrackers-charge",
       "cover": "covers/pieces/the-nutcrackers-charge.jpg",
-      "excerpt": "The scene terrifies her but it’s how the story goes—she knows, she knows."
+      "excerpt": "The scene terrifies her but it’s how the story goes—she knows, she knows.",
+      "genre": "Flash fiction"
     },
     {
       "title": "Truth, or Its Evidence",
@@ -396,7 +423,8 @@
       ],
       "link": "https://phylumpress.ca/current-issue/#issue-003-phoenix-moss",
       "cover": "covers/pieces/truth-or-its-evidence.jpg",
-      "excerpt": "Somewhere in his besieged mind rattled an unassailable, choking truth."
+      "excerpt": "Somewhere in his besieged mind rattled an unassailable, choking truth.",
+      "genre": "Short fiction"
     },
     {
       "title": "Genesis",
@@ -408,7 +436,8 @@
       ],
       "link": "https://www.discretionarylove.com/genesis/",
       "cover": "covers/pieces/genesis.jpg",
-      "excerpt": "By the web he thought of no longer—by unrequited wings that bore him to the defining moment"
+      "excerpt": "By the web he thought of no longer—by unrequited wings that bore him to the defining moment",
+      "genre": "Short fiction"
     },
     {
       "title": "Heart's Surge",
@@ -420,7 +449,8 @@
       ],
       "link": "https://litbreak.com/hearts-surge/",
       "cover": "covers/pieces/hearts-surge.jpg",
-      "excerpt": "Adam didn’t know what to offer of himself to counterbalance a terror unknowable to him."
+      "excerpt": "Adam didn’t know what to offer of himself to counterbalance a terror unknowable to him.",
+      "genre": "Short fiction"
     },
     {
       "title": "His Green Delight",
@@ -432,7 +462,8 @@
       ],
       "link": "https://bluedaisiesjournal.wixsite.com/bluedaisiesjournal",
       "cover": "covers/pieces/his-green-delight.jpg",
-      "excerpt": "Silence settles between the scarabeous man and the gilt woman."
+      "excerpt": "Silence settles between the scarabeous man and the gilt woman.",
+      "genre": "Flash fiction"
     },
     {
       "title": "How the Night Glows",
@@ -445,7 +476,8 @@
       ],
       "link": "https://minimag.press/gallery/minimag176%20first%20edition.pdf",
       "cover": "covers/pieces/how-the-night-glows.jpg",
-      "excerpt": "Something else hid within him, his toska a mere symptom. Something partitioned off."
+      "excerpt": "Something else hid within him, his toska a mere symptom. Something partitioned off.",
+      "genre": "Short fiction"
     },
     {
       "title": "LothariOnline",
@@ -457,7 +489,8 @@
       ],
       "link": "https://somewords.boards.net/thread/91/alexei-raymond",
       "cover": "covers/pieces/lotharionline.jpg",
-      "excerpt": "Flowery language will not, cannot, hide the gnarled rot."
+      "excerpt": "Flowery language will not, cannot, hide the gnarled rot.",
+      "genre": "Short fiction"
     },
     {
       "title": "The Pale and the Green",
@@ -469,7 +502,8 @@
       ],
       "link": "https://suburbanwitchcraft.com/issue10",
       "cover": "covers/pieces/the-pale-and-the-green.jpg",
-      "excerpt": "Why were you up so late last night?"
+      "excerpt": "Why were you up so late last night?",
+      "genre": "Short fiction"
     },
     {
       "title": "Witnesses",
@@ -481,7 +515,8 @@
       ],
       "link": "https://underbellypress.wixsite.com/home/issue-six",
       "cover": "covers/pieces/witnesses.jpg",
-      "excerpt": "This Friday we can get tipsy; I’ll cry, you’ll tell me I’m beautiful, read to me…"
+      "excerpt": "This Friday we can get tipsy; I’ll cry, you’ll tell me I’m beautiful, read to me…",
+      "genre": "Flash fiction"
     },
     {
       "title": "Paradigm of the Tyrant",
@@ -494,7 +529,8 @@
       ],
       "link": "",
       "cover": "covers/pieces/paradigm-of-the-tyrant.jpg",
-      "excerpt": "Her golden earth to his sea."
+      "excerpt": "Her golden earth to his sea.",
+      "genre": "Short fiction"
     },
     {
       "title": "The Iron Crown",
@@ -507,7 +543,8 @@
       ],
       "link": "",
       "cover": "covers/pieces/the-iron-crown.jpg",
-      "excerpt": "Something is dead, or someone."
+      "excerpt": "Something is dead, or someone.",
+      "genre": "Short fiction"
     },
     {
       "title": "6080",
@@ -519,7 +556,8 @@
       ],
       "link": "https://eulogy.press/#raymond-6080",
       "cover": "covers/pieces/6080.jpg",
-      "excerpt": "Batter my heart, five-eye’d God"
+      "excerpt": "Batter my heart, five-eye’d God",
+      "genre": "Poem"
     },
     {
       "title": "Father Frost",
@@ -531,7 +569,8 @@
       ],
       "link": "https://donotsubmit.net/father-frost-by-alexei-raymond/",
       "cover": "covers/pieces/father-frost.jpg",
-      "excerpt": "maybe I did the thing, thing where nothin’ make sense ‘cept to bang on my fuckin’ empty useless bad head"
+      "excerpt": "maybe I did the thing, thing where nothin’ make sense ‘cept to bang on my fuckin’ empty useless bad head",
+      "genre": "Short fiction"
     },
     {
       "title": "How It Ends",
@@ -543,7 +582,8 @@
       ],
       "link": "https://ricjournal.com/2025/08/27/how-it-ends-alexei-raymond/",
       "cover": "covers/pieces/how-it-ends.jpg",
-      "excerpt": "I can never find my way back."
+      "excerpt": "I can never find my way back.",
+      "genre": "Other"
     },
     {
       "title": "No, Rabbit",
@@ -555,7 +595,8 @@
       ],
       "link": "https://www.sublunaryreview.com/home/no-rabbit",
       "cover": "covers/pieces/no-rabbit.jpg",
-      "excerpt": "The rabbit’s black marble of an eye looks at him."
+      "excerpt": "The rabbit’s black marble of an eye looks at him.",
+      "genre": "Short fiction"
     },
     {
       "title": "Of Lies and Frogs",
@@ -567,7 +608,8 @@
       ],
       "link": "https://plaguecircuspress.com/of-lies-and-frogs-by-alexei-raymond",
       "cover": "covers/pieces/of-lies-and-frogs.jpg",
-      "excerpt": "He lied, of course; he lied."
+      "excerpt": "He lied, of course; he lied.",
+      "genre": "Flash fiction"
     },
     {
       "title": "On the Nature of Sleep",
@@ -579,7 +621,8 @@
       ],
       "link": "https://bluedaisiesjournal.wixsite.com/bluedaisiesjournal",
       "cover": "covers/pieces/on-the-nature-of-sleep.jpg",
-      "excerpt": "Sincerely, futilely, wretchedly yours. In beating sorrow and purest grief."
+      "excerpt": "Sincerely, futilely, wretchedly yours. In beating sorrow and purest grief.",
+      "genre": "Short fiction"
     },
     {
       "title": "Red, They Are Cherry Red",
@@ -591,7 +634,8 @@
       ],
       "link": "https://dodoeraser.org/2026/02/25/red-they-are-cherry-red/",
       "cover": "covers/pieces/red-they-are-cherry-red.jpg",
-      "excerpt": "I transcribe what she’s saying, which will be of no use whatsoever"
+      "excerpt": "I transcribe what she’s saying, which will be of no use whatsoever",
+      "genre": "Short fiction"
     },
     {
       "title": "Remediation",
@@ -603,7 +647,8 @@
       ],
       "link": "https://www.lulu.com/shop/mai-gooch-and-conor-hultman/loser-ii/paperback/product-zmn7542.html",
       "cover": "covers/pieces/remediation.jpg",
-      "excerpt": "Question queued: whose fault is this?"
+      "excerpt": "Question queued: whose fault is this?",
+      "genre": "Short fiction"
     },
     {
       "title": "Ember",
@@ -616,7 +661,8 @@
       ],
       "link": "",
       "cover": "covers/pieces/ember.jpg",
-      "excerpt": "So, wander elsewhere, nurse what is, a faint ember."
+      "excerpt": "So, wander elsewhere, nurse what is, a faint ember.",
+      "genre": "Short fiction"
     },
     {
       "title": "A Loss Hard-Won",
@@ -628,7 +674,8 @@
       ],
       "link": "https://theleaflinemag.wordpress.com/2026/06/26/a-loss-hard-won-poetry-by-alexei-raymond/",
       "cover": "covers/pieces/a-loss-hard-won.jpg",
-      "excerpt": "Is thirty no age to die?"
+      "excerpt": "Is thirty no age to die?",
+      "genre": "Poem"
     },
     {
       "title": "Desire, Discovered",
@@ -640,7 +687,8 @@
       ],
       "link": "https://chatloglit.com/entry009",
       "cover": "covers/pieces/desire-discovered.jpg",
-      "excerpt": "New day after darker-than-dark night"
+      "excerpt": "New day after darker-than-dark night",
+      "genre": "Poem"
     },
     {
       "title": "Mothhead",
@@ -652,7 +700,8 @@
       ],
       "link": "https://expatpress.com/mothhead-alexei-raymond",
       "cover": "covers/pieces/mothhead.jpg",
-      "excerpt": "the old world is dying, and the new one is unborn yet. Time of moths."
+      "excerpt": "the old world is dying, and the new one is unborn yet. Time of moths.",
+      "genre": "Flash fiction"
     },
     {
       "title": "Glassdom",
@@ -665,7 +714,8 @@
       ],
       "link": "",
       "cover": "covers/pieces/glassdom.jpg",
-      "excerpt": "It’s glassfall—a rain that chimes and glitters the street come first rays of brilliant-cut sun, heralding glasnost."
+      "excerpt": "It’s glassfall—a rain that chimes and glitters the street come first rays of brilliant-cut sun, heralding glasnost.",
+      "genre": "Flash fiction"
     },
     {
       "title": "La Luna",
@@ -678,7 +728,8 @@
       ],
       "link": "",
       "cover": "covers/pieces/la-luna.jpg",
-      "excerpt": "He will pause use the excuse and goal entire of the journey to attempt a capture of the luring satellite."
+      "excerpt": "He will pause use the excuse and goal entire of the journey to attempt a capture of the luring satellite.",
+      "genre": "Short fiction"
     },
     {
       "title": "Speaking Terms",
@@ -691,7 +742,8 @@
       ],
       "link": "",
       "cover": "covers/pieces/speaking-terms.jpg",
-      "excerpt": "A whisper-quiet treatment."
+      "excerpt": "A whisper-quiet treatment.",
+      "genre": "Poem"
     },
     {
       "title": "Life to Dragons",
@@ -703,7 +755,8 @@
       ],
       "link": "https://euphemism.illinoisstate.edu/21-1/fiction/life-to-dragons",
       "cover": "covers/pieces/life-to-dragons.jpg",
-      "excerpt": "He sees that the dragon’s tan appearance was the sun’s insistence; greenish scales declare its true color."
+      "excerpt": "He sees that the dragon’s tan appearance was the sun’s insistence; greenish scales declare its true color.",
+      "genre": "Short fiction"
     },
     {
       "title": "Star-Crossed",
@@ -715,7 +768,8 @@
       ],
       "link": "https://zinniajournal.wixsite.com/the-zinnia-journal",
       "cover": "covers/pieces/star-crossed.jpg",
-      "excerpt": "Another crazy couple disrupting the quiet night."
+      "excerpt": "Another crazy couple disrupting the quiet night.",
+      "genre": "Flash fiction"
     },
     {
       "title": "Under Street Sign and Star",
@@ -727,7 +781,8 @@
       ],
       "link": "https://www.partiallyshymagazine.com/issues/issue-5-daydreams-doldrums",
       "cover": "covers/pieces/under-street-sign-and-star.jpg",
-      "excerpt": "And her lips met his—and bliss, bliss, bliss."
+      "excerpt": "And her lips met his—and bliss, bliss, bliss.",
+      "genre": "Flash fiction"
     },
     {
       "title": "Waiting for Beloved",
@@ -739,7 +794,8 @@
       ],
       "link": "https://micromancemagazine.substack.com/p/waiting-for-beloved",
       "cover": "covers/pieces/waiting-for-beloved.jpg",
-      "excerpt": "He knows he is lovely to her."
+      "excerpt": "He knows he is lovely to her.",
+      "genre": "Flash fiction"
     },
     {
       "title": "Nazi",
@@ -751,7 +807,8 @@
       ],
       "link": "https://minimag.substack.com/p/the-smartest-warriors",
       "cover": "covers/pieces/nazi.jpg",
-      "excerpt": "I can actually imagine going along with it. Giving in to it."
+      "excerpt": "I can actually imagine going along with it. Giving in to it.",
+      "genre": "Short fiction"
     },
     {
       "title": "The Trail",
@@ -763,7 +820,8 @@
       ],
       "link": "https://www.theravenreview.org/archive/the-trail-raymond",
       "cover": "covers/pieces/the-trail.jpg",
-      "excerpt": "Some say there are ways easier, braver, more cunning, but his heart’s been called to this one."
+      "excerpt": "Some say there are ways easier, braver, more cunning, but his heart’s been called to this one.",
+      "genre": "Short fiction"
     },
     {
       "title": "Whether Yossarian",
@@ -775,7 +833,8 @@
       ],
       "link": "https://www.schoolcraftbooks.com/shop_product_detail.asp?catalog_group_id=MTY&catalog_group_name=TWFjZ3VmZmlu&catalog_id=52&catalog_name=VGhlIE1hY0d1ZmZpbg&pf_id=1737&product_name=VGhlIE1hY0d1ZmZpbiAtIFZvbC4gNDEsIE5vIDEgKE5vdmVtYmVyIDIwMjUp&type=3&target=shop_product_list.asp",
       "cover": "covers/pieces/whether-yossarian.jpg",
-      "excerpt": "The lone soldier—whether Yossarian, or any other name—plunges into great bewilderment the moment war begins."
+      "excerpt": "The lone soldier—whether Yossarian, or any other name—plunges into great bewilderment the moment war begins.",
+      "genre": "Short fiction"
     }
   ],
   "interview": {

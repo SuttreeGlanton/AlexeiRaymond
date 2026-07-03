@@ -2,7 +2,7 @@
 import TagList from './TagList.astro';
 import type { Piece } from '../lib/data';
 import { canLinkToPiece, isDefunct, isUpcoming } from '../lib/data';
-import { assetPath } from '../lib/paths';
+import { assetPath, withBase } from '../lib/paths';
 
 interface Props {
   piece: Piece;
@@ -13,15 +13,32 @@ const upcoming = isUpcoming(piece);
 const defunct = isDefunct(piece);
 const linked = canLinkToPiece(piece);
 const cover = piece.cover ? assetPath(piece.cover) : '';
+const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : '';
+const accountLabel = piece.account?.label || 'Account';
 const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-defunct' : ''}`;
 const metaParts = [piece.publication, upcoming ? '' : piece.date].filter(Boolean);
 ---
 
-{linked ? (
-  <a class={className} href={piece.link} target="_blank" rel="noreferrer">
+<article class={className}>
+  {linked ? (
+    <a class="card-cover-link" href={piece.link} target="_blank" rel="noreferrer" tabindex="-1">
+      <div class="card-media">
+        {cover ? (
+          <img src={cover} alt={`${piece.title} cover`} loading="lazy" decoding="async" />
+        ) : (
+          <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
+        )}
+        {piece.excerpt && (
+          <div class="card-overlay" aria-hidden="true">
+            <p class="card-excerpt">“{piece.excerpt}”</p>
+          </div>
+        )}
+      </div>
+    </a>
+  ) : (
     <div class="card-media">
       {cover ? (
-        <img src={cover} alt={`${piece.title} cover`} loading="lazy" />
+        <img src={cover} alt={`${piece.title} cover`} loading="lazy" decoding="async" />
       ) : (
         <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
       )}
@@ -31,35 +48,22 @@ const metaParts = [piece.publication, upcoming ? '' : piece.date].filter(Boolean
         </div>
       )}
     </div>
-    <div class="card-body">
-      <h2 class="card-title">{piece.title}</h2>
-      {metaParts.length > 0 && <div class="card-meta">{metaParts.join(' · ')}</div>}
-      {piece.excerpt && <p class="card-mobile-excerpt">“{piece.excerpt}”</p>}
-      {piece.note && <p class="card-note">{piece.note}</p>}
-      <TagList tags={piece.tags} />
-    </div>
-  </a>
-) : (
-  <article class={className}>
-    <div class="card-media">
-      {cover ? (
-        <img src={cover} alt={`${piece.title} cover`} loading="lazy" />
+  )}
+  <div class="card-body">
+    <h2 class="card-title">
+      {linked ? (
+        <a href={piece.link} target="_blank" rel="noreferrer">{piece.title}</a>
       ) : (
-        <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
+        piece.title
       )}
-      {piece.excerpt && (
-        <div class="card-overlay" aria-hidden="true">
-          <p class="card-excerpt">“{piece.excerpt}”</p>
-        </div>
-      )}
-    </div>
-    <div class="card-body">
-      <h2 class="card-title">{piece.title}</h2>
-      {metaParts.length > 0 && <div class="card-meta">{metaParts.join(' · ')}</div>}
-      {upcoming && <p class="coming-soon">Coming soon</p>}
-      {piece.excerpt && <p class="card-mobile-excerpt">“{piece.excerpt}”</p>}
-      {piece.note && <p class="card-note">{piece.note}</p>}
-      <TagList tags={piece.tags} />
-    </div>
-  </article>
-)}
+    </h2>
+    {metaParts.length > 0 && <div class="card-meta">{metaParts.join(' · ')}</div>}
+    {upcoming && <p class="coming-soon">Coming soon</p>}
+    {piece.excerpt && <p class="card-mobile-excerpt">“{piece.excerpt}”</p>}
+    {piece.note && <p class="card-note">{piece.note}</p>}
+    <TagList tags={piece.tags} genre={piece.genre} />
+  </div>
+  {piece.account && (
+    <a class="account-strip" href={accountHref}>{accountLabel} &rarr;</a>
+  )}
+</article>

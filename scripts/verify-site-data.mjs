@@ -33,6 +33,13 @@ for (const piece of data.pieces) {
   if (isDefunct && piece.link) {
     errors.push(`${piece.title}: Defunct pieces must not have an external link.`);
   }
+
+  const genres = ['Short fiction', 'Flash fiction', 'Poem', 'Non-fiction', 'Other'];
+  if (!piece.genre) {
+    errors.push(`${piece.title}: missing genre.`);
+  } else if (!genres.includes(piece.genre)) {
+    errors.push(`${piece.title}: genre "${piece.genre}" is not one of: ${genres.join(', ')}.`);
+  }
 }
 
 const totalByCycle = new Map(data.cycles.map((cycle) => [cycle.name, 0]));
