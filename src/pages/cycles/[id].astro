@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CycleIcon from '../../components/CycleIcon.astro';
 import PieceCard from '../../components/PieceCard.astro';
 import type { Cycle } from '../../lib/data';
 import { cycles, isUpcoming, piecesForCycle, site } from '../../lib/data';
@@ -26,7 +27,7 @@ const cyclePieces = [...allPieces.filter((piece) => !isUpcoming(piece)), ...allP
   <div class="cycle-shell" data-cycle-id={cycle.id}>
     <section class="page-shell page-hero" aria-labelledby="cycle-title">
       <a class="back-link" href={withBase('')}>&larr; All cycles</a>
-      <h1 class="cycle-title" id="cycle-title">{cycle.name}</h1>
+      <h1 class="cycle-title" id="cycle-title"><CycleIcon id={cycle.id} />{cycle.name}</h1>
       {cycle.blurb && <p class="cycle-intro">{cycle.blurb}</p>}
     </section>
 
