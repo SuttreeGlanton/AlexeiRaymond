@@ -1384,3 +1384,40 @@ img {
     padding: 7px 10px 6px;
   }
 }
+
+/* --- Softened edges: cards, covers, tags --- */
+:root {
+  --radius-card: 10px;
+  --radius-media: 8px;
+  --radius-chip: 6px;
+}
+
+.tile,
+.piece-card,
+.interview-card {
+  border-radius: var(--radius-card);
+}
+
+.tile-media,
+.card-media,
+.interview-media,
+.placeholder {
+  border-radius: var(--radius-media);
+}
+
+.tile,
+.piece-card,
+.interview-card,
+.tile-media,
+.card-media,
+.interview-media {
+  overflow: hidden;
+}
+
+.tag {
+  border-radius: var(--radius-chip);
+}
+
+.account-strip {
+  border-radius: 0 0 var(--radius-card) var(--radius-card);
+}
