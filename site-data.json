@@ -1,0 +1,726 @@
+{
+  "site": {
+    "author": "Alexei Raymond",
+    "bio": "Alexei Raymond, editor at Blood+Honey, offers his heart, shaped by life and love in the Middle East. He chases visions of unspeakable loveliness. Find pieces of him in a variety of publications.",
+    "email": "",
+    "socials": []
+  },
+  "cycles": [
+    {
+      "id": "mythbreaking",
+      "name": "Mythbreaking",
+      "blurb": "",
+      "cover": ""
+    },
+    {
+      "id": "mythmaking",
+      "name": "Mythmaking",
+      "blurb": "",
+      "cover": ""
+    },
+    {
+      "id": "fools-gold",
+      "name": "Fool's Gold",
+      "blurb": "",
+      "cover": ""
+    },
+    {
+      "id": "dreams",
+      "name": "Dreams",
+      "blurb": "Dreams or fragments — also the home for standalone pieces.",
+      "cover": ""
+    },
+    {
+      "id": "portici",
+      "name": "Portici",
+      "blurb": "Set in Turin, under the city's porticoes.",
+      "cover": ""
+    },
+    {
+      "id": "valentines-star",
+      "name": "Valentine's Star",
+      "blurb": "",
+      "cover": ""
+    },
+    {
+      "id": "conscription",
+      "name": "Conscription",
+      "blurb": "",
+      "cover": ""
+    }
+  ],
+  "pieces": [
+    {
+      "title": "193 Lines of Sight",
+      "cycle": "Mythbreaking",
+      "publication": "The Bloomin' Onion",
+      "date": "12/04/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://www.thebloominonion.com/193-lines-of-sight-alexei-raymond",
+      "cover": ""
+    },
+    {
+      "title": "193 Thoughts of You",
+      "cycle": "Mythbreaking",
+      "publication": "Neon Origami Magazine",
+      "date": "15/07/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://neonorigami.co/2025/07/14/issue-8-is-here/",
+      "cover": ""
+    },
+    {
+      "title": "Alpha",
+      "cycle": "Mythbreaking",
+      "publication": "The Argyle",
+      "date": "15/06/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://www.theargylelitmag.com/fiction-2/alpha",
+      "cover": ""
+    },
+    {
+      "title": "Another Year of Love",
+      "cycle": "Mythbreaking",
+      "publication": "Querencia Press",
+      "date": "02/09/2025",
+      "tags": [
+        "Online",
+        "In print"
+      ],
+      "link": "https://www.querenciapress.com/querencia-summer-2025",
+      "cover": ""
+    },
+    {
+      "title": "Betrayal",
+      "cycle": "Mythbreaking",
+      "publication": "miniMAG",
+      "date": "12/12/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://minimag.substack.com/p/gnarly?r=242qoq&utm_campaign=post",
+      "cover": ""
+    },
+    {
+      "title": "Deathwish",
+      "cycle": "Mythbreaking",
+      "publication": "Loser II",
+      "date": "28/06/2026",
+      "tags": [
+        "In print"
+      ],
+      "link": "https://www.lulu.com/shop/mai-gooch-and-conor-hultman/loser-ii/paperback/product-zmn7542.html",
+      "cover": ""
+    },
+    {
+      "title": "From Home",
+      "cycle": "Mythbreaking",
+      "publication": "Corvus Review",
+      "date": "01/07/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://corev.ink/",
+      "cover": "",
+      "note": "published in Corvus Review as “He Works From Home”"
+    },
+    {
+      "title": "Now",
+      "cycle": "Mythbreaking",
+      "publication": "Eulogy Press",
+      "date": "25/07/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://eulogy.press/#now-raymond",
+      "cover": ""
+    },
+    {
+      "title": "Of Lips and War",
+      "cycle": "Mythbreaking",
+      "publication": "Blood+Honey",
+      "date": "01/08/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://www.bloodhoneylit.com/fiction/of-lips-and-war",
+      "cover": ""
+    },
+    {
+      "title": "She Loves Her Mother",
+      "cycle": "Mythbreaking",
+      "publication": "Lowlife Lit Press",
+      "date": "16/04/2025",
+      "tags": [
+        "Online",
+        "Defunct"
+      ],
+      "link": "",
+      "cover": "",
+      "note": "originally published in Lowlife Lit Press (now defunct)"
+    },
+    {
+      "title": "The Boxer",
+      "cycle": "Mythbreaking",
+      "publication": "Empyrean",
+      "date": "21/06/2025",
+      "tags": [
+        "In print"
+      ],
+      "link": "https://www.empyreanliterarymagazine.com/raymond-the-boxer.html",
+      "cover": ""
+    },
+    {
+      "title": "The Flagellant",
+      "cycle": "Mythbreaking",
+      "publication": "Citywide Lunch",
+      "date": "16/09/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://citywidelunch.wordpress.com/the-flagellant-by-alexei-raymond/",
+      "cover": ""
+    },
+    {
+      "title": "The Guests Are Here",
+      "cycle": "Mythbreaking",
+      "publication": "Blood+Honey",
+      "date": "01/07/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://www.bloodhoneylit.com/fiction/the-guests-are-here",
+      "cover": ""
+    },
+    {
+      "title": "The Hunt",
+      "cycle": "Mythbreaking",
+      "publication": "Livina Press",
+      "date": "20/09/2025",
+      "tags": [
+        "Online",
+        "In print"
+      ],
+      "link": "https://www.livinapress.com/issues",
+      "cover": ""
+    },
+    {
+      "title": "The Mourning Hounds",
+      "cycle": "Mythbreaking",
+      "publication": "Everscribe Magazine",
+      "date": "01/08/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://everscribemag.com/issue-11",
+      "cover": ""
+    },
+    {
+      "title": "Last Sight of Her",
+      "cycle": "Mythbreaking",
+      "publication": "BULL",
+      "date": null,
+      "tags": [
+        "Online",
+        "Upcoming"
+      ],
+      "link": "",
+      "cover": ""
+    },
+    {
+      "title": "Alley Money",
+      "cycle": "Mythmaking",
+      "publication": "Blood+Honey",
+      "date": "01/09/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://www.bloodhoneylit.com/fiction/alley-money",
+      "cover": ""
+    },
+    {
+      "title": "Arboreal Queen",
+      "cycle": "Mythmaking",
+      "publication": "Euphemism",
+      "date": "05/12/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://euphemism.illinoisstate.edu/21-1/fiction/arboreal-queen",
+      "cover": ""
+    },
+    {
+      "title": "Blackbird",
+      "cycle": "Mythmaking",
+      "publication": "Eunoia Review",
+      "date": "26/07/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://eunoiareview.wordpress.com/2025/07/26/blackbird/",
+      "cover": ""
+    },
+    {
+      "title": "Clothesline Divorce",
+      "cycle": "Mythmaking",
+      "publication": "The Crawfish",
+      "date": "25/04/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://www.the-crawfish.com/features/clothesline-divorcealexei-raymond",
+      "cover": ""
+    },
+    {
+      "title": "Death to Legions",
+      "cycle": "Mythmaking",
+      "publication": "The Argyle",
+      "date": "15/09/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://www.theargylelitmag.com/fiction-3/death-of-legions",
+      "cover": ""
+    },
+    {
+      "title": "God Underground",
+      "cycle": "Mythmaking",
+      "publication": "Waffle Fried",
+      "date": "01/08/2025",
+      "tags": [
+        "Online",
+        "In print",
+        "Defunct"
+      ],
+      "link": "",
+      "cover": "",
+      "note": "originally published in Waffle Fried (now defunct)"
+    },
+    {
+      "title": "Minors' Militia",
+      "cycle": "Mythmaking",
+      "publication": "The Pixelated Shroud",
+      "date": "12/06/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://pixelatedshroud.wordpress.com/2025/06/12/minors-militia-alexei-raymond/",
+      "cover": ""
+    },
+    {
+      "title": "She Is At the Window",
+      "cycle": "Mythmaking",
+      "publication": "Juste Literary",
+      "date": "15/11/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://justeliterary.com.ng/issue-iv/",
+      "cover": ""
+    },
+    {
+      "title": "The Duet",
+      "cycle": "Mythmaking",
+      "publication": "Citywide Lunch",
+      "date": "01/07/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://citywidelunch.wordpress.com/the-duet-by-alexei-raymond/",
+      "cover": ""
+    },
+    {
+      "title": "The Flower and the Beetle",
+      "cycle": "Mythmaking",
+      "publication": "Euphemism",
+      "date": "05/12/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://euphemism.illinoisstate.edu/21-1/fiction/the-flower-and-the-beetle/",
+      "cover": ""
+    },
+    {
+      "title": "The Nutcracker's Charge",
+      "cycle": "Mythmaking",
+      "publication": "Everscribe Magazine",
+      "date": "01/07/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://everscribemag.com/the-nutcrackers-charge",
+      "cover": ""
+    },
+    {
+      "title": "Truth, or Its Evidence",
+      "cycle": "Mythmaking",
+      "publication": "Phylum Press",
+      "date": "28/09/2025",
+      "tags": [
+        "In print"
+      ],
+      "link": "https://phylumpress.ca/current-issue/#issue-003-phoenix-moss",
+      "cover": ""
+    },
+    {
+      "title": "Genesis",
+      "cycle": "Fool's Gold",
+      "publication": "Discretionary Love",
+      "date": "05/01/2026",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://www.discretionarylove.com/genesis/",
+      "cover": ""
+    },
+    {
+      "title": "Heart's Surge",
+      "cycle": "Fool's Gold",
+      "publication": "Litbreak Magazine",
+      "date": "14/07/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://litbreak.com/hearts-surge/",
+      "cover": ""
+    },
+    {
+      "title": "His Green Delight",
+      "cycle": "Fool's Gold",
+      "publication": "Blue Daisies Journal",
+      "date": "05/07/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://bluedaisiesjournal.wixsite.com/bluedaisiesjournal",
+      "cover": ""
+    },
+    {
+      "title": "How the Night Glows",
+      "cycle": "Fool's Gold",
+      "publication": "miniMAG",
+      "date": "14/11/2025",
+      "tags": [
+        "Online",
+        "In print"
+      ],
+      "link": "https://minimag.press/gallery/minimag176%20first%20edition.pdf",
+      "cover": ""
+    },
+    {
+      "title": "LothariOnline",
+      "cycle": "Fool's Gold",
+      "publication": "Some Words",
+      "date": "06/03/2026",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://somewords.boards.net/thread/91/alexei-raymond",
+      "cover": ""
+    },
+    {
+      "title": "The Pale and the Green",
+      "cycle": "Fool's Gold",
+      "publication": "Suburban Witchcraft Magazine",
+      "date": "16/09/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://suburbanwitchcraft.com/issue10",
+      "cover": ""
+    },
+    {
+      "title": "Witnesses",
+      "cycle": "Fool's Gold",
+      "publication": "Underbelly Press",
+      "date": "13/03/2026",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://underbellypress.wixsite.com/home/issue-six",
+      "cover": ""
+    },
+    {
+      "title": "Paradigm of the Tyrant",
+      "cycle": "Fool's Gold",
+      "publication": "For Page & Screen",
+      "date": null,
+      "tags": [
+        "Online",
+        "Upcoming"
+      ],
+      "link": "",
+      "cover": ""
+    },
+    {
+      "title": "The Iron Crown",
+      "cycle": "Fool's Gold",
+      "publication": "Some Words",
+      "date": null,
+      "tags": [
+        "Online",
+        "Upcoming"
+      ],
+      "link": "",
+      "cover": ""
+    },
+    {
+      "title": "6080",
+      "cycle": "Dreams",
+      "publication": "Eulogy Press",
+      "date": "12/03/2026",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://eulogy.press/#raymond-6080",
+      "cover": ""
+    },
+    {
+      "title": "Father Frost",
+      "cycle": "Dreams",
+      "publication": "DON’T SUBMIT!",
+      "date": "24/02/2026",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://donotsubmit.net/father-frost-by-alexei-raymond/",
+      "cover": ""
+    },
+    {
+      "title": "How It Ends",
+      "cycle": "Dreams",
+      "publication": "RIC Journal",
+      "date": "27/08/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://ricjournal.com/2025/08/27/how-it-ends-alexei-raymond/",
+      "cover": ""
+    },
+    {
+      "title": "No, Rabbit",
+      "cycle": "Dreams",
+      "publication": "Sublunary Review",
+      "date": "11/12/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://www.sublunaryreview.com/home/no-rabbit",
+      "cover": ""
+    },
+    {
+      "title": "Of Lies and Frogs",
+      "cycle": "Dreams",
+      "publication": "Plague Circus Press",
+      "date": "24/05/2026",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://plaguecircuspress.com/of-lies-and-frogs-by-alexei-raymond",
+      "cover": ""
+    },
+    {
+      "title": "On the Nature of Sleep",
+      "cycle": "Dreams",
+      "publication": "Blue Daisies Journal",
+      "date": "15/01/2026",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://bluedaisiesjournal.wixsite.com/bluedaisiesjournal",
+      "cover": ""
+    },
+    {
+      "title": "Red, They Are Cherry Red",
+      "cycle": "Dreams",
+      "publication": "Dodo Eraser",
+      "date": "25/02/2026",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://dodoeraser.org/2026/02/25/red-they-are-cherry-red/",
+      "cover": ""
+    },
+    {
+      "title": "Remediation",
+      "cycle": "Dreams",
+      "publication": "Loser II",
+      "date": "28/06/2026",
+      "tags": [
+        "In print"
+      ],
+      "link": "https://www.lulu.com/shop/mai-gooch-and-conor-hultman/loser-ii/paperback/product-zmn7542.html",
+      "cover": ""
+    },
+    {
+      "title": "Ember",
+      "cycle": "Dreams",
+      "publication": "Some Words",
+      "date": null,
+      "tags": [
+        "Online",
+        "Upcoming"
+      ],
+      "link": "",
+      "cover": ""
+    },
+    {
+      "title": "A Loss Hard-Won",
+      "cycle": "Portici",
+      "publication": "The Leafline Magazine",
+      "date": "26/06/2026",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://theleaflinemag.wordpress.com/2026/06/26/a-loss-hard-won-poetry-by-alexei-raymond/",
+      "cover": ""
+    },
+    {
+      "title": "Desire, Discovered",
+      "cycle": "Portici",
+      "publication": "Chat Log",
+      "date": "13/05/2026",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://chatloglit.com/entry009",
+      "cover": ""
+    },
+    {
+      "title": "Mothhead",
+      "cycle": "Portici",
+      "publication": "Expat Press",
+      "date": "02/06/2026",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://expatpress.com/mothhead-alexei-raymond",
+      "cover": ""
+    },
+    {
+      "title": "Glassdom",
+      "cycle": "Portici",
+      "publication": "Bending Genres",
+      "date": null,
+      "tags": [
+        "Online",
+        "Upcoming"
+      ],
+      "link": "",
+      "cover": ""
+    },
+    {
+      "title": "La Luna",
+      "cycle": "Portici",
+      "publication": "Michigan City Review of Books",
+      "date": null,
+      "tags": [
+        "Online",
+        "Upcoming"
+      ],
+      "link": "",
+      "cover": ""
+    },
+    {
+      "title": "Speaking Terms",
+      "cycle": "Portici",
+      "publication": "Farewell Transmissions",
+      "date": null,
+      "tags": [
+        "Online",
+        "Upcoming"
+      ],
+      "link": "",
+      "cover": ""
+    },
+    {
+      "title": "Life to Dragons",
+      "cycle": "Valentine's Star",
+      "publication": "Euphemism",
+      "date": "05/12/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://euphemism.illinoisstate.edu/21-1/fiction/life-to-dragons",
+      "cover": ""
+    },
+    {
+      "title": "Star-Crossed",
+      "cycle": "Valentine's Star",
+      "publication": "The Zinnia Journal",
+      "date": "22/06/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://zinniajournal.wixsite.com/the-zinnia-journal",
+      "cover": ""
+    },
+    {
+      "title": "Under Street Sign and Star",
+      "cycle": "Valentine's Star",
+      "publication": "Partially Shy",
+      "date": "15/09/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://www.partiallyshymagazine.com/issues/issue-5-daydreams-doldrums",
+      "cover": ""
+    },
+    {
+      "title": "Waiting for Beloved",
+      "cycle": "Valentine's Star",
+      "publication": "Micromance Magazine",
+      "date": "15/09/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://micromancemagazine.substack.com/p/waiting-for-beloved",
+      "cover": ""
+    },
+    {
+      "title": "Nazi",
+      "cycle": "Conscription",
+      "publication": "miniMAG",
+      "date": "15/08/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://minimag.substack.com/p/the-smartest-warriors",
+      "cover": "",
+      "note": "published as “The Smartest Warriors”"
+    },
+    {
+      "title": "The Trail",
+      "cycle": "Conscription",
+      "publication": "The Raven Review",
+      "date": "27/10/2025",
+      "tags": [
+        "Online"
+      ],
+      "link": "https://www.theravenreview.org/archive/the-trail-raymond",
+      "cover": ""
+    },
+    {
+      "title": "Whether Yossarian",
+      "cycle": "Conscription",
+      "publication": "The MacGuffin",
+      "date": "01/12/2025",
+      "tags": [
+        "In print"
+      ],
+      "link": "https://www.schoolcraftbooks.com/shop_product_detail.asp?catalog_group_id=MTY&catalog_group_name=TWFjZ3VmZmlu&catalog_id=52&catalog_name=VGhlIE1hY0d1ZmZpbg&pf_id=1737&product_name=VGhlIE1hY0d1ZmZpbiAtIFZvbC4gNDEsIE5vIDEgKE5vdmVtYmVyIDIwMjUp&type=3&target=shop_product_list.asp",
+      "cover": ""
+    }
+  ],
+  "interview": {
+    "title": "Interview with Blood+Honey",
+    "publication": "Blood+Honey",
+    "date": "08/07/2025",
+    "link": "https://www.bloodhoneylit.com/features/interview-with-writer-alexei-raymond"
+  }
+}

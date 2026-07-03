@@ -1,0 +1,16 @@
+{
+  "name": "alexei-raymond-author-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && npm run verify:data",
+    "preview": "astro preview",
+    "verify:data": "node scripts/verify-site-data.mjs"
+  },
+  "dependencies": {
+    "astro": "^7.0.6"
+  },
+  "devDependencies": {}
+}

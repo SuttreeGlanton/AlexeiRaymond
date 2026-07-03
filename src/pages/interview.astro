@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { interview, site } from '../lib/data';
+---
+
+<BaseLayout title={`Interview — ${site.author}`}>
+  <section class="page-shell page-hero text-page" aria-labelledby="interview-title">
+    <div class="overline">Interview</div>
+    <h1 class="page-title" id="interview-title">Interview</h1>
+
+    <article class="interview-card">
+      <h2>{interview.title}</h2>
+      <p class="interview-meta">{interview.publication} · {interview.date}</p>
+      <a class="interview-link" href={interview.link} target="_blank" rel="noreferrer">Read interview</a>
+    </article>
+  </section>
+</BaseLayout>

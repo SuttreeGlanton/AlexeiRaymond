@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, socialHref, socialLabel } from '../lib/data';
+---
+
+<BaseLayout title={`About — ${site.author}`}>
+  <section class="page-shell page-hero text-page" aria-labelledby="about-title">
+    <div class="overline">About</div>
+    <h1 class="page-title" id="about-title">{site.author}</h1>
+    <div class="prose">
+      <p>{site.bio}</p>
+    </div>
+
+    {site.socials.length > 0 && (
+      <ul class="social-list" aria-label="Social links">
+        {site.socials.map((social) => {
+          const href = socialHref(social);
+          const label = socialLabel(social);
+          return <li>{href ? <a href={href} target="_blank" rel="noreferrer">{label}</a> : <span>{label}</span>}</li>;
+        })}
+      </ul>
+    )}
+  </section>
+</BaseLayout>

@@ -1,0 +1,26 @@
+---
+import { site } from '../lib/data';
+import { withBase } from '../lib/paths';
+
+const currentPath = Astro.url.pathname;
+const homeHref = withBase('');
+const currentWithoutTrailing = currentPath.replace(/\/$/, '');
+const homeWithoutTrailing = homeHref.replace(/\/$/, '');
+const navItems = [
+  { label: 'Cycles', href: homeHref, active: currentWithoutTrailing === homeWithoutTrailing },
+  { label: 'About', href: withBase('about/'), active: currentPath.startsWith(withBase('about/')) },
+  { label: 'Interview', href: withBase('interview/'), active: currentPath.startsWith(withBase('interview/')) },
+  { label: 'Contact', href: withBase('contact/'), active: currentPath.startsWith(withBase('contact/')) }
+];
+---
+
+<header class="site-header">
+  <div class="page-shell header-inner">
+    <a class="brand" href={homeHref}>{site.author}</a>
+    <nav class="main-nav" aria-label="Main navigation">
+      {navItems.map((item) => (
+        <a href={item.href} aria-current={item.active ? 'page' : undefined}>{item.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>

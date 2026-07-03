@@ -1,0 +1,53 @@
+---
+import TagList from './TagList.astro';
+import type { Piece } from '../lib/data';
+import { canLinkToPiece, isDefunct, isUpcoming } from '../lib/data';
+import { assetPath } from '../lib/paths';
+
+interface Props {
+  piece: Piece;
+}
+
+const { piece } = Astro.props;
+const upcoming = isUpcoming(piece);
+const defunct = isDefunct(piece);
+const linked = canLinkToPiece(piece);
+const cover = piece.cover ? assetPath(piece.cover) : '';
+const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-defunct' : ''}`;
+const metaParts = [piece.publication, upcoming ? '' : piece.date].filter(Boolean);
+---
+
+{linked ? (
+  <a class={className} href={piece.link} target="_blank" rel="noreferrer">
+    <div class="card-media">
+      {cover ? (
+        <img src={cover} alt={`${piece.title} cover`} loading="lazy" />
+      ) : (
+        <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
+      )}
+    </div>
+    <div class="card-body">
+      <h2 class="card-title">{piece.title}</h2>
+      {metaParts.length > 0 && <div class="card-meta">{metaParts.join(' · ')}</div>}
+      {piece.note && <p class="card-note">{piece.note}</p>}
+      <TagList tags={piece.tags} />
+    </div>
+  </a>
+) : (
+  <article class={className}>
+    <div class="card-media">
+      {cover ? (
+        <img src={cover} alt={`${piece.title} cover`} loading="lazy" />
+      ) : (
+        <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
+      )}
+    </div>
+    <div class="card-body">
+      <h2 class="card-title">{piece.title}</h2>
+      {metaParts.length > 0 && <div class="card-meta">{metaParts.join(' · ')}</div>}
+      {upcoming && <p class="coming-soon">Coming soon</p>}
+      {piece.note && <p class="card-note">{piece.note}</p>}
+      <TagList tags={piece.tags} />
+    </div>
+  </article>
+)}
