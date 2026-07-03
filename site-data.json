@@ -667,6 +667,20 @@
       "genre": "Short fiction"
     },
     {
+      "title": "Смерть моя",
+      "cycle": "Dreams",
+      "publication": "Gopnik Press",
+      "date": null,
+      "tags": [
+        "Online",
+        "Upcoming"
+      ],
+      "link": "",
+      "cover": "covers/pieces/smert-moya.jpg",
+      "excerpt": "",
+      "genre": "Poem"
+    },
+    {
       "title": "A Loss Hard-Won",
       "cycle": "Portici",
       "publication": "The Leafline Magazine",
