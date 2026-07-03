@@ -1,39 +1,47 @@
-﻿---
+---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site, socialHref, socialLabel } from '../lib/data';
+import { assetPath } from '../lib/paths';
 
 const bloodHoneyUrl = 'https://www.bloodhoneylit.com/';
 const bloodHoneyName = 'Blood+Honey';
 const [bioBefore, bioAfter] = site.bio.split(bloodHoneyName);
 const canLinkBloodHoney = typeof bioAfter === 'string';
+const aboutVisual = assetPath('page-visuals/about-portrait.jpg');
 ---
 
-<BaseLayout title={`About — ${site.author}`}>
-  <section class="page-shell page-hero text-page" aria-labelledby="about-title">
-    <h1 class="page-title" id="about-title">About</h1>
-    <div class="prose">
-      <p>
-        {canLinkBloodHoney ? (
-          <>
-            {bioBefore}<a href={bloodHoneyUrl} target="_blank" rel="noreferrer">{bloodHoneyName}</a>{bioAfter}
-          </>
-        ) : (
-          site.bio
-        )}
-      </p>
+<BaseLayout title={`About â€” ${site.author}`}>
+  <section class="page-shell page-hero text-page text-page-with-visual about-page" aria-labelledby="about-title">
+    <div class="text-page-copy">
+      <h1 class="page-title" id="about-title">About</h1>
+      <div class="prose">
+        <p>
+          {canLinkBloodHoney ? (
+            <>
+              {bioBefore}<a href={bloodHoneyUrl} target="_blank" rel="noreferrer">{bloodHoneyName}</a>{bioAfter}
+            </>
+          ) : (
+            site.bio
+          )}
+        </p>
+      </div>
+
+      {site.socials.length > 0 && (
+        <section class="social-block" aria-labelledby="socials-title">
+          <h2 id="socials-title">Socials</h2>
+          <ul class="social-list" aria-label="Social links">
+            {site.socials.map((social) => {
+              const href = socialHref(social);
+              const label = socialLabel(social);
+              return <li>{href ? <a href={href} target="_blank" rel="noreferrer">{label}</a> : <span>{label}</span>}</li>;
+            })}
+          </ul>
+        </section>
+      )}
     </div>
 
-    {site.socials.length > 0 && (
-      <section class="social-block" aria-labelledby="socials-title">
-        <h2 id="socials-title">Socials</h2>
-        <ul class="social-list" aria-label="Social links">
-          {site.socials.map((social) => {
-            const href = socialHref(social);
-            const label = socialLabel(social);
-            return <li>{href ? <a href={href} target="_blank" rel="noreferrer">{label}</a> : <span>{label}</span>}</li>;
-          })}
-        </ul>
-      </section>
-    )}
+    <aside class="page-visual about-visual" aria-hidden="true">
+      <img src={aboutVisual} alt="" loading="lazy" />
+    </aside>
   </section>
 </BaseLayout>

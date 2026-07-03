@@ -1,27 +1,63 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TagList from '../components/TagList.astro';
-import { canLinkToPiece, formatMonthYear, publishedNewestFirst, site, upcomingPieces } from '../lib/data';
+import { canLinkToPiece, formatMonthYear, parseDate, publishedNewestFirst, site, upcomingPieces } from '../lib/data';
+import { assetPath } from '../lib/paths';
 
 const upcoming = upcomingPieces();
 const published = publishedNewestFirst();
+const chronologyVisual = assetPath('page-visuals/chronology-records.jpg');
+const sortValueFor = (date: string | null) => parseDate(date)?.getTime() ?? 0;
 ---
 
-<BaseLayout title={`Chronology — ${site.author}`} description="A chronological bibliography of published and forthcoming work.">
-  <div class="page-shell">
-    <section class="page-hero" aria-labelledby="chronology-title">
-      <h1 class="page-title" id="chronology-title">Chronology</h1>
-      <p class="page-intro cycle-intro">A chronological bibliography of published and forthcoming work.</p>
-    </section>
+<BaseLayout title={`Chronology â€” ${site.author}`} description="A chronological bibliography of published and forthcoming work.">
+  <div class="page-shell page-with-visual chronology-page">
+    <div class="page-copy">
+      <section class="page-hero" aria-labelledby="chronology-title">
+        <h1 class="page-title" id="chronology-title">Chronology</h1>
+        <p class="page-intro cycle-intro">A chronological bibliography of published and forthcoming work.</p>
+      </section>
 
-    {upcoming.length > 0 && (
-      <section class="chronology-section chronology-upcoming" aria-labelledby="upcoming-title">
-        <h2 id="upcoming-title">Upcoming</h2>
-        <ul class="chronology-list">
-          {upcoming.map((piece) => (
-            <li class="chronology-item">
+      {upcoming.length > 0 && (
+        <section class="chronology-section chronology-upcoming" aria-labelledby="upcoming-title">
+          <h2 id="upcoming-title">Upcoming</h2>
+          <ul class="chronology-list">
+            {upcoming.map((piece) => (
+              <li class="chronology-item">
+                <p class="bibliography-line">
+                  â€œ{piece.title}â€ is forthcoming in <span class="pub">{piece.publication}</span>.
+                </p>
+                <div class="chronology-tags">
+                  <TagList tags={piece.tags} genre={piece.genre} />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <section class="chronology-section chronology-published" aria-labelledby="published-title">
+        <div class="chronology-section-head">
+          <h2 id="published-title">Published</h2>
+          <button
+            class="chronology-sort"
+            type="button"
+            data-sort-toggle
+            aria-label="Sort published works. Currently latest first."
+          >
+            Latest first
+          </button>
+        </div>
+        <ul class="chronology-list" data-published-list data-sort-direction="desc">
+          {published.map((piece) => (
+            <li class="chronology-item" data-sort-value={sortValueFor(piece.date)}>
               <p class="bibliography-line">
-                “{piece.title}” is forthcoming in <span class="pub">{piece.publication}</span>.
+                {canLinkToPiece(piece) ? (
+                  <>â€œ<a href={piece.link} target="_blank" rel="noreferrer">{piece.title}</a>â€</>
+                ) : (
+                  <>â€œ{piece.title}â€</>
+                )}
+                {' '}first appeared in <span class="pub">{piece.publication}</span>{formatMonthYear(piece.date) ? `, ${formatMonthYear(piece.date)}` : ''}.
               </p>
               <div class="chronology-tags">
                 <TagList tags={piece.tags} genre={piece.genre} />
@@ -30,27 +66,43 @@ const published = publishedNewestFirst();
           ))}
         </ul>
       </section>
-    )}
+    </div>
 
-    <section class="chronology-section" aria-labelledby="published-title">
-      <h2 id="published-title">Published</h2>
-      <ul class="chronology-list">
-        {published.map((piece) => (
-          <li class="chronology-item">
-            <p class="bibliography-line">
-              {canLinkToPiece(piece) ? (
-                <>“<a href={piece.link} target="_blank" rel="noreferrer">{piece.title}</a>”</>
-              ) : (
-                <>“{piece.title}”</>
-              )}
-              {' '}first appeared in <span class="pub">{piece.publication}</span>{formatMonthYear(piece.date) ? `, ${formatMonthYear(piece.date)}` : ''}.
-            </p>
-            <div class="chronology-tags">
-              <TagList tags={piece.tags} genre={piece.genre} />
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <aside class="page-visual chronology-visual" aria-hidden="true">
+      <img src={chronologyVisual} alt="" loading="lazy" />
+    </aside>
   </div>
+
+  <script is:inline>
+    (() => {
+      const list = document.querySelector('[data-published-list]');
+      const toggle = document.querySelector('[data-sort-toggle]');
+
+      if (!list || !toggle) return;
+
+      let latestFirst = true;
+
+      toggle.addEventListener('click', () => {
+        latestFirst = !latestFirst;
+
+        const items = Array.from(list.querySelectorAll('[data-sort-value]'));
+        items.sort((a, b) => {
+          const aDate = Number(a.dataset.sortValue || 0);
+          const bDate = Number(b.dataset.sortValue || 0);
+          return latestFirst ? bDate - aDate : aDate - bDate;
+        });
+
+        for (const item of items) {
+          list.appendChild(item);
+        }
+
+        toggle.textContent = latestFirst ? 'Latest first' : 'Earliest first';
+        toggle.setAttribute(
+          'aria-label',
+          `Sort published works. Currently ${latestFirst ? 'latest first' : 'earliest first'}.`
+        );
+        list.dataset.sortDirection = latestFirst ? 'desc' : 'asc';
+      });
+    })();
+  </script>
 </BaseLayout>
