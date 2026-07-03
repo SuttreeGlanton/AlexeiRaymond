@@ -1,0 +1,22 @@
+---
+// The Interview page became Elsewhere; this stub keeps old shared links alive.
+import { site } from '../lib/data';
+import { withBase } from '../lib/paths';
+
+const target = withBase('elsewhere/');
+const canonical = new URL(target, Astro.site).toString();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="noindex" />
+    <title>Elsewhere — {site.author}</title>
+  </head>
+  <body style="background: #0a0a0a; color: #f1efe9; font-family: Georgia, serif;">
+    <p style="padding: 2rem;">This page moved. <a href={target} style="color: inherit;">Continue to Elsewhere &rarr;</a></p>
+  </body>
+</html>
