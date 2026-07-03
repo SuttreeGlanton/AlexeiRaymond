@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import CycleIcon from '../../components/CycleIcon.astro';
 import PieceCard from '../../components/PieceCard.astro';
 import type { Cycle } from '../../lib/data';
-import { cycles, isUpcoming, piecesForCycle, site } from '../../lib/data';
+import { cycles, isUpcoming, parseDate, piecesForCycle, site } from '../../lib/data';
 import { withBase } from '../../lib/paths';
 
 export function getStaticPaths() {
@@ -18,9 +18,17 @@ interface Props {
 }
 
 const { cycle } = Astro.props;
-// Published pieces first, upcoming always at the bottom of the page.
-const allPieces = piecesForCycle(cycle.name);
-const cyclePieces = [...allPieces.filter((piece) => !isUpcoming(piece)), ...allPieces.filter(isUpcoming)];
+// Upcoming pieces first, then published pieces newest to oldest.
+const cyclePieces = piecesForCycle(cycle.name)
+  .slice()
+  .sort((a, b) => {
+    const aUpcoming = isUpcoming(a);
+    const bUpcoming = isUpcoming(b);
+
+    if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1;
+
+    return (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0);
+  });
 const otherCycles = cycles;
 ---
 
