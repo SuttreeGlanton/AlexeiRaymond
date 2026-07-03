@@ -12,3 +12,6 @@ dist/
 # system
 .DS_Store
 Thumbs.db
+
+# unprocessed source photos for scripts/process-covers.mjs
+raw-covers/

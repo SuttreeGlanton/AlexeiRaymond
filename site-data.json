@@ -19,43 +19,43 @@
       "id": "mythbreaking",
       "name": "Mythbreaking",
       "blurb": "The Anton persona; the shedding and breaking of old worlds, as a new world struggles to be born.",
-      "cover": ""
+      "cover": "covers/cycles/mythbreaking.jpg"
     },
     {
       "id": "mythmaking",
       "name": "Mythmaking",
       "blurb": "A psyche's architecture; foundations, early cataclysms, and experience prior to words.",
-      "cover": ""
+      "cover": "covers/cycles/mythmaking.jpg"
     },
     {
       "id": "fools-gold",
       "name": "Fool's Gold",
       "blurb": "The Adam persona, its partitions, and the gold in the center.",
-      "cover": ""
+      "cover": "covers/cycles/fools-gold.jpg"
     },
     {
       "id": "dreams",
       "name": "Dreams",
       "blurb": "Figments, dreams, and fragments bubbling up.",
-      "cover": ""
+      "cover": "covers/cycles/dreams.jpg"
     },
     {
       "id": "portici",
       "name": "Portici",
       "blurb": "The Turin cycle; time of moths.",
-      "cover": ""
+      "cover": "covers/cycles/portici.jpg"
     },
     {
       "id": "valentines-star",
       "name": "Valentine's Star",
       "blurb": "The Valentin persona, tribulations of early love.",
-      "cover": ""
+      "cover": "covers/cycles/valentines-star.jpg"
     },
     {
       "id": "conscription",
       "name": "Conscription",
       "blurb": "Hauntings of white and blue, of olive-drab and refusal.",
-      "cover": ""
+      "cover": "covers/cycles/conscription.jpg"
     }
   ],
   "pieces": [
@@ -68,7 +68,7 @@
         "Online"
       ],
       "link": "https://www.thebloominonion.com/193-lines-of-sight-alexei-raymond",
-      "cover": ""
+      "cover": "covers/pieces/193-lines-of-sight.jpg"
     },
     {
       "title": "193 Thoughts of You",
@@ -79,7 +79,7 @@
         "Online"
       ],
       "link": "https://neonorigami.co/2025/07/14/issue-8-is-here/",
-      "cover": ""
+      "cover": "covers/pieces/193-thoughts-of-you.jpg"
     },
     {
       "title": "Alpha",
@@ -90,7 +90,7 @@
         "Online"
       ],
       "link": "https://www.theargylelitmag.com/fiction-2/alpha",
-      "cover": ""
+      "cover": "covers/pieces/alpha.jpg"
     },
     {
       "title": "Another Year of Love",
@@ -102,7 +102,7 @@
         "In print"
       ],
       "link": "https://www.querenciapress.com/querencia-summer-2025",
-      "cover": ""
+      "cover": "covers/pieces/another-year-of-love.jpg"
     },
     {
       "title": "Betrayal",
@@ -124,7 +124,7 @@
         "In print"
       ],
       "link": "https://www.lulu.com/shop/mai-gooch-and-conor-hultman/loser-ii/paperback/product-zmn7542.html",
-      "cover": ""
+      "cover": "covers/pieces/deathwish.jpg"
     },
     {
       "title": "From Home",
@@ -147,7 +147,7 @@
         "Online"
       ],
       "link": "https://eulogy.press/#now-raymond",
-      "cover": ""
+      "cover": "covers/pieces/now.jpg"
     },
     {
       "title": "Of Lips and War",
@@ -182,7 +182,7 @@
         "In print"
       ],
       "link": "https://www.empyreanliterarymagazine.com/raymond-the-boxer.html",
-      "cover": ""
+      "cover": "covers/pieces/the-boxer.jpg"
     },
     {
       "title": "The Flagellant",
@@ -193,7 +193,7 @@
         "Online"
       ],
       "link": "https://citywidelunch.wordpress.com/the-flagellant-by-alexei-raymond/",
-      "cover": ""
+      "cover": "covers/pieces/the-flagellant.jpg"
     },
     {
       "title": "The Guests Are Here",
@@ -216,7 +216,7 @@
         "In print"
       ],
       "link": "https://www.livinapress.com/issues",
-      "cover": ""
+      "cover": "covers/pieces/the-hunt.jpg"
     },
     {
       "title": "The Mourning Hounds",
@@ -307,7 +307,7 @@
         "Defunct"
       ],
       "link": "",
-      "cover": "",
+      "cover": "covers/pieces/god-underground.jpg",
       "note": "originally published in Waffle Fried (now defunct)"
     },
     {
@@ -319,7 +319,7 @@
         "Online"
       ],
       "link": "https://pixelatedshroud.wordpress.com/2025/06/12/minors-militia-alexei-raymond/",
-      "cover": ""
+      "cover": "covers/pieces/minors-militia.jpg"
     },
     {
       "title": "She Is At the Window",
@@ -363,7 +363,7 @@
         "Online"
       ],
       "link": "https://everscribemag.com/the-nutcrackers-charge",
-      "cover": ""
+      "cover": "covers/pieces/the-nutcrackers-charge.jpg"
     },
     {
       "title": "Truth, or Its Evidence",
@@ -385,7 +385,7 @@
         "Online"
       ],
       "link": "https://www.discretionarylove.com/genesis/",
-      "cover": ""
+      "cover": "covers/pieces/genesis.jpg"
     },
     {
       "title": "Heart's Surge",
@@ -396,7 +396,7 @@
         "Online"
       ],
       "link": "https://litbreak.com/hearts-surge/",
-      "cover": ""
+      "cover": "covers/pieces/hearts-surge.jpg"
     },
     {
       "title": "His Green Delight",
@@ -407,7 +407,7 @@
         "Online"
       ],
       "link": "https://bluedaisiesjournal.wixsite.com/bluedaisiesjournal",
-      "cover": ""
+      "cover": "covers/pieces/his-green-delight.jpg"
     },
     {
       "title": "How the Night Glows",
@@ -419,7 +419,7 @@
         "In print"
       ],
       "link": "https://minimag.press/gallery/minimag176%20first%20edition.pdf",
-      "cover": ""
+      "cover": "covers/pieces/how-the-night-glows.jpg"
     },
     {
       "title": "LothariOnline",
@@ -430,7 +430,7 @@
         "Online"
       ],
       "link": "https://somewords.boards.net/thread/91/alexei-raymond",
-      "cover": ""
+      "cover": "covers/pieces/lotharionline.jpg"
     },
     {
       "title": "The Pale and the Green",
@@ -441,7 +441,7 @@
         "Online"
       ],
       "link": "https://suburbanwitchcraft.com/issue10",
-      "cover": ""
+      "cover": "covers/pieces/the-pale-and-the-green.jpg"
     },
     {
       "title": "Witnesses",
@@ -452,7 +452,7 @@
         "Online"
       ],
       "link": "https://underbellypress.wixsite.com/home/issue-six",
-      "cover": ""
+      "cover": "covers/pieces/witnesses.jpg"
     },
     {
       "title": "Paradigm of the Tyrant",
@@ -498,7 +498,7 @@
         "Online"
       ],
       "link": "https://donotsubmit.net/father-frost-by-alexei-raymond/",
-      "cover": ""
+      "cover": "covers/pieces/father-frost.jpg"
     },
     {
       "title": "How It Ends",
@@ -520,7 +520,7 @@
         "Online"
       ],
       "link": "https://www.sublunaryreview.com/home/no-rabbit",
-      "cover": ""
+      "cover": "covers/pieces/no-rabbit.jpg"
     },
     {
       "title": "Of Lies and Frogs",
@@ -531,7 +531,7 @@
         "Online"
       ],
       "link": "https://plaguecircuspress.com/of-lies-and-frogs-by-alexei-raymond",
-      "cover": ""
+      "cover": "covers/pieces/of-lies-and-frogs.jpg"
     },
     {
       "title": "On the Nature of Sleep",
@@ -542,7 +542,7 @@
         "Online"
       ],
       "link": "https://bluedaisiesjournal.wixsite.com/bluedaisiesjournal",
-      "cover": ""
+      "cover": "covers/pieces/on-the-nature-of-sleep.jpg"
     },
     {
       "title": "Red, They Are Cherry Red",
@@ -553,7 +553,7 @@
         "Online"
       ],
       "link": "https://dodoeraser.org/2026/02/25/red-they-are-cherry-red/",
-      "cover": ""
+      "cover": "covers/pieces/red-they-are-cherry-red.jpg"
     },
     {
       "title": "Remediation",
@@ -564,7 +564,7 @@
         "In print"
       ],
       "link": "https://www.lulu.com/shop/mai-gooch-and-conor-hultman/loser-ii/paperback/product-zmn7542.html",
-      "cover": ""
+      "cover": "covers/pieces/remediation.jpg"
     },
     {
       "title": "Ember",
@@ -587,7 +587,7 @@
         "Online"
       ],
       "link": "https://theleaflinemag.wordpress.com/2026/06/26/a-loss-hard-won-poetry-by-alexei-raymond/",
-      "cover": ""
+      "cover": "covers/pieces/a-loss-hard-won.jpg"
     },
     {
       "title": "Desire, Discovered",
@@ -598,7 +598,7 @@
         "Online"
       ],
       "link": "https://chatloglit.com/entry009",
-      "cover": ""
+      "cover": "covers/pieces/desire-discovered.jpg"
     },
     {
       "title": "Mothhead",
@@ -609,7 +609,7 @@
         "Online"
       ],
       "link": "https://expatpress.com/mothhead-alexei-raymond",
-      "cover": ""
+      "cover": "covers/pieces/mothhead.jpg"
     },
     {
       "title": "Glassdom",
@@ -678,7 +678,7 @@
         "Online"
       ],
       "link": "https://www.partiallyshymagazine.com/issues/issue-5-daydreams-doldrums",
-      "cover": ""
+      "cover": "covers/pieces/under-street-sign-and-star.jpg"
     },
     {
       "title": "Waiting for Beloved",
@@ -689,7 +689,7 @@
         "Online"
       ],
       "link": "https://micromancemagazine.substack.com/p/waiting-for-beloved",
-      "cover": ""
+      "cover": "covers/pieces/waiting-for-beloved.jpg"
     },
     {
       "title": "Nazi",
@@ -723,7 +723,7 @@
         "In print"
       ],
       "link": "https://www.schoolcraftbooks.com/shop_product_detail.asp?catalog_group_id=MTY&catalog_group_name=TWFjZ3VmZmlu&catalog_id=52&catalog_name=VGhlIE1hY0d1ZmZpbg&pf_id=1737&product_name=VGhlIE1hY0d1ZmZpbiAtIFZvbC4gNDEsIE5vIDEgKE5vdmVtYmVyIDIwMjUp&type=3&target=shop_product_list.asp",
-      "cover": ""
+      "cover": "covers/pieces/whether-yossarian.jpg"
     }
   ],
   "interview": {

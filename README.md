@@ -47,13 +47,32 @@ Piece counts on the home page are computed automatically from `site-data.json`.
 
 ## Covers
 
-Put cover images in `public/covers/` and reference them in `site-data.json` without a leading slash:
+The site is designed to look finished even before cover photos exist — empty `cover` values render typographic placeholders. When you have photos, there are two ways to add them.
+
+### Automatic (recommended — no manual resizing)
+
+1. `npm install` once, to pull in `sharp` (used only by this script, not by the site itself).
+2. Drop raw photos, any size or format, into two folders at the repo root:
+   - `raw-covers/cycles/` — name each file after the cycle, e.g. `Portici.jpg` or `Fool's Gold.png`.
+   - `raw-covers/pieces/` — name each file after the exact piece title, e.g. `The Boxer.jpg`.
+3. Run:
+
+   ```bash
+   npm run covers
+   ```
+
+   This crops each photo to the right aspect ratio (4:5 for cycle tiles, 5:6 for piece cards), converts it to grayscale, resizes and compresses it, writes it into `public/covers/`, and fills in the matching `cover` field in `site-data.json` automatically. It prints a report of what matched and what didn't — rename and re-run for anything unmatched.
+4. Review the `site-data.json` diff, then `npm run build` to confirm everything renders, and commit.
+
+`raw-covers/` is gitignored — only the processed output in `public/covers/` gets committed.
+
+### Manual
+
+Put an already-sized image directly in `public/covers/` and reference it in `site-data.json` without a leading slash:
 
 ```json
 "cover": "covers/my-piece.jpg"
 ```
-
-The site is designed to look finished even before cover photos exist. Empty `cover` values render typographic placeholders.
 
 ## Deployment
 
