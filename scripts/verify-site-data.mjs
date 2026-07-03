@@ -1,7 +1,46 @@
 import fs from 'node:fs';
 
-const data = JSON.parse(fs.readFileSync(new URL('../site-data.json', import.meta.url), 'utf8'));
+const rawSiteData = fs.readFileSync(new URL('../site-data.json', import.meta.url), 'utf8').replace(/^\uFEFF/, '');
+const data = JSON.parse(rawSiteData);
 const errors = [];
+
+function collectStrings(value, path = 'site-data') {
+  const found = [];
+
+  if (typeof value === 'string') {
+    found.push([path, value]);
+    return found;
+  }
+
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => {
+      found.push(...collectStrings(item, `${path}[${index}]`));
+    });
+    return found;
+  }
+
+  if (value && typeof value === 'object') {
+    for (const [key, item] of Object.entries(value)) {
+      found.push(...collectStrings(item, `${path}.${key}`));
+    }
+  }
+
+  return found;
+}
+
+for (const [path, value] of collectStrings(data)) {
+  if (/\u00e2\u20ac|\u00c2/.test(value)) {
+    errors.push(`${path}: possible mojibake/encoding damage.`);
+  }
+}
+
+if (rawSiteData.includes('gnarlyr=')) {
+  errors.push('site-data.json: damaged URL found: gnarlyr=');
+}
+
+if (rawSiteData.includes('detail.aspcatalog')) {
+  errors.push('site-data.json: damaged URL found: detail.aspcatalog');
+}
 
 const cycleNames = new Set(data.cycles.map((cycle) => cycle.name));
 const cycleIds = new Set(data.cycles.map((cycle) => cycle.id));
