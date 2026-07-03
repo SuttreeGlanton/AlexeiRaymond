@@ -14,7 +14,7 @@ const cover = interview.cover ? assetPath(interview.cover) : '';
     <article class="interview-card">
       <div class="interview-media">
         {cover ? (
-          <img src={cover} alt={`${interview.title} image`} loading="lazy" />
+          <img src={cover} alt={interview.title} loading="lazy" />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{interview.publication}</span></div>
         )}

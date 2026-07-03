@@ -7,7 +7,11 @@ const homeHref = withBase('');
 const currentWithoutTrailing = currentPath.replace(/\/$/, '');
 const homeWithoutTrailing = homeHref.replace(/\/$/, '');
 const navItems = [
-  { label: 'Cycles', href: homeHref, active: currentWithoutTrailing === homeWithoutTrailing },
+  {
+    label: 'Cycles',
+    href: homeHref,
+    active: currentWithoutTrailing === homeWithoutTrailing || currentPath.startsWith(withBase('cycles/'))
+  },
   { label: 'About', href: withBase('about/'), active: currentPath.startsWith(withBase('about/')) },
   { label: 'Interview', href: withBase('interview/'), active: currentPath.startsWith(withBase('interview/')) }
 ];

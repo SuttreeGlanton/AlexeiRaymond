@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../lib/data';
+import { withBase } from '../lib/paths';
+---
+
+<BaseLayout title={`Page not found — ${site.author}`}>
+  <section class="page-shell page-hero text-page" aria-labelledby="notfound-title">
+    <div class="overline">404</div>
+    <h1 class="page-title" id="notfound-title">Not found</h1>
+    <div class="prose">
+      <p>This page has wandered off, or never was.</p>
+      <p><a href={withBase('')}>Return to the cycles</a>.</p>
+    </div>
+  </section>
+</BaseLayout>

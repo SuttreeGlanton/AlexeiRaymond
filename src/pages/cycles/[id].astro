@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PieceCard from '../../components/PieceCard.astro';
 import type { Cycle } from '../../lib/data';
-import { cycles, piecesForCycle, site } from '../../lib/data';
+import { cycles, isUpcoming, piecesForCycle, site } from '../../lib/data';
 
 export function getStaticPaths() {
   return cycles.map((cycle) => ({
@@ -16,7 +16,9 @@ interface Props {
 }
 
 const { cycle } = Astro.props;
-const cyclePieces = piecesForCycle(cycle.name);
+// Published pieces first, upcoming always at the bottom of the page.
+const allPieces = piecesForCycle(cycle.name);
+const cyclePieces = [...allPieces.filter((piece) => !isUpcoming(piece)), ...allPieces.filter(isUpcoming)];
 const countLabel = `${cyclePieces.length} ${cyclePieces.length === 1 ? 'piece' : 'pieces'}`;
 ---
 

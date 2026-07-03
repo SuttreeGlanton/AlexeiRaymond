@@ -23,6 +23,26 @@
   box-sizing: border-box;
 }
 
+/* Never leave a single word alone on the last line. */
+h1,
+h2,
+h3,
+.tile-title,
+.card-title,
+.placeholder span {
+  text-wrap: balance;
+}
+
+p,
+.section-note,
+.cycle-intro,
+.tile-blurb,
+.tile-mobile-blurb,
+.hero-kicker,
+.card-note {
+  text-wrap: pretty;
+}
+
 html {
   min-height: 100%;
   background: var(--bg);
@@ -105,7 +125,7 @@ img {
   align-items: center;
   gap: clamp(12px, 2.2vw, 28px);
   color: var(--text-soft);
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -146,7 +166,7 @@ img {
 .eyebrow,
 .overline {
   color: var(--muted);
-  font-size: 0.7rem;
+  font-size: 0.84rem;
   font-weight: 600;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -174,7 +194,7 @@ img {
 }
 
 .hero h1 {
-  margin-top: 16px;
+  margin-top: clamp(30px, 4.5vw, 52px);
   font-size: clamp(3.5rem, 13vw, 10.8rem);
   line-height: 0.88;
 }
@@ -210,7 +230,7 @@ img {
   max-width: 520px;
   margin: 0;
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 1.02rem;
   text-align: right;
 }
 
@@ -461,12 +481,23 @@ img {
 }
 
 .prose {
+  margin-top: clamp(24px, 3.5vw, 42px);
   color: var(--text-soft);
   font-size: clamp(1.05rem, 2vw, 1.24rem);
 }
 
 .prose p {
   margin: 0 0 1.25em;
+}
+
+.prose a {
+  border-bottom: 1px solid var(--border-strong);
+  color: var(--text);
+  transition: border-color 240ms ease;
+}
+
+.prose a:hover {
+  border-color: var(--text);
 }
 
 .social-block {

@@ -57,7 +57,7 @@ The site is designed to look finished even before cover photos exist. Empty `cov
 
 ## Deployment
 
-The site deploys to GitHub Pages through `.github/workflows/deploy.yml` using the official Astro GitHub Action.
+The site deploys to GitHub Pages through `.github/workflows/deploy.yml`, which builds with Node 22 (`actions/setup-node`) and publishes with `actions/upload-pages-artifact` and `actions/deploy-pages`.
 
 The project is configured as a GitHub Pages project site:
 
