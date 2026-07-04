@@ -1880,3 +1880,24 @@ img {
     margin-top: 12px;
   }
 }
+
+/* --- Mobile cycle carousel focused cover color --- */
+@media (max-width: 640px) {
+  .cycle-piece-carousel .piece-card {
+    transition: border-color 320ms ease, background 320ms ease, opacity 320ms ease;
+  }
+
+  .cycle-piece-carousel .piece-card.is-mobile-focus {
+    border-color: var(--border-strong);
+    background: var(--panel-lift);
+  }
+
+  .cycle-piece-carousel .piece-card.is-mobile-focus img {
+    filter: grayscale(0) brightness(0.96) contrast(1.04);
+    transform: scale(1.014);
+  }
+
+  .cycle-piece-carousel .piece-card.is-mobile-focus .card-media {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.055);
+  }
+}

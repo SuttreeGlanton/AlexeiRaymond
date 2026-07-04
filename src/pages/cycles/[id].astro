@@ -55,9 +55,72 @@ const otherCycles = cycles;
     </section>
 
     <section class="page-shell" aria-label={`${cycle.name} pieces`}>
-      <div class="piece-grid">
+      <div class="piece-grid cycle-piece-carousel" data-mobile-focus-carousel>
         {cyclePieces.map((piece) => <PieceCard piece={piece} />)}
       </div>
     </section>
   </div>
+
+  <script>
+    /* Mobile cycle carousel focused cover color. */
+    (() => {
+      const media = window.matchMedia('(max-width: 640px)');
+      const carousels = Array.from(document.querySelectorAll('[data-mobile-focus-carousel]'));
+
+      if (!carousels.length) return;
+
+      function updateCarousel(carousel) {
+        const cards = Array.from(carousel.querySelectorAll('.piece-card'));
+
+        if (!cards.length) return;
+
+        if (!media.matches) {
+          cards.forEach((card) => card.classList.remove('is-mobile-focus'));
+          return;
+        }
+
+        const carouselRect = carousel.getBoundingClientRect();
+        const carouselCenter = carouselRect.left + carouselRect.width / 2;
+
+        let closestCard = cards[0];
+        let closestDistance = Infinity;
+
+        cards.forEach((card) => {
+          const rect = card.getBoundingClientRect();
+          const cardCenter = rect.left + rect.width / 2;
+          const distance = Math.abs(cardCenter - carouselCenter);
+
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestCard = card;
+          }
+        });
+
+        cards.forEach((card) => {
+          card.classList.toggle('is-mobile-focus', card === closestCard);
+        });
+      }
+
+      carousels.forEach((carousel) => {
+        let frame = 0;
+
+        function scheduleUpdate() {
+          cancelAnimationFrame(frame);
+          frame = requestAnimationFrame(() => updateCarousel(carousel));
+        }
+
+        carousel.addEventListener('scroll', scheduleUpdate, { passive: true });
+        window.addEventListener('resize', scheduleUpdate);
+
+        if (media.addEventListener) {
+          media.addEventListener('change', scheduleUpdate);
+        } else if (media.addListener) {
+          media.addListener(scheduleUpdate);
+        }
+
+        scheduleUpdate();
+      });
+    })();
+  </script>
+
 </BaseLayout>
