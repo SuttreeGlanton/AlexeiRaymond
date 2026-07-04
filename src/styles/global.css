@@ -1178,14 +1178,16 @@ img {
 }
 
 .nav-glyph {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: 1em;
-  color: var(--muted);
+  color: var(--text-soft);
   font-family: var(--serif);
-  font-size: 1.05em;
-  line-height: 1;
-  text-align: center;
-  transform: translateY(-0.04em);
+  font-size: 1.32em;
+  line-height: 0;
+  /* Paint the glyph onto itself to thicken these thin dingbats. */
+  -webkit-text-stroke: 0.4px currentColor;
   transition: color 240ms ease;
 }
 
@@ -1504,4 +1506,63 @@ img {
     display: block;
     margin-right: 0;
   }
+}
+
+/* --- Genre plate: a quiet archive label on the cover --- */
+.genre-mark {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  border: 1px solid rgba(241, 239, 233, 0.22);
+  border-radius: var(--radius-chip, 999px);
+  background: rgba(8, 8, 8, 0.62);
+  backdrop-filter: blur(6px);
+  padding: 5px 9px 4px;
+  color: var(--text-soft);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-transform: uppercase;
+  transition: opacity 360ms ease;
+}
+
+/* The plate steps aside when the cover blooms into color on hover. */
+.piece-card:hover .genre-mark,
+.piece-card:focus-within .genre-mark {
+  opacity: 0.25;
+}
+
+/* Muted per-genre color-coding: text and backing stay monochrome, only the
+   hairline border carries the hue. */
+.genre-mark[data-genre='short-fiction'] { border-color: rgba(150, 92, 84, 0.9); }
+.genre-mark[data-genre='flash-fiction'] { border-color: rgba(104, 124, 150, 0.9); }
+.genre-mark[data-genre='poem']          { border-color: rgba(132, 110, 152, 0.9); }
+.genre-mark[data-genre='non-fiction']   { border-color: rgba(124, 134, 98, 0.9); }
+.genre-mark[data-genre='other']         { border-color: rgba(134, 128, 120, 0.9); }
+
+/* Date plate mirrors the genre plate on the opposite corner. */
+.date-mark {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  border: 1px solid rgba(241, 239, 233, 0.22);
+  border-radius: var(--radius-chip, 999px);
+  background: rgba(8, 8, 8, 0.62);
+  backdrop-filter: blur(6px);
+  padding: 5px 9px 4px;
+  color: var(--text-soft);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  transition: opacity 360ms ease;
+}
+
+.piece-card:hover .date-mark,
+.piece-card:focus-within .date-mark {
+  opacity: 0.25;
 }

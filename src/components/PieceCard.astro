@@ -1,7 +1,7 @@
 ---
 import TagList from './TagList.astro';
 import type { Piece } from '../lib/data';
-import { canLinkToPiece, formatMonthYear, isDefunct, isUpcoming } from '../lib/data';
+import { canLinkToPiece, formatShortDate, isDefunct, isUpcoming } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
 
 interface Props {
@@ -19,11 +19,22 @@ const accountLabel = piece.account?.label || 'Account';
 const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-defunct' : ''}`;
 
 const cycleLabel = showCycle ? `From the ${piece.cycle} cycle` : '';
-const dateLabel = upcoming ? '' : formatMonthYear(piece.date);
+// Date now rides as a compact plate on the cover, so it never wraps the meta line.
+const dateLabel = upcoming ? '' : formatShortDate(piece.date);
+
+// Genre lives as a quiet plate on the cover; short labels keep it small.
+const GENRE_SHORT: Record<string, string> = {
+  'Short fiction': 'Short fiction',
+  'Flash fiction': 'Flash',
+  'Poem': 'Poem',
+  'Non-fiction': 'Non-fiction',
+  'Other': 'Other'
+};
+const genreLabel = piece.genre ? (GENRE_SHORT[piece.genre] ?? piece.genre) : '';
+const genreSlug = piece.genre ? piece.genre.toLowerCase().replace(/[^a-z]+/g, '-') : '';
 const metaParts = [
   cycleLabel ? { text: cycleLabel } : null,
-  piece.publication ? { text: piece.publication, className: 'card-publication' } : null,
-  dateLabel ? { text: dateLabel } : null
+  piece.publication ? { text: piece.publication, className: 'card-publication' } : null
 ].filter(Boolean);
 ---
 
@@ -36,6 +47,8 @@ const metaParts = [
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
         )}
+        {genreLabel && <span class="genre-mark" data-genre={genreSlug}>{genreLabel}</span>}
+        {dateLabel && <span class="date-mark">{dateLabel}</span>}
         {piece.excerpt && (
           <div class="card-overlay" aria-hidden="true">
             <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
@@ -50,6 +63,7 @@ const metaParts = [
       ) : (
         <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
       )}
+      {genreLabel && <span class="genre-mark" data-genre={genreSlug}>{genreLabel}</span>}
       {piece.excerpt && (
         <div class="card-overlay" aria-hidden="true">
           <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
@@ -78,7 +92,7 @@ const metaParts = [
     {upcoming && <p class="coming-soon">Coming soon</p>}
     {piece.excerpt && <p class="card-mobile-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>}
     {piece.note && <p class="card-note">{piece.note}</p>}
-    <TagList tags={piece.tags} genre={piece.genre} />
+    <TagList tags={piece.tags} />
   </div>
   {piece.account && (
     <a class="account-strip" href={accountHref}>{accountLabel} &rarr;</a>

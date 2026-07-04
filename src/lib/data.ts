@@ -129,6 +129,15 @@ export function formatMonthYear(date: string | null): string {
   return `${MONTHS[parsed.getMonth()]} ${parsed.getFullYear()}`;
 }
 
+/** Compact date plate label, e.g. "APR 25" for a card corner. */
+export function formatShortDate(date: string | null): string {
+  const parsed = parseDate(date);
+  if (!parsed) return '';
+  const month = MONTHS[parsed.getMonth()].slice(0, 3).toUpperCase();
+  const year = String(parsed.getFullYear()).slice(-2);
+  return `${month} ${year}`;
+}
+
 /** Published pieces sorted newest first by full parsed date. */
 export function publishedNewestFirst(): Piece[] {
   return publishedPieces()
