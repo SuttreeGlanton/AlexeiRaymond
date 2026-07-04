@@ -1711,3 +1711,172 @@ img {
     order: 2;
   }
 }
+
+/* --- Selected Works mobile compact-card test --- */
+@media (max-width: 640px) {
+  .selected-piece-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    overflow-x: visible;
+    scroll-snap-type: none;
+    padding-bottom: clamp(54px, 11vw, 92px);
+  }
+
+  .selected-piece-grid .piece-card {
+    display: grid;
+    grid-template-columns: 86px minmax(0, 1fr);
+    flex: none;
+    min-height: 122px;
+    scroll-snap-align: none;
+  }
+
+  .selected-piece-grid .piece-card > .card-cover-link,
+  .selected-piece-grid .piece-card > .card-media {
+    grid-column: 1;
+    grid-row: 1;
+    display: block;
+    min-width: 0;
+  }
+
+  .selected-piece-grid .card-media {
+    width: 86px;
+    height: 100%;
+    min-height: 122px;
+    aspect-ratio: auto;
+    border-right: 1px solid var(--border);
+    border-bottom: 0;
+  }
+
+  .selected-piece-grid .card-media img,
+  .selected-piece-grid .card-media .placeholder {
+    height: 100%;
+  }
+
+  .selected-piece-grid .genre-mark {
+    top: 7px;
+    left: 7px;
+    right: auto;
+    max-width: calc(100% - 14px);
+    padding: 4px 5px 3px;
+    font-size: 0.48rem;
+    letter-spacing: 0.08em;
+  }
+
+  .selected-piece-grid .date-mark {
+    right: 7px;
+    bottom: 7px;
+    padding: 4px 5px 3px;
+    font-size: 0.48rem;
+    letter-spacing: 0.08em;
+  }
+
+  .selected-piece-grid .card-body {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    padding: 13px 13px 12px;
+  }
+
+  .selected-piece-grid .card-title {
+    font-size: clamp(1.18rem, 5.4vw, 1.55rem);
+    line-height: 1.02;
+  }
+
+  .selected-piece-grid .card-meta {
+    gap: 4px 6px;
+    margin-top: 8px;
+    font-size: 0.62rem;
+    line-height: 1.35;
+  }
+
+  .selected-piece-grid .coming-soon {
+    margin-top: 8px;
+    font-size: 0.55rem;
+    letter-spacing: 0.14em;
+  }
+
+  .selected-piece-grid .card-mobile-excerpt,
+  .selected-piece-grid .card-note {
+    display: none;
+  }
+
+  .selected-piece-grid .tags {
+    gap: 5px;
+    margin-top: 10px;
+  }
+
+  .selected-piece-grid .tag {
+    padding: 4px 5px 3px;
+    font-size: 0.48rem;
+    letter-spacing: 0.12em;
+  }
+
+  .selected-piece-grid .account-strip {
+    grid-column: 1 / -1;
+  }
+}
+
+/* --- Selected Works mobile compact-card refinement --- */
+@media (max-width: 640px) {
+  .selected-piece-grid .piece-card {
+    grid-template-columns: 112px minmax(0, 1fr);
+    min-height: 148px;
+  }
+
+  .selected-piece-grid .card-media {
+    width: 112px;
+    min-height: 148px;
+  }
+
+  .selected-piece-grid .genre-mark {
+    top: 8px;
+    left: 8px;
+    right: auto;
+    max-width: calc(100% - 16px);
+    padding: 4px 6px 3px;
+    font-size: 0.48rem;
+    letter-spacing: 0.07em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .selected-piece-grid .date-mark {
+    top: auto;
+    right: 8px;
+    bottom: 8px;
+    left: auto;
+    width: auto;
+    min-width: 0;
+    height: auto;
+    min-height: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 6px 3px;
+    border-radius: 5px;
+    font-size: 0.48rem;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    white-space: nowrap;
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+
+  .selected-piece-grid .card-body {
+    padding: 15px 15px 13px;
+  }
+
+  .selected-piece-grid .card-title {
+    font-size: clamp(1.28rem, 5.5vw, 1.68rem);
+  }
+
+  .selected-piece-grid .card-meta {
+    margin-top: 9px;
+    font-size: 0.65rem;
+  }
+
+  .selected-piece-grid .tags {
+    margin-top: 12px;
+  }
+}

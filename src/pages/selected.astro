@@ -14,7 +14,7 @@ const selected = featuredPieces();
     </section>
 
     {selected.length > 0 ? (
-      <section class="piece-grid" aria-label="Selected works">
+      <section class="piece-grid selected-piece-grid" aria-label="Selected works">
         {selected.map((piece) => (
           <PieceCard piece={piece} showCycle={true} />
         ))}
