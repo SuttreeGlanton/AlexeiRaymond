@@ -38,7 +38,7 @@ const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
       <h2 id="cycles-title">Cycles</h2>
       <p class="section-note">Published and forthcoming work, arranged by recurring cycle rather than chronology.</p>
     </div>
-    <div class="cycle-grid">
+    <div class="cycle-grid home-cycle-grid" data-home-cycle-focus>
       {cycles.map((cycle) => (
         <CycleTile cycle={cycle} />
       ))}
@@ -111,4 +111,63 @@ const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
       });
     }
   </script>
+
+  <script>
+    /* Homepage mobile cycle focus color. */
+    (() => {
+      const media = window.matchMedia('(max-width: 640px)');
+      const grid = document.querySelector('[data-home-cycle-focus]');
+
+      if (!grid) return;
+
+      const tiles = Array.from(grid.querySelectorAll('.tile'));
+      if (!tiles.length) return;
+
+      function updateFocus() {
+        if (!media.matches) {
+          tiles.forEach((tile) => tile.classList.remove('is-mobile-focus'));
+          return;
+        }
+
+        const viewportCenter = window.innerHeight / 2;
+        let closestTile = tiles[0];
+        let closestDistance = Infinity;
+
+        tiles.forEach((tile) => {
+          const rect = tile.getBoundingClientRect();
+          const tileCenter = rect.top + rect.height / 2;
+          const distance = Math.abs(tileCenter - viewportCenter);
+          const visible = rect.bottom > 0 && rect.top < window.innerHeight;
+
+          if (visible && distance < closestDistance) {
+            closestDistance = distance;
+            closestTile = tile;
+          }
+        });
+
+        tiles.forEach((tile) => {
+          tile.classList.toggle('is-mobile-focus', tile === closestTile);
+        });
+      }
+
+      let frame = 0;
+
+      function scheduleUpdate() {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(updateFocus);
+      }
+
+      window.addEventListener('scroll', scheduleUpdate, { passive: true });
+      window.addEventListener('resize', scheduleUpdate);
+
+      if (media.addEventListener) {
+        media.addEventListener('change', scheduleUpdate);
+      } else if (media.addListener) {
+        media.addListener(scheduleUpdate);
+      }
+
+      scheduleUpdate();
+    })();
+  </script>
+
 </BaseLayout>

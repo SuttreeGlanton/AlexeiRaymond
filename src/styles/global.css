@@ -2049,3 +2049,20 @@ img {
     line-height: 1;
   }
 }
+
+/* --- Homepage mobile cycle focus color --- */
+@media (max-width: 640px) {
+  .home-cycle-grid .tile.is-mobile-focus {
+    border-color: var(--border-strong);
+    background: var(--panel-lift);
+  }
+
+  .home-cycle-grid .tile.is-mobile-focus img {
+    filter: grayscale(0) brightness(0.96) contrast(1.04);
+    transform: scale(1.014);
+  }
+
+  .home-cycle-grid .tile.is-mobile-focus .tile-media {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.055);
+  }
+}
