@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PieceCard from '../components/PieceCard.astro';
+import { featuredPieces, site } from '../lib/data';
+
+const selected = featuredPieces();
+---
+
+<BaseLayout title={`Selected Works ? ${site.author}`} description="A selected variety from across the cycles.">
+  <div class="page-shell">
+    <section class="page-hero" aria-labelledby="selected-title">
+      <h1 class="page-title" id="selected-title">Selected Works</h1>
+      <p class="page-intro cycle-intro">A selected variety from across the cycles.</p>
+    </section>
+
+    {selected.length > 0 ? (
+      <section class="piece-grid" aria-label="Selected works">
+        {selected.map((piece) => (
+          <PieceCard piece={piece} showCycle={true} />
+        ))}
+      </section>
+    ) : (
+      <p class="cycle-intro">Selections are being chosen.</p>
+    )}
+  </div>
+</BaseLayout>

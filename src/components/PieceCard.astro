@@ -1,14 +1,15 @@
 ---
 import TagList from './TagList.astro';
 import type { Piece } from '../lib/data';
-import { canLinkToPiece, isDefunct, isUpcoming } from '../lib/data';
+import { canLinkToPiece, formatMonthYear, isDefunct, isUpcoming } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
 
 interface Props {
   piece: Piece;
+  showCycle?: boolean;
 }
 
-const { piece } = Astro.props;
+const { piece, showCycle = false } = Astro.props;
 const upcoming = isUpcoming(piece);
 const defunct = isDefunct(piece);
 const linked = canLinkToPiece(piece);
@@ -16,7 +17,14 @@ const cover = piece.cover ? assetPath(piece.cover) : '';
 const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : '';
 const accountLabel = piece.account?.label || 'Account';
 const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-defunct' : ''}`;
-const metaParts = [piece.publication, upcoming ? '' : piece.date].filter(Boolean);
+
+const cycleLabel = showCycle ? `From the ${piece.cycle} cycle` : '';
+const dateLabel = upcoming ? '' : formatMonthYear(piece.date);
+const metaParts = [
+  cycleLabel ? { text: cycleLabel } : null,
+  piece.publication ? { text: piece.publication, className: 'card-publication' } : null,
+  dateLabel ? { text: dateLabel } : null
+].filter(Boolean);
 ---
 
 <article class={className}>
@@ -30,7 +38,7 @@ const metaParts = [piece.publication, upcoming ? '' : piece.date].filter(Boolean
         )}
         {piece.excerpt && (
           <div class="card-overlay" aria-hidden="true">
-            <p class="card-excerpt">“{piece.excerpt}”</p>
+            <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
           </div>
         )}
       </div>
@@ -44,7 +52,7 @@ const metaParts = [piece.publication, upcoming ? '' : piece.date].filter(Boolean
       )}
       {piece.excerpt && (
         <div class="card-overlay" aria-hidden="true">
-          <p class="card-excerpt">“{piece.excerpt}”</p>
+          <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
         </div>
       )}
     </div>
@@ -57,9 +65,18 @@ const metaParts = [piece.publication, upcoming ? '' : piece.date].filter(Boolean
         piece.title
       )}
     </h2>
-    {metaParts.length > 0 && <div class="card-meta">{metaParts.join(' · ')}</div>}
+    {metaParts.length > 0 && (
+      <div class="card-meta">
+        {metaParts.map((part, index) => (
+          <>
+            {index > 0 && <span class="meta-separator" aria-hidden="true">&middot;</span>}
+            <span class={part.className}>{part.text}</span>
+          </>
+        ))}
+      </div>
+    )}
     {upcoming && <p class="coming-soon">Coming soon</p>}
-    {piece.excerpt && <p class="card-mobile-excerpt">“{piece.excerpt}”</p>}
+    {piece.excerpt && <p class="card-mobile-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>}
     {piece.note && <p class="card-note">{piece.note}</p>}
     <TagList tags={piece.tags} genre={piece.genre} />
   </div>

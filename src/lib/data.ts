@@ -23,9 +23,13 @@ export interface SiteMeta {
   author: string;
   bio: string;
   email: string;
+  /** Base64-encoded contact address; keeps the plain address out of public source. */
+  emailEncoded?: string;
   socials: Social[];
   headerCover?: string;
   socialCard?: string;
+  /** Ordered list of piece titles to feature on the Selected page. */
+  featured?: string[];
 }
 
 export interface Cycle {
@@ -72,9 +76,17 @@ export const pieces = siteData.pieces;
 export const interview = siteData.interview;
 
 export const cycleByName = new Map(cycles.map((cycle) => [cycle.name, cycle]));
+export const pieceByTitle = new Map(pieces.map((piece) => [piece.title, piece]));
 
 export function piecesForCycle(cycleName: string): Piece[] {
   return pieces.filter((piece) => piece.cycle === cycleName);
+}
+
+/** Featured pieces in the author's chosen order; unknown titles are skipped. */
+export function featuredPieces(): Piece[] {
+  return (site.featured ?? [])
+    .map((title) => pieceByTitle.get(title))
+    .filter((piece): piece is Piece => Boolean(piece));
 }
 
 export function isUpcoming(piece: Piece): boolean {

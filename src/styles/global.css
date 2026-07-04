@@ -1421,3 +1421,87 @@ img {
 .account-strip {
   border-radius: 0 0 var(--radius-card) var(--radius-card);
 }
+
+/* --- Privacy-safe contact reveal --- */
+.contact-line {
+  margin: 36px 0 0;
+}
+
+.contact-reveal {
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--border-strong);
+  background: none;
+  color: var(--text-soft);
+  font-family: var(--sans);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 240ms ease, color 240ms ease;
+}
+
+.contact-reveal:hover,
+.contact-reveal:focus-visible {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+.contact-email {
+  display: inline-block;
+  border-bottom: 1px solid var(--border-strong);
+  color: var(--text);
+  transition: border-color 240ms ease;
+}
+
+.contact-email:hover {
+  border-color: var(--text);
+}
+
+/* --- Card meta publication styling --- */
+.card-publication {
+  font-style: italic;
+}
+
+.meta-separator {
+  color: var(--dim);
+}
+
+/* --- About page compact contact area --- */
+.about-copy.page-hero {
+  padding-top: clamp(42px, 7vw, 82px);
+  padding-bottom: clamp(42px, 7vw, 82px);
+}
+
+.about-copy .page-title {
+  font-size: clamp(2.75rem, 8vw, 6.9rem);
+}
+
+.about-copy .prose {
+  margin-top: clamp(18px, 2.5vw, 28px);
+}
+
+.about-copy .prose p {
+  margin-bottom: 0;
+}
+
+.about-copy .social-block {
+  display: inline-block;
+  vertical-align: top;
+  margin-top: clamp(26px, 4vw, 34px);
+  margin-right: clamp(42px, 7vw, 78px);
+}
+
+.about-copy .social-block h2 {
+  font-size: clamp(1.55rem, 3.2vw, 2.45rem);
+}
+
+.about-copy .social-list,
+.about-copy .contact-line {
+  margin-top: 18px;
+}
+
+@media (max-width: 640px) {
+  .about-copy .social-block {
+    display: block;
+    margin-right: 0;
+  }
+}

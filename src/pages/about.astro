@@ -8,11 +8,15 @@ const bloodHoneyName = 'Blood+Honey';
 const [bioBefore, bioAfter] = site.bio.split(bloodHoneyName);
 const canLinkBloodHoney = typeof bioAfter === 'string';
 const aboutVisual = assetPath('page-visuals/about-portrait.jpg');
+
+// Prefer a pre-encoded address so the plain email does not appear in this
+// public repository. Fallback keeps the old plain-email path working.
+const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).toString('base64') : '');
 ---
 
 <BaseLayout title={`About — ${site.author}`}>
   <div class="page-shell page-with-visual about-with-visual">
-    <section class="page-hero text-page page-copy" aria-labelledby="about-title">
+    <section class="page-hero text-page page-copy about-copy" aria-labelledby="about-title">
       <h1 class="page-title" id="about-title">About</h1>
       <div class="prose">
         <p>
@@ -38,10 +42,35 @@ const aboutVisual = assetPath('page-visuals/about-portrait.jpg');
           </ul>
         </section>
       )}
+
+      {emailEncoded && (
+        <section class="social-block" aria-labelledby="contact-title">
+          <h2 id="contact-title">Contact</h2>
+          <p class="contact-line">
+            <button type="button" class="contact-reveal" data-email={emailEncoded}>Show email address</button>
+          </p>
+        </section>
+      )}
     </section>
 
     <aside class="page-visual about-visual" aria-hidden="true">
       <img src={aboutVisual} alt="" loading="lazy" />
     </aside>
   </div>
+
+  <script>
+    /* Reveal the email only on interaction, decoded from base64 so it is
+       never present as plain text in the page source. */
+    const revealButton = document.querySelector('.contact-reveal');
+    if (revealButton instanceof HTMLElement && revealButton.dataset.email) {
+      revealButton.addEventListener('click', () => {
+        const address = atob(revealButton.dataset.email);
+        const link = document.createElement('a');
+        link.href = 'mailto:' + address;
+        link.textContent = address;
+        link.className = 'contact-email';
+        revealButton.replaceWith(link);
+      }, { once: true });
+    }
+  </script>
 </BaseLayout>

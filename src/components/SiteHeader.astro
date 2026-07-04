@@ -15,6 +15,13 @@ const navItems = [
     active: currentWithoutTrailing === homeWithoutTrailing || currentPath.startsWith(withBase('cycles/'))
   },
   {
+    label: 'Selected',
+    glyph: '★',
+    href: withBase('selected/'),
+    active: currentPath.startsWith(withBase('selected/'))
+  },
+
+  {
     label: 'Chronology',
     glyph: '↓',
     href: withBase('chronology/'),

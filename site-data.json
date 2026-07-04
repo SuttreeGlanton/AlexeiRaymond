@@ -18,7 +18,20 @@
       }
     ],
     "headerCover": "covers/header.jpg",
-    "socialCard": "social-card.jpg"
+    "socialCard": "social-card.jpg",
+    "featured": [
+      "Mothhead",
+      "Clothesline Divorce",
+      "No, Rabbit",
+      "193 Thoughts of You",
+      "LothariOnline",
+      "6080",
+      "Death to Legions",
+      "Witnesses",
+      "Last Sight of Her",
+      "The Iron Crown"
+    ],
+    "emailEncoded": "dGFsdXRvbEBnbWFpbC5jb20="
   },
   "cycles": [
     {
@@ -67,7 +80,7 @@
   "pieces": [
     {
       "title": "193 Lines of Sight",
-      "cycle": "Mythbreaking",
+      "cycle": "Conscription",
       "publication": "The Bloomin' Onion",
       "date": "12/04/2025",
       "tags": [
@@ -80,7 +93,7 @@
     },
     {
       "title": "193 Thoughts of You",
-      "cycle": "Mythbreaking",
+      "cycle": "Conscription",
       "publication": "Neon Origami Magazine",
       "date": "15/07/2025",
       "tags": [
@@ -495,7 +508,7 @@
       ],
       "link": "https://somewords.boards.net/thread/91/alexei-raymond",
       "cover": "covers/pieces/lotharionline.jpg",
-      "excerpt": "Flowery language will not, cannot, hide the gnarled rot.",
+      "excerpt": "Flowery language will not, cannot, hide the gnarled rot.",
       "genre": "Short fiction"
     },
     {
@@ -593,14 +606,14 @@
     },
     {
       "title": "No, Rabbit",
-      "cycle": "Dreams",
+      "cycle": "Mythbreaking",
       "publication": "Sublunary Review",
       "date": "11/12/2025",
       "tags": [
         "Online"
       ],
       "link": "https://www.sublunaryreview.com/home/no-rabbit",
-      "cover": "covers/pieces/no-rabbit.jpg",
+      "cover": "covers/pieces/no rabbit.jpg",
       "excerpt": "The rabbit’s black marble of an eye looks at him.",
       "genre": "Short fiction"
     },
