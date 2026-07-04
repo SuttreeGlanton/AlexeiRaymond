@@ -21,8 +21,14 @@ const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
       <h1 id="home-title">{site.author}</h1>
     </div>
 
-    <button class="hero-sound-toggle" type="button" data-sound-toggle aria-pressed="false">
-      Sound: off
+    <button class="hero-sound-toggle" type="button" data-sound-toggle aria-pressed="false" aria-label="Sound off" title="Sound off">
+      <span class="hero-sound-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="M4.5 10v4h4l5 4V6l-5 4h-4z"></path>
+          <path class="hero-sound-wave" d="M16.5 8.5c1.4 1.4 1.4 4.6 0 6"></path>
+        </svg>
+      </span>
+      <span class="hero-sound-state">Off</span>
     </button>
     <audio data-ambient-audio src={assetPath('audio/ambient.mp3')} loop preload="none"></audio>
   </section>
@@ -77,25 +83,30 @@ const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
 
     if (soundButton && ambientAudio) {
       ambientAudio.volume = 0.32;
+      const soundState = soundButton.querySelector('.hero-sound-state');
+
+      function setSoundState(label, pressed) {
+        soundButton.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+        soundButton.setAttribute('aria-label', 'Sound ' + label.toLowerCase());
+        soundButton.setAttribute('title', 'Sound ' + label.toLowerCase());
+        if (soundState) soundState.textContent = label;
+      }
 
       soundButton.addEventListener('click', async () => {
         const isOn = soundButton.getAttribute('aria-pressed') === 'true';
 
         if (isOn) {
           ambientAudio.pause();
-          soundButton.setAttribute('aria-pressed', 'false');
-          soundButton.textContent = 'Sound: off';
+          setSoundState('Off', false);
           return;
         }
 
         try {
-          soundButton.textContent = 'Sound: loading';
+          setSoundState('...', false);
           await ambientAudio.play();
-          soundButton.setAttribute('aria-pressed', 'true');
-          soundButton.textContent = 'Sound: on';
+          setSoundState('On', true);
         } catch {
-          soundButton.setAttribute('aria-pressed', 'false');
-          soundButton.textContent = 'Sound unavailable';
+          setSoundState('Unavailable', false);
         }
       });
     }

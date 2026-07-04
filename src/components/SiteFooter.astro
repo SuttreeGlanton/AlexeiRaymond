@@ -1,11 +1,26 @@
 ---
 import { site } from '../lib/data';
+import { withBase } from '../lib/paths';
 
 const year = new Date().getFullYear();
+
+const footerLinks = [
+  { label: 'Cycles', href: withBase('') },
+  { label: 'Selected', href: withBase('selected/') },
+  { label: 'Chronology', href: withBase('chronology/') },
+  { label: 'About', href: withBase('about/') },
+  { label: 'Elsewhere', href: withBase('elsewhere/') }
+];
 ---
 
 <footer class="site-footer">
   <div class="page-shell footer-inner">
-    <span>© {year} {site.author}</span>
+    <span class="footer-mark">&copy; {year} {site.author}</span>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      {footerLinks.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
+      <a href="#">Back to top &uarr;</a>
+    </nav>
   </div>
 </footer>
