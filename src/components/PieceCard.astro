@@ -64,6 +64,7 @@ const metaParts = [
         <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
       )}
       {genreLabel && <span class="genre-mark" data-genre={genreSlug}>{genreLabel}</span>}
+      {dateLabel && <span class="date-mark">{dateLabel}</span>}
       {piece.excerpt && (
         <div class="card-overlay" aria-hidden="true">
           <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
