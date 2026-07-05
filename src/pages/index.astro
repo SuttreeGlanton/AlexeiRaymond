@@ -1,10 +1,22 @@
 ---
+import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CycleTile from '../components/CycleTile.astro';
 import { cycles, site } from '../lib/data';
 import { assetPath } from '../lib/paths';
+import { imageAsset } from '../lib/image-assets';
 
-const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
+const headerImage = imageAsset(site.headerCover);
+const optimizedHeader = headerImage
+  ? await getImage({
+      src: headerImage,
+      width: 1800,
+      format: 'webp',
+      quality: 82
+    })
+  : null;
+
+const headerCover = optimizedHeader?.src || (site.headerCover ? assetPath(site.headerCover) : '');
 ---
 
 <BaseLayout title={site.author}>
