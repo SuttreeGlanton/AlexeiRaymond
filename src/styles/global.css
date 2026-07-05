@@ -2192,3 +2192,23 @@ img {
 .archived-piece-page .prose p + p {
   text-indent: 1.6em;
 }
+
+/* --- Chronology year-group separators --- */
+.chron-year-sep {
+  list-style: none;
+  margin: 40px 0 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.chron-year-sep:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}

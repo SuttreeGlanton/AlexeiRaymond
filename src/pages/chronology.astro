@@ -49,21 +49,31 @@ function dateTimestamp(date) {
         </div>
 
         <ul class="chronology-list" data-published-list>
-          {published.map((piece) => (
-            <li class="chronology-item" data-date={dateTimestamp(piece.date)}>
-              <p class="bibliography-line">
-                <span aria-hidden="true">&ldquo;</span>{canLinkToPiece(piece) ? (
-                  <a href={piece.link} target="_blank" rel="noreferrer">{piece.title}</a>
-                ) : (
-                  piece.title
-                )}<span aria-hidden="true">&rdquo;</span>
-                {' '}first appeared in <span class="pub">{publicationLabel(piece)}</span>{formatMonthYear(piece.date) ? `, ${formatMonthYear(piece.date)}` : ''}.
-              </p>
-              <div class="chronology-tags">
-                <TagList tags={piece.tags} genre={piece.genre} />
-              </div>
-            </li>
-          ))}
+          {published.map((piece, index) => {
+            const year = parseDate(piece.date)?.getFullYear();
+            const previousYear = index > 0 ? parseDate(published[index - 1].date)?.getFullYear() : null;
+
+            return (
+              <>
+                {year && year !== previousYear && (
+                  <li class="chron-year-sep" aria-hidden="true">{year}</li>
+                )}
+                <li class="chronology-item" data-date={dateTimestamp(piece.date)}>
+                  <p class="bibliography-line">
+                    <span aria-hidden="true">&ldquo;</span>{canLinkToPiece(piece) ? (
+                      <a href={piece.link} target="_blank" rel="noreferrer">{piece.title}</a>
+                    ) : (
+                      piece.title
+                    )}<span aria-hidden="true">&rdquo;</span>
+                    {' '}first appeared in <span class="pub">{publicationLabel(piece)}</span>{formatMonthYear(piece.date) ? `, ${formatMonthYear(piece.date)}` : ''}.
+                  </p>
+                  <div class="chronology-tags">
+                    <TagList tags={piece.tags} genre={piece.genre} />
+                  </div>
+                </li>
+              </>
+            );
+          })}
         </ul>
       </section>
     </div>
@@ -90,7 +100,34 @@ function dateTimestamp(date) {
 
       for (const item of items) list.appendChild(item);
 
-      for (const button of buttons) {
+      renderYearMarkers();
+
+      function renderYearMarkers() {
+      if (!list) return;
+
+      list.querySelectorAll('.chron-year-sep').forEach((node) => node.remove());
+
+      const items = Array.from(list.querySelectorAll('.chronology-item'));
+      let lastYear = null;
+
+      for (const item of items) {
+        const timestamp = Number(item.dataset.date || 0);
+        const year = timestamp ? new Date(timestamp).getFullYear() : null;
+
+        if (year && year !== lastYear) {
+          const separator = document.createElement('li');
+          separator.className = 'chron-year-sep';
+          separator.setAttribute('aria-hidden', 'true');
+          separator.textContent = String(year);
+          list.insertBefore(separator, item);
+          lastYear = year;
+        }
+      }
+    }
+
+    renderYearMarkers();
+
+    for (const button of buttons) {
         const active = button.dataset.sortOrder === order;
         button.classList.toggle('is-active', active);
         button.setAttribute('aria-pressed', active ? 'true' : 'false');
