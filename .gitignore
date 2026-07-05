@@ -15,3 +15,5 @@ Thumbs.db
 
 # unprocessed source photos for scripts/process-covers.mjs
 raw-covers/
+
+source-docx/

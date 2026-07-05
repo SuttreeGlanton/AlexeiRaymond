@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { canLinkToPiece, cycleByName, pieces, site } from '../../lib/data';
+import { canLinkToPiece, cycleByName, isDefunct, pieces, site } from '../../lib/data';
 import { withBase } from '../../lib/paths';
 
 export async function getStaticPaths() {
@@ -14,6 +14,8 @@ const { Content } = await render(entry);
 
 const piece = pieces.find((p) => p.account?.slug === entry.id);
 const cycle = piece ? cycleByName.get(piece.cycle) : undefined;
+const archived = piece ? isDefunct(piece) : false;
+const overlineLabel = archived ? 'Archived piece' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
 const backHref = cycle ? withBase(`cycles/${cycle.id}/`) : withBase('');
 const backLabel = cycle ? cycle.name : 'All cycles';
@@ -21,9 +23,9 @@ const metaParts = piece ? [piece.title, piece.publication, piece.date].filter(Bo
 ---
 
 <BaseLayout title={`${title} — ${site.author}`}>
-  <article class="page-shell page-hero text-page" aria-labelledby="account-title">
+  <article class={`page-shell page-hero text-page${archived ? ' archived-piece-page' : ''}`} aria-labelledby="account-title">
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
-    <div class="overline">Account</div>
+    <div class="overline">{overlineLabel}</div>
     <h1 class="page-title account-title" id="account-title">{title}</h1>
     {metaParts.length > 0 && <p class="account-meta">{metaParts.join(' · ')}</p>}
     <div class="prose">

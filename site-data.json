@@ -365,7 +365,12 @@
       "link": "",
       "cover": "covers/pieces/god-underground.jpg",
       "excerpt": "The threat of death couldn’t break the builder’s bond to his creation.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "account": {
+        "slug": "god-underground",
+        "label": "Read on site",
+        "title": "God Underground"
+      }
     },
     {
       "title": "Minors' Militia",

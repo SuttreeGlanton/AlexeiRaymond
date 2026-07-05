@@ -2155,3 +2155,19 @@ img {
     object-position: 34% center;
   }
 }
+
+/* --- No card title hover underline --- */
+.card-title a,
+.card-title a:hover,
+.card-title a:focus-visible {
+  border-bottom-color: transparent;
+}
+
+/* --- Archived piece paragraph indentation --- */
+.archived-piece-page .prose p {
+  text-indent: 0;
+}
+
+.archived-piece-page .prose p + p {
+  text-indent: 1.6em;
+}
