@@ -68,8 +68,9 @@ function dateTimestamp(date) {
       </section>
     </div>
 
-    <aside class="page-visual chronology-visual" aria-hidden="true">
+    <aside class="page-visual chronology-visual" aria-hidden="true" data-chronology-visual>
       <img src={chronologyVisual} alt="" loading="lazy" />
+      <img class="chronology-color" src={chronologyVisual} alt="" loading="lazy" aria-hidden="true" />
     </aside>
   </div>
 
@@ -98,6 +99,36 @@ function dateTimestamp(date) {
 
     for (const button of buttons) {
       button.addEventListener('click', () => sortPublished(button.dataset.sortOrder || 'newest'));
+    }
+  </script>
+
+  <script>
+    /* Chronology photo color flashlight: desktop pointer only, reduced-motion safe. */
+    const visual = document.querySelector('[data-chronology-visual]');
+    const container = document.querySelector('.chronology-with-visual');
+    const canReveal =
+      visual &&
+      container &&
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (canReveal) {
+      let frame = 0;
+
+      function moveReveal(event) {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          const rect = visual.getBoundingClientRect();
+          visual.style.setProperty('--reveal-x', (event.clientX - rect.left) + 'px');
+          visual.style.setProperty('--reveal-y', (event.clientY - rect.top) + 'px');
+          visual.classList.add('is-color-reveal-active');
+        });
+      }
+
+      container.addEventListener('pointermove', moveReveal);
+      container.addEventListener('pointerleave', () => {
+        visual.classList.remove('is-color-reveal-active');
+      });
     }
   </script>
 </BaseLayout>
