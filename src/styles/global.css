@@ -2152,6 +2152,6 @@ img {
 @media (min-width: 641px) {
   .interview-media picture img,
   .interview-media img {
-    object-position: 39% center;
+    object-position: 34% center;
   }
 }
