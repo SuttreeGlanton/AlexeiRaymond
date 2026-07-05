@@ -2,7 +2,10 @@
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import '../styles/global.css';
-import { site } from '../lib/data';
+import '@fontsource-variable/inter';
+import '@fontsource/sorts-mill-goudy';
+import '@fontsource/sorts-mill-goudy/400-italic.css';
+import { site, socialHref } from '../lib/data';
 import { withBase } from '../lib/paths';
 
 interface Props {
@@ -17,6 +20,15 @@ const {
 const canonical = new URL(withBase(Astro.url.pathname.replace(import.meta.env.BASE_URL, '')), Astro.site).toString();
 const socialImage = site.socialCard ? new URL(withBase(site.socialCard), Astro.site).toString() : '';
 const twitterCard = socialImage ? 'summary_large_image' : 'summary';
+const siteUrl = new URL(withBase(''), Astro.site).toString();
+const sameAs = site.socials.map(socialHref).filter(Boolean);
+const personSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.author,
+  url: siteUrl,
+  sameAs
+});
 ---
 
 <!doctype html>
@@ -24,9 +36,11 @@ const twitterCard = socialImage ? 'summary_large_image' : 'summary';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+    <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.author} />
     <meta property="og:title" content={title} />
@@ -41,10 +55,7 @@ const twitterCard = socialImage ? 'summary_large_image' : 'summary';
         <meta name="twitter:image" content={socialImage} />
       </>
     )}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sorts+Mill+Goudy:ital@0;1&display=swap" rel="stylesheet" />
-    <title>{title}</title>
+<title>{title}</title>
   </head>
   <body>
     <SiteHeader />
