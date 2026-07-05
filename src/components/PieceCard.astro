@@ -2,7 +2,7 @@
 import TagList from './TagList.astro';
 import OptimizedImage from './OptimizedImage.astro';
 import type { Piece } from '../lib/data';
-import { canLinkToPiece, formatShortDate, isDefunct, isUpcoming } from '../lib/data';
+import { canLinkToPiece, formatShortDate, isDefunct, isUpcoming, publicationLabel } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
 import { imageAsset } from '../lib/image-assets';
 
@@ -44,7 +44,7 @@ const genreLabel = piece.genre ? (GENRE_SHORT[piece.genre] ?? piece.genre) : '';
 const genreSlug = piece.genre ? piece.genre.toLowerCase().replace(/[^a-z]+/g, '-') : '';
 const metaParts = [
   cycleLabel ? { text: cycleLabel } : null,
-  piece.publication ? { text: piece.publication, className: 'card-publication' } : null
+  piece.publication ? { text: publicationLabel(piece), className: 'card-publication' } : null
 ].filter(Boolean);
 ---
 

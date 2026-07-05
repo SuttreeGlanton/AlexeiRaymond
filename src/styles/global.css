@@ -2171,3 +2171,24 @@ img {
 .archived-piece-page .prose p + p {
   text-indent: 1.6em;
 }
+
+/* --- Archived piece reading measure --- */
+.archived-piece-page .prose {
+  max-width: 68ch;
+}
+
+.archived-piece-page .prose p:first-child {
+  margin-bottom: 1.45em;
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: clamp(1.18rem, 2.1vw, 1.38rem);
+  text-indent: 0;
+}
+
+.archived-piece-page .prose p {
+  text-indent: 0;
+}
+
+.archived-piece-page .prose p + p {
+  text-indent: 1.6em;
+}

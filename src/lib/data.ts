@@ -47,6 +47,7 @@ export interface Piece {
   tags: Tag[];
   link: string;
   cover: string;
+  issue?: string;
   note?: string;
   excerpt?: string;
   genre?: Genre;
@@ -127,6 +128,16 @@ export function formatMonthYear(date: string | null): string {
   const parsed = parseDate(date);
   if (!parsed) return '';
   return `${MONTHS[parsed.getMonth()]} ${parsed.getFullYear()}`;
+}
+
+export function formatLongDate(date: string | null): string {
+  const parsed = parseDate(date);
+  if (!parsed) return '';
+  return `${parsed.getDate()} ${MONTHS[parsed.getMonth()]} ${parsed.getFullYear()}`;
+}
+
+export function publicationLabel(piece: Pick<Piece, 'publication' | 'issue'>): string {
+  return [piece.publication, piece.issue].filter(Boolean).join(' ');
 }
 
 /** Compact date plate label, e.g. "APR 25" for a card corner. */

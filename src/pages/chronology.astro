@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TagList from '../components/TagList.astro';
-import { canLinkToPiece, formatMonthYear, parseDate, publishedNewestFirst, site, upcomingPieces } from '../lib/data';
+import { canLinkToPiece, formatMonthYear, parseDate, publishedNewestFirst, site, upcomingPieces, publicationLabel } from '../lib/data';
 import { assetPath } from '../lib/paths';
 
 const upcoming = upcomingPieces();
@@ -28,7 +28,7 @@ function dateTimestamp(date) {
             {upcoming.map((piece) => (
               <li class="chronology-item">
                 <p class="bibliography-line">
-                  <span aria-hidden="true">&ldquo;</span>{piece.title}<span aria-hidden="true">&rdquo;</span> is forthcoming in <span class="pub">{piece.publication}</span>.
+                  <span aria-hidden="true">&ldquo;</span>{piece.title}<span aria-hidden="true">&rdquo;</span> is forthcoming in <span class="pub">{publicationLabel(piece)}</span>.
                 </p>
                 <div class="chronology-tags">
                   <TagList tags={piece.tags} genre={piece.genre} />
@@ -57,7 +57,7 @@ function dateTimestamp(date) {
                 ) : (
                   piece.title
                 )}<span aria-hidden="true">&rdquo;</span>
-                {' '}first appeared in <span class="pub">{piece.publication}</span>{formatMonthYear(piece.date) ? `, ${formatMonthYear(piece.date)}` : ''}.
+                {' '}first appeared in <span class="pub">{publicationLabel(piece)}</span>{formatMonthYear(piece.date) ? `, ${formatMonthYear(piece.date)}` : ''}.
               </p>
               <div class="chronology-tags">
                 <TagList tags={piece.tags} genre={piece.genre} />
