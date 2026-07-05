@@ -2120,3 +2120,38 @@ img {
   width: 100%;
   height: 100%;
 }
+
+/* --- Interview tile color pop --- */
+.interview-media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.interview-media picture img,
+.interview-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: grayscale(1) brightness(0.88) contrast(1.08);
+  transform: scale(1);
+  transition: filter 520ms ease, transform 520ms ease;
+}
+
+.interview-card:hover .interview-media picture img,
+.interview-card:hover .interview-media img,
+.interview-card:focus-within .interview-media picture img,
+.interview-card:focus-within .interview-media img,
+.interview-card.is-mobile-focus .interview-media picture img,
+.interview-card.is-mobile-focus .interview-media img {
+  filter: grayscale(0) brightness(0.96) contrast(1.04);
+  transform: scale(1.014);
+}
+
+/* --- Interview desktop crop adjustment --- */
+@media (min-width: 641px) {
+  .interview-media picture img,
+  .interview-media img {
+    object-position: 39% center;
+  }
+}
