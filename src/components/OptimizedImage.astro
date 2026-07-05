@@ -1,0 +1,52 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { assetPath } from '../lib/paths';
+
+interface Props {
+  path?: string;
+  image?: ImageMetadata;
+  alt: string;
+  loading?: 'lazy' | 'eager';
+  decoding?: 'async' | 'sync' | 'auto';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  widths?: number[];
+  sizes?: string;
+}
+
+const {
+  path = '',
+  image,
+  alt,
+  loading = 'lazy',
+  decoding = 'async',
+  fetchpriority,
+  widths = [240, 360, 480, 720, 900, 1080],
+  sizes = '(max-width: 640px) 85vw, (max-width: 860px) 45vw, 360px'
+} = Astro.props;
+
+const fallbackSrc = path ? assetPath(path) : '';
+---
+
+{image ? (
+  <Picture
+    src={image}
+    formats={['avif', 'webp']}
+    widths={widths}
+    sizes={sizes}
+    alt={alt}
+    loading={loading}
+    decoding={decoding}
+    fetchpriority={fetchpriority}
+    fit="cover"
+    position="center"
+  />
+) : fallbackSrc ? (
+  <img
+    src={fallbackSrc}
+    alt={alt}
+    loading={loading}
+    decoding={decoding}
+    fetchpriority={fetchpriority}
+  />
+) : null}

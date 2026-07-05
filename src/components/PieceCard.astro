@@ -1,19 +1,29 @@
 ---
 import TagList from './TagList.astro';
+import OptimizedImage from './OptimizedImage.astro';
 import type { Piece } from '../lib/data';
 import { canLinkToPiece, formatShortDate, isDefunct, isUpcoming } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
+import { imageAsset } from '../lib/image-assets';
 
 interface Props {
   piece: Piece;
   showCycle?: boolean;
+  imageSizes?: string;
+  imageWidths?: number[];
 }
 
-const { piece, showCycle = false } = Astro.props;
+const {
+  piece,
+  showCycle = false,
+  imageSizes = '(max-width: 640px) 85vw, (max-width: 860px) 45vw, 360px',
+  imageWidths = [320, 480, 640, 800, 1080, 1400]
+} = Astro.props;
 const upcoming = isUpcoming(piece);
 const defunct = isDefunct(piece);
 const linked = canLinkToPiece(piece);
 const cover = piece.cover ? assetPath(piece.cover) : '';
+const coverImage = imageAsset(piece.cover);
 const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : '';
 const accountLabel = piece.account?.label || 'Account';
 const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-defunct' : ''}`;
@@ -43,7 +53,7 @@ const metaParts = [
     <a class="card-cover-link" href={piece.link} target="_blank" rel="noreferrer" tabindex="-1">
       <div class="card-media">
         {cover ? (
-          <img src={cover} alt={`${piece.title} cover`} loading="lazy" decoding="async" />
+          <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading="lazy" sizes={imageSizes} widths={imageWidths} />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
         )}
@@ -59,7 +69,7 @@ const metaParts = [
   ) : (
     <div class="card-media">
       {cover ? (
-        <img src={cover} alt={`${piece.title} cover`} loading="lazy" decoding="async" />
+        <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading="lazy" sizes={imageSizes} widths={imageWidths} />
       ) : (
         <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
       )}

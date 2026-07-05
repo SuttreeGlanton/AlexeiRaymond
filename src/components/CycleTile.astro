@@ -1,6 +1,8 @@
 ---
+import OptimizedImage from './OptimizedImage.astro';
 import type { Cycle } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
+import { imageAsset } from '../lib/image-assets';
 
 interface Props {
   cycle: Cycle;
@@ -8,13 +10,14 @@ interface Props {
 
 const { cycle } = Astro.props;
 const cover = cycle.cover ? assetPath(cycle.cover) : '';
+const coverImage = imageAsset(cycle.cover);
 const href = withBase(`cycles/${cycle.id}/`);
 ---
 
 <a class="tile" href={href}>
   <div class="tile-media">
     {cover ? (
-      <img src={cover} alt={`${cycle.name} cover`} loading="lazy" />
+      <OptimizedImage path={cycle.cover} image={coverImage} alt={`${cycle.name} cover`} loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1120px) 33vw, 25vw" widths={[320, 480, 640, 800, 1080, 1400]} />
     ) : (
       <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
     )}

@@ -16,7 +16,12 @@ const selected = featuredPieces();
     {selected.length > 0 ? (
       <section class="piece-grid selected-piece-grid" aria-label="Selected works">
         {selected.map((piece) => (
-          <PieceCard piece={piece} showCycle={true} />
+          <PieceCard
+            piece={piece}
+            showCycle={true}
+            imageSizes="(max-width: 640px) 112px, (max-width: 860px) 45vw, 360px"
+            imageWidths={[160, 224, 320, 480, 720, 900]}
+          />
         ))}
       </section>
     ) : (
