@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TagList from '../components/TagList.astro';
 import { canLinkToPiece, formatMonthYear, parseDate, publishedNewestFirst, site, upcomingPieces, publicationLabel } from '../lib/data';
-import { assetPath } from '../lib/paths';
+import { assetPath, withBase } from '../lib/paths';
 
 const upcoming = upcomingPieces();
 const published = publishedNewestFirst();
@@ -62,6 +62,8 @@ function dateTimestamp(date) {
                   <p class="bibliography-line">
                     <span aria-hidden="true">&ldquo;</span>{canLinkToPiece(piece) ? (
                       <a href={piece.link} target="_blank" rel="noreferrer">{piece.title}</a>
+                    ) : piece.account?.slug ? (
+                      <a href={withBase(`accounts/${piece.account.slug}/`)}>{piece.title}</a>
                     ) : (
                       piece.title
                     )}<span aria-hidden="true">&rdquo;</span>
