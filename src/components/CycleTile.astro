@@ -17,7 +17,7 @@ const href = withBase(`cycles/${cycle.id}/`);
 <a class="tile" href={href}>
   <div class="tile-media">
     {cover ? (
-      <OptimizedImage path={cycle.cover} image={coverImage} alt={`${cycle.name} cover`} loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1120px) 33vw, 25vw" widths={[320, 480, 640, 800, 1080, 1400]} />
+      <OptimizedImage path={cycle.cover} image={coverImage} alt={`${cycle.name} cover`} loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1120px) 33vw, 25vw" widths={[240, 400, 560, 760]} />
     ) : (
       <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
     )}

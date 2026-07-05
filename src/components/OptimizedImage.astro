@@ -21,7 +21,7 @@ const {
   loading = 'lazy',
   decoding = 'async',
   fetchpriority,
-  widths = [240, 360, 480, 720, 900, 1080],
+  widths = [240, 400, 560, 760],
   sizes = '(max-width: 640px) 85vw, (max-width: 860px) 45vw, 360px'
 } = Astro.props;
 
@@ -31,7 +31,7 @@ const fallbackSrc = path ? assetPath(path) : '';
 {image ? (
   <Picture
     src={image}
-    formats={['avif', 'webp']}
+    formats={['webp']}
     widths={widths}
     sizes={sizes}
     alt={alt}
