@@ -50,7 +50,7 @@ const metaParts = [
 
 <article class={className}>
   {linked ? (
-    <a class="card-cover-link" href={piece.link} target="_blank" rel="noreferrer" tabindex="-1">
+    <a class="card-cover-link" href={piece.link} target="_blank" rel="noopener noreferrer" tabindex="-1" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>
       <div class="card-media">
         {cover ? (
           <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading="lazy" sizes={imageSizes} widths={imageWidths} />
@@ -85,7 +85,7 @@ const metaParts = [
   <div class="card-body">
     <h2 class="card-title">
       {linked ? (
-        <a href={piece.link} target="_blank" rel="noreferrer">{piece.title}</a>
+        <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>{piece.title}</a>
       ) : (
         piece.title
       )}
@@ -106,6 +106,6 @@ const metaParts = [
     <TagList tags={piece.tags} />
   </div>
   {piece.account && (
-    <a class="account-strip" href={accountHref}>{accountLabel} &rarr;</a>
+    <a class="account-strip" href={accountHref} aria-label={`${accountLabel} for ${piece.title}`}>{accountLabel} &rarr;</a>
   )}
 </article>

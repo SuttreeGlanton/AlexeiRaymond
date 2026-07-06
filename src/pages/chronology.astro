@@ -61,7 +61,7 @@ function dateTimestamp(date) {
                 <li class="chronology-item" data-date={dateTimestamp(piece.date)}>
                   <p class="bibliography-line">
                     <span aria-hidden="true">&ldquo;</span>{canLinkToPiece(piece) ? (
-                      <a href={piece.link} target="_blank" rel="noreferrer">{piece.title}</a>
+                      <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>{piece.title}</a>
                     ) : piece.account?.slug ? (
                       <a href={withBase(`accounts/${piece.account.slug}/`)}>{piece.title}</a>
                     ) : (

@@ -22,7 +22,7 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
         <p>
           {canLinkBloodHoney ? (
             <>
-              {bioBefore}<a href={bloodHoneyUrl} target="_blank" rel="noreferrer">{bloodHoneyName}</a>{bioAfter}
+              {bioBefore}<a href={bloodHoneyUrl} target="_blank" rel="noopener noreferrer" aria-label={`${bloodHoneyName}. Opens in a new tab.`}>{bloodHoneyName}</a>{bioAfter}
             </>
           ) : (
             site.bio
@@ -37,7 +37,7 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
             {site.socials.map((social) => {
               const href = socialHref(social);
               const label = socialLabel(social);
-              return <li>{href ? <a href={href} target="_blank" rel="noreferrer">{label}</a> : <span>{label}</span>}</li>;
+              return <li>{href ? <a href={href} target="_blank" rel="noopener noreferrer" aria-label={`${label}. Opens in a new tab.`}>{label}</a> : <span>{label}</span>}</li>;
             })}
           </ul>
         </section>

@@ -154,7 +154,12 @@ if (!base) {
 }
 
 const htmlFiles = fs.existsSync(distDir)
-  ? walk(distDir).filter((file) => file.endsWith('.html'))
+  ? walk(distDir).filter((file) => {
+      const name = path.basename(file).toLowerCase();
+      if (!file.endsWith('.html')) return false;
+      if (/^google[a-z0-9]+\.html$/i.test(name)) return false;
+      return true;
+    })
   : [];
 
 if (!htmlFiles.length) {
@@ -167,6 +172,14 @@ const seenCanonicals = new Map();
 for (const file of htmlFiles) {
   const relative = normalizeSlash(path.relative(repoRoot, file));
   const html = fs.readFileSync(file, 'utf8');
+
+  const robots = getMeta(html, 'name', 'robots').toLowerCase();
+  const isMetaRefreshRedirect = /<meta\b[^>]*http-equiv=["']refresh["'][^>]*>/i.test(html);
+
+  // Redirect/alias stubs are intentionally not full metadata-bearing pages.
+  if (robots.includes('noindex') && isMetaRefreshRedirect) {
+    continue;
+  }
 
   const title = getTitle(html);
   const description = getMeta(html, 'name', 'description');
