@@ -2292,3 +2292,9 @@ img {
 .tile--disabled.is-mobile-focus .tile-overlay {
   opacity: 1;
 }
+
+.card-excerpt,
+.card-mobile-excerpt,
+.interview-excerpt {
+  white-space: pre-line;
+}
