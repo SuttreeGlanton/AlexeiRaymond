@@ -722,12 +722,11 @@
       "title": "Смерть моя",
       "cycle": "Dreams",
       "publication": "Gopnik Press",
-      "date": null,
+      "date": "06/07/2026",
       "tags": [
-        "Online",
-        "Upcoming"
+        "Online"
       ],
-      "link": "",
+      "link": "https://www.gopnikpress.com/AlexeiRaymond",
       "cover": "covers/pieces/smert-moya.jpg",
       "excerpt": "",
       "genre": "Poem"
