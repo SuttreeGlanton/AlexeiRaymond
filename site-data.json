@@ -80,8 +80,7 @@
       "id": "the-real",
       "name": "The Real",
       "blurb": "De liefde maeckte van den smidt eenen schilder.",
-      "cover": "covers/cycles/the-real.jpg",
-      "disabled": true
+      "cover": "covers/cycles/the-real.jpg"
     }
   ],
   "pieces": [
@@ -209,7 +208,7 @@
     },
     {
       "title": "She Loves Her Mother",
-      "cycle": "Mythbreaking",
+      "cycle": "The Real",
       "publication": "Lowlife Lit Press",
       "date": "16/04/2025",
       "tags": [
@@ -666,7 +665,7 @@
     },
     {
       "title": "On the Nature of Sleep",
-      "cycle": "Dreams",
+      "cycle": "The Real",
       "publication": "Blue Daisies Journal",
       "date": "15/01/2026",
       "tags": [
@@ -693,7 +692,7 @@
     },
     {
       "title": "Remediation",
-      "cycle": "Dreams",
+      "cycle": "The Real",
       "publication": "Loser",
       "date": "28/06/2026",
       "tags": [
@@ -707,7 +706,7 @@
     },
     {
       "title": "Ember",
-      "cycle": "Dreams",
+      "cycle": "The Real",
       "publication": "Some Words",
       "date": null,
       "tags": [
