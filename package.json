@@ -8,7 +8,6 @@
     "build": "astro build && npm run verify:data",
     "preview": "astro preview",
     "verify:data": "node scripts/verify-site-data.mjs",
-    "covers": "node scripts/process-covers.mjs",
     "audit:privacy": "node scripts/audit-privacy.mjs",
     "audit:privacy:deep": "node scripts/audit-privacy.mjs --deep",
     "check:links": "node scripts/check-links.mjs",
