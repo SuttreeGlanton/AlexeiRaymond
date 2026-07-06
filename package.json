@@ -8,7 +8,9 @@
     "build": "astro build && npm run verify:data",
     "preview": "astro preview",
     "verify:data": "node scripts/verify-site-data.mjs",
-    "covers": "node scripts/process-covers.mjs"
+    "covers": "node scripts/process-covers.mjs",
+    "audit:privacy": "node scripts/audit-privacy.mjs",
+    "audit:privacy:deep": "node scripts/audit-privacy.mjs --deep"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
