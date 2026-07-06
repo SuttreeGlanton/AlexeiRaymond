@@ -210,8 +210,13 @@
       ],
       "link": "",
       "cover": "covers/pieces/she-loves-her-mother.jpg",
-      "excerpt": "See the mother, age sixty-four. See her daughter, age thirty. They live alone…",
-      "genre": "Short fiction"
+      "excerpt": "See the mother, age sixty-four. See her daughter, age thirty.",
+      "genre": "Short fiction",
+      "account": {
+        "slug": "she-loves-her-mother",
+        "label": "Read on site",
+        "title": "She Loves Her Mother"
+      }
     },
     {
       "title": "Boxer",

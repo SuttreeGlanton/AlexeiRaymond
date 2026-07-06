@@ -2177,7 +2177,7 @@ img {
   max-width: 68ch;
 }
 
-.archived-piece-page .prose p:first-child {
+.archived-piece-page.has-epigraph .prose p:first-child {
   margin-bottom: 1.45em;
   color: var(--text);
   font-family: var(--serif);
@@ -2211,4 +2211,22 @@ img {
   margin-top: 0;
   padding-top: 0;
   border-top: 0;
+}
+
+/* --- Archived piece story serif --- */
+.archived-piece-page .prose {
+  font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.2rem, 2.1vw, 1.34rem);
+  line-height: 1.68;
+}
+
+.archived-piece-page .prose em,
+.archived-piece-page .prose i {
+  font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  font-style: italic;
+}
+
+.archived-piece-page.has-epigraph .prose p:first-child {
+  font-family: var(--serif);
+  line-height: 1.5;
 }

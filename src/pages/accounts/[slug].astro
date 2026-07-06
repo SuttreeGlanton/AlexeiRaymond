@@ -26,7 +26,7 @@ const archiveDescription = piece
 ---
 
 <BaseLayout title={`${title} \u2014 ${site.author}`} description={archiveDescription}>
-  <article class={`page-shell page-hero text-page${archived ? ' archived-piece-page' : ''}`} aria-labelledby="account-title">
+  <article class={`page-shell page-hero text-page${archived ? ' archived-piece-page' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
     <div class="overline">{overlineLabel}</div>
     <h1 class="page-title account-title" id="account-title">{title}</h1>
