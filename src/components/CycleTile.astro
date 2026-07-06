@@ -11,24 +11,48 @@ interface Props {
 const { cycle } = Astro.props;
 const cover = cycle.cover ? assetPath(cycle.cover) : '';
 const coverImage = imageAsset(cycle.cover);
-const href = withBase(`cycles/${cycle.id}/`);
+const disabled = Boolean(cycle.disabled);
+const href = disabled ? '' : withBase(`cycles/${cycle.id}/`);
 ---
 
-<a class="tile" href={href}>
-  <div class="tile-media">
-    {cover ? (
-      <OptimizedImage path={cycle.cover} image={coverImage} alt={`${cycle.name} cover`} loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1120px) 33vw, 25vw" widths={[240, 400, 560, 760]} />
-    ) : (
-      <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
-    )}
-    {cycle.blurb && (
-      <div class="tile-overlay" aria-hidden="true">
-        <p class="tile-blurb">{cycle.blurb}</p>
+{
+  disabled ? (
+    <div class="tile tile--disabled" aria-disabled="true">
+      <div class="tile-media">
+        {cover ? (
+          <OptimizedImage path={cycle.cover} image={coverImage} alt={`${cycle.name} cover`} loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1120px) 33vw, 25vw" widths={[240, 400, 560, 760]} />
+        ) : (
+          <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
+        )}
+        {cycle.blurb && (
+          <div class="tile-overlay" aria-hidden="true">
+            <p class="tile-blurb">{cycle.blurb}</p>
+          </div>
+        )}
       </div>
-    )}
-  </div>
-  <div class="tile-body">
-    <h3 class="tile-title">{cycle.name}</h3>
-    {cycle.blurb && <p class="tile-mobile-blurb">{cycle.blurb}</p>}
-  </div>
-</a>
+      <div class="tile-body">
+        <h3 class="tile-title">{cycle.name}</h3>
+        {cycle.blurb && <p class="tile-mobile-blurb">{cycle.blurb}</p>}
+      </div>
+    </div>
+  ) : (
+    <a class="tile" href={href}>
+      <div class="tile-media">
+        {cover ? (
+          <OptimizedImage path={cycle.cover} image={coverImage} alt={`${cycle.name} cover`} loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1120px) 33vw, 25vw" widths={[240, 400, 560, 760]} />
+        ) : (
+          <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
+        )}
+        {cycle.blurb && (
+          <div class="tile-overlay" aria-hidden="true">
+            <p class="tile-blurb">{cycle.blurb}</p>
+          </div>
+        )}
+      </div>
+      <div class="tile-body">
+        <h3 class="tile-title">{cycle.name}</h3>
+        {cycle.blurb && <p class="tile-mobile-blurb">{cycle.blurb}</p>}
+      </div>
+    </a>
+  )
+}

@@ -75,6 +75,13 @@
       "name": "Conscription",
       "blurb": "Hauntings of white and blue, of olive-drab, and refusal.",
       "cover": "covers/cycles/conscription.jpg"
+    },
+    {
+      "id": "the-real",
+      "name": "The Real",
+      "blurb": "De liefde maeckte van den smidt eenen schilder.",
+      "cover": "covers/cycles/the-real.jpg",
+      "disabled": true
     }
   ],
   "pieces": [

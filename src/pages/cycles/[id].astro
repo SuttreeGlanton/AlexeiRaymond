@@ -7,7 +7,7 @@ import { cycles, isUpcoming, parseDate, piecesForCycle, site } from '../../lib/d
 import { withBase } from '../../lib/paths';
 
 export function getStaticPaths() {
-  return cycles.map((cycle) => ({
+  return cycles.filter((cycle) => !cycle.disabled).map((cycle) => ({
     params: { id: cycle.id },
     props: { cycle }
   }));
@@ -29,7 +29,7 @@ const cyclePieces = piecesForCycle(cycle.name)
 
     return (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0);
   });
-const otherCycles = cycles;
+const otherCycles = cycles.filter((item) => !item.disabled);
 ---
 
 <BaseLayout title={`${cycle.name} — ${site.author}`} description={cycle.blurb || site.bio}>

@@ -2320,3 +2320,32 @@ img {
     transform: scale(1.012);
   }
 }
+
+/* --- Disabled cycle tile --- */
+.tile--disabled {
+  cursor: default;
+  opacity: 0.66;
+}
+
+.tile--disabled:hover {
+  opacity: 0.9;
+}
+
+.tile--disabled .tile-title {
+  color: var(--text-soft);
+}
+
+.tile--disabled .tile-media img {
+  filter: grayscale(1) brightness(0.52) contrast(1.05);
+}
+
+.tile--disabled:hover .tile-media img,
+.tile--disabled.is-mobile-focus .tile-media img {
+  filter: grayscale(0) brightness(0.96) contrast(1.04);
+  transform: scale(1.018);
+}
+
+.tile--disabled:hover .tile-overlay,
+.tile--disabled.is-mobile-focus .tile-overlay {
+  opacity: 1;
+}

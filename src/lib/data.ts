@@ -37,6 +37,7 @@ export interface Cycle {
   name: string;
   blurb: string;
   cover: string;
+  disabled?: boolean;
 }
 
 export interface Piece {
