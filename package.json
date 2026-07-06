@@ -13,7 +13,8 @@
     "audit:privacy:deep": "node scripts/audit-privacy.mjs --deep",
     "check:links": "node scripts/check-links.mjs",
     "check:links:strict": "node scripts/check-links.mjs --strict-external",
-    "check:links:local": "node scripts/check-links.mjs --skip-external"
+    "check:links:local": "node scripts/check-links.mjs --skip-external",
+    "check:metadata": "node scripts/check-metadata.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

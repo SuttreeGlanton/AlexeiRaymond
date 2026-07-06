@@ -49,6 +49,8 @@ const personSchema = JSON.stringify({
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content={twitterCard} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
     {socialImage && (
       <>
         <meta property="og:image" content={socialImage} />
@@ -57,7 +59,8 @@ const personSchema = JSON.stringify({
         <meta name="twitter:image" content={socialImage} />
       </>
     )}
-<title>{title}</title>
+    <script type="application/ld+json" set:html={personSchema}></script>
+    <title>{title}</title>
   </head>
   <body>
     <SiteHeader />
