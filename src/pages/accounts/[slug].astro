@@ -1,8 +1,10 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import OptimizedImage from '../../components/OptimizedImage.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatLongDate, publicationLabel } from '../../lib/data';
 import { withBase } from '../../lib/paths';
+import { imageAsset } from '../../lib/image-assets';
 
 export async function getStaticPaths() {
   const entries = await getCollection('accounts');
@@ -23,6 +25,8 @@ const metaParts = piece ? [publicationLabel(piece), formatLongDate(piece.date)].
 const archiveDescription = piece
   ? `${piece.title} by ${site.author}. Originally published in ${publicationLabel(piece)}${formatLongDate(piece.date) ? `, ${formatLongDate(piece.date)}` : ''}.`
   : site.bio;
+const archiveCoverImage = piece?.cover ? imageAsset(piece.cover) : undefined;
+const archiveCoverAlt = piece ? `${piece.title} cover` : '';
 ---
 
 <BaseLayout title={`${title} \u2014 ${site.author}`} description={archiveDescription}>
@@ -30,9 +34,24 @@ const archiveDescription = piece
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
     <div class="overline">{overlineLabel}</div>
     <h1 class="page-title account-title" id="account-title">{title}</h1>
-    {metaParts.length > 0 && <p class="account-meta">{metaParts.join(' · ')}</p>}
-    <div class="prose">
-      <Content />
+    {metaParts.length > 0 && <p class="account-meta">{metaParts.join(' \u00b7 ')}</p>}
+    <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
+      {piece?.cover && (
+        <aside class="archive-cover-card" aria-label={archiveCoverAlt} data-archive-mobile-focus>
+          <div class="archive-cover-media">
+            <OptimizedImage
+              path={piece.cover}
+              image={archiveCoverImage}
+              alt={archiveCoverAlt}
+              loading="eager"
+              sizes="(max-width: 640px) 76vw, (max-width: 860px) 42vw, 280px"
+            />
+          </div>
+        </aside>
+      )}
+      <div class="prose archive-prose">
+        <Content />
+      </div>
     </div>
     {piece && canLinkToPiece(piece) && (
       <p class="account-outbound">
@@ -40,6 +59,46 @@ const archiveDescription = piece
       </p>
     )}
   </article>
+
+  <script>
+    /* Archive cover mobile color focus. */
+    const archiveCover = document.querySelector('[data-archive-mobile-focus]');
+    const archiveCoverQuery = window.matchMedia('(max-width: 640px)');
+    let archiveCoverTicking = false;
+
+    function updateArchiveCoverFocus() {
+      archiveCoverTicking = false;
+
+      if (!(archiveCover instanceof HTMLElement)) return;
+
+      if (!archiveCoverQuery.matches) {
+        archiveCover.classList.remove('is-mobile-focus');
+        return;
+      }
+
+      const rect = archiveCover.getBoundingClientRect();
+      const focusLine = window.innerHeight * 0.52;
+      const isFocused = rect.top <= focusLine && rect.bottom >= focusLine;
+
+      archiveCover.classList.toggle('is-mobile-focus', isFocused);
+    }
+
+    function scheduleArchiveCoverFocus() {
+      if (archiveCoverTicking) return;
+      archiveCoverTicking = true;
+      requestAnimationFrame(updateArchiveCoverFocus);
+    }
+
+    if (archiveCover) {
+      updateArchiveCoverFocus();
+      window.addEventListener('scroll', scheduleArchiveCoverFocus, { passive: true });
+      window.addEventListener('resize', scheduleArchiveCoverFocus);
+
+      if (typeof archiveCoverQuery.addEventListener === 'function') {
+        archiveCoverQuery.addEventListener('change', scheduleArchiveCoverFocus);
+      }
+    }
+  </script>
 </BaseLayout>
 
 <style>
