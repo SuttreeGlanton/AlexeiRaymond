@@ -1059,112 +1059,55 @@ img {
   }
 }
 
-/* --- Final page visual crop tuning --- */
-/* Crop/edge tuning only.
-   Does not touch chronology sort controls. */
+/* --- Page visual crops --- */
+/* Consolidated from earlier visual nudge patches. Keep these rules stable:
+   they define the final crop, rounding, and atmospheric treatment for the
+   decorative About and Chronology side images. */
 
-.page-visual img {
-  border-radius: 18px;
-  clip-path: inset(0 round 18px);
+.page-visual {
+  border-radius: 24px;
+  overflow: hidden;
 }
 
-/* Chronology: show more of the right/lower part of the bar photo,
-   so the human figure and lower bar area come into the atmosphere. */
+.page-visual img {
+  border-radius: 24px;
+  clip-path: inset(0 round 24px);
+}
+
 .chronology-visual {
   top: clamp(62px, 7vw, 110px);
-  right: clamp(-210px, -11vw, -104px);
+  right: clamp(8px, 1.5vw, 28px);
   width: min(64vw, 1080px);
   height: min(74vh, 780px);
+  border-radius: 24px;
+  overflow: hidden;
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
 .chronology-visual img {
-  object-position: 62% 58%;
+  object-position: 95% 58%;
   opacity: 0.54;
   filter: grayscale(1) brightness(0.78) contrast(1.08);
+  border-radius: 24px;
+  clip-path: inset(0 round 24px);
 }
 
-/* About: bring the right edge of the portrait farther into frame,
-   and aim the crop at the upper-right where the face is. */
 .about-visual {
   top: clamp(78px, 8vw, 126px);
-  right: clamp(-62px, -4vw, -28px);
+  right: clamp(8px, 1.5vw, 28px);
   width: min(40vw, 640px);
   height: min(70vh, 700px);
+  border-radius: 24px;
+  overflow: hidden;
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
 .about-visual img {
   object-position: 100% 8%;
   opacity: 0.38;
   filter: grayscale(1) brightness(0.82) contrast(1.08);
-}
-
-
-
-/* --- Final nudge for page visuals --- */
-/* Last visual nudge only.
-   Does not touch chronology sort controls. */
-
-/* Round the actual visual container and the image itself.
-   The earlier radius was only hitting the image, while the visible clipping
-   was still coming from the container/mask area. */
-.page-visual {
-  border-radius: 22px;
-  overflow: hidden;
-}
-
-.page-visual img {
-  border-radius: 22px;
-  clip-path: inset(0 round 22px);
-}
-
-/* Chronology: push the crop further right and slightly preserve the lower bar/person area. */
-.chronology-visual img {
-  object-position: 78% 58%;
-}
-
-/* About: bring the portrait panel farther into view and aim at the far-right face area. */
-.about-visual {
-  right: clamp(-24px, -1.5vw, -8px);
-}
-
-.about-visual img {
-  object-position: 100% 8%;
-}
-
-
-
-/* --- Final right-edge page visual correction --- */
-/* Final crop/edge correction only.
-   Does not touch chronology sort controls. */
-
-/* Make the visual's own right edge visible, so border-radius can actually show.
-   Earlier it was pushed too far right, so the viewport/page cut made the right edge look square. */
-.chronology-visual {
-  right: clamp(8px, 1.5vw, 28px);
-  border-radius: 24px;
-  overflow: hidden;
-  -webkit-mask-image: none;
-  mask-image: none;
-}
-
-.chronology-visual img {
-  /* Move the crop ~15-20% further right without pushing the visual box offscreen. */
-  object-position: 95% 58%;
-  border-radius: 24px;
-  clip-path: inset(0 round 24px);
-}
-
-/* Same principle for About: keep the element edge roundable, then crop toward the face. */
-.about-visual {
-  right: clamp(8px, 1.5vw, 28px);
-  border-radius: 24px;
-  overflow: hidden;
-  -webkit-mask-image: none;
-  mask-image: none;
-}
-
-.about-visual img {
-  object-position: 100% 8%;
   border-radius: 24px;
   clip-path: inset(0 round 24px);
 }
