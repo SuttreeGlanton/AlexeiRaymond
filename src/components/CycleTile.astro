@@ -17,7 +17,7 @@ const href = disabled ? '' : withBase(`cycles/${cycle.id}/`);
 
 {
   disabled ? (
-    <div class="tile tile--disabled" aria-disabled="true">
+    <div class="tile tile--disabled" data-cycle-id={cycle.id} aria-disabled="true">
       <div class="tile-media">
         {cover ? (
           <OptimizedImage path={cycle.cover} image={coverImage} alt={`${cycle.name} cover`} loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1120px) 33vw, 25vw" widths={[240, 400, 560, 760]} />
@@ -36,7 +36,7 @@ const href = disabled ? '' : withBase(`cycles/${cycle.id}/`);
       </div>
     </div>
   ) : (
-    <a class="tile" href={href}>
+    <a class="tile" data-cycle-id={cycle.id} href={href}>
       <div class="tile-media">
         {cover ? (
           <OptimizedImage path={cycle.cover} image={coverImage} alt={`${cycle.name} cover`} loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1120px) 33vw, 25vw" widths={[240, 400, 560, 760]} />

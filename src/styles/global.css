@@ -2298,3 +2298,40 @@ img {
 .interview-excerpt {
   white-space: pre-line;
 }
+
+
+/* --- Mobile homepage cycle order --- */
+
+@media (max-width: 640px) {
+  .home-cycle-grid > .tile[data-cycle-id='portici'] {
+    order: 1;
+  }
+
+  .home-cycle-grid > .tile[data-cycle-id='the-real'] {
+    order: 2;
+  }
+
+  .home-cycle-grid > .tile[data-cycle-id='dreams'] {
+    order: 3;
+  }
+
+  .home-cycle-grid > .tile[data-cycle-id='mythbreaking'] {
+    order: 4;
+  }
+
+  .home-cycle-grid > .tile[data-cycle-id='fools-gold'] {
+    order: 5;
+  }
+
+  .home-cycle-grid > .tile[data-cycle-id='valentines-star'] {
+    order: 6;
+  }
+
+  .home-cycle-grid > .tile[data-cycle-id='mythmaking'] {
+    order: 7;
+  }
+
+  .home-cycle-grid > .tile[data-cycle-id='conscription'] {
+    order: 8;
+  }
+}
