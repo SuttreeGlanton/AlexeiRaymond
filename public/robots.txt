@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://suttreeglanton.github.io/AlexeiRaymond/sitemap-index.xml

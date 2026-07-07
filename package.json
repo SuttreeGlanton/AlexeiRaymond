@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run clean && astro build && npm run verify:data",
+    "build": "npm run clean && astro build && npm run fix:sitemap && npm run verify:data",
     "preview": "astro preview",
     "verify:data": "node scripts/verify-site-data.mjs",
     "audit:privacy": "node scripts/audit-privacy.mjs",
@@ -14,7 +14,8 @@
     "check:links:strict": "node scripts/check-links.mjs --strict-external",
     "check:links:local": "node scripts/check-links.mjs --skip-external",
     "check:metadata": "node scripts/check-metadata.mjs",
-    "clean": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\""
+    "clean": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\"",
+    "fix:sitemap": "node scripts/fix-sitemap.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
