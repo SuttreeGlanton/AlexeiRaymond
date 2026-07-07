@@ -719,6 +719,20 @@
       "genre": "Short fiction"
     },
     {
+      "title": "Zagagulyn",
+      "cycle": "The Real",
+      "publication": "Guestbook",
+      "date": null,
+      "tags": [
+        "In print",
+        "Upcoming"
+      ],
+      "link": "",
+      "cover": "covers/pieces/zagagulyn.jpg",
+      "excerpt": "His rough black hair stands on end, giving him a mean, underworldly look.",
+      "genre": "Short fiction"
+    },
+    {
       "title": "Смерть моя",
       "cycle": "Dreams",
       "publication": "Gopnik Press",
