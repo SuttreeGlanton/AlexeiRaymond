@@ -65,6 +65,10 @@ function ensureRoute(label, route, knownRoutes) {
   if (clean === '/') return;
   if (knownRoutes.has(clean)) return;
 
+  // Some source calls use withBase('cycles/') as a route-prefix check,
+  // not as a rendered link. Treat known route namespaces as valid prefixes.
+  if ([...knownRoutes].some((knownRoute) => knownRoute.startsWith(clean))) return;
+
   addError(`${label}: missing internal route "${route}"`);
 }
 
@@ -115,7 +119,13 @@ function collectSourceLinks() {
 
     const withBaseMatches = text.matchAll(/withBase\(\s*['"`]([^'"`]*)['"`]\s*\)/g);
     for (const match of withBaseMatches) {
-      withBase.push({ value: match[1], file });
+      const value = match[1];
+
+      // Dynamic routes such as cycles/${cycle.id}/ are validated through
+      // site-data-derived known routes, not as literal source strings.
+      if (value.includes('${')) continue;
+
+      withBase.push({ value, file });
     }
 
     const hrefMatches = text.matchAll(/\bhref\s*=\s*['"`]([^'"`]*)['"`]/g);
@@ -283,7 +293,11 @@ for (const item of sourceLinks.withBase) {
   if (!clean) continue;
 
   if (isLikelyAsset(clean)) {
-    const assetRoots = clean.startsWith('covers/') ? ['src/assets', 'public'] : ['public', 'src/assets'];
+    const assetRoots = clean === 'sitemap-index.xml'
+        ? ['dist', 'public', 'src/assets']
+        : clean.startsWith('covers/')
+          ? ['src/assets', 'public']
+          : ['public', 'src/assets'];
     ensureAsset(`withBase asset in ${item.file}`, clean, assetRoots);
   } else {
     ensureRoute(`withBase route in ${item.file}`, clean, knownRoutes);
