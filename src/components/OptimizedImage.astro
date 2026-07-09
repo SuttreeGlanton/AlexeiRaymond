@@ -33,6 +33,7 @@ const fallbackSrc = path ? assetPath(path) : '';
     src={image}
     formats={['webp']}
     widths={widths}
+    width={Math.max(...widths)}
     sizes={sizes}
     alt={alt}
     loading={loading}
