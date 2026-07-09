@@ -95,7 +95,11 @@
       "link": "https://www.thebloominonion.com/193-lines-of-sight-alexei-raymond",
       "cover": "covers/pieces/193-lines-of-sight.jpg",
       "excerpt": "High and higher the translucent turns dim darker then void-black,",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "cycles": [
+        "Conscription",
+        "Mythbreaking"
+      ]
     },
     {
       "title": "193 Thoughts of You",
@@ -109,7 +113,11 @@
       "cover": "covers/pieces/193-thoughts-of-you.jpg",
       "excerpt": "Hello, Ms. Tom Latin.",
       "genre": "Short fiction",
-      "issue": "#8"
+      "issue": "#8",
+      "cycles": [
+        "Conscription",
+        "Mythbreaking"
+      ]
     },
     {
       "title": "Alpha",
@@ -164,7 +172,11 @@
       "cover": "covers/pieces/deathwish.jpg",
       "excerpt": "Never imagined strangling or killing her.",
       "genre": "Short fiction",
-      "issue": "II anthology"
+      "issue": "II anthology",
+      "cycles": [
+        "Mythbreaking",
+        "The Real"
+      ]
     },
     {
       "title": "From Home",
@@ -204,7 +216,11 @@
       "link": "https://www.bloodhoneylit.com/fiction/of-lips-and-war",
       "cover": "covers/pieces/of-lips-and-war.jpg",
       "excerpt": "Break. Gasp. Now again.",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "cycles": [
+        "Mythbreaking",
+        "Conscription"
+      ]
     },
     {
       "title": "She Loves Her Mother",
@@ -345,7 +361,11 @@
       "link": "https://eunoiareview.wordpress.com/2025/07/26/blackbird/",
       "cover": "covers/pieces/blackbird.jpg",
       "excerpt": "Brass and gold dominate as rich red vitreous enamel announces itself here and there as stars and flags.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "cycles": [
+        "Mythmaking",
+        "Conscription"
+      ]
     },
     {
       "title": "Clothesline Divorce",
@@ -391,7 +411,11 @@
         "label": "Read on site",
         "title": "God Underground"
       },
-      "issue": "#2"
+      "issue": "#2",
+      "cycles": [
+        "Mythmaking",
+        "Conscription"
+      ]
     },
     {
       "title": "Minors' Militia",
@@ -404,7 +428,11 @@
       "link": "https://pixelatedshroud.wordpress.com/2025/06/12/minors-militia-alexei-raymond/",
       "cover": "covers/pieces/minors-militia.jpg",
       "excerpt": "This afternoon will culminate in an ecstasy of violence.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "cycles": [
+        "Mythmaking",
+        "Conscription"
+      ]
     },
     {
       "title": "At the Window",
@@ -485,7 +513,11 @@
       "link": "https://www.discretionarylove.com/genesis/",
       "cover": "covers/pieces/genesis.jpg",
       "excerpt": "By the web he thought of no longer—by unrequited wings that bore him to the defining moment",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "cycles": [
+        "Fool's Gold",
+        "Valentine's Star"
+      ]
     },
     {
       "title": "Heart's Surge",
@@ -554,7 +586,11 @@
       "cover": "covers/pieces/the-pale-and-the-green.jpg",
       "excerpt": "Why were you up so late last night?",
       "genre": "Short fiction",
-      "issue": "#10"
+      "issue": "#10",
+      "cycles": [
+        "Fool's Gold",
+        "Mythbreaking"
+      ]
     },
     {
       "title": "Witnesses",
@@ -648,7 +684,11 @@
       "link": "https://www.sublunaryreview.com/home/no-rabbit",
       "cover": "covers/pieces/no rabbit.jpg",
       "excerpt": "The rabbit’s black marble of an eye looks at him.",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "cycles": [
+        "Mythbreaking",
+        "Mythmaking"
+      ]
     },
     {
       "title": "Of Lies and Frogs",

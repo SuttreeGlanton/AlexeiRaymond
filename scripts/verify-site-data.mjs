@@ -264,10 +264,36 @@ if (Array.isArray(data.pieces)) {
       pieceTitles.add(piece.title);
     }
 
-    if (!cycleNames.has(piece.cycle)) {
-      addError(`${label}: cycle "${piece.cycle}" does not match any cycle name.`);
-    } else {
-      totalByCycle.set(piece.cycle, (totalByCycle.get(piece.cycle) || 0) + 1);
+    const membership = Array.isArray(piece.cycles) ? piece.cycles : [piece.cycle];
+
+    if ('cycles' in piece && !Array.isArray(piece.cycles)) {
+      addError(`${label}.cycles: must be an array when present.`);
+    }
+
+    if (Array.isArray(piece.cycles) && piece.cycle && !piece.cycles.includes(piece.cycle)) {
+      addError(`${label}.cycles: must include primary cycle "${piece.cycle}".`);
+    }
+
+    const seenPieceCycles = new Set();
+
+    for (const cycleName of membership) {
+      if (typeof cycleName !== 'string' || !cycleName.trim()) {
+        addError(`${label}.cycles: cycle names must be non-empty strings.`);
+        continue;
+      }
+
+      if (seenPieceCycles.has(cycleName)) {
+        addError(`${label}.cycles: duplicate cycle "${cycleName}".`);
+        continue;
+      }
+
+      seenPieceCycles.add(cycleName);
+
+      if (!cycleNames.has(cycleName)) {
+        addError(`${label}: cycle "${cycleName}" does not match any cycle name.`);
+      } else {
+        totalByCycle.set(cycleName, (totalByCycle.get(cycleName) || 0) + 1);
+      }
     }
 
     if (!Array.isArray(piece.tags)) {
@@ -397,7 +423,7 @@ if (isPlainObject(data.interview)) {
 }
 
 const assignedPieceCount = [...totalByCycle.values()].reduce((sum, count) => sum + count, 0);
-if (assignedPieceCount !== (Array.isArray(data.pieces) ? data.pieces.length : 0)) {
+if (assignedPieceCount < (Array.isArray(data.pieces) ? data.pieces.length : 0)) {
   addError('Every piece must appear on exactly one valid cycle page.');
 }
 

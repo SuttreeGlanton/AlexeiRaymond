@@ -43,6 +43,8 @@ export interface Cycle {
 export interface Piece {
   title: string;
   cycle: string;
+  /** Full cycle membership. When omitted, the primary cycle is the only cycle. */
+  cycles?: string[];
   publication: string;
   date: string | null;
   tags: Tag[];
@@ -80,8 +82,12 @@ export const interview = siteData.interview;
 export const cycleByName = new Map(cycles.map((cycle) => [cycle.name, cycle]));
 export const pieceByTitle = new Map(pieces.map((piece) => [piece.title, piece]));
 
+export function cycleNamesForPiece(piece: Piece): string[] {
+  return [...new Set([piece.cycle, ...(piece.cycles ?? [])].filter(Boolean))];
+}
+
 export function piecesForCycle(cycleName: string): Piece[] {
-  return pieces.filter((piece) => piece.cycle === cycleName);
+  return pieces.filter((piece) => cycleNamesForPiece(piece).includes(cycleName));
 }
 
 /** Featured pieces in the author's chosen order; unknown titles are skipped. */
