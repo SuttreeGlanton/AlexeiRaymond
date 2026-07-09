@@ -2156,6 +2156,15 @@ img {
   border-top: 0;
 }
 
+/* --- Cycle page epigraph blurbs --- */
+.cycle-shell .cycle-intro {
+  color: var(--text);
+  font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.2rem, 2.1vw, 1.34rem);
+  font-style: italic;
+  line-height: 1.55;
+}
+
 /* --- Archived piece story serif --- */
 .archived-piece-page .prose {
   font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
