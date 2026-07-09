@@ -1212,6 +1212,103 @@ img {
 }
 
 
+
+/* --- Desktop cycle hover menu --- */
+.nav-cycle-menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-cycle-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 45;
+  display: grid;
+  min-width: 230px;
+  gap: 2px;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  padding: 10px;
+  background: rgba(10, 10, 10, 0.82);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(18px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.nav-cycle-panel::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -13px;
+  height: 13px;
+}
+
+.nav-cycle-menu:hover .nav-cycle-panel,
+.nav-cycle-menu:focus-within .nav-cycle-panel {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.nav-cycle-panel a {
+  display: block;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  padding: 8px 10px 7px;
+  color: var(--text-soft);
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.nav-cycle-panel a:hover,
+.nav-cycle-panel a:focus-visible,
+.nav-cycle-panel a[aria-current='page'] {
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.055);
+  color: var(--text);
+}
+
+@media (max-width: 640px) {
+  .nav-cycle-panel {
+    display: none;
+  }
+}
+
+/* --- Chronology cycle links --- */
+.chronology-cycle-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 8px;
+  margin-top: 8px;
+  color: var(--dim);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.chronology-cycle-links a {
+  border-bottom: 1px solid transparent;
+  color: var(--muted);
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.chronology-cycle-links a:hover,
+.chronology-cycle-links a:focus-visible {
+  border-color: var(--border-strong);
+  color: var(--text-soft);
+}
+
 /* --- Cycle page switcher --- */
 
 .cycle-switcher {
@@ -2362,4 +2459,61 @@ img {
 .hero-start:focus-visible {
   color: var(--text-soft);
   border-bottom-color: var(--border-strong);
+}
+
+
+/* --- Mobile hero color and CTA tightening --- */
+@media (max-width: 640px) {
+  .hero-backdrop--mono {
+    display: none;
+  }
+
+  .hero-color-reveal {
+    display: block;
+    opacity: 1;
+    filter: brightness(0.82) contrast(1.04) saturate(1.14);
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .hero.is-color-reveal-active .hero-color-reveal {
+    opacity: 1;
+  }
+
+  .hero-start {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    white-space: nowrap;
+    font-size: clamp(0.52rem, 2.35vw, 0.62rem);
+    letter-spacing: 0.08em;
+  }
+}
+
+
+
+
+/* --- Mobile hero readability over color photo --- */
+@media (max-width: 640px) {
+  .hero-scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(10, 10, 10, 0.72) 0%,
+      rgba(10, 10, 10, 0.46) 42%,
+      rgba(10, 10, 10, 0.58) 72%,
+      var(--bg) 100%
+    );
+  }
+
+  .hero-kicker {
+    color: rgba(241, 239, 233, 0.96);
+  }
+}
+
+
+/* --- Mobile homepage cover crop --- */
+@media (max-width: 640px) {
+  .hero-backdrop {
+    object-position: 64% center;
+  }
 }

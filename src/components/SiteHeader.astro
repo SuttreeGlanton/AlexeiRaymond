@@ -1,11 +1,17 @@
 ---
-import { site } from '../lib/data';
+import { cycles, site } from '../lib/data';
 import { withBase } from '../lib/paths';
 
 const currentPath = Astro.url.pathname;
 const homeHref = withBase('');
 const currentWithoutTrailing = currentPath.replace(/\/$/, '');
 const homeWithoutTrailing = homeHref.replace(/\/$/, '');
+
+const cycleNavItems = cycles.filter((cycle) => !cycle.disabled).map((cycle) => ({
+  label: cycle.name,
+  href: withBase(`cycles/${cycle.id}/`),
+  active: currentPath.startsWith(withBase(`cycles/${cycle.id}/`))
+}));
 
 const navItems = [
   {
@@ -39,6 +45,11 @@ const navItems = [
     active: currentPath.startsWith(withBase('elsewhere/'))
   }
 ];
+
+const desktopNavItems = [
+  ...navItems.filter((item) => item.label !== 'Cycles'),
+  ...navItems.filter((item) => item.label === 'Cycles')
+];
 ---
 
 <header class="site-header" data-site-header>
@@ -61,11 +72,25 @@ const navItems = [
     </button>
 
     <nav class="main-nav" aria-label="Main navigation">
-      {navItems.map((item) => (
-        <a class="nav-link" href={item.href} aria-current={item.active ? 'page' : undefined}>
-          <span class="nav-glyph" aria-hidden="true">{item.glyph}</span>
-          <span>{item.label}</span>
-        </a>
+      {desktopNavItems.map((item) => (
+        item.label === 'Cycles' ? (
+          <div class="nav-cycle-menu">
+            <a class="nav-link" href={item.href} aria-current={item.active ? 'page' : undefined}>
+              <span class="nav-glyph" aria-hidden="true">{item.glyph}</span>
+              <span>{item.label}</span>
+            </a>
+            <div class="nav-cycle-panel" aria-label="Cycle navigation">
+              {cycleNavItems.map((cycle) => (
+                <a href={cycle.href} aria-current={cycle.active ? 'page' : undefined}>{cycle.label}</a>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <a class="nav-link" href={item.href} aria-current={item.active ? 'page' : undefined}>
+            <span class="nav-glyph" aria-hidden="true">{item.glyph}</span>
+            <span>{item.label}</span>
+          </a>
+        )
       ))}
     </nav>
   </div>

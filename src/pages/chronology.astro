@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TagList from '../components/TagList.astro';
-import { canLinkToPiece, formatMonthYear, parseDate, publishedNewestFirst, site, upcomingPieces, publicationLabel } from '../lib/data';
+import { canLinkToPiece, cycleByName, cycleNamesForPiece, formatMonthYear, parseDate, publishedNewestFirst, site, upcomingPieces, publicationLabel } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
 
 const upcoming = upcomingPieces();
@@ -10,6 +10,12 @@ const chronologyVisual = assetPath('page-visuals/chronology-records.jpg');
 
 function dateTimestamp(date) {
   return parseDate(date)?.getTime() ?? 0;
+}
+
+function cycleLinksForPiece(piece) {
+  return cycleNamesForPiece(piece)
+    .map((name) => cycleByName.get(name))
+    .filter(Boolean);
 }
 ---
 
@@ -32,6 +38,15 @@ function dateTimestamp(date) {
                 </p>
                 <div class="chronology-tags">
                   <TagList tags={piece.tags} genre={piece.genre} />
+                </div>
+                <div class="chronology-cycle-links" aria-label={cycleLinksForPiece(piece).length > 1 ? 'Cycles' : 'Cycle'}>
+                  <span>{cycleLinksForPiece(piece).length > 1 ? 'Cycles' : 'Cycle'}</span>
+                  {cycleLinksForPiece(piece).map((cycle, index) => (
+                    <>
+                      {index > 0 && <span aria-hidden="true">·</span>}
+                      <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
+                    </>
+                  ))}
                 </div>
               </li>
             ))}
@@ -71,6 +86,15 @@ function dateTimestamp(date) {
                   </p>
                   <div class="chronology-tags">
                     <TagList tags={piece.tags} genre={piece.genre} />
+                  </div>
+                  <div class="chronology-cycle-links" aria-label={cycleLinksForPiece(piece).length > 1 ? 'Cycles' : 'Cycle'}>
+                    <span>{cycleLinksForPiece(piece).length > 1 ? 'Cycles' : 'Cycle'}</span>
+                    {cycleLinksForPiece(piece).map((cycle, index) => (
+                      <>
+                        {index > 0 && <span aria-hidden="true">·</span>}
+                        <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
+                      </>
+                    ))}
                   </div>
                 </li>
               </>
