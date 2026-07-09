@@ -3,7 +3,7 @@ import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CycleTile from '../components/CycleTile.astro';
 import { cycles, site } from '../lib/data';
-import { assetPath } from '../lib/paths';
+import { assetPath, withBase } from '../lib/paths';
 import { imageAsset } from '../lib/image-assets';
 
 const headerImage = imageAsset(site.headerCover);
@@ -31,6 +31,7 @@ const headerCover = optimizedHeader?.src || (site.headerCover ? assetPath(site.h
     <div class="page-shell hero-content">
       <p class="hero-kicker">Short fiction, flash, poems, and the pursuit of unspeakable&nbsp;loveliness.</p>
       <h1 id="home-title">{site.author}</h1>
+      <a class="hero-start" href={withBase('selected/')}>New here? Start with Selected Works &rarr;</a>
     </div>
 
     <button class="hero-sound-toggle" type="button" data-sound-toggle aria-pressed="false" aria-label="Sound off" title="Sound off">

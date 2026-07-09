@@ -31,6 +31,10 @@ jobs:
 
       - name: Build site
         run: npm run build
+      - name: Quality gates
+        run: |
+          npm run check:metadata
+          npm run check:links:local
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
