@@ -1154,30 +1154,30 @@ img {
 
 .hero-color-reveal {
   opacity: 0;
-  filter: brightness(0.58) contrast(1.04) saturate(1.08);
-  transition: opacity 260ms ease;
+  filter: brightness(1) contrast(1.04) saturate(1.18);
+  transition: opacity 220ms ease;
   will-change: opacity, mask-image, -webkit-mask-image;
 
   -webkit-mask-image: radial-gradient(
     circle at var(--reveal-x) var(--reveal-y),
     rgba(0, 0, 0, 1) 0,
-    rgba(0, 0, 0, 0.98) 86px,
-    rgba(0, 0, 0, 0.62) 164px,
-    rgba(0, 0, 0, 0.22) 236px,
-    rgba(0, 0, 0, 0) 304px
+    rgba(0, 0, 0, 1) 120px,
+    rgba(0, 0, 0, 0.78) 230px,
+    rgba(0, 0, 0, 0.36) 340px,
+    rgba(0, 0, 0, 0) 460px
   );
   mask-image: radial-gradient(
     circle at var(--reveal-x) var(--reveal-y),
     rgba(0, 0, 0, 1) 0,
-    rgba(0, 0, 0, 0.98) 86px,
-    rgba(0, 0, 0, 0.62) 164px,
-    rgba(0, 0, 0, 0.22) 236px,
-    rgba(0, 0, 0, 0) 304px
+    rgba(0, 0, 0, 1) 120px,
+    rgba(0, 0, 0, 0.78) 230px,
+    rgba(0, 0, 0, 0.36) 340px,
+    rgba(0, 0, 0, 0) 460px
   );
 }
 
 .hero.is-color-reveal-active .hero-color-reveal {
-  opacity: 0.82;
+  opacity: 1;
 }
 
 .hero-scrim {
