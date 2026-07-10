@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run clean && astro build && npm run fix:sitemap && npm run verify:data",
+    "build": "npm run clean && npm run verify:data && astro build && npm run fix:sitemap",
     "preview": "astro preview",
     "verify:data": "node scripts/verify-site-data.mjs",
     "audit:privacy": "node scripts/audit-privacy.mjs",

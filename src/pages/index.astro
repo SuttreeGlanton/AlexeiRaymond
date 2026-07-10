@@ -1,5 +1,5 @@
 ---
-import { getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CycleTile from '../components/CycleTile.astro';
 import { cycles, site } from '../lib/data';
@@ -7,27 +7,45 @@ import { assetPath, withBase } from '../lib/paths';
 import { imageAsset } from '../lib/image-assets';
 
 const headerImage = imageAsset(site.headerCover);
-const optimizedHeader = headerImage
-  ? await getImage({
-      src: headerImage,
-      width: 1800,
-      format: 'webp',
-      quality: 82
-    })
-  : null;
-
-const headerCover = optimizedHeader?.src || (site.headerCover ? assetPath(site.headerCover) : '');
+const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
+const heroWidths = [640, 960, 1280, 1800];
 ---
 
 <BaseLayout title={site.author}>
   <section class="hero" aria-labelledby="home-title" data-color-reveal>
-    {headerCover && (
+    {headerImage ? (
+      <>
+        <Image
+          class="hero-backdrop hero-backdrop--mono"
+          src={headerImage}
+          alt=""
+          widths={heroWidths}
+          sizes="100vw"
+          format="webp"
+          quality={82}
+          priority
+        />
+        <Image
+          class="hero-backdrop hero-color-reveal"
+          src={headerImage}
+          alt=""
+          widths={heroWidths}
+          sizes="100vw"
+          format="webp"
+          quality={82}
+          loading="eager"
+          decoding="async"
+          aria-hidden="true"
+        />
+        <div class="hero-scrim" aria-hidden="true"></div>
+      </>
+    ) : headerCover ? (
       <>
         <img class="hero-backdrop hero-backdrop--mono" src={headerCover} alt="" fetchpriority="high" />
         <img class="hero-backdrop hero-color-reveal" src={headerCover} alt="" aria-hidden="true" loading="eager" />
         <div class="hero-scrim" aria-hidden="true"></div>
       </>
-    )}
+    ) : null}
     <div class="page-shell hero-content">
       <p class="hero-kicker">Short fiction, flash, poems, and the pursuit of unspeakable&nbsp;loveliness.</p>
       <h1 id="home-title">{site.author}</h1>

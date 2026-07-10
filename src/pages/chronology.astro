@@ -114,21 +114,7 @@ function cycleLinksForPiece(piece) {
     const list = document.querySelector('[data-published-list]');
     const buttons = Array.from(document.querySelectorAll('[data-sort-order]'));
 
-    function sortPublished(order) {
-      if (!list) return;
-
-      const items = Array.from(list.querySelectorAll('.chronology-item'));
-      items.sort((a, b) => {
-        const first = Number(a.dataset.date || 0);
-        const second = Number(b.dataset.date || 0);
-        return order === 'oldest' ? first - second : second - first;
-      });
-
-      for (const item of items) list.appendChild(item);
-
-      renderYearMarkers();
-
-      function renderYearMarkers() {
+    function renderYearMarkers() {
       if (!list) return;
 
       list.querySelectorAll('.chron-year-sep').forEach((node) => node.remove());
@@ -151,17 +137,36 @@ function cycleLinksForPiece(piece) {
       }
     }
 
-    renderYearMarkers();
+    function sortPublished(order) {
+      if (!list) return;
 
-    for (const button of buttons) {
+      const items = Array.from(list.querySelectorAll('.chronology-item'));
+
+      items.sort((a, b) => {
+        const first = Number(a.dataset.date || 0);
+        const second = Number(b.dataset.date || 0);
+        return order === 'oldest' ? first - second : second - first;
+      });
+
+      for (const item of items) {
+        list.appendChild(item);
+      }
+
+      renderYearMarkers();
+
+      for (const button of buttons) {
         const active = button.dataset.sortOrder === order;
         button.classList.toggle('is-active', active);
         button.setAttribute('aria-pressed', active ? 'true' : 'false');
       }
     }
 
+    renderYearMarkers();
+
     for (const button of buttons) {
-      button.addEventListener('click', () => sortPublished(button.dataset.sortOrder || 'newest'));
+      button.addEventListener('click', () => {
+        sortPublished(button.dataset.sortOrder || 'newest');
+      });
     }
   </script>
 

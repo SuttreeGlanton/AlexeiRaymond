@@ -34,6 +34,8 @@ jobs:
       - name: Quality gates
         run: |
           npm run check:metadata
+          npm run check:links:local
+          npm run audit:privacy
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
