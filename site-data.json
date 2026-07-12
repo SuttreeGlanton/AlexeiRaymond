@@ -503,6 +503,20 @@
       "issue": "#3"
     },
     {
+      "title": "Out of Bounds",
+      "cycle": "Mythmaking",
+      "publication": "Exclamation Mark Literary Journal",
+      "date": null,
+      "tags": [
+        "Online",
+        "Upcoming"
+      ],
+      "link": "",
+      "cover": "covers/pieces/out-of-bounds.jpg",
+      "excerpt": "In smoke, a world has fallen.",
+      "genre": "Flash fiction"
+    },
+    {
       "title": "Genesis",
       "cycle": "Fool's Gold",
       "publication": "Discretionary Love",
