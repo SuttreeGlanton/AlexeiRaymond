@@ -3,7 +3,7 @@ title: Deathwish
 fullText: true
 format: tracked
 ---
-<p>— It’s time for a wartime news refresh, so let us begin. Scroll, yes, scroll. Who will it be?</p>
+<p>— It’s time for a wartime news refresh, so let us begin. Scroll, yes, scroll. Who will it&nbsp;be?</p>
 
 <p class="dw-excerpt"><em>…four casualties confirmed, no prior alert, two in their late sixties, two in their early thirties, critically injured, building partially collapsed, direct hit, search continues…</em></p>
 
