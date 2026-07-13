@@ -29,10 +29,10 @@ const accountLabel = piece.account?.label || 'Account';
 const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-defunct' : ''}`;
 
 const cycleLabel = showCycle ? `From the ${piece.cycle} cycle` : '';
-// Date now rides as a compact plate on the cover, so it never wraps the meta line.
+// Render the date as a compact cover plate to prevent metadata wrapping.
 const dateLabel = upcoming ? '' : formatShortDate(piece.date);
 
-// Genre lives as a quiet plate on the cover; short labels keep it small.
+// Use shortened genre labels for the compact cover plate.
 const GENRE_SHORT: Record<string, string> = {
   'Short fiction': 'Short fiction',
   'Flash fiction': 'Flash',

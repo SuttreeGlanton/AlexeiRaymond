@@ -921,12 +921,6 @@ img {
 }
 
 /* --- Page visuals and chronology sort --- */
-/* Clean final pass:
-   - one visual system
-   - one sort-button system
-   - no duplicate overrides below this point
-   - no radial masks, no inset-shadow overlays, no internal square/blob
-*/
 
 .page-with-visual,
 .text-page-with-visual {
@@ -969,9 +963,7 @@ img {
   opacity: 0.42;
   filter: grayscale(1) brightness(0.82) contrast(1.06);
 
-  /* One simple horizontal dissolve.
-     Transparent toward the text, fully visible toward the outer right.
-     No vertical mask, no radial mask, no shadow overlay. */
+  /* Horizontal dissolve from the text edge toward the outer right. */
   -webkit-mask-image: linear-gradient(
     to right,
     rgba(0, 0, 0, 0) 0%,
@@ -1030,7 +1022,7 @@ img {
   margin-bottom: 0;
 }
 
-/* Restored sort pill. Keep this stable. */
+/* Chronology sort control. */
 .chronology-sort {
   display: inline-flex;
   gap: 4px;
@@ -1086,9 +1078,8 @@ img {
 }
 
 /* --- Page visual crops --- */
-/* Consolidated from earlier visual nudge patches. Keep these rules stable:
-   they define the final crop, rounding, and atmospheric treatment for the
-   decorative About and Chronology side images. */
+/* Crop, rounding, and atmospheric treatment for the decorative
+   About and Chronology side images. */
 
 .page-visual {
   border-radius: 24px;
@@ -1633,7 +1624,7 @@ img {
   opacity: 0.25;
 }
 
-/* --- Footer, sound glyph, and mobile nav polish --- */
+/* --- Footer, sound glyph, and mobile navigation --- */
 .footer-inner {
   align-items: center;
   justify-content: space-between;
@@ -1747,7 +1738,7 @@ img {
   }
 }
 
-/* --- Footer glyph and mobile sound tightening --- */
+/* --- Mobile footer glyph and sound control sizing --- */
 @media (max-width: 640px) {
   .hero-sound-toggle {
     gap: 5px;
@@ -1778,7 +1769,7 @@ img {
   }
 }
 
-/* --- Selected Works mobile compact-card test --- */
+/* --- Selected Works compact cards on mobile --- */
 @media (max-width: 640px) {
   .selected-piece-grid {
     display: grid;
@@ -1883,7 +1874,7 @@ img {
   }
 }
 
-/* --- Selected Works mobile compact-card refinement --- */
+/* --- Selected Works mobile card sizing and labels --- */
 @media (max-width: 640px) {
   .selected-piece-grid .piece-card {
     grid-template-columns: 112px minmax(0, 1fr);
@@ -1968,7 +1959,7 @@ img {
   }
 }
 
-/* --- Mobile hamburger menu test --- */
+/* --- Mobile hamburger menu --- */
 .mobile-menu-toggle,
 .mobile-menu-panel {
   display: none;
@@ -2214,7 +2205,7 @@ img {
   transform: scale(1.014);
 }
 
-/* --- Interview desktop crop adjustment --- */
+/* --- Interview desktop crop --- */
 @media (min-width: 641px) {
   .interview-media picture img,
   .interview-media img {
@@ -2488,7 +2479,7 @@ img {
 }
 
 
-/* --- Mobile hero color and CTA tightening --- */
+/* --- Mobile hero color and CTA sizing --- */
 @media (max-width: 640px) {
   .hero-backdrop--mono {
     display: none;
