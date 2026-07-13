@@ -13,9 +13,7 @@ format: tracked
 
 <p class="dw-excerpt"><em>I saw your old building got hit, are you ok? I know you don’t live there anymore but I thought I’d ask.</em></p>
 
-<p>— No. I’m not reaching out.<br>— She can’t answer. Do you want it to be her? A glimpse of dusted pearly flesh, golden hair, twixt brick and gypsum.<br>— Why would I want it to be her?<br>— Well, do you?<br>— Of course I don’t want it to be her and I don’t want her to be hurt.</p>
-
-<p>— Oh, is that your phone?</p>
+<p>— No. I’m not reaching out.<br>— She can’t answer. Do you want it to be her? A glimpse of dusted pearly flesh, golden hair, twixt brick and gypsum.<br>— Why would I want it to be her?<br>— Well, do you?<br>— Of course I don’t want it to be her and I don’t want her to be hurt.<br>— Oh, is that your phone?</p>
 
 <p class="dw-excerpt"><em>dude, heard the news. you ok?<br>what happened?<br>direct hit on his ex’s place.<br>Goddamn, im sorry<br>dude, you there?</em></p>
 
