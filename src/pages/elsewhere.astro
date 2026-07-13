@@ -1,7 +1,7 @@
 ---
 import OptimizedImage from '../components/OptimizedImage.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { interview, site } from '../lib/data';
+import { formatMonthYear, interview, site } from '../lib/data';
 import { imageAsset } from '../lib/image-assets';
 
 const cover = interview.cover || '';
@@ -30,7 +30,7 @@ const coverImage = imageAsset(interview.cover);
       </div>
       <div class="interview-body">
         <h2>{interview.title}</h2>
-        <p class="interview-meta">{interview.publication} · {interview.date}</p>
+        <p class="interview-meta">{interview.publication} · {formatMonthYear(interview.date)}</p>
         {interview.excerpt && <p class="interview-excerpt">&ldquo;{interview.excerpt}&rdquo;</p>}
         <a class="interview-link" href={interview.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${interview.title}. Opens in a new tab.`}>Read interview</a>
       </div>

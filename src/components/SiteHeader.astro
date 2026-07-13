@@ -137,7 +137,9 @@ const desktopNavItems = [
     });
 
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') setOpen(false);
+      if (event.key !== 'Escape' || button.getAttribute('aria-expanded') !== 'true') return;
+      setOpen(false);
+      button.focus();
     });
 
     window.addEventListener('resize', () => {
