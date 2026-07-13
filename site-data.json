@@ -756,7 +756,12 @@
       "cover": "covers/pieces/remediation.jpg",
       "excerpt": "Question queued: whose fault is this?",
       "genre": "Short fiction",
-      "issue": "II anthology"
+      "issue": "II anthology",
+      "account": {
+        "slug": "remediation",
+        "label": "Read on site",
+        "title": "Remediation"
+      }
     },
     {
       "title": "Ember",

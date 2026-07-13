@@ -87,32 +87,6 @@ img {
   color: var(--bg);
 }
 
-.skip-link {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  z-index: 100;
-  border: 1px solid var(--border-strong);
-  border-radius: 999px;
-  padding: 8px 12px 7px;
-  background: var(--bg);
-  color: var(--text);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  transform: translateY(calc(-100% - 24px));
-  transition: transform 180ms ease;
-}
-
-.skip-link:focus-visible {
-  transform: translateY(0);
-}
-
-.site-main:focus {
-  outline: none;
-}
-
 .page-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
@@ -921,6 +895,12 @@ img {
 }
 
 /* --- Page visuals and chronology sort --- */
+/* Clean final pass:
+   - one visual system
+   - one sort-button system
+   - no duplicate overrides below this point
+   - no radial masks, no inset-shadow overlays, no internal square/blob
+*/
 
 .page-with-visual,
 .text-page-with-visual {
@@ -963,7 +943,9 @@ img {
   opacity: 0.42;
   filter: grayscale(1) brightness(0.82) contrast(1.06);
 
-  /* Horizontal dissolve from the text edge toward the outer right. */
+  /* One simple horizontal dissolve.
+     Transparent toward the text, fully visible toward the outer right.
+     No vertical mask, no radial mask, no shadow overlay. */
   -webkit-mask-image: linear-gradient(
     to right,
     rgba(0, 0, 0, 0) 0%,
@@ -1022,7 +1004,7 @@ img {
   margin-bottom: 0;
 }
 
-/* Chronology sort control. */
+/* Restored sort pill. Keep this stable. */
 .chronology-sort {
   display: inline-flex;
   gap: 4px;
@@ -1078,8 +1060,9 @@ img {
 }
 
 /* --- Page visual crops --- */
-/* Crop, rounding, and atmospheric treatment for the decorative
-   About and Chronology side images. */
+/* Consolidated from earlier visual nudge patches. Keep these rules stable:
+   they define the final crop, rounding, and atmospheric treatment for the
+   decorative About and Chronology side images. */
 
 .page-visual {
   border-radius: 24px;
@@ -1624,7 +1607,7 @@ img {
   opacity: 0.25;
 }
 
-/* --- Footer, sound glyph, and mobile navigation --- */
+/* --- Footer, sound glyph, and mobile nav polish --- */
 .footer-inner {
   align-items: center;
   justify-content: space-between;
@@ -1738,7 +1721,7 @@ img {
   }
 }
 
-/* --- Mobile footer glyph and sound control sizing --- */
+/* --- Footer glyph and mobile sound tightening --- */
 @media (max-width: 640px) {
   .hero-sound-toggle {
     gap: 5px;
@@ -1769,7 +1752,7 @@ img {
   }
 }
 
-/* --- Selected Works compact cards on mobile --- */
+/* --- Selected Works mobile compact-card test --- */
 @media (max-width: 640px) {
   .selected-piece-grid {
     display: grid;
@@ -1874,7 +1857,7 @@ img {
   }
 }
 
-/* --- Selected Works mobile card sizing and labels --- */
+/* --- Selected Works mobile compact-card refinement --- */
 @media (max-width: 640px) {
   .selected-piece-grid .piece-card {
     grid-template-columns: 112px minmax(0, 1fr);
@@ -1959,7 +1942,7 @@ img {
   }
 }
 
-/* --- Mobile hamburger menu --- */
+/* --- Mobile hamburger menu test --- */
 .mobile-menu-toggle,
 .mobile-menu-panel {
   display: none;
@@ -2205,7 +2188,7 @@ img {
   transform: scale(1.014);
 }
 
-/* --- Interview desktop crop --- */
+/* --- Interview desktop crop adjustment --- */
 @media (min-width: 641px) {
   .interview-media picture img,
   .interview-media img {
@@ -2479,7 +2462,7 @@ img {
 }
 
 
-/* --- Mobile hero color and CTA sizing --- */
+/* --- Mobile hero color and CTA tightening --- */
 @media (max-width: 640px) {
   .hero-backdrop--mono {
     display: none;
@@ -2533,4 +2516,68 @@ img {
   .hero-backdrop {
     object-position: 64% center;
   }
+}
+
+/* --- Archived piece: log format (e.g. Remediation) --- */
+.archived-piece-page--log .prose {
+  max-width: 76ch;
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
+  font-size: 0.86rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.archived-piece-page--log .prose p {
+  margin: 0 0 0.4em;
+  text-indent: 0;
+  overflow-wrap: anywhere;
+}
+
+.archived-piece-page--log .prose p + p {
+  text-indent: 0;
+}
+
+.archived-piece-page--log .prose em,
+.archived-piece-page--log .prose i {
+  font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 1.16em;
+  color: var(--text);
+}
+
+.archived-piece-page--log .prose .lg-meta {
+  color: var(--muted);
+  padding-bottom: 0.9em;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.4em;
+}
+
+.archived-piece-page--log .prose .lg-req { color: var(--text-soft); }
+.archived-piece-page--log .prose .lg-res { color: var(--muted); }
+.archived-piece-page--log .prose .lg-ok { color: var(--text-soft); }
+.archived-piece-page--log .prose .lg-fail { color: var(--text); }
+
+.archived-piece-page--log .prose .lg-note {
+  color: var(--text-soft);
+  margin: 0.5em 0 1.3em;
+}
+
+.archived-piece-page--log .prose .lg-ts {
+  display: block;
+  margin: 1.8em 0 0.6em;
+  color: var(--dim);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+}
+
+.archived-piece-page--log .prose .lg-status {
+  margin: 1.5em 0;
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.74rem;
+  letter-spacing: 0.05em;
+  overflow-wrap: anywhere;
 }

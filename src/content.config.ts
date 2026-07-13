@@ -7,7 +7,8 @@ const accounts = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/accounts' }),
   schema: z.object({
     title: z.string().optional(),
-    epigraph: z.boolean().optional()
+    epigraph: z.boolean().optional(),
+    format: z.enum(['log']).optional()
   })
 });
 
