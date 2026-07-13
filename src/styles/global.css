@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --bg: #0a0a0a;
   --bg-soft: #0f0f0f;
   --panel: #111111;
@@ -2723,7 +2723,7 @@ img {
 }
 
 .archived-piece-page--tracked .prose .dw-revision[open] .dw-revision-action::before {
-  content: 'âˆ’ ';
+  content: '\2212\00a0';
 }
 
 .archived-piece-page--tracked .prose .dw-revision-hide,
