@@ -2849,3 +2849,8 @@ img {
 }
 
 
+
+/* --- Full-text story opening after epigraph --- */
+.archived-piece-page .prose p.story-opening {
+  text-indent: 0;
+}

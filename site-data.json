@@ -96,6 +96,11 @@
       "cover": "covers/pieces/193-lines-of-sight.jpg",
       "excerpt": "High and higher the translucent turns dim darker then void-black,",
       "genre": "Short fiction",
+      "account": {
+        "slug": "193-lines-of-sight",
+        "label": "Read on site",
+        "title": "193 Lines of Sight"
+      },
       "cycles": [
         "Conscription",
         "Mythbreaking"
@@ -303,7 +308,12 @@
       "cover": "covers/pieces/the-hunt.jpg",
       "excerpt": "I wake up at dawn, which means, I realize, that the hunt is on.",
       "genre": "Non-fiction",
-      "issue": "(special issue: homeland)"
+      "issue": "(special issue: homeland)",
+      "account": {
+        "slug": "the-hunt",
+        "label": "Read on site",
+        "title": "The Hunt"
+      }
     },
     {
       "title": "The Mourning Hounds",

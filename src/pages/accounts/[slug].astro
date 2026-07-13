@@ -76,7 +76,7 @@ const archiveGenreSlug = piece?.genre ? piece.genre.toLowerCase().replace(/[^a-z
     </div>
     {piece && canLinkToPiece(piece) && (
       <p class="account-outbound">
-        <a href={piece.link} target="_blank" rel="noreferrer">Read â€œ{piece.title}â€ at {piece.publication} &rarr;</a>
+        <a href={piece.link} target="_blank" rel="noreferrer">Read &ldquo;{piece.title}&rdquo; at {piece.publication} &rarr;</a>
       </p>
     )}
   </article>
@@ -152,4 +152,5 @@ const archiveGenreSlug = piece?.genre ? piece.genre.toLowerCase().replace(/[^a-z
     color: var(--text);
   }
 </style>
+
 
