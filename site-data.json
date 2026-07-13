@@ -114,6 +114,11 @@
       "excerpt": "Hello, Ms. Tom Latin.",
       "genre": "Short fiction",
       "issue": "#8",
+      "account": {
+        "slug": "193-thoughts-of-you",
+        "label": "Read on site",
+        "title": "193 Thoughts of You"
+      },
       "cycles": [
         "Conscription",
         "Mythbreaking"
