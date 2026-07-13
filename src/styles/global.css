@@ -2554,8 +2554,9 @@ img {
 
 .archived-piece-page--log .prose .lg-req { color: var(--text-soft); }
 .archived-piece-page--log .prose .lg-res { color: var(--muted); }
-.archived-piece-page--log .prose .lg-ok { color: var(--text-soft); }
-.archived-piece-page--log .prose .lg-fail { color: var(--text); }
+.archived-piece-page--log .prose .lg-ok { color: #7ee787; font-weight: 600; }
+.archived-piece-page--log .prose .lg-warn { color: #f2cc60; font-weight: 600; }
+.archived-piece-page--log .prose .lg-fail { color: #ff7b72; font-weight: 600; }
 
 .archived-piece-page--log .prose .lg-note {
   color: var(--text-soft);
@@ -2580,4 +2581,27 @@ img {
   font-size: 0.74rem;
   letter-spacing: 0.05em;
   overflow-wrap: anywhere;
+}
+
+/* Remediation ending: the unresolved process remains alive. */
+.archived-piece-page--log .prose .lg-pulse {
+  display: inline-block;
+  color: var(--text);
+  opacity: 0.36;
+  animation: remediation-log-pulse 3.6s ease-out infinite;
+}
+
+.archived-piece-page--log .prose .lg-pulse--2 { animation-delay: 550ms; }
+.archived-piece-page--log .prose .lg-pulse--3 { animation-delay: 1100ms; }
+
+@keyframes remediation-log-pulse {
+  0%, 9% { opacity: 1; }
+  18%, 100% { opacity: 0.36; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archived-piece-page--log .prose .lg-pulse {
+    animation: none;
+    opacity: 1;
+  }
 }
