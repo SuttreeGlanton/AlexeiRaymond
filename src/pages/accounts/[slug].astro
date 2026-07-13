@@ -1,8 +1,8 @@
----
+﻿---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import OptimizedImage from '../../components/OptimizedImage.astro';
-import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatLongDate, publicationLabel } from '../../lib/data';
+import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
 import { withBase } from '../../lib/paths';
 import { imageAsset } from '../../lib/image-assets';
 
@@ -31,6 +31,16 @@ const archiveDescription = piece
   : site.bio;
 const archiveCoverImage = piece?.cover ? imageAsset(piece.cover) : undefined;
 const archiveCoverAlt = piece ? `${piece.title} cover` : '';
+const archiveDateLabel = piece ? formatShortDate(piece.date) : '';
+const archiveGenreLabels: Record<string, string> = {
+  'Short fiction': 'Short fiction',
+  'Flash fiction': 'Flash',
+  'Poem': 'Poem',
+  'Non-fiction': 'Non-fiction',
+  'Other': 'Other'
+};
+const archiveGenreLabel = piece?.genre ? (archiveGenreLabels[piece.genre] ?? piece.genre) : '';
+const archiveGenreSlug = piece?.genre ? piece.genre.toLowerCase().replace(/[^a-z]+/g, '-') : '';
 ---
 
 <BaseLayout title={`${title} \u2014 ${site.author}`} description={archiveDescription}>
@@ -41,7 +51,7 @@ const archiveCoverAlt = piece ? `${piece.title} cover` : '';
     {metaParts.length > 0 && <p class="account-meta">{metaParts.join(' \u00b7 ')}</p>}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
-        <aside class="archive-cover-card" aria-label={archiveCoverAlt} data-archive-mobile-focus>
+        <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
           <div class="archive-cover-media">
             <OptimizedImage
               path={piece.cover}
@@ -50,6 +60,13 @@ const archiveCoverAlt = piece ? `${piece.title} cover` : '';
               loading="eager"
               sizes="(max-width: 640px) 76vw, (max-width: 860px) 42vw, 280px"
             />
+            {archiveGenreLabel && <span class="genre-mark" data-genre={archiveGenreSlug}>{archiveGenreLabel}</span>}
+            {archiveDateLabel && <span class="date-mark">{archiveDateLabel}</span>}
+            {piece.excerpt && (
+              <div class="card-overlay" aria-hidden="true">
+                <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
+              </div>
+            )}
           </div>
         </aside>
       )}
@@ -59,7 +76,7 @@ const archiveCoverAlt = piece ? `${piece.title} cover` : '';
     </div>
     {piece && canLinkToPiece(piece) && (
       <p class="account-outbound">
-        <a href={piece.link} target="_blank" rel="noreferrer">Read “{piece.title}” at {piece.publication} &rarr;</a>
+        <a href={piece.link} target="_blank" rel="noreferrer">Read â€œ{piece.title}â€ at {piece.publication} &rarr;</a>
       </p>
     )}
   </article>
@@ -135,3 +152,4 @@ const archiveCoverAlt = piece ? `${piece.title} cover` : '';
     color: var(--text);
   }
 </style>
+

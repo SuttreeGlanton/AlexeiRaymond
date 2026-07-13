@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --bg: #0a0a0a;
   --bg-soft: #0f0f0f;
   --panel: #111111;
@@ -549,7 +549,7 @@ img {
   text-transform: uppercase;
 }
 
-/* Genre reads as a quiet label, not a status box â€” no border, dimmer. */
+/* Genre reads as a quiet label, not a status box Ã¢â‚¬â€ no border, dimmer. */
 .genre-chip {
   padding: 4px 0 3px;
   color: var(--muted);
@@ -2723,7 +2723,7 @@ img {
 }
 
 .archived-piece-page--tracked .prose .dw-revision[open] .dw-revision-action::before {
-  content: '− ';
+  content: 'âˆ’ ';
 }
 
 .archived-piece-page--tracked .prose .dw-revision-hide,
@@ -2804,3 +2804,48 @@ img {
   border-bottom-color: var(--text-soft);
   color: var(--text);
 }
+
+/* --- Full-text cover card metadata --- */
+.archive-cover-card {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card, 10px);
+  background: var(--panel);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+  outline: none;
+  transition: border-color 320ms ease, background 320ms ease;
+}
+
+.archive-cover-media {
+  position: relative;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.archive-cover-card:hover,
+.archive-cover-card:focus-visible,
+.archive-cover-card.is-mobile-focus {
+  border-color: var(--border-strong);
+  background: var(--panel-lift);
+}
+
+.archive-cover-card:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 4px;
+}
+
+.archive-cover-card:hover .card-overlay,
+.archive-cover-card:focus-visible .card-overlay {
+  opacity: 1;
+}
+
+.archive-cover-card:hover .genre-mark,
+.archive-cover-card:focus-visible .genre-mark,
+.archive-cover-card:hover .date-mark,
+.archive-cover-card:focus-visible .date-mark {
+  opacity: 0.25;
+}
+
+
