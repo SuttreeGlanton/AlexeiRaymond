@@ -2793,3 +2793,14 @@ img {
     padding-right: 0.8rem;
   }
 }
+/* --- Chronology full-text links --- */
+.chronology-cycle-links .chronology-account-link {
+  border-bottom-color: var(--border-strong);
+  color: var(--text-soft);
+}
+
+.chronology-cycle-links .chronology-account-link:hover,
+.chronology-cycle-links .chronology-account-link:focus-visible {
+  border-bottom-color: var(--text-soft);
+  color: var(--text);
+}

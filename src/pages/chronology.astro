@@ -87,7 +87,15 @@ function cycleLinksForPiece(piece) {
                   <div class="chronology-tags">
                     <TagList tags={piece.tags} genre={piece.genre} />
                   </div>
-                  <div class="chronology-cycle-links" aria-label={cycleLinksForPiece(piece).length > 1 ? 'Cycles' : 'Cycle'}>
+                  <div class="chronology-cycle-links" aria-label={piece.account ? `Links for ${piece.title}` : cycleLinksForPiece(piece).length > 1 ? 'Cycles' : 'Cycle'}>
+                    {piece.account && (
+                      <>
+                        <a class="chronology-account-link" href={withBase(`accounts/${piece.account.slug}/`)} aria-label={`${piece.account.label || 'Read on site'} for ${piece.title}`}>
+                          {piece.account.label || 'Read on site'} <span aria-hidden="true">&rarr;</span>
+                        </a>
+                        <span aria-hidden="true">&middot;</span>
+                      </>
+                    )}
                     <span>{cycleLinksForPiece(piece).length > 1 ? 'Cycles' : 'Cycle'}</span>
                     {cycleLinksForPiece(piece).map((cycle, index) => (
                       <>
