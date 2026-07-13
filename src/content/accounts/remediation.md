@@ -1,5 +1,6 @@
 ---
 title: Remediation
+fullText: true
 format: log
 ---
 <p class="lg-meta">ANTN, Autonomous Negotiation &amp; Triage Node; a log</p>

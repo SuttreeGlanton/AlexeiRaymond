@@ -8,7 +8,8 @@ const accounts = defineCollection({
   schema: z.object({
     title: z.string().optional(),
     epigraph: z.boolean().optional(),
-    format: z.enum(['log']).optional()
+    fullText: z.boolean().optional(),
+    format: z.enum(['log', 'tracked']).optional()
   })
 });
 

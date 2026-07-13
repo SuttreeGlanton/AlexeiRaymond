@@ -173,6 +173,11 @@
       "excerpt": "Never imagined strangling or killing her.",
       "genre": "Short fiction",
       "issue": "II anthology",
+      "account": {
+        "slug": "deathwish",
+        "label": "Read on site",
+        "title": "Deathwish"
+      },
       "cycles": [
         "Mythbreaking",
         "The Real"
