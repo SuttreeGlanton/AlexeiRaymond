@@ -30,28 +30,45 @@ fullText: true
   }
 
   .lo-coda-entry {
+    position: relative;
     min-width: 0;
     overflow-wrap: anywhere;
   }
 
-  .lo-coda-cursor {
-    display: inline-block;
-    width: 0.08em;
-    height: 1.05em;
-    margin-left: 0.12em;
-    background: currentColor;
-    vertical-align: -0.14em;
+  .lo-coda-measure {
+    visibility: hidden;
+  }
+
+  .lo-coda-measure,
+  [data-lo-typing] {
+    border-right: 0.08em solid transparent;
+    padding-right: 0.12em;
+  }
+
+  .lo-coda-live {
+    position: absolute;
+    inset: 0;
+  }
+
+  [data-lo-typing] {
+    border-right-color: currentColor;
     animation: loCursorBlink 900ms steps(1, end) infinite;
   }
 
   @keyframes loCursorBlink {
-    0%, 48% { opacity: 1; }
-    49%, 100% { opacity: 0; }
+    0%, 48% { border-right-color: currentColor; }
+    49%, 100% { border-right-color: transparent; }
+  }
+
+  @media (max-width: 640px) {
+    .lo-coda {
+      font-size: 0.7rem;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .lo-coda-cursor {
-      display: none;
+    [data-lo-typing] {
+      border-right-color: transparent;
       animation: none;
     }
   }
@@ -85,5 +102,8 @@ It is coming.
 
 <div class="lo-coda" role="img" aria-label="AdamOne types: Hullo, I come in peace and curiosity, followed by an alien emoji.">
   <span class="lo-coda-handle" aria-hidden="true">AdamOne:</span>
-  <span class="lo-coda-entry" aria-hidden="true"><span data-lo-typing>Hullo, I come in peace and curiosity 👽</span><span class="lo-coda-cursor"></span></span>
+  <span class="lo-coda-entry" aria-hidden="true">
+    <span class="lo-coda-measure">Hullo, I come in peace and curiosity 👽</span>
+    <span class="lo-coda-live"><span data-lo-typing>Hullo, I come in peace and curiosity 👽</span></span>
+  </span>
 </div>

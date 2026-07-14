@@ -223,7 +223,12 @@ const workSchema = fullText && piece ? {
           while (lotharioTyping.isConnected) {
             lotharioTyping.textContent = '';
             await wait(750);
-            await typeText('Hullo, I come in peace and curiosoty');
+            await typeText('Hullo, I cmoe');
+            await wait(430);
+            await eraseText(3);
+            await typeText('ome');
+            await wait(240);
+            await typeText(' in peace and curiosoty');
             await wait(520);
             await eraseText(3);
             await typeText('ity');
