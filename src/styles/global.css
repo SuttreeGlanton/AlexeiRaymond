@@ -2916,3 +2916,116 @@ img {
   .cd-line .cd-frame { animation: none; }
   .cd-line .cd-f1 { opacity: 1; }
 }
+
+/* --- No, Rabbit: sequential ASCII motion coda --- */
+.nr-coda {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  gap: clamp(0.25rem, 1.5vw, 0.85rem);
+  width: 100%;
+  max-width: 34rem;
+  height: clamp(5.5rem, 11vw, 7.25rem);
+  margin: clamp(2.75rem, 6vw, 4rem) auto 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
+}
+
+.nr-coda .nr-slot {
+  position: relative;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.nr-coda .nr-figure {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  max-width: none;
+  margin: 0;
+  font: 6px/1 ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
+  white-space: pre;
+  text-indent: 0;
+  opacity: 0;
+  transform-origin: 50% 100%;
+  animation: nrFlash 7.2s ease-in-out infinite both;
+  will-change: opacity;
+}
+
+.nr-coda .nr-rabbit-left {
+  transform: translateX(-50%) scale(0.3);
+}
+
+.nr-coda .nr-boy {
+  transform: translateX(-50%) scale(0.28);
+}
+
+.nr-coda .nr-rabbit-right {
+  transform: translateX(-50%) scale(0.3);
+}
+
+.nr-coda .nr-slot-center .nr-figure {
+  animation-delay: 2.2s;
+}
+
+.nr-coda .nr-slot-right .nr-figure {
+  animation-delay: 4.4s;
+}
+
+@keyframes nrFlash {
+  0%, 3% { opacity: 0; }
+  6%, 18% { opacity: 1; }
+  23%, 100% { opacity: 0; }
+}
+
+@media (max-width: 640px) {
+  .nr-coda {
+    gap: 0.15rem;
+    height: 5.25rem;
+  }
+
+  .nr-coda .nr-rabbit-left {
+    transform: translateX(-50%) scale(0.2);
+  }
+
+  .nr-coda .nr-boy {
+    transform: translateX(-50%) scale(0.21);
+  }
+
+  .nr-coda .nr-rabbit-right {
+    transform: translateX(-50%) scale(0.19);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nr-coda .nr-figure {
+    animation: none;
+    opacity: 0;
+  }
+
+  .nr-coda .nr-slot-right .nr-figure {
+    opacity: 1;
+  }
+}
+
+/* --- No, Rabbit: desktop hover hold --- */
+@media (hover: hover) and (pointer: fine) {
+  .nr-coda:hover .nr-figure {
+    animation-play-state: paused;
+    opacity: 0 !important;
+    transition: opacity 180ms ease;
+  }
+
+  .nr-coda .nr-slot:hover .nr-figure {
+    opacity: 1 !important;
+  }
+}
+/* --- Selected Works long-title fit --- */
+@media (min-width: 641px) {
+  .selected-piece-grid .piece-card.has-long-title .card-title {
+    font-size: clamp(1.4rem, 2.65vw, 2.15rem);
+    text-wrap: nowrap;
+  }
+}

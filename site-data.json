@@ -729,6 +729,11 @@
       "cover": "covers/pieces/no rabbit.jpg",
       "excerpt": "The rabbit’s black marble of an eye looks at him.",
       "genre": "Short fiction",
+      "account": {
+        "slug": "no-rabbit",
+        "label": "Read on site",
+        "title": "No, Rabbit"
+      },
       "cycles": [
         "Mythbreaking",
         "Mythmaking"

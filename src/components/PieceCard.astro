@@ -26,7 +26,8 @@ const cover = piece.cover ? assetPath(piece.cover) : '';
 const coverImage = imageAsset(piece.cover);
 const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : '';
 const accountLabel = piece.account?.label || 'Account';
-const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-defunct' : ''}`;
+const longTitle = piece.title.length >= 18;
+const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-defunct' : ''}${longTitle ? ' has-long-title' : ''}`;
 
 const cycleLabel = showCycle ? `From the ${piece.cycle} cycle` : '';
 // Render the date as a compact cover plate to prevent metadata wrapping.
