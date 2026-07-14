@@ -2,8 +2,8 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import OptimizedImage from '../../components/OptimizedImage.astro';
-import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
-import { withBase } from '../../lib/paths';
+import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
+import { absoluteSiteUrl, withBase } from '../../lib/paths';
 import { imageAsset } from '../../lib/image-assets';
 
 export async function getStaticPaths() {
@@ -25,9 +25,10 @@ const overlineLabel = archived ? 'Archived piece' : fullText ? 'Full text' : 'Ac
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
 const backHref = cycle ? withBase(`cycles/${cycle.id}/`) : withBase('');
 const backLabel = cycle ? cycle.name : 'All cycles';
-const metaParts = piece ? [publicationLabel(piece), formatLongDate(piece.date)].filter(Boolean) : [];
+const originalPublication = piece ? publicationLabel(piece) : '';
+const metaParts = piece ? [originalPublication, formatLongDate(piece.date)].filter(Boolean) : [];
 const archiveDescription = piece
-  ? `${piece.title} by ${site.author}. Originally published in ${publicationLabel(piece)}${formatLongDate(piece.date) ? `, ${formatLongDate(piece.date)}` : ''}.`
+  ? `${piece.title} by ${site.author}. Originally published in ${originalPublication}${formatLongDate(piece.date) ? `, ${formatLongDate(piece.date)}` : ''}.`
   : site.bio;
 const archiveCoverImage = piece?.cover ? imageAsset(piece.cover) : undefined;
 const archiveCoverAlt = piece ? `${piece.title} cover` : '';
@@ -41,9 +42,67 @@ const archiveGenreLabels: Record<string, string> = {
 };
 const archiveGenreLabel = piece?.genre ? (archiveGenreLabels[piece.genre] ?? piece.genre) : '';
 const archiveGenreSlug = piece?.genre ? piece.genre.toLowerCase().replace(/[^a-z]+/g, '-') : '';
+const seoGenreLabels: Record<string, string> = {
+  'Short fiction': 'Short Fiction',
+  'Flash fiction': 'Flash Fiction',
+  'Poem': 'Poem',
+  'Non-fiction': 'Non-fiction',
+  'Other': 'Writing'
+};
+const seoGenreLabel = piece?.genre ? (seoGenreLabels[piece.genre] ?? piece.genre) : 'Full Text';
+const seoTitle = fullText && piece
+  ? `${piece.title} \u2014 ${seoGenreLabel} by ${site.author}`
+  : `${title} \u2014 ${site.author}`;
+const seoDescription = fullText && piece
+  ? `${piece.genre ?? 'Writing'} by ${site.author}, originally published in ${originalPublication}.${piece.excerpt ? ` ${piece.excerpt}` : ''}`
+  : archiveDescription;
+const publishedIso = fullText && piece ? formatIsoDate(piece.date) : '';
+const accountUrl = absoluteSiteUrl(`accounts/${entry.id}/`, Astro.site);
+const authorUrl = absoluteSiteUrl('', Astro.site);
+const coverUrl = archiveCoverImage ? absoluteSiteUrl(archiveCoverImage.src, Astro.site) : '';
+const workSchema = fullText && piece ? {
+  '@context': 'https://schema.org',
+  '@type': piece.genre === 'Short fiction' || piece.genre === 'Flash fiction' ? 'ShortStory' : 'CreativeWork',
+  '@id': `${accountUrl}#work`,
+  name: piece.title,
+  url: accountUrl,
+  mainEntityOfPage: accountUrl,
+  description: seoDescription,
+  author: {
+    '@type': 'Person',
+    '@id': `${authorUrl}#person`,
+    name: site.author,
+    url: authorUrl
+  },
+  ...(piece.genre ? { genre: piece.genre } : {}),
+  ...(publishedIso ? { datePublished: publishedIso } : {}),
+  ...(piece.publication ? {
+    publisher: {
+      '@type': 'Organization',
+      name: piece.publication
+    }
+  } : {}),
+  ...(originalPublication ? {
+    isPartOf: {
+      '@type': 'CreativeWork',
+      name: originalPublication
+    }
+  } : {}),
+  ...(coverUrl ? { image: coverUrl } : {}),
+  inLanguage: 'en',
+  isAccessibleForFree: true
+} : undefined;
 ---
 
-<BaseLayout title={`${title} \u2014 ${site.author}`} description={archiveDescription}>
+<BaseLayout
+  title={seoTitle}
+  description={seoDescription}
+  socialImage={fullText && piece ? archiveCoverImage : undefined}
+  socialImageAlt={fullText && piece ? archiveCoverAlt : undefined}
+  ogType={fullText && piece ? 'article' : 'website'}
+  publishedTime={publishedIso || undefined}
+  structuredData={workSchema}
+>
   <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
     <div class="overline">{overlineLabel}</div>

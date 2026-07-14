@@ -143,6 +143,14 @@ export function formatLongDate(date: string | null): string {
   return `${parsed.getDate()} ${MONTHS[parsed.getMonth()]} ${parsed.getFullYear()}`;
 }
 
+/** ISO date for metadata and structured data, e.g. "2025-09-20". */
+export function formatIsoDate(date: string | null): string {
+  if (!date) return '';
+  const [day, month, year] = date.split('/').map(Number);
+  if (!day || !month || !year) return '';
+  return `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
 export function publicationLabel(piece: Pick<Piece, 'publication' | 'issue'>): string {
   return [piece.publication, piece.issue].filter(Boolean).join(' ');
 }
