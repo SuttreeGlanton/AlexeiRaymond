@@ -2933,10 +2933,10 @@ img {
   align-items: end;
   gap: clamp(0.25rem, 1.5vw, 0.85rem);
   width: 100%;
-  max-width: 34rem;
-  height: clamp(5.5rem, 11vw, 7.25rem);
+  max-width: 40rem;
+  height: clamp(12rem, 24vw, 15rem);
   margin: clamp(2.75rem, 6vw, 4rem) auto 0;
-  overflow: hidden;
+  overflow: visible;
   color: var(--text);
   font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
 }
@@ -2945,8 +2945,12 @@ img {
   position: relative;
   min-width: 0;
   height: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
+
+.nr-coda .nr-slot-left .nr-figure { left: 75%; }
+.nr-coda .nr-slot-center .nr-figure { left: 50%; }
+.nr-coda .nr-slot-right .nr-figure { left: 25%; }
 
 .nr-coda .nr-figure {
   position: absolute;
@@ -2959,52 +2963,52 @@ img {
   text-indent: 0;
   opacity: 0;
   transform-origin: 50% 100%;
-  animation: nrFlash 7.2s ease-in-out infinite both;
+  animation: nrGhost 10.5s ease-in-out infinite both;
   will-change: opacity;
 }
 
 .nr-coda .nr-rabbit-left {
-  transform: translateX(-50%) scale(0.3);
+  transform: translateX(-50%) scale(0.56);
 }
 
 .nr-coda .nr-boy {
-  transform: translateX(-50%) scale(0.28);
+  transform: translateX(-50%) scale(0.52);
 }
 
 .nr-coda .nr-rabbit-right {
-  transform: translateX(-50%) scale(0.3);
+  transform: translateX(-50%) scale(0.54);
 }
 
 .nr-coda .nr-slot-center .nr-figure {
-  animation-delay: 2.2s;
+  animation-delay: 3.5s;
 }
 
 .nr-coda .nr-slot-right .nr-figure {
-  animation-delay: 4.4s;
+  animation-delay: 7s;
 }
 
-@keyframes nrFlash {
-  0%, 3% { opacity: 0; }
-  6%, 18% { opacity: 1; }
-  23%, 100% { opacity: 0; }
+@keyframes nrGhost {
+  0% { opacity: 0; }
+  8%, 30% { opacity: 0.85; }
+  45%, 100% { opacity: 0; }
 }
 
 @media (max-width: 640px) {
   .nr-coda {
     gap: 0.15rem;
-    height: 5.25rem;
+    height: 9rem;
   }
 
   .nr-coda .nr-rabbit-left {
-    transform: translateX(-50%) scale(0.2);
+    transform: translateX(-50%) scale(0.34);
   }
 
   .nr-coda .nr-boy {
-    transform: translateX(-50%) scale(0.21);
+    transform: translateX(-50%) scale(0.32);
   }
 
   .nr-coda .nr-rabbit-right {
-    transform: translateX(-50%) scale(0.19);
+    transform: translateX(-50%) scale(0.33);
   }
 }
 
