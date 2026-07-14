@@ -191,6 +191,51 @@ const workSchema = fullText && piece ? {
         archiveCoverQuery.addEventListener('change', scheduleArchiveCoverFocus);
       }
     }
+
+    /* LothariOnline's opener: type, catch a typo, correct it, and try again. */
+    const lotharioTyping = document.querySelector('[data-lo-typing]');
+
+    if (lotharioTyping instanceof HTMLElement) {
+      const finalMessage = 'Hullo, I come in peace and curiosity 👽';
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (reducedMotion) {
+        lotharioTyping.textContent = finalMessage;
+      } else {
+        const wait = (milliseconds: number) =>
+          new Promise<void>((resolve) => window.setTimeout(resolve, milliseconds));
+
+        const typeText = async (text: string, pace = 68) => {
+          for (const character of text) {
+            lotharioTyping.textContent += character;
+            await wait(pace + Math.random() * 38);
+          }
+        };
+
+        const eraseText = async (count: number) => {
+          for (let index = 0; index < count; index += 1) {
+            lotharioTyping.textContent = (lotharioTyping.textContent ?? '').slice(0, -1);
+            await wait(105);
+          }
+        };
+
+        const playOpener = async () => {
+          while (lotharioTyping.isConnected) {
+            lotharioTyping.textContent = '';
+            await wait(750);
+            await typeText('Hullo, I come in peace and curiosoty');
+            await wait(520);
+            await eraseText(3);
+            await typeText('ity');
+            await wait(320);
+            await typeText(' 👽', 105);
+            await wait(2700);
+          }
+        };
+
+        void playOpener();
+      }
+    }
   </script>
 </BaseLayout>
 
@@ -224,4 +269,3 @@ const workSchema = fullText && piece ? {
     color: var(--text);
   }
 </style>
-

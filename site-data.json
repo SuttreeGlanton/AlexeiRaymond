@@ -616,7 +616,12 @@
       "link": "https://somewords.boards.net/thread/91/alexei-raymond",
       "cover": "covers/pieces/lotharionline.jpg",
       "excerpt": "Flowery language will not, cannot, hide the gnarled rot.",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "account": {
+        "slug": "lotharionline",
+        "label": "Read on site",
+        "title": "LothariOnline"
+      }
     },
     {
       "title": "The Pale and the Green",
