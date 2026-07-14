@@ -1,0 +1,65 @@
+---
+title: Clothesline Divorce
+fullText: true
+---
+The yard is vast. Is it life’s luxury, where a cascade of sensations dazzles the boy. On his head jingles a jester’s hat as he moves around the yard. He rarely looks up; and why would he, when so much is grounded. He rides his tricycle down the one path in the yard going from the gate to the entryway into his home. When he is not tired from doing so but simply restless for other stimulations, fascinations, he accosts a trail of labouring ants. They carry minute seeds and fragments of dry grass and are infinitely interesting. He crouches above them, beside them, and tests their patience with a twig or, when more eager, his grimy fingers. Sometimes the ants sense the danger that hums from his fingers and circumvent them where they appear in the middle of their path, though sometimes they simply clamber on and run around the curves and creases of his young hands. He picks and pops off their hard, shiny heads. The tactile feeling demands it. He winces when some retaliate with a bite. Out of the corner of his eye, plastic toys are saturated with colour under the sun’s unobstructed rays; they call to him. He turns to them while smelling whatever ant viscera and juices remain on his fingers. He doesn’t know his age, but he knows that he is smaller than all others. He is only able to keep in his consciousness that which occurs immediately before him, and it’s all that he needs or wants. The bright plastic toys scrape and clash on the concrete path where he tries to construct some rudimentary mechanism, as if in imitation of something seen on TV—the image embedded in him unconsciously. He is a toddler artificer. His craft awakens his thirst, but the bottle he has with him is dry. He throws it away absentmindedly.
+
+The door of his home opens, and out of it appears his tall, fair mother. She comes out into the yard, though not to call the boy home or ask him about what he’s doing. She is soon followed by the boy’s funny, strong father. He too doesn’t seem to be interested in what the boy is up to. It’s okay, because the boy doesn’t have anything to show them. Not yet. His parents seem to linger on the other side of the yard. One appears to constantly follow the other. One turns away; the other follows to reestablish eye contact. Their voices are low and too far to make out. The boy regains his focus on what lies below and turns to look at his mother’s garden. It looks dry, and nothing appears to be growing. The sight frustrates him and elicits some agitation. He doesn’t know why. Seeing the garden, he thinks of how his father and his grandfather dug huge holes in the earth there, which are now covered. The numerous, pink worms they unearthed excited him to no end. He even felt a pang of envy at his father’s and grandfather’s strength. How they lifted heavy, metal shovels full of earth with ease, and how they compared to his own small plastic one.
+
+He feels his mother’s soft hand on his shoulder. Then, her hand is on his wrist, and he supposes it’s time to go. The yard is always there anyway, and besides, he is thirsty. But she does not walk him toward the door of the house. They are going to the other side of the yard. His mother’s steps seem urgent and slightly faster than what he is used to. His father stands away from them and then begins walking toward them to close the distance. It seems that they will all go together. His father begins to talk as he walks closer, and his voice is somehow harsher than the boy’s ever heard it. The strength in it halts his mother’s step. The boy can’t understand the words even though they are in his own language. It is as if the harsher tone makes them unintelligible for him. The boy’s hand begins to tremble. The source of the tremble is not him, but his mother. It is her hand that quakes and transmits it to the boy’s hand. The trembling makes the boy look up, for the first time today, to try to make sense of his mother’s state. As his eyes go up, he sees the clothesline behind her. It’s drawn lower by the weight of clothes. He can see his own clothes moving there in the slight breeze, colourful. And then higher, his mother’s face is contorted into a shape he’s never seen before, and the world tilts.
+
+His father’s steps suddenly make the ground tremble too, and he is closer, and the boy’s hand is let go, and his mother walks—runs along the clothesline away from the boy and his father behind him.
+
+“Marina! Marina!” his father’s voice bellows after her.
+
+But his mother does not turn back and is partly obscured by the billowing clothes. The boy is certain he can hear a cry growing distant and being forced down the more his mother’s back recedes around the corner of the house. His father runs past him and into the clothes.
+
+It is a clothesline divorce.
+
+<div class="cd-line" role="img" aria-label="An animated clothesline: a shirt, a dress, pants, a small shirt, and a towel billow as a breeze passes through them.">
+<pre class="cd-frame cd-f1" aria-hidden="true">
+|\_______o____________o___________o__________o__________o_______/|
+|        |            |           |          |          |        |
+|     ___|___        _|_        __|__    <span class="cd-boy">  __|__    </span>  __|_       |
+|    |   v   |      /   \      |  |  |   <span class="cd-boy"> |  v  |   </span> |    |      |
+|    |       |     /     \     |  |  |   <span class="cd-boy"> |_____|   </span> |    |      |
+|    |_______|    /_______\    |__|__|               |____|      |
+|                                                                |
+</pre>
+<pre class="cd-frame cd-f2" aria-hidden="true">
+|\_______o____________o___________o__________o__________o_______/|
+|        |            |           |          |          |        |
+|     ___|___        _|_        __|__    <span class="cd-boy">  __|__    </span>  __|_       |
+|     \   v   \      \    \    |  |  |   <span class="cd-boy"> |  v  |   </span> |    |      |
+|      \       \      \    \   |  |  |   <span class="cd-boy"> |_____|   </span> |    |      |
+|       \_______\      \_____\ |__|__|               |____|      |
+|                                                                |
+</pre>
+<pre class="cd-frame cd-f3" aria-hidden="true">
+|\_______o____________o___________o__________o__________o_______/|
+|        |            |           |          |          |        |
+|     ___|___        _|_        __|__    <span class="cd-boy">  __|__    </span>  __|_       |
+|    |   v   |       \    \     \  \  \  <span class="cd-boy"> |  v  |   </span> |    |      |
+|     \       \       \    \     \  \  \ <span class="cd-boy"> |_____|   </span> |    |      |
+|      \_______\       \_____\    \__\__\            |____|      |
+|                                                                |
+</pre>
+<pre class="cd-frame cd-f4" aria-hidden="true">
+|\_______o____________o___________o__________o__________o_______/|
+|        |            |           |          |          |        |
+|     ___|___        _|_        __|__    <span class="cd-boy">  __|__    </span>  __|_       |
+|    |   v   |      /   \      |  |  |   <span class="cd-boy">  \  v  \  </span>  \    \     |
+|    |       |      \     \     \  \  \  <span class="cd-boy">   \_____\ </span>   \    \    |
+|    |_______|       \______\    \__\__\                \____\   |
+|                                                                |
+</pre>
+<pre class="cd-frame cd-f5" aria-hidden="true">
+|\_______o____________o___________o__________o__________o_______/|
+|        |            |           |          |          |        |
+|     ___|___        _|_        __|__    <span class="cd-boy">  __|__    </span>  __|_       |
+|    |   v   |      /   \      |  |  |   <span class="cd-boy"> |  v  |   </span> |    |      |
+|    |       |     /     \     |  |  |   <span class="cd-boy">  \_____\  </span>  \    \     |
+|    |_______|    /_______\    |__|__|                 \____\    |
+|                                                                |
+</pre>
+</div>

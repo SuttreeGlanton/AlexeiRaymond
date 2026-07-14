@@ -397,7 +397,12 @@
       "link": "https://www.the-crawfish.com/features/clothesline-divorcealexei-raymond",
       "cover": "covers/pieces/clothesline-divorce.jpg",
       "excerpt": "The yard is vast. Is it life’s luxury, where a cascade of sensations dazzles the boy.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "account": {
+        "slug": "clothesline-divorce",
+        "label": "Read on site",
+        "title": "Clothesline Divorce"
+      }
     },
     {
       "title": "Death to Legions",

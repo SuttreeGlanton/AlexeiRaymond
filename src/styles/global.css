@@ -1061,18 +1061,6 @@ img {
     align-items: flex-start;
     flex-direction: column;
   }
-
-  .chronology-sort {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    width: 100%;
-  }
-
-  .sort-button {
-    padding-inline: 7px;
-    letter-spacing: 0.12em;
-    line-height: 1.35;
-  }
 }
 
 /* --- Page visual crops --- */
@@ -2865,4 +2853,43 @@ img {
 /* --- Full-text story opening after epigraph --- */
 .archived-piece-page .prose p.story-opening {
   text-indent: 0;
+}
+
+/* --- Clothesline Divorce: animated ASCII coda --- */
+.cd-line {
+  position: relative;
+  margin: clamp(48px, 7vw, 72px) auto 0;
+  max-width: 68ch;
+  height: 8.6em;
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
+  font-size: clamp(0.4rem, 1.1vw, 0.58rem);
+  line-height: 1.15;
+  color: var(--dim);
+}
+
+.cd-line .cd-frame {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  white-space: pre;
+  text-indent: 0;
+  opacity: 0;
+  animation: cdFlip 4.5s steps(1) infinite;
+}
+
+.cd-line .cd-f2 { animation-delay: 0.9s; }
+.cd-line .cd-f3 { animation-delay: 1.8s; }
+.cd-line .cd-f4 { animation-delay: 2.7s; }
+.cd-line .cd-f5 { animation-delay: 3.6s; }
+
+@keyframes cdFlip {
+  0%, 19.99% { opacity: 1; }
+  20%, 100% { opacity: 0; }
+}
+
+.cd-line .cd-boy { color: #c08a63; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cd-line .cd-frame { animation: none; }
+  .cd-line .cd-f1 { opacity: 1; }
 }
