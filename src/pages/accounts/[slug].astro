@@ -47,7 +47,11 @@ const archiveGenreSlug = piece?.genre ? piece.genre.toLowerCase().replace(/[^a-z
   <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
     <div class="overline">{overlineLabel}</div>
-    <h1 class="page-title account-title" id="account-title">{title}</h1>
+    <h1 class="page-title account-title" id="account-title">
+      {entry.id === 'his-green-delight' ? (
+        <>His <span class="hgd-green">Green</span> Delight</>
+      ) : title}
+    </h1>
     {metaParts.length > 0 && <p class="account-meta">{metaParts.join(' \u00b7 ')}</p>}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (

@@ -25,7 +25,7 @@
       "No, Rabbit",
       "193 Thoughts of You",
       "LothariOnline",
-      "6080",
+      "(6,080)",
       "Death to Legions",
       "Witnesses",
       "Deathwish",
@@ -261,8 +261,7 @@
       "publication": "Empyrean",
       "date": "21/06/2025",
       "tags": [
-        "In print",
-        "Defunct"
+        "In print"
       ],
       "link": "",
       "cover": "covers/pieces/the-boxer.jpg",
@@ -308,7 +307,7 @@
       "cover": "covers/pieces/the-hunt.jpg",
       "excerpt": "I wake up at dawn, which means, I realize, that the hunt is on.",
       "genre": "Non-fiction",
-      "issue": "(special issue: homeland)",
+      "issue": "(Special Issue: Homeland)",
       "account": {
         "slug": "the-hunt",
         "label": "Read on site",
@@ -465,7 +464,8 @@
       "link": "https://justeliterary.com.ng/issue-iv/",
       "cover": "covers/pieces/at-the-window.jpg",
       "excerpt": "Why does the room tilt so?",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "issue": "#4"
     },
     {
       "title": "The Duet",
@@ -576,9 +576,14 @@
       ],
       "link": "https://bluedaisiesjournal.wixsite.com/bluedaisiesjournal",
       "cover": "covers/pieces/his-green-delight.jpg",
-      "excerpt": "Silence settles between the scarabeous man and the gilt woman.",
+      "excerpt": "Silence settles between the scarabeous man and the gilt\u00a0woman.",
       "genre": "Flash fiction",
-      "issue": "#4"
+      "issue": "#4",
+      "account": {
+        "slug": "his-green-delight",
+        "label": "Read on site",
+        "title": "His Green Delight"
+      }
     },
     {
       "title": "How the Night Glows",
@@ -669,7 +674,7 @@
       "genre": "Short fiction"
     },
     {
-      "title": "6080",
+      "title": "(6,080)",
       "cycle": "Dreams",
       "publication": "Eulogy Press",
       "date": "12/03/2026",
