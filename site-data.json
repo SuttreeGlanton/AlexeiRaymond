@@ -694,7 +694,12 @@
       "link": "https://eulogy.press/#raymond-6080",
       "cover": "covers/pieces/6080.jpg",
       "excerpt": "Batter my heart, five-eye’d God",
-      "genre": "Poem"
+      "genre": "Poem",
+      "account": {
+        "slug": "6080",
+        "label": "Read on site",
+        "title": "(6,080)"
+      }
     },
     {
       "title": "Father Frost",
