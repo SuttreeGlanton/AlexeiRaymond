@@ -27,7 +27,6 @@ const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Accoun
 const backHref = cycle ? withBase(`cycles/${cycle.id}/`) : withBase('');
 const backLabel = cycle ? cycle.name : 'All cycles';
 const originalPublication = piece ? publicationLabel(piece) : '';
-const metaParts = piece ? [originalPublication, formatLongDate(piece.date)].filter(Boolean) : [];
 const archiveDescription = piece
   ? `${piece.title} by ${site.author}. Originally published in ${originalPublication}${formatLongDate(piece.date) ? `, ${formatLongDate(piece.date)}` : ''}.`
   : site.bio;
@@ -115,7 +114,13 @@ const workSchema = fullText && piece ? {
         <>His <span class="hgd-green">Green</span> Delight</>
       ) : title}
     </h1>
-    {metaParts.length > 0 && <p class="account-meta">{metaParts.join(' \u00b7 ')}</p>}
+    {piece && (piece.publication || piece.issue || formatLongDate(piece.date)) && (
+      <p class="account-meta">
+        {piece.publication && <span class="card-publication">{piece.publication}</span>}
+        {piece.issue && <> {piece.issue}</>}
+        {formatLongDate(piece.date) && <> &middot; {formatLongDate(piece.date)}</>}
+      </p>
+    )}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
         <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
@@ -143,7 +148,7 @@ const workSchema = fullText && piece ? {
     </div>
     {piece && canLinkToPiece(piece) && (
       <p class="account-outbound">
-        <a href={piece.link} target="_blank" rel="noreferrer">Read &ldquo;{piece.title}&rdquo; at {piece.publication} &rarr;</a>
+        <a href={piece.link} target="_blank" rel="noreferrer">Read &ldquo;{piece.title}&rdquo; at <span class="card-publication">{piece.publication}</span> &rarr;</a>
       </p>
     )}
   </article>
