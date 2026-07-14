@@ -22,7 +22,7 @@ const fullText = entry.data.fullText === true;
 const isLog = entry.data.format === 'log';
 const isTracked = entry.data.format === 'tracked';
 const archivePresentation = archived || fullText;
-const overlineLabel = archived ? 'Archived piece' : fullText ? 'Full text' : 'Account';
+const overlineLabel = archived ? 'Archived piece' : fullText ? 'In full' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
 const backHref = cycle ? withBase(`cycles/${cycle.id}/`) : withBase('');
 const backLabel = cycle ? cycle.name : 'All cycles';
@@ -50,7 +50,7 @@ const seoGenreLabels: Record<string, string> = {
   'Non-fiction': 'Non-fiction',
   'Other': 'Writing'
 };
-const seoGenreLabel = piece?.genre ? (seoGenreLabels[piece.genre] ?? piece.genre) : 'Full Text';
+const seoGenreLabel = piece?.genre ? (seoGenreLabels[piece.genre] ?? piece.genre) : 'Writing';
 const seoTitle = fullText && piece
   ? `${piece.title} \u2014 ${seoGenreLabel} by ${site.author}`
   : `${title} \u2014 ${site.author}`;
@@ -219,5 +219,4 @@ const workSchema = fullText && piece ? {
     color: var(--text);
   }
 </style>
-
 

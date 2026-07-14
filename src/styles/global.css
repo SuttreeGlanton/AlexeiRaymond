@@ -2887,7 +2887,30 @@ img {
   20%, 100% { opacity: 0; }
 }
 
-.cd-line .cd-boy { color: #c08a63; }
+.cd-line .cd-shirt { color: #d88379; }
+.cd-line .cd-dress { color: #d9b45f; }
+.cd-line .cd-pants { color: #78a9d1; }
+.cd-line .cd-boy { color: #79bd92; }
+.cd-line .cd-towel { color: #b68cd0; }
+
+@media (hover: hover) and (pointer: fine) {
+  .cd-line {
+    transition: filter 180ms ease;
+  }
+
+  .cd-line:hover {
+    filter: brightness(1.14) saturate(1.12);
+  }
+
+  .cd-line:hover .cd-frame {
+    animation-duration: 1.5s;
+  }
+
+  .cd-line:hover .cd-f2 { animation-delay: 0.3s; }
+  .cd-line:hover .cd-f3 { animation-delay: 0.6s; }
+  .cd-line:hover .cd-f4 { animation-delay: 0.9s; }
+  .cd-line:hover .cd-f5 { animation-delay: 1.2s; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .cd-line .cd-frame { animation: none; }

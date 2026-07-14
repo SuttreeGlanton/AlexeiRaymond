@@ -20,46 +20,46 @@ It is a clothesline divorce.
 <pre class="cd-frame cd-f1" aria-hidden="true">
 |\_______o____________o___________o__________o__________o_______/|
 |        |            |           |          |          |        |
-|     ___|___        _|_        __|__    <span class="cd-boy">  __|__    </span>  __|_       |
-|    |   v   |      /   \      |  |  |   <span class="cd-boy"> |  v  |   </span> |    |      |
-|    |       |     /     \     |  |  |   <span class="cd-boy"> |_____|   </span> |    |      |
-|    |_______|    /_______\    |__|__|               |____|      |
+|     <span class="cd-shirt">___|___</span>        <span class="cd-dress">_|_</span>        <span class="cd-pants">__|__</span>      <span class="cd-boy">__|__</span>      <span class="cd-towel">__|_</span>       |
+|    <span class="cd-shirt">|   v   |</span>      <span class="cd-dress">/   \</span>      <span class="cd-pants">|  |  |</span>    <span class="cd-boy">|  v  |</span>    <span class="cd-towel">|    |</span>      |
+|    <span class="cd-shirt">|       |</span>     <span class="cd-dress">/     \</span>     <span class="cd-pants">|  |  |</span>    <span class="cd-boy">|_____|</span>    <span class="cd-towel">|    |</span>      |
+|    <span class="cd-shirt">|_______|</span>    <span class="cd-dress">/_______\</span>    <span class="cd-pants">|__|__|</span>               <span class="cd-towel">|____|</span>      |
 |                                                                |
 </pre>
 <pre class="cd-frame cd-f2" aria-hidden="true">
 |\_______o____________o___________o__________o__________o_______/|
 |        |            |           |          |          |        |
-|     ___|___        _|_        __|__    <span class="cd-boy">  __|__    </span>  __|_       |
-|     \   v   \      \    \    |  |  |   <span class="cd-boy"> |  v  |   </span> |    |      |
-|      \       \      \    \   |  |  |   <span class="cd-boy"> |_____|   </span> |    |      |
-|       \_______\      \_____\ |__|__|               |____|      |
+|     <span class="cd-shirt">___|___</span>        <span class="cd-dress">_|_</span>        <span class="cd-pants">__|__</span>      <span class="cd-boy">__|__</span>      <span class="cd-towel">__|_</span>       |
+|     <span class="cd-shirt">\   v   \</span>      <span class="cd-dress">\    \</span>    <span class="cd-pants">|  |  |</span>    <span class="cd-boy">|  v  |</span>    <span class="cd-towel">|    |</span>      |
+|      <span class="cd-shirt">\       \</span>      <span class="cd-dress">\    \</span>   <span class="cd-pants">|  |  |</span>    <span class="cd-boy">|_____|</span>    <span class="cd-towel">|    |</span>      |
+|       <span class="cd-shirt">\_______\</span>      <span class="cd-dress">\_____\</span> <span class="cd-pants">|__|__|</span>               <span class="cd-towel">|____|</span>      |
 |                                                                |
 </pre>
 <pre class="cd-frame cd-f3" aria-hidden="true">
 |\_______o____________o___________o__________o__________o_______/|
 |        |            |           |          |          |        |
-|     ___|___        _|_        __|__    <span class="cd-boy">  __|__    </span>  __|_       |
-|    |   v   |       \    \     \  \  \  <span class="cd-boy"> |  v  |   </span> |    |      |
-|     \       \       \    \     \  \  \ <span class="cd-boy"> |_____|   </span> |    |      |
-|      \_______\       \_____\    \__\__\            |____|      |
+|     <span class="cd-shirt">___|___</span>        <span class="cd-dress">_|_</span>        <span class="cd-pants">__|__</span>      <span class="cd-boy">__|__</span>      <span class="cd-towel">__|_</span>       |
+|    <span class="cd-shirt">|   v   |</span>       <span class="cd-dress">\    \</span>     <span class="cd-pants">\  \  \</span>   <span class="cd-boy">|  v  |</span>    <span class="cd-towel">|    |</span>      |
+|     <span class="cd-shirt">\       \</span>       <span class="cd-dress">\    \</span>     <span class="cd-pants">\  \  \</span>  <span class="cd-boy">|_____|</span>    <span class="cd-towel">|    |</span>      |
+|      <span class="cd-shirt">\_______\</span>       <span class="cd-dress">\_____\</span>    <span class="cd-pants">\__\__\</span>            <span class="cd-towel">|____|</span>      |
 |                                                                |
 </pre>
 <pre class="cd-frame cd-f4" aria-hidden="true">
 |\_______o____________o___________o__________o__________o_______/|
 |        |            |           |          |          |        |
-|     ___|___        _|_        __|__    <span class="cd-boy">  __|__    </span>  __|_       |
-|    |   v   |      /   \      |  |  |   <span class="cd-boy">  \  v  \  </span>  \    \     |
-|    |       |      \     \     \  \  \  <span class="cd-boy">   \_____\ </span>   \    \    |
-|    |_______|       \______\    \__\__\                \____\   |
+|     <span class="cd-shirt">___|___</span>        <span class="cd-dress">_|_</span>        <span class="cd-pants">__|__</span>      <span class="cd-boy">__|__</span>      <span class="cd-towel">__|_</span>       |
+|    <span class="cd-shirt">|   v   |</span>      <span class="cd-dress">/   \</span>      <span class="cd-pants">|  |  |</span>     <span class="cd-boy">\  v  \</span>    <span class="cd-towel">\    \</span>     |
+|    <span class="cd-shirt">|       |</span>      <span class="cd-dress">\     \</span>     <span class="cd-pants">\  \  \</span>     <span class="cd-boy">\_____\</span>    <span class="cd-towel">\    \</span>    |
+|    <span class="cd-shirt">|_______|</span>       <span class="cd-dress">\______\</span>    <span class="cd-pants">\__\__\</span>                <span class="cd-towel">\____\</span>   |
 |                                                                |
 </pre>
 <pre class="cd-frame cd-f5" aria-hidden="true">
 |\_______o____________o___________o__________o__________o_______/|
 |        |            |           |          |          |        |
-|     ___|___        _|_        __|__    <span class="cd-boy">  __|__    </span>  __|_       |
-|    |   v   |      /   \      |  |  |   <span class="cd-boy"> |  v  |   </span> |    |      |
-|    |       |     /     \     |  |  |   <span class="cd-boy">  \_____\  </span>  \    \     |
-|    |_______|    /_______\    |__|__|                 \____\    |
+|     <span class="cd-shirt">___|___</span>        <span class="cd-dress">_|_</span>        <span class="cd-pants">__|__</span>      <span class="cd-boy">__|__</span>      <span class="cd-towel">__|_</span>       |
+|    <span class="cd-shirt">|   v   |</span>      <span class="cd-dress">/   \</span>      <span class="cd-pants">|  |  |</span>    <span class="cd-boy">|  v  |</span>    <span class="cd-towel">|    |</span>      |
+|    <span class="cd-shirt">|       |</span>     <span class="cd-dress">/     \</span>     <span class="cd-pants">|  |  |</span>     <span class="cd-boy">\_____\</span>    <span class="cd-towel">\    \</span>     |
+|    <span class="cd-shirt">|_______|</span>    <span class="cd-dress">/_______\</span>    <span class="cd-pants">|__|__|</span>                 <span class="cd-towel">\____\</span>    |
 |                                                                |
 </pre>
 </div>
