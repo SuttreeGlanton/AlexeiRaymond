@@ -2928,7 +2928,7 @@ img {
   height: clamp(5.5rem, 11vw, 7.25rem);
   margin: clamp(2.75rem, 6vw, 4rem) auto 0;
   overflow: hidden;
-  color: var(--muted);
+  color: var(--text);
   font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
 }
 
