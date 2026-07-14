@@ -1061,6 +1061,18 @@ img {
     align-items: flex-start;
     flex-direction: column;
   }
+
+  .chronology-sort {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .sort-button {
+    padding-inline: 7px;
+    letter-spacing: 0.12em;
+    line-height: 1.35;
+  }
 }
 
 /* --- Page visual crops --- */

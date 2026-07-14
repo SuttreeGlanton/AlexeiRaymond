@@ -60,6 +60,7 @@ function cycleLinksForPiece(piece) {
           <div class="chronology-sort" aria-label="Sort published pieces">
             <button type="button" class="sort-button is-active" data-sort-order="newest" aria-pressed="true">Latest first</button>
             <button type="button" class="sort-button" data-sort-order="oldest" aria-pressed="false">Earliest first</button>
+            <button type="button" class="sort-button" data-sort-order="onsite" aria-pressed="false">Read on site first</button>
           </div>
         </div>
 
@@ -71,9 +72,13 @@ function cycleLinksForPiece(piece) {
             return (
               <>
                 {year && year !== previousYear && (
-                  <li class="chron-year-sep" aria-hidden="true">{year}</li>
+                  <li class="chron-year-sep" data-sort-separator aria-hidden="true">{year}</li>
                 )}
-                <li class="chronology-item" data-date={dateTimestamp(piece.date)}>
+                <li
+                  class="chronology-item"
+                  data-date={dateTimestamp(piece.date)}
+                  data-on-site={piece.account?.slug ? 'true' : 'false'}
+                >
                   <p class="bibliography-line">
                     <span aria-hidden="true">&ldquo;</span>{canLinkToPiece(piece) ? (
                       <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>{piece.title}</a>
@@ -122,12 +127,32 @@ function cycleLinksForPiece(piece) {
     const list = document.querySelector('[data-published-list]');
     const buttons = Array.from(document.querySelectorAll('[data-sort-order]'));
 
-    function renderYearMarkers() {
+    function renderSeparators(order) {
       if (!list) return;
 
-      list.querySelectorAll('.chron-year-sep').forEach((node) => node.remove());
+      list.querySelectorAll('[data-sort-separator]').forEach((node) => node.remove());
 
       const items = Array.from(list.querySelectorAll('.chronology-item'));
+
+      if (order === 'onsite') {
+        let lastGroup = '';
+
+        for (const item of items) {
+          const group = item.dataset.onSite === 'true' ? 'onsite' : 'other';
+
+          if (group !== lastGroup) {
+            const separator = document.createElement('li');
+            separator.className = 'chron-year-sep chron-group-sep';
+            separator.dataset.sortSeparator = '';
+            separator.textContent = group === 'onsite' ? 'Read on site' : 'Other publications';
+            list.insertBefore(separator, item);
+            lastGroup = group;
+          }
+        }
+
+        return;
+      }
+
       let lastYear = null;
 
       for (const item of items) {
@@ -137,6 +162,7 @@ function cycleLinksForPiece(piece) {
         if (year && year !== lastYear) {
           const separator = document.createElement('li');
           separator.className = 'chron-year-sep';
+          separator.dataset.sortSeparator = '';
           separator.setAttribute('aria-hidden', 'true');
           separator.textContent = String(year);
           list.insertBefore(separator, item);
@@ -153,6 +179,16 @@ function cycleLinksForPiece(piece) {
       items.sort((a, b) => {
         const first = Number(a.dataset.date || 0);
         const second = Number(b.dataset.date || 0);
+
+        if (order === 'onsite') {
+          const firstOnSite = a.dataset.onSite === 'true';
+          const secondOnSite = b.dataset.onSite === 'true';
+
+          if (firstOnSite !== secondOnSite) {
+            return firstOnSite ? -1 : 1;
+          }
+        }
+
         return order === 'oldest' ? first - second : second - first;
       });
 
@@ -160,7 +196,7 @@ function cycleLinksForPiece(piece) {
         list.appendChild(item);
       }
 
-      renderYearMarkers();
+      renderSeparators(order);
 
       for (const button of buttons) {
         const active = button.dataset.sortOrder === order;
@@ -169,7 +205,7 @@ function cycleLinksForPiece(piece) {
       }
     }
 
-    renderYearMarkers();
+    renderSeparators('newest');
 
     for (const button of buttons) {
       button.addEventListener('click', () => {
