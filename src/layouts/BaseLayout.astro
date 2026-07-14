@@ -1,5 +1,4 @@
 ---
-import type { ImageMetadata } from 'astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import '../styles/global.css';
@@ -14,7 +13,7 @@ import { absoluteSiteUrl, withBase } from '../lib/paths';
 interface Props {
   title?: string;
   description?: string;
-  socialImage?: ImageMetadata;
+  socialImage?: { src: string; width?: number; height?: number };
   socialImageAlt?: string;
   ogType?: 'website' | 'article';
   publishedTime?: string;
