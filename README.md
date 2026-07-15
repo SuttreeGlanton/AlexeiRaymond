@@ -1,6 +1,8 @@
 # Alexei Raymond author site
 
-A minimal, black-and-white Astro static site for Alexei Raymond's author website. The project is intentionally data-driven: `site-data.json` is the single source of truth for the site content.
+A lean Astro static site for Alexei Raymond's author website. It deploys to
+GitHub Pages and intentionally uses no client framework, backend, CMS, or
+runtime image service.
 
 ## Local development
 
@@ -9,81 +11,74 @@ npm install
 npm run dev
 ```
 
-Build and verify the data model:
+Build the production site:
 
 ```bash
 npm run build
 ```
 
-## Editing the site content
+Preview the production build:
 
-All author, cycle, piece, and interview content lives in `site-data.json`.
-
-### Add a new piece
-
-Add a new object to the `pieces` array:
-
-```json
-{
-  "title": "New Piece Title",
-  "cycle": "Dreams",
-  "publication": "Magazine Name",
-  "date": "31/12/2026",
-  "tags": ["Online"],
-  "link": "https://example.com/new-piece",
-  "cover": "covers/new-piece.jpg"
-}
+```bash
+npm run preview
 ```
 
-Rules:
+## Content
 
-- `cycle` must match one of the cycle names in `cycles`.
-- Dates use European `DD/MM/YYYY` format.
-- Upcoming pieces use `"date": null`, include the `"Upcoming"` tag, and leave `link` empty until publication.
-- Defunct pieces include the `"Defunct"` tag, leave `link` empty, and add a `note`, for example: `"originally published in X (now defunct)"`.
-- `Online` and `In print` are independent tags. Use both when both apply.
-- `excerpt` (optional) — a short teaser sentence from the story, without surrounding quotation marks (the site adds its own). On desktop it fades in over the cover on hover; on mobile it shows under the card meta. Omit the field (or leave it empty) and nothing renders.
-- `note` (optional) — a small italic line under the card, e.g. for pieces published under a different title. Defunct pieces don't need one; the Defunct tag plus the publication name already tell the story.
+Structured author, cycle, publication, and piece metadata lives in
+`site-data.json`. Full-text reading pages live in `src/content/accounts/` and
+are connected to their piece through the optional `account` entry in
+`site-data.json`.
 
-## Covers
+Important conventions:
 
-The site is designed to look finished even before cover photos exist — empty `cover` values render typographic placeholders. When you have photos, there are two ways to add them.
+- Dates use `DD/MM/YYYY`.
+- Upcoming pieces use `"date": null`, include the `Upcoming` tag, and have an
+  empty external link.
+- Defunct publications include the `Defunct` tag and have an empty external
+  link.
+- A piece's `cycle` is its primary cycle. Hinge pieces may also have a
+  `cycles` array, which must include the primary cycle.
+- Cover paths use `covers/...` and resolve under `src/assets/`.
 
-### Automatic (recommended — no manual resizing)
+## Images
 
-1. `npm install` once, to pull in `sharp` (used only by this script, not by the site itself).
-2. Drop raw photos, any size or format, into two folders at the repo root:
-   - `raw-covers/cycles/` — name each file after the cycle, e.g. `Portici.jpg` or `Fool's Gold.png`.
-   - `raw-covers/pieces/` — name each file after the exact piece title, e.g. `The Boxer.jpg`. A file named `interview.jpg` (any extension) becomes the interview page cover.
-   - A file named `header.jpg` (any extension) in `raw-covers/cycles/` becomes the home-page hero backdrop, processed wide (2400×1350).
+Production covers belong in:
 
-   Re-running is always safe: replacing a photo in `raw-covers/` and running the script again overwrites the processed copy, and photos can be added in batches whenever they're ready.
-3. Run:
-
-   ```bash
-   npm run covers
-   ```
-
-   This crops each photo to the right aspect ratio (4:5 for cycle tiles, 5:6 for piece cards), converts it to grayscale, resizes and compresses it, writes it into `public/covers/`, and fills in the matching `cover` field in `site-data.json` automatically. It prints a report of what matched and what didn't — rename and re-run for anything unmatched.
-4. Review the `site-data.json` diff, then `npm run build` to confirm everything renders, and commit.
-
-`raw-covers/` is gitignored — only the processed output in `public/covers/` gets committed.
-
-### Manual
-
-Put an already-sized image directly in `public/covers/` and reference it in `site-data.json` without a leading slash:
-
-```json
-"cover": "covers/my-piece.jpg"
+```text
+src/assets/covers/cycles/
+src/assets/covers/pieces/
 ```
+
+The homepage hero and interview cover live directly under
+`src/assets/covers/`. Decorative page images live under
+`src/assets/page-visuals/`.
+
+After adding or replacing an image, update its path in `site-data.json`, then
+run `npm run build`. Astro generates the responsive production derivatives;
+do not commit generated `dist/` files or temporary/backup images.
+
+## Validation
+
+```bash
+npm run verify:data
+npm run check:assets
+npm run build
+npm run check:metadata
+npm run check:links:local
+npm run audit:privacy
+```
+
+Use `npm run check:links` when external link availability also needs to be
+tested. Use `npm run audit:privacy:deep` before a major public-repository
+cleanup.
 
 ## Deployment
 
-The site deploys to GitHub Pages through `.github/workflows/deploy.yml`, which builds with Node 22 (`actions/setup-node`) and publishes with `actions/upload-pages-artifact` and `actions/deploy-pages`.
+`.github/workflows/deploy.yml` builds with Node 22 and deploys `dist/` to
+GitHub Pages after every push to `main`.
 
-The project is configured as a GitHub Pages project site:
+- Site: `https://suttreeglanton.github.io`
+- Base path: `/AlexeiRaymond`
 
-- `site`: `https://suttreeglanton.github.io`
-- `base`: `/AlexeiRaymond`
-
-After pushing to `main`, go to the repository's **Settings → Pages** and choose **GitHub Actions** as the Pages source. Future pushes to `main` will build and deploy automatically.
+GitHub Pages should use **GitHub Actions** as its deployment source.

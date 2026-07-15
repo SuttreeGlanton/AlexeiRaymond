@@ -4,7 +4,12 @@ import { site } from '../lib/data';
 import { withBase } from '../lib/paths';
 ---
 
-<BaseLayout title={`Page not found — ${site.author}`}>
+<BaseLayout
+  title={`Page not found — ${site.author}`}
+  description="The requested page could not be found on Alexei Raymond's author site."
+  robots="noindex"
+  canonicalPath="404"
+>
   <section class="page-shell page-hero text-page" aria-labelledby="notfound-title">
     <div class="overline">404</div>
     <h1 class="page-title" id="notfound-title">Not found</h1>

@@ -1,12 +1,15 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TagList from '../components/TagList.astro';
+import chronologyVisual from '../assets/page-visuals/chronology-records.jpg';
 import { canLinkToPiece, cycleByName, cycleNamesForPiece, formatMonthYear, parseDate, publishedNewestFirst, site, upcomingPieces, publicationLabel } from '../lib/data';
-import { assetPath, withBase } from '../lib/paths';
+import { withBase } from '../lib/paths';
 
 const upcoming = upcomingPieces();
 const published = publishedNewestFirst();
-const chronologyVisual = assetPath('page-visuals/chronology-records.jpg');
+const chronologyWidths = [720, 960, 1080, 1200, 1400];
+const chronologySizes = '(max-width: 1080px) 1px, (max-width: 1687px) 64vw, 1080px';
 
 function dateTimestamp(date) {
   return parseDate(date)?.getTime() ?? 0;
@@ -118,8 +121,28 @@ function cycleLinksForPiece(piece) {
     </div>
 
     <aside class="page-visual chronology-visual" aria-hidden="true" data-chronology-visual>
-      <img src={chronologyVisual} alt="" loading="lazy" />
-      <img class="chronology-color" src={chronologyVisual} alt="" loading="lazy" aria-hidden="true" />
+      <Image
+        src={chronologyVisual}
+        alt=""
+        widths={chronologyWidths}
+        sizes={chronologySizes}
+        format="webp"
+        quality={82}
+        loading="lazy"
+        decoding="async"
+      />
+      <Image
+        class="chronology-color"
+        src={chronologyVisual}
+        alt=""
+        widths={chronologyWidths}
+        sizes={chronologySizes}
+        format="webp"
+        quality={82}
+        loading="lazy"
+        decoding="async"
+        aria-hidden="true"
+      />
     </aside>
   </div>
 

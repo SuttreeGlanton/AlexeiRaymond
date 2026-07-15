@@ -13,7 +13,7 @@ dist/
 .DS_Store
 Thumbs.db
 
-# unprocessed source photos for scripts/process-covers.mjs
+# optional local source photos and working files
 raw-covers/
 
 source-docx/

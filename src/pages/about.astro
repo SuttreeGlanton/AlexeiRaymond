@@ -1,20 +1,22 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import aboutVisual from '../assets/page-visuals/about-portrait.jpg';
 import { site, socialHref, socialLabel } from '../lib/data';
-import { assetPath } from '../lib/paths';
 
 const bloodHoneyUrl = 'https://www.bloodhoneylit.com/';
 const bloodHoneyName = 'Blood+Honey';
 const [bioBefore, bioAfter] = site.bio.split(bloodHoneyName);
 const canLinkBloodHoney = typeof bioAfter === 'string';
-const aboutVisual = assetPath('page-visuals/about-portrait.jpg');
-
 // Prefer a pre-encoded address so the plain email does not appear in this
 // public repository. Fallback keeps the old plain-email path working.
 const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).toString('base64') : '');
 ---
 
-<BaseLayout title={`About — ${site.author}`}>
+<BaseLayout
+  title={`About — ${site.author}`}
+  description="About Alexei Raymond, his writing, editorial work, social profiles, and contact information."
+>
   <div class="page-shell page-with-visual about-with-visual">
     <section class="page-hero text-page page-copy about-copy" aria-labelledby="about-title">
       <h1 class="page-title" id="about-title">About</h1>
@@ -54,7 +56,16 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
     </section>
 
     <aside class="page-visual about-visual" aria-hidden="true">
-      <img src={aboutVisual} alt="" loading="lazy" />
+      <Image
+        src={aboutVisual}
+        alt=""
+        widths={[320, 480, 640, 914]}
+        sizes="(max-width: 1080px) 1px, (max-width: 1600px) 40vw, 640px"
+        format="webp"
+        quality={82}
+        loading="lazy"
+        decoding="async"
+      />
     </aside>
   </div>
 

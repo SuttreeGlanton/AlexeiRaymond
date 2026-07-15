@@ -13,6 +13,7 @@
     "check:links": "node scripts/check-links.mjs",
     "check:links:strict": "node scripts/check-links.mjs --strict-external",
     "check:links:local": "node scripts/check-links.mjs --skip-external",
+    "check:assets": "node scripts/check-assets.mjs",
     "check:metadata": "node scripts/check-metadata.mjs",
     "clean": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\"",
     "fix:sitemap": "node scripts/fix-sitemap.mjs"

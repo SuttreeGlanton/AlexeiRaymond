@@ -13,6 +13,8 @@ import { absoluteSiteUrl, withBase } from '../lib/paths';
 interface Props {
   title?: string;
   description?: string;
+  robots?: string;
+  canonicalPath?: string;
   socialImage?: { src: string; width?: number; height?: number };
   socialImageAlt?: string;
   ogType?: 'website' | 'article';
@@ -23,13 +25,15 @@ interface Props {
 const {
   title = site.author,
   description = site.bio,
+  robots,
+  canonicalPath,
   socialImage: pageSocialImage,
   socialImageAlt,
   ogType = 'website',
   publishedTime,
   structuredData
 } = Astro.props;
-const canonical = absoluteSiteUrl(Astro.url.pathname, Astro.site);
+const canonical = absoluteSiteUrl(canonicalPath ?? Astro.url.pathname, Astro.site);
 const socialImageSource = pageSocialImage?.src || site.socialCard || '';
 const socialImage = socialImageSource ? absoluteSiteUrl(socialImageSource, Astro.site) : '';
 const socialImageWidth = pageSocialImage?.width ?? (site.socialCard ? 1200 : undefined);
@@ -58,6 +62,7 @@ const pageSchema = structuredData ? serializeJsonLd(structuredData) : '';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0a0a0a" />
     <meta name="description" content={description} />
+    {robots && <meta name="robots" content={robots} />}
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" href={withBase('sitemap-index.xml')} />
     <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
@@ -88,7 +93,7 @@ const pageSchema = structuredData ? serializeJsonLd(structuredData) : '';
   </head>
   <body>
     <SiteHeader />
-    <main class="site-main" id="main-content" tabindex="-1">
+    <main class="site-main">
       <slot />
     </main>
     <SiteFooter />

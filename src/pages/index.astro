@@ -8,10 +8,13 @@ import { imageAsset } from '../lib/image-assets';
 
 const headerImage = imageAsset(site.headerCover);
 const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
-const heroWidths = [640, 960, 1280, 1800];
+const heroWidths = [640, 960, 1280, 1440, 1600, 1800];
 ---
 
-<BaseLayout title={site.author}>
+<BaseLayout
+  title={site.author}
+  description="Short fiction, flash, poems, and the pursuit of unspeakable loveliness by Alexei Raymond."
+>
   <section class="hero" aria-labelledby="home-title" data-color-reveal>
     {headerImage ? (
       <>

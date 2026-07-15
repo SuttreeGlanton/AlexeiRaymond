@@ -243,6 +243,7 @@ if (Array.isArray(data.cycles)) {
 }
 
 const pieceTitles = new Set();
+const accountSlugs = new Set();
 const totalByCycle = new Map([...cycleNames].map((cycleName) => [cycleName, 0]));
 
 if (Array.isArray(data.pieces)) {
@@ -371,6 +372,14 @@ if (Array.isArray(data.pieces)) {
         addError(`${label}.account.slug: "${piece.account.slug}" should be a lowercase slug.`);
       }
 
+      if (piece.account.slug && accountSlugs.has(piece.account.slug)) {
+        addError(`${label}.account.slug: duplicate account slug "${piece.account.slug}".`);
+      }
+
+      if (piece.account.slug) {
+        accountSlugs.add(piece.account.slug);
+      }
+
       if (piece.account.slug && !accountMarkdownExists(piece.account.slug)) {
         addError(`${label}: missing archive markdown for account slug "${piece.account.slug}".`);
       }
@@ -422,9 +431,16 @@ if (isPlainObject(data.interview)) {
   }
 }
 
-const assignedPieceCount = [...totalByCycle.values()].reduce((sum, count) => sum + count, 0);
-if (assignedPieceCount < (Array.isArray(data.pieces) ? data.pieces.length : 0)) {
-  addError('Every piece must appear on exactly one valid cycle page.');
+const accountsDir = path.join(repoRoot, 'src', 'content', 'accounts');
+if (fs.existsSync(accountsDir)) {
+  for (const file of fs.readdirSync(accountsDir)) {
+    if (!/\.mdx?$/i.test(file)) continue;
+
+    const slug = file.replace(/\.mdx?$/i, '');
+    if (!accountSlugs.has(slug)) {
+      addError(`src/content/accounts/${file}: no piece references account slug "${slug}".`);
+    }
+  }
 }
 
 if (warnings.length) {

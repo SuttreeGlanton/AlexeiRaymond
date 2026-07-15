@@ -6,5 +6,9 @@ export default defineConfig({
   base: '/AlexeiRaymond',
   output: 'static',
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
-  integrations: [sitemap()]
+  integrations: [
+    sitemap({
+      filter: (page) => !page.endsWith('/interview/')
+    })
+  ]
 });
