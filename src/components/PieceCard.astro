@@ -2,13 +2,15 @@
 import TagList from './TagList.astro';
 import OptimizedImage from './OptimizedImage.astro';
 import type { Piece } from '../lib/data';
-import { canLinkToPiece, formatShortDate, isDefunct, isUpcoming, publicationLabel } from '../lib/data';
+import { canLinkToPiece, formatShortDate, isDefunct, isUpcoming, parseDate, publicationLabel } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
 import { imageAsset } from '../lib/image-assets';
 
 interface Props {
   piece: Piece;
   showCycle?: boolean;
+  storyOrder?: number;
+  sourceOrder?: number;
   imageSizes?: string;
   imageWidths?: number[];
 }
@@ -16,6 +18,8 @@ interface Props {
 const {
   piece,
   showCycle = false,
+  storyOrder,
+  sourceOrder,
   imageSizes = '(max-width: 640px) 85vw, (max-width: 860px) 45vw, 360px',
   imageWidths = [240, 400, 560, 760]
 } = Astro.props;
@@ -27,11 +31,14 @@ const coverImage = imageAsset(piece.cover);
 const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : '';
 const accountLabel = piece.account?.label || 'Account';
 const longTitle = piece.title.length >= 18;
-const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-defunct' : ''}${longTitle ? ' has-long-title' : ''}`;
+const cycleTitleFit = piece.title === '193 Thoughts of You';
+const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-defunct' : ''}${longTitle ? ' has-long-title' : ''}${cycleTitleFit ? ' has-cycle-title-fit' : ''}`;
 
 const cycleLabel = showCycle ? `From the ${piece.cycle} cycle` : '';
 // Render the date as a compact cover plate to prevent metadata wrapping.
 const dateLabel = upcoming ? '' : formatShortDate(piece.date);
+const publicationTime = parseDate(piece.date)?.getTime() ?? 0;
+const storyOrderLabel = storyOrder ? String(storyOrder).padStart(2, '0') : '';
 
 // Use shortened genre labels for the compact cover plate.
 const GENRE_SHORT: Record<string, string> = {
@@ -49,7 +56,14 @@ const metaParts = [
 ].filter(Boolean);
 ---
 
-<article class={className}>
+<article
+  class={className}
+  data-piece-card
+  data-story-order={storyOrder}
+  data-source-order={sourceOrder}
+  data-publication-time={publicationTime}
+  data-upcoming={upcoming ? 'true' : 'false'}
+>
   {linked ? (
     <a class="card-cover-link" href={piece.link} target="_blank" rel="noopener noreferrer" tabindex="-1" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>
       <div class="card-media">
@@ -84,6 +98,7 @@ const metaParts = [
     </div>
   )}
   <div class="card-body">
+    {storyOrderLabel && <span class="story-order-mark">Story {storyOrderLabel}</span>}
     <h2 class="card-title">
       {linked ? (
         <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>{piece.title}</a>

@@ -18,22 +18,29 @@ interface Props {
 }
 
 const { cycle } = Astro.props;
-// Upcoming pieces first, then published pieces newest to oldest.
-const cyclePieces = piecesForCycle(cycle.name)
-  .slice()
-  .sort((a, b) => {
-    const aUpcoming = isUpcoming(a);
-    const bUpcoming = isUpcoming(b);
+const cycleSourcePieces = piecesForCycle(cycle.name);
+const storyOrder = cycle.storyOrder ?? [];
+const hasStoryOrder = cycle.id !== 'dreams' && storyOrder.length > 0;
+const storyIndex = new Map(storyOrder.map((title, index) => [title, index + 1]));
+const sourceIndex = new Map(cycleSourcePieces.map((piece, index) => [piece.title, index]));
 
-    if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1;
-
-    return (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0);
-  });
+// Publication order is the initial view: upcoming work first, followed by
+// published work newest to oldest. Story order later rearranges every card.
+const upcomingCyclePieces = cycleSourcePieces.filter(isUpcoming);
+const publishedCyclePieces = cycleSourcePieces
+  .filter((piece) => !isUpcoming(piece))
+  .sort((a, b) => (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0));
+const cyclePieces = [...upcomingCyclePieces, ...publishedCyclePieces];
 const otherCycles = cycles.filter((item) => !item.disabled);
 ---
 
 <BaseLayout title={`${cycle.name} — ${site.author}`} description={cycle.blurb || site.bio}>
-  <div class="cycle-shell" data-cycle-id={cycle.id}>
+  <div
+    class="cycle-shell"
+    data-cycle-id={cycle.id}
+    data-cycle-order-root={hasStoryOrder ? '' : undefined}
+    data-order-mode={hasStoryOrder ? 'publication' : undefined}
+  >
     <section class="page-shell page-hero" aria-labelledby="cycle-title">
       <a class="back-link" href={withBase('')}>&larr; All cycles</a>
       <h1 class="cycle-title" id="cycle-title"><CycleIcon id={cycle.id} />{cycle.name}</h1>
@@ -55,13 +62,137 @@ const otherCycles = cycles.filter((item) => !item.disabled);
     </section>
 
     <section class="page-shell" aria-label={`${cycle.name} pieces`}>
-      <div class="piece-grid cycle-piece-carousel" data-mobile-focus-carousel>
-        {cyclePieces.map((piece) => <PieceCard piece={piece} />)}
+      {hasStoryOrder && (
+        <div class="cycle-order-bar">
+          <span class="cycle-order-label" id={`cycle-order-label-${cycle.id}`}>Order</span>
+          <div class="cycle-order-toggle" role="group" aria-labelledby={`cycle-order-label-${cycle.id}`}>
+            <button
+              type="button"
+              class="sort-button is-active"
+              data-cycle-order="publication"
+              aria-pressed="true"
+              aria-controls={`cycle-grid-${cycle.id}`}
+            >Publication order</button>
+            <button
+              type="button"
+              class="sort-button"
+              data-cycle-order="story"
+              aria-pressed="false"
+              aria-controls={`cycle-grid-${cycle.id}`}
+            >Story order</button>
+          </div>
+          <span class="sr-only" aria-live="polite" data-cycle-order-status></span>
+        </div>
+      )}
+      <div
+        class="piece-grid cycle-piece-carousel"
+        id={`cycle-grid-${cycle.id}`}
+        data-mobile-focus-carousel
+        data-cycle-order-grid={hasStoryOrder ? '' : undefined}
+      >
+        {cyclePieces.map((piece) => (
+          <PieceCard
+            piece={piece}
+            storyOrder={hasStoryOrder ? storyIndex.get(piece.title) : undefined}
+            sourceOrder={sourceIndex.get(piece.title)}
+          />
+        ))}
       </div>
     </section>
   </div>
 
   <script>
+    /* Cycle cards: animated publication/narrative sort, including upcoming work. */
+    (() => {
+      const root = document.querySelector<HTMLElement>('[data-cycle-order-root]');
+      const grid = root?.querySelector<HTMLElement>('[data-cycle-order-grid]');
+      const buttons = root
+        ? Array.from(root.querySelectorAll<HTMLButtonElement>('[data-cycle-order]'))
+        : [];
+      const status = root?.querySelector<HTMLElement>('[data-cycle-order-status]');
+
+      if (!(root instanceof HTMLElement) || !(grid instanceof HTMLElement) || !buttons.length) return;
+
+      type CycleOrderMode = 'story' | 'publication';
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const numericData = (card: HTMLElement, key: 'storyOrder' | 'sourceOrder' | 'publicationTime') =>
+        Number(card.dataset[key] || 0);
+
+      const applyOrder = (mode: CycleOrderMode) => {
+        const cards = Array.from(grid.querySelectorAll<HTMLElement>(':scope > [data-piece-card]'));
+        cards.forEach((card) => card.getAnimations().forEach((animation) => animation.cancel()));
+        const firstPositions = new Map(cards.map((card) => [card, card.getBoundingClientRect()]));
+        const previousScrollLeft = grid.scrollLeft;
+        const ordered = cards.slice();
+
+        ordered.sort((a, b) => {
+          if (mode === 'story') {
+            return numericData(a, 'storyOrder') - numericData(b, 'storyOrder');
+          }
+
+          const aUpcoming = a.dataset.upcoming === 'true';
+          const bUpcoming = b.dataset.upcoming === 'true';
+          if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1;
+
+          if (aUpcoming && bUpcoming) {
+            return numericData(a, 'sourceOrder') - numericData(b, 'sourceOrder');
+          }
+
+          const dateDifference = numericData(b, 'publicationTime') - numericData(a, 'publicationTime');
+          return dateDifference || numericData(a, 'sourceOrder') - numericData(b, 'sourceOrder');
+        });
+
+        for (const card of ordered) {
+          grid.appendChild(card);
+        }
+
+        grid.scrollLeft = previousScrollLeft;
+        root.dataset.orderMode = mode;
+
+        for (const button of buttons) {
+          const active = button.dataset.cycleOrder === mode;
+          button.classList.toggle('is-active', active);
+          button.setAttribute('aria-pressed', active ? 'true' : 'false');
+        }
+
+        if (status) {
+          status.textContent = mode === 'story'
+            ? 'Showing pieces in story order.'
+            : 'Showing pieces in publication order, latest first.';
+        }
+
+        if (!reducedMotion) {
+          for (const card of cards) {
+            const first = firstPositions.get(card);
+            const last = card.getBoundingClientRect();
+            if (!first) continue;
+
+            const deltaX = first.left - last.left;
+            const deltaY = first.top - last.top;
+            if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) continue;
+
+            card.animate(
+              [
+                { transform: `translate(${deltaX}px, ${deltaY}px)` },
+                { transform: 'translate(0, 0)' }
+              ],
+              { duration: 460, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+            );
+          }
+        }
+
+        grid.dispatchEvent(new Event('scroll'));
+      };
+
+      for (const button of buttons) {
+        button.addEventListener('click', () => {
+          const mode = button.dataset.cycleOrder;
+          if (mode === 'story' || mode === 'publication') applyOrder(mode);
+        });
+      }
+    })();
+
     /* Mobile cycle carousel focused cover color. */
     (() => {
       const media = window.matchMedia('(max-width: 640px)');

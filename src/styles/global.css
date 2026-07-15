@@ -1014,7 +1014,8 @@ img {
 }
 
 /* Restored sort pill. Keep this stable. */
-.chronology-sort {
+.chronology-sort,
+.cycle-order-toggle {
   display: inline-flex;
   gap: 4px;
   border: 1px solid var(--border);
@@ -1366,6 +1367,39 @@ img {
   color: var(--text);
 }
 
+.cycle-order-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.cycle-order-label {
+  color: var(--dim);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.cycle-order-toggle .sort-button {
+  white-space: nowrap;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 @media (max-width: 640px) {
   .cycle-switcher {
     align-items: flex-start;
@@ -1378,6 +1412,23 @@ img {
 
   .cycle-switcher-links a {
     font-size: 0.68rem;
+  }
+
+  .cycle-order-bar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cycle-order-toggle {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .cycle-order-toggle .sort-button {
+    padding-inline: 7px;
+    letter-spacing: 0.12em;
   }
 }
 
@@ -1614,6 +1665,30 @@ img {
 .piece-card:hover .date-mark,
 .piece-card:focus-within .date-mark {
   opacity: 0.25;
+}
+
+/* Narrative position appears only while a cycle is in story order. */
+.story-order-mark {
+  display: none;
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+}
+
+.cycle-shell[data-order-mode='story'] .story-order-mark {
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .story-order-mark {
+    margin-bottom: 8px;
+    font-size: 0.55rem;
+  }
 }
 
 /* --- Footer, sound glyph, and mobile nav polish --- */
@@ -1931,6 +2006,22 @@ img {
 }
 
 /* --- Mobile cycle carousel focused cover color --- */
+.cycle-piece-carousel .piece-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.cycle-piece-carousel .card-body {
+  flex: 1;
+}
+
+@media (min-width: 641px) {
+  .cycle-piece-carousel .piece-card.has-cycle-title-fit .card-title {
+    font-size: clamp(1.35rem, 2.55vw, 2.2rem);
+    white-space: nowrap;
+  }
+}
+
 @media (max-width: 640px) {
   .cycle-piece-carousel .piece-card {
     transition: border-color 320ms ease, background 320ms ease, opacity 320ms ease;
@@ -3031,6 +3122,46 @@ img {
     opacity: 1 !important;
   }
 }
+
+/* --- 193 Lines of Sight: a recurring wink with a hover/focus response --- */
+.tal-wink {
+  display: inline;
+  outline: 1px dotted transparent;
+  outline-offset: 2px;
+  animation: talWordWink 6.4s ease-in-out infinite;
+}
+
+@keyframes talWordWink {
+  0%, 71%, 75%, 100% { opacity: 1; }
+  73% { opacity: 0.14; }
+}
+
+.tal-wink:hover,
+.tal-wink:focus-visible {
+  animation: talWordWinkNow 520ms ease-in-out both;
+}
+
+.tal-wink:focus-visible {
+  outline-color: var(--border-strong);
+}
+
+@keyframes talWordWinkNow {
+  0%, 100% { opacity: 1; }
+  46% { opacity: 0.14; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tal-wink {
+    animation: none;
+  }
+
+  .tal-wink:hover,
+  .tal-wink:focus-visible {
+    animation: none;
+    opacity: 0.62;
+  }
+}
+
 /* --- Selected Works long-title fit --- */
 @media (min-width: 641px) {
   .selected-piece-grid .piece-card.has-long-title .card-title {

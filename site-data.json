@@ -38,19 +38,65 @@
       "id": "mythbreaking",
       "name": "Mythbreaking",
       "blurb": "The Anton persona; the shedding and breaking of old worlds as a new world struggles to be born.",
-      "cover": "covers/cycles/mythbreaking.jpg"
+      "cover": "covers/cycles/mythbreaking.jpg",
+      "storyOrder": [
+        "Boxer",
+        "193 Lines of Sight",
+        "The Guests Are Here",
+        "The Pale and the Green",
+        "No, Rabbit",
+        "Another Year of Love",
+        "Betrayal",
+        "Flagellant",
+        "From Home",
+        "Of Lips and War",
+        "Alpha",
+        "193 Thoughts of You",
+        "Deathwish",
+        "Last Sight of Her",
+        "The Mourning Hounds",
+        "The Hunt"
+      ]
     },
     {
       "id": "mythmaking",
       "name": "Mythmaking",
       "blurb": "A psyche’s architecture; foundations, early cataclysms, and experience prior to words.",
-      "cover": "covers/cycles/mythmaking.jpg"
+      "cover": "covers/cycles/mythmaking.jpg",
+      "storyOrder": [
+        "No, Rabbit",
+        "Clothesline Divorce",
+        "God Underground",
+        "The Nutcracker's Charge",
+        "Alley Money",
+        "The Duet",
+        "Truth, or Its Evidence",
+        "At the Window",
+        "Arboreal Queen",
+        "Blackbird",
+        "Death to Legions",
+        "Minors' Militia",
+        "Out of Bounds",
+        "The Flower and the Beetle"
+      ]
     },
     {
       "id": "fools-gold",
       "name": "Fool's Gold",
       "blurb": "The Adam persona; its partitions and the gold in the center.",
-      "cover": "covers/cycles/fools-gold.jpg"
+      "cover": "covers/cycles/fools-gold.jpg",
+      "storyOrder": [
+        "Genesis",
+        "His Green Delight",
+        "Heart's Surge",
+        "How the Night Glows",
+        "LothariOnline",
+        "Paradigm of the Tyrant",
+        "The Pale and the Green",
+        "Witnesses",
+        "The Iron Crown",
+        "Now"
+      ]
     },
     {
       "id": "dreams",
@@ -62,25 +108,59 @@
       "id": "portici",
       "name": "Portici",
       "blurb": "The Turin cycle; time of moths.",
-      "cover": "covers/cycles/portici.jpg"
+      "cover": "covers/cycles/portici.jpg",
+      "storyOrder": [
+        "Glassdom",
+        "La Luna",
+        "Desire, Discovered",
+        "Mothhead",
+        "Speaking Terms",
+        "A Loss Hard-Won"
+      ]
     },
     {
       "id": "valentines-star",
       "name": "Valentine's Star",
       "blurb": "The Valentin persona; tribulations of early love.",
-      "cover": "covers/cycles/valentines-star.jpg"
+      "cover": "covers/cycles/valentines-star.jpg",
+      "storyOrder": [
+        "Under Street Sign and Star",
+        "Waiting for Beloved",
+        "Life to Dragons",
+        "Star-Crossed",
+        "Genesis"
+      ]
     },
     {
       "id": "conscription",
       "name": "Conscription",
       "blurb": "Hauntings of white and blue; olive-drab and refusal.",
-      "cover": "covers/cycles/conscription.jpg"
+      "cover": "covers/cycles/conscription.jpg",
+      "storyOrder": [
+        "God Underground",
+        "Blackbird",
+        "Minors' Militia",
+        "Whether Yossarian",
+        "Nazi",
+        "The Trail",
+        "Of Lips and War",
+        "193 Lines of Sight",
+        "193 Thoughts of You"
+      ]
     },
     {
       "id": "the-real",
       "name": "The Real",
       "blurb": "De liefde maeckte van den smidt eenen schilder.",
-      "cover": "covers/cycles/the-real.jpg"
+      "cover": "covers/cycles/the-real.jpg",
+      "storyOrder": [
+        "Zagagulyn",
+        "Embers",
+        "Remediation",
+        "Deathwish",
+        "On the Nature of Sleep",
+        "She Loves Her Mother"
+      ]
     }
   ],
   "pieces": [

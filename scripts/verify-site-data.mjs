@@ -395,6 +395,53 @@ if (Array.isArray(data.pieces)) {
   });
 }
 
+if (Array.isArray(data.cycles) && Array.isArray(data.pieces)) {
+  for (const cycle of data.cycles) {
+    const label = `cycle "${cycle.name}"`;
+
+    if (cycle.name === 'Dreams') {
+      if ('storyOrder' in cycle) {
+        addError(`${label}.storyOrder: Dreams must not define a narrative sequence.`);
+      }
+      continue;
+    }
+
+    if (!requireArray(cycle.storyOrder, `${label}.storyOrder`)) continue;
+
+    const expectedTitles = data.pieces
+      .filter((piece) => {
+        const membership = Array.isArray(piece.cycles) ? piece.cycles : [piece.cycle];
+        return membership.includes(cycle.name);
+      })
+      .map((piece) => piece.title);
+    const expectedSet = new Set(expectedTitles);
+    const seen = new Set();
+
+    for (const [index, title] of cycle.storyOrder.entries()) {
+      if (typeof title !== 'string' || !title.trim()) {
+        addError(`${label}.storyOrder[${index}]: must be a non-empty piece title.`);
+        continue;
+      }
+
+      if (seen.has(title)) {
+        addError(`${label}.storyOrder: duplicate title "${title}".`);
+      }
+
+      if (!expectedSet.has(title)) {
+        addError(`${label}.storyOrder: "${title}" is not a member of this cycle.`);
+      }
+
+      seen.add(title);
+    }
+
+    for (const title of expectedTitles) {
+      if (!seen.has(title)) {
+        addError(`${label}.storyOrder: missing cycle piece "${title}".`);
+      }
+    }
+  }
+}
+
 if (isPlainObject(data.site) && Array.isArray(data.site.featured)) {
   const featuredSeen = new Set();
 
