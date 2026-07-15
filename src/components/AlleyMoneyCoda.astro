@@ -1,5 +1,6 @@
 ---
 import cacodemonSheet from '../assets/codas/cacodemon.png';
+import { assetPath } from '../lib/paths';
 ---
 
 <figure class="am-coda" data-am-coda data-sprite-sheet={cacodemonSheet.src}>
@@ -11,6 +12,7 @@ import cacodemonSheet from '../assets/codas/cacodemon.png';
   >
     <canvas width="112" height="112" aria-hidden="true" data-am-cacodemon-canvas></canvas>
   </button>
+  <audio src={assetPath('audio/doom.mp3')} preload="auto" data-am-cacodemon-audio></audio>
   <span class="sr-only" aria-live="polite" data-am-cacodemon-status></span>
 </figure>
 
@@ -20,6 +22,7 @@ import cacodemonSheet from '../assets/codas/cacodemon.png';
   for (const coda of cacodemonCodas) {
     const button = coda.querySelector('[data-am-cacodemon]');
     const canvas = coda.querySelector('[data-am-cacodemon-canvas]');
+    const audio = coda.querySelector('[data-am-cacodemon-audio]');
     const status = coda.querySelector('[data-am-cacodemon-status]');
     const spriteSheet = coda.dataset.spriteSheet;
 
@@ -54,6 +57,37 @@ import cacodemonSheet from '../assets/codas/cacodemon.png';
       new Promise<void>((resolve) => window.setTimeout(resolve, milliseconds));
 
     const clear = () => context.clearRect(0, 0, canvas.width, canvas.height);
+
+    const playKillSound = () => {
+      if (!(audio instanceof HTMLAudioElement)) {
+        return wait(reducedMotion ? 1100 : 2400);
+      }
+
+      audio.pause();
+      audio.currentTime = 0;
+
+      return new Promise<void>((resolve) => {
+        let finished = false;
+
+        const finish = () => {
+          if (finished) return;
+          finished = true;
+          audio.removeEventListener('ended', finish);
+          audio.removeEventListener('error', finish);
+          resolve();
+        };
+
+        audio.addEventListener('ended', finish, { once: true });
+        audio.addEventListener('error', finish, { once: true });
+
+        const playback = audio.play();
+        if (playback) {
+          playback.catch(() => {
+            window.setTimeout(finish, reducedMotion ? 1100 : 2400);
+          });
+        }
+      });
+    };
 
     const drawFrame = (frame: SpriteFrame) => {
       clear();
@@ -94,6 +128,7 @@ import cacodemonSheet from '../assets/codas/cacodemon.png';
       playing = true;
       button.disabled = true;
       button.setAttribute('aria-busy', 'true');
+      const soundFinished = playKillSound();
 
       if (reducedMotion) {
         drawFrame(deathFrames.at(-1) ?? idleFrame);
@@ -107,7 +142,7 @@ import cacodemonSheet from '../assets/codas/cacodemon.png';
 
       clear();
       if (status instanceof HTMLElement) status.textContent = 'Cacodemon defeated.';
-      await wait(reducedMotion ? 1100 : 2400);
+      await soundFinished;
 
       drawFrame(idleFrame);
       if (status instanceof HTMLElement) status.textContent = 'The Cacodemon returned.';
