@@ -1,0 +1,514 @@
+<div class="ff-coda" data-ff-coda aria-hidden="true">
+  <span class="ff-end" data-ff-end></span>
+  <canvas class="ff-fireworks" data-ff-fireworks></canvas>
+</div>
+
+<script>
+  type Zone = {
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+    width: number;
+    height: number;
+  };
+
+  type Palette = readonly [string, string, string, ...string[]];
+
+  type Rocket = {
+    at: number;
+    duration: number;
+    startX: number;
+    startY: number;
+    endX: number;
+    endY: number;
+    palette: Palette;
+    size: number;
+    kind: 'round' | 'year';
+    exploded: boolean;
+  };
+
+  type Spark = {
+    x: number;
+    y: number;
+    previousX: number;
+    previousY: number;
+    velocityX: number;
+    velocityY: number;
+    gravity: number;
+    drag: number;
+    age: number;
+    life: number;
+    size: number;
+    color: string;
+  };
+
+  type YearSpark = {
+    originX: number;
+    originY: number;
+    targetX: number;
+    targetY: number;
+    breakVelocityX: number;
+    breakVelocityY: number;
+    breakDelay: number;
+    color: string;
+    size: number;
+  };
+
+  const codaElements = document.querySelectorAll<HTMLElement>('[data-ff-coda]');
+
+  for (const coda of codaElements) {
+    const marker = coda.querySelector('[data-ff-end]');
+    const canvas = coda.querySelector('[data-ff-fireworks]');
+    const finalParagraph = coda.previousElementSibling;
+
+    if (
+      !(marker instanceof HTMLElement) ||
+      !(canvas instanceof HTMLCanvasElement) ||
+      !(finalParagraph instanceof HTMLParagraphElement)
+    ) {
+      continue;
+    }
+
+    const context = canvas.getContext('2d');
+    if (!context) continue;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) continue;
+
+    const palettes: Palette[] = [
+      ['#fff4b5', '#ffbd4a', '#ff5e7d'],
+      ['#e7fbff', '#51d7ff', '#7c6cff'],
+      ['#f5ffbf', '#7ce38b', '#26c7b8'],
+      ['#fff0f7', '#ff72cc', '#9f75ff'],
+      ['#fff6d7', '#ff8f5a', '#f04464']
+    ];
+    const yearPalette: Palette = ['#fff8cf', '#68e4ff', '#ff70c8', '#9eff86'];
+    const sparks: Spark[] = [];
+    const yearSparks: YearSpark[] = [];
+    let rockets: Rocket[] = [];
+    let frame = 0;
+    let endTimer = 0;
+    let resizeTimer = 0;
+    let playing = false;
+    let startedAt = 0;
+    let previousFrame = 0;
+    let pixelRatio = 1;
+    let launchZone: Zone | null = null;
+
+    const clamp = (value: number, minimum: number, maximum: number) =>
+      Math.min(maximum, Math.max(minimum, value));
+
+    const easeOutCubic = (value: number) => 1 - Math.pow(1 - value, 3);
+    const easeOutQuad = (value: number) => 1 - Math.pow(1 - value, 2);
+
+    const currentZone = (): Zone => {
+      const rect = finalParagraph.getBoundingClientRect();
+      const horizontalGutter = window.innerWidth <= 640 ? 6 : 18;
+      const left = clamp(rect.left - horizontalGutter, 0, window.innerWidth);
+      const right = clamp(rect.right + horizontalGutter, left, window.innerWidth);
+      const top = clamp(rect.top, 0, window.innerHeight);
+      const bottom = window.innerHeight;
+
+      return {
+        left,
+        right,
+        top,
+        bottom,
+        width: right - left,
+        height: bottom - top
+      };
+    };
+
+    const applyCodaClip = () => {
+      const zone = currentZone();
+      const rightInset = Math.max(0, window.innerWidth - zone.right);
+      const topInset = window.innerWidth <= 640 ? zone.top : 0;
+      canvas.style.clipPath = `inset(${topInset}px ${rightInset}px 0 ${zone.left}px)`;
+    };
+
+    const sizeCanvas = () => {
+      pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(window.innerWidth * pixelRatio);
+      canvas.height = Math.round(window.innerHeight * pixelRatio);
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      applyCodaClip();
+    };
+
+    const createRoundBurst = (rocket: Rocket) => {
+      const mobile = window.innerWidth <= 640;
+      const count = mobile ? 44 : 58;
+      const speedScale = rocket.size * (mobile ? 0.82 : 1);
+      const paceScale = mobile ? 0.9 : 0.78;
+
+      for (let index = 0; index < count; index += 1) {
+        const angle = (Math.PI * 2 * index) / count + (Math.random() - 0.5) * 0.075;
+        const speed = (54 + Math.random() * 62) * speedScale * paceScale;
+        const color = rocket.palette[index % rocket.palette.length];
+
+        sparks.push({
+          x: rocket.endX,
+          y: rocket.endY,
+          previousX: rocket.endX,
+          previousY: rocket.endY,
+          velocityX: Math.cos(angle) * speed,
+          velocityY: Math.sin(angle) * speed,
+          gravity: mobile ? 28 + Math.random() * 14 : 25 + Math.random() * 13,
+          drag: mobile ? 0.972 + Math.random() * 0.01 : 0.976 + Math.random() * 0.009,
+          age: 0,
+          life: mobile ? 1650 + Math.random() * 700 : 1900 + Math.random() * 700,
+          size: mobile ? 1.65 + Math.random() * 0.8 : 1.35 + Math.random() * 0.75,
+          color
+        });
+      }
+    };
+
+    const createYearBurst = (rocket: Rocket, zone: Zone) => {
+      const shapeCanvas = document.createElement('canvas');
+      const shapeContext = shapeCanvas.getContext('2d', { willReadFrequently: true });
+      if (!shapeContext) return;
+
+      const mobile = window.innerWidth <= 640;
+      const shapeWidth = Math.floor(clamp(zone.width * (mobile ? 0.88 : 0.52), mobile ? 260 : 200, mobile ? 460 : 370));
+      const shapeHeight = Math.floor(clamp(zone.height * 0.31, 92, 142));
+      const fontSize = Math.floor(Math.min(shapeHeight * 0.9, shapeWidth / 3.5));
+      shapeCanvas.width = shapeWidth;
+      shapeCanvas.height = shapeHeight;
+      shapeContext.clearRect(0, 0, shapeWidth, shapeHeight);
+      shapeContext.fillStyle = '#fff';
+      shapeContext.font = `700 ${fontSize}px "EB Garamond", Georgia, serif`;
+      shapeContext.textAlign = 'center';
+      shapeContext.textBaseline = 'middle';
+      const digits = '2005';
+      const glyphWidth = shapeContext.measureText('0').width;
+      const tracking = fontSize * 0.045;
+      const textWidth = glyphWidth * digits.length + tracking * (digits.length - 1);
+      const archDepth = fontSize * (mobile ? 0.16 : 0.2);
+      const firstX = shapeWidth / 2 - textWidth / 2 + glyphWidth / 2;
+
+      for (let index = 0; index < digits.length; index += 1) {
+        const normalized = (index - (digits.length - 1) / 2) / ((digits.length - 1) / 2);
+        const x = firstX + index * (glyphWidth + tracking);
+        const y = shapeHeight / 2 - archDepth * 0.42 + archDepth * normalized * normalized;
+        const angle = Math.atan((2 * archDepth * normalized) / (textWidth / 2));
+
+        shapeContext.save();
+        shapeContext.translate(x, y);
+        shapeContext.rotate(angle);
+        shapeContext.fillText(digits[index], 0, 0);
+        shapeContext.restore();
+      }
+
+      const pixels = shapeContext.getImageData(0, 0, shapeWidth, shapeHeight).data;
+      const sampleStep = mobile ? 5 : 6;
+      const points: Array<{ x: number; y: number }> = [];
+
+      for (let y = 0; y < shapeHeight; y += sampleStep) {
+        for (let x = 0; x < shapeWidth; x += sampleStep) {
+          if (pixels[(y * shapeWidth + x) * 4 + 3] > 120) points.push({ x, y });
+        }
+      }
+
+      const maximumPoints = mobile ? 230 : 290;
+      const stride = Math.max(1, Math.ceil(points.length / maximumPoints));
+      const shapeLeft = clamp(
+        rocket.endX - shapeWidth / 2,
+        zone.left + 4,
+        Math.max(zone.left + 4, zone.right - shapeWidth - 4)
+      );
+      const shapeTop = clamp(
+        rocket.endY - shapeHeight / 2,
+        zone.top + 8,
+        Math.max(zone.top + 8, zone.bottom - shapeHeight - 10)
+      );
+
+      for (let index = 0; index < points.length; index += stride) {
+        const point = points[index];
+        const targetX = shapeLeft + point.x;
+        const targetY = shapeTop + point.y;
+        const directionX = targetX - (shapeLeft + shapeWidth / 2);
+        const directionY = targetY - (shapeTop + shapeHeight / 2);
+        const directionLength = Math.max(1, Math.hypot(directionX, directionY));
+        const breakSpeed = 16 + Math.random() * 22;
+
+        yearSparks.push({
+          originX: rocket.endX,
+          originY: rocket.endY,
+          targetX,
+          targetY,
+          breakVelocityX: directionX / directionLength * breakSpeed + (Math.random() - 0.5) * 9,
+          breakVelocityY: directionY / directionLength * breakSpeed - 12 - Math.random() * 16,
+          breakDelay: Math.random() * 0.3,
+          color: yearPalette[index % yearPalette.length],
+          size: mobile ? 2.25 : 1.9
+        });
+      }
+    };
+
+    const scheduleRockets = (zone: Zone) => {
+      const mobile = window.innerWidth <= 640;
+      const minimumRadius = mobile ? 46 : 54;
+      const burstScale = clamp(zone.width / 690, mobile ? 0.82 : 0.72, 1.08);
+      const desktopLaunchLine = zone.top + zone.height * 0.82;
+      const target = (relativeX: number, relativeY: number, radius = minimumRadius) => ({
+        x: clamp(zone.left + zone.width * relativeX, zone.left + radius, zone.right - radius),
+        y: clamp(zone.top + zone.height * relativeY, zone.top + radius * 0.72, zone.bottom - radius)
+      });
+      const specs = [
+        { at: 120, x: 0.18, y: 0.36, palette: palettes[0], size: 0.9, kind: 'round' as const },
+        { at: 610, x: 0.76, y: 0.28, palette: palettes[1], size: 0.96, kind: 'round' as const },
+        { at: 1080, x: 0.43, y: 0.55, palette: palettes[2], size: 0.82, kind: 'round' as const },
+        { at: 1580, x: 0.50, y: mobile ? 0.38 : 0.42, palette: yearPalette, size: 1, kind: 'year' as const },
+        { at: 2720, x: 0.82, y: 0.59, palette: palettes[3], size: 0.86, kind: 'round' as const },
+        { at: 3370, x: 0.25, y: 0.69, palette: palettes[4], size: 0.92, kind: 'round' as const },
+        { at: 4050, x: 0.62, y: 0.74, palette: palettes[1], size: 0.78, kind: 'round' as const },
+        { at: 4680, x: 0.42, y: 0.40, palette: palettes[0], size: 1.02, kind: 'round' as const }
+      ];
+
+      rockets = specs.map((spec, index) => {
+        const destination = target(spec.x, spec.y);
+        return {
+          at: spec.at,
+          duration: spec.kind === 'year'
+            ? (mobile ? 720 : 860)
+            : (mobile ? 560 : 720) + (index % 3) * (mobile ? 60 : 75),
+          startX: destination.x + (Math.random() - 0.5) * zone.width * 0.12,
+          startY: mobile
+            ? zone.bottom + 18
+            : Math.min(zone.bottom - 10, desktopLaunchLine + ((index % 3) - 1) * 10),
+          endX: destination.x,
+          endY: destination.y,
+          palette: spec.palette,
+          size: spec.size * burstScale,
+          kind: spec.kind,
+          exploded: false
+        };
+      });
+    };
+
+    const drawRocket = (rocket: Rocket, elapsed: number) => {
+      const progress = clamp((elapsed - rocket.at) / rocket.duration, 0, 1);
+      if (progress <= 0 || progress >= 1) return;
+
+      const eased = easeOutQuad(progress);
+      const x = rocket.startX + (rocket.endX - rocket.startX) * eased;
+      const y = rocket.startY + (rocket.endY - rocket.startY) * eased;
+      const trailProgress = Math.max(0, progress - 0.075);
+      const trailEased = easeOutQuad(trailProgress);
+      const trailX = rocket.startX + (rocket.endX - rocket.startX) * trailEased;
+      const trailY = rocket.startY + (rocket.endY - rocket.startY) * trailEased;
+
+      context.strokeStyle = rocket.palette[1];
+      context.lineWidth = window.innerWidth <= 640 ? 2.1 : 1.6;
+      context.globalAlpha = 0.86;
+      context.beginPath();
+      context.moveTo(trailX, trailY);
+      context.lineTo(x, y);
+      context.stroke();
+
+      context.fillStyle = '#fffbea';
+      context.globalAlpha = 1;
+      context.beginPath();
+      context.arc(x, y, window.innerWidth <= 640 ? 2.9 : 2.4, 0, Math.PI * 2);
+      context.fill();
+    };
+
+    const updateAndDrawSparks = (delta: number) => {
+      const seconds = delta / 1000;
+
+      for (let index = sparks.length - 1; index >= 0; index -= 1) {
+        const spark = sparks[index];
+        spark.age += delta;
+
+        if (spark.age >= spark.life) {
+          sparks.splice(index, 1);
+          continue;
+        }
+
+        spark.previousX = spark.x;
+        spark.previousY = spark.y;
+        spark.x += spark.velocityX * seconds;
+        spark.y += spark.velocityY * seconds;
+        spark.velocityX *= Math.pow(spark.drag, delta / 16.67);
+        spark.velocityY = spark.velocityY * Math.pow(spark.drag, delta / 16.67) + spark.gravity * seconds;
+        const alpha = Math.pow(1 - spark.age / spark.life, 1.25);
+
+        context.strokeStyle = spark.color;
+        context.lineWidth = spark.size;
+        context.globalAlpha = alpha;
+        context.beginPath();
+        context.moveTo(spark.previousX, spark.previousY);
+        context.lineTo(spark.x, spark.y);
+        context.stroke();
+
+        context.fillStyle = spark.color;
+        context.beginPath();
+        context.arc(spark.x, spark.y, spark.size * 0.58, 0, Math.PI * 2);
+        context.fill();
+      }
+    };
+
+    const drawYear = (elapsed: number) => {
+      const yearRocket = rockets.find((rocket) => rocket.kind === 'year');
+      if (!yearRocket || !yearRocket.exploded || yearSparks.length === 0) return;
+
+      const age = elapsed - yearRocket.at - yearRocket.duration;
+      const settleDuration = 940;
+      const holdUntil = 1950;
+      const endAt = 3550;
+      if (age < 0 || age >= endAt) return;
+
+      const settling = clamp(age / settleDuration, 0, 1);
+      const eased = easeOutCubic(settling);
+      const breakup = clamp((age - holdUntil) / (endAt - holdUntil), 0, 1);
+
+      for (const spark of yearSparks) {
+        const localBreakup = clamp(
+          (breakup - spark.breakDelay) / (1 - spark.breakDelay),
+          0,
+          1
+        );
+        const breakupSeconds = localBreakup * (endAt - holdUntil) / 1000;
+        const x = spark.originX + (spark.targetX - spark.originX) * eased
+          + spark.breakVelocityX * breakupSeconds;
+        const y = spark.originY + (spark.targetY - spark.originY) * eased
+          + spark.breakVelocityY * breakupSeconds
+          + 34 * breakupSeconds * breakupSeconds;
+        const alpha = localBreakup <= 0.45
+          ? 1
+          : clamp(1 - (localBreakup - 0.45) / 0.55, 0, 1);
+
+        context.fillStyle = spark.color;
+        context.globalAlpha = alpha;
+        context.beginPath();
+        context.arc(x, y, spark.size * (1 - localBreakup * 0.18), 0, Math.PI * 2);
+        context.fill();
+      }
+    };
+
+    const stop = () => {
+      playing = false;
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(resizeTimer);
+      window.removeEventListener('scroll', applyCodaClip);
+      window.removeEventListener('resize', scheduleResize);
+      context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      canvas.classList.remove('is-active');
+      canvas.style.opacity = '';
+      canvas.style.clipPath = '';
+      sparks.length = 0;
+      yearSparks.length = 0;
+      rockets = [];
+      launchZone = null;
+    };
+
+    const draw = (now: number) => {
+      if (!playing || !launchZone) return;
+
+      const elapsed = now - startedAt;
+      const delta = Math.min(34, now - previousFrame || 16.67);
+      previousFrame = now;
+      context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      context.save();
+      context.globalCompositeOperation = 'lighter';
+      const sequenceFade = elapsed <= 6800 ? 1 : clamp(1 - (elapsed - 6800) / 700, 0, 1);
+      canvas.style.opacity = String(sequenceFade);
+
+      for (const rocket of rockets) {
+        drawRocket(rocket, elapsed);
+
+        if (!rocket.exploded && elapsed >= rocket.at + rocket.duration) {
+          rocket.exploded = true;
+          if (rocket.kind === 'year') createYearBurst(rocket, launchZone);
+          else createRoundBurst(rocket);
+        }
+      }
+
+      updateAndDrawSparks(delta);
+      drawYear(elapsed);
+      context.restore();
+
+      if (elapsed >= 7500) {
+        stop();
+        return;
+      }
+
+      frame = window.requestAnimationFrame(draw);
+    };
+
+    function scheduleResize() {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        if (!playing) return;
+        sizeCanvas();
+        launchZone = currentZone();
+      }, 80);
+    }
+
+    const play = () => {
+      if (playing) return;
+      playing = true;
+      sizeCanvas();
+      launchZone = currentZone();
+      scheduleRockets(launchZone);
+      canvas.classList.add('is-active');
+      canvas.style.opacity = '1';
+      window.addEventListener('scroll', applyCodaClip, { passive: true });
+      window.addEventListener('resize', scheduleResize);
+      startedAt = performance.now();
+      previousFrame = startedAt;
+      frame = window.requestAnimationFrame(draw);
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      const endingIsVisible = entries.some(
+        (entry) => entry.isIntersecting && entry.intersectionRatio >= 1
+      );
+
+      window.clearTimeout(endTimer);
+      if (!endingIsVisible) return;
+
+      endTimer = window.setTimeout(() => {
+        play();
+        observer.disconnect();
+      }, 2600);
+    }, { threshold: 1 });
+
+    observer.observe(marker);
+  }
+</script>
+
+<style>
+  .ff-coda,
+  .ff-end {
+    display: block;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    text-indent: 0;
+  }
+
+  .ff-fireworks {
+    position: fixed;
+    z-index: 15;
+    inset: 0;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    visibility: hidden;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .ff-fireworks.is-active {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ff-fireworks {
+      display: none;
+    }
+  }
+</style>

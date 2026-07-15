@@ -4,6 +4,7 @@ import { getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 import AlleyMoneyCoda from '../../components/AlleyMoneyCoda.astro';
+import FatherFrostCoda from '../../components/FatherFrostCoda.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
 import { absoluteSiteUrl, withBase } from '../../lib/paths';
 import { imageAsset } from '../../lib/image-assets';
@@ -24,6 +25,7 @@ const isLog = entry.data.format === 'log';
 const isTracked = entry.data.format === 'tracked';
 const isGenesis = entry.id === 'genesis';
 const isAlleyMoney = entry.id === 'alley-money';
+const isFatherFrost = entry.id === 'father-frost';
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? 'In full' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -148,6 +150,7 @@ const workSchema = fullText && piece ? {
       <div class="prose archive-prose">
         <Content />
         {isAlleyMoney && <AlleyMoneyCoda />}
+        {isFatherFrost && <FatherFrostCoda />}
       </div>
     </div>
     {piece && canLinkToPiece(piece) && (

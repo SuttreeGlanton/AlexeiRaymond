@@ -801,7 +801,12 @@
       "link": "https://donotsubmit.net/father-frost-by-alexei-raymond/",
       "cover": "covers/pieces/father-frost.jpg",
       "excerpt": "maybe I did the thing, thing where nothin’ make sense ‘cept to bang on my fuckin’ empty useless bad head",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "account": {
+        "slug": "father-frost",
+        "label": "Read on site",
+        "title": "Father Frost"
+      }
     },
     {
       "title": "How It Ends",
