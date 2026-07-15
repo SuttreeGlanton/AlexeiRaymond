@@ -433,7 +433,11 @@
       "link": "https://www.bloodhoneylit.com/fiction/alley-money",
       "cover": "covers/pieces/alley-money.jpg",
       "excerpt": "Red, pixelated violence beamed from the screen as a MIDI soundtrack crackled out of a pair of speakers,",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "account": {
+        "slug": "alley-money",
+        "label": "Read on site"
+      }
     },
     {
       "title": "Arboreal Queen",

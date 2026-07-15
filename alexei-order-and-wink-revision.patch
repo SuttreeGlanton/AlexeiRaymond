@@ -1,0 +1,219 @@
+diff --git a/src/content/accounts/193-lines-of-sight.md b/src/content/accounts/193-lines-of-sight.md
+index 3950930..d1bd8c9 100644
+--- a/src/content/accounts/193-lines-of-sight.md
++++ b/src/content/accounts/193-lines-of-sight.md
+@@ -36,7 +36,7 @@ He considers his hunger and whether it’s strong enough to delude and orchestra
+ 
+ A number of stops yet remaining, the obliviously offending man leaves the bus, barking a brusque thank you at the driver, followed by the remaining window-side seatmates. Both he and the girl move to the now-vacant window seats in the near-empty bus, moving those few feet further apart. He mourns the minor loss of proximity. Thankfully, the new angle provides opportunity to sit with the back slightly against the window and more boldly look in her direction. At this late point in the ride, he expects the peak of his likely illusion to be behind him, and a faint trace of resignation appears in him. His face slackens, eyes no longer aglint, and embarrassment creeps up for allowing himself to lose his head in such a desperate manner. And yet, he’s quick to forgive himself, thinking that ultimately, he did no wrong. Expiation is on his mind, although not over this. If anything, he deserves to indulge for a while in such a harmless manner. Everything he does on the way out bears the heft of farewell, a *proshay* in all its finality.
+ 
+-With the cloying, infatuate fog dissipating and light outside dimming, as if rotting and giving way to the impending darkness, he attempts to get at the mechanism which allowed the episode to occur. Why the weakness? The unsightly frenzy of emotion? He’s on a precipice with unreconciled appetites, past misdeeds, Israeli and Palestinian female shapes strewn below. A cast off him is also down there, thrown after the rest, or perhaps rightfully dragged in. Dew, <em class="tal-wink" data-tal-wink>tal</em>, winks over all.
++With the cloying, infatuate fog dissipating and light outside dimming, as if rotting and giving way to the impending darkness, he attempts to get at the mechanism which allowed the episode to occur. Why the weakness? The unsightly frenzy of emotion? He’s on a precipice with unreconciled appetites, past misdeeds, Israeli and Palestinian female shapes strewn below. A cast off him is also down there, thrown after the rest, or perhaps rightfully dragged in. Dew, <em class="tal-wink" tabindex="0">tal</em>, winks over all.
+ 
+ Then, before he has time to flow deeper into the heart’s shadowy chambers, comes the moment to disembark, his final stop being two away. One away. Now. And as he rises from his seat and faces the girl, intending to walk to the door, a final melancholy overflows and he allows himself, not without a hint of urgency, to look those eyes goodbye. *See me*, he thinks. She’s reclining, eyes partly closed, hair mussed. His sense of time becomes viscous, and, within it, he wonders what to make of her slightly upwards tilted, yielding face. No—it’s not for him. The moment passes. As the PA drones out its pre-recorded message once again, his stiff legs transport him out of the bus, and onto harsh first-to-Zion brick.
+ 
+diff --git a/src/pages/accounts/[slug].astro b/src/pages/accounts/[slug].astro
+index 1c02021..ae1fcf9 100644
+--- a/src/pages/accounts/[slug].astro
++++ b/src/pages/accounts/[slug].astro
+@@ -193,27 +193,6 @@ const workSchema = fullText && piece ? {
+       }
+     }
+ 
+-    /* 193 Lines of Sight: let the word "tal" perform one restrained wink. */
+-    const talWink = document.querySelector('[data-tal-wink]');
+-
+-    if (
+-      talWink instanceof HTMLElement &&
+-      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+-    ) {
+-      const talObserver = new IntersectionObserver((entries) => {
+-        const visible = entries.some(
+-          (entry) => entry.isIntersecting && entry.intersectionRatio >= 0.75
+-        );
+-
+-        if (!visible) return;
+-
+-        window.setTimeout(() => talWink.classList.add('is-winking'), 220);
+-        talObserver.disconnect();
+-      }, { threshold: [0.75] });
+-
+-      talObserver.observe(talWink);
+-    }
+-
+     /* LothariOnline's opener: type, catch a typo, correct it, and try again. */
+     const lotharioTyping = document.querySelector('[data-lo-typing]');
+ 
+diff --git a/src/pages/cycles/[id].astro b/src/pages/cycles/[id].astro
+index c378e97..ba40d33 100644
+--- a/src/pages/cycles/[id].astro
++++ b/src/pages/cycles/[id].astro
+@@ -24,18 +24,12 @@ const hasStoryOrder = cycle.id !== 'dreams' && storyOrder.length > 0;
+ const storyIndex = new Map(storyOrder.map((title, index) => [title, index + 1]));
+ const sourceIndex = new Map(cycleSourcePieces.map((piece, index) => [piece.title, index]));
+ 
+-// Upcoming cards remain pinned at the front in narrative sequence and never
+-// participate in the toggle. Published cards default to the cycle's story order.
+-const upcomingCyclePieces = cycleSourcePieces
+-  .filter(isUpcoming)
+-  .sort((a, b) => hasStoryOrder
+-    ? (storyIndex.get(a.title) ?? Number.MAX_SAFE_INTEGER) - (storyIndex.get(b.title) ?? Number.MAX_SAFE_INTEGER)
+-    : 0);
++// Publication order is the initial view: upcoming work first, followed by
++// published work newest to oldest. Story order later rearranges every card.
++const upcomingCyclePieces = cycleSourcePieces.filter(isUpcoming);
+ const publishedCyclePieces = cycleSourcePieces
+   .filter((piece) => !isUpcoming(piece))
+-  .sort((a, b) => hasStoryOrder
+-    ? (storyIndex.get(a.title) ?? Number.MAX_SAFE_INTEGER) - (storyIndex.get(b.title) ?? Number.MAX_SAFE_INTEGER)
+-    : (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0));
++  .sort((a, b) => (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0));
+ const cyclePieces = [...upcomingCyclePieces, ...publishedCyclePieces];
+ const otherCycles = cycles.filter((item) => !item.disabled);
+ ---
+@@ -45,7 +39,7 @@ const otherCycles = cycles.filter((item) => !item.disabled);
+     class="cycle-shell"
+     data-cycle-id={cycle.id}
+     data-cycle-order-root={hasStoryOrder ? '' : undefined}
+-    data-order-mode={hasStoryOrder ? 'story' : undefined}
++    data-order-mode={hasStoryOrder ? 'publication' : undefined}
+   >
+     <section class="page-shell page-hero" aria-labelledby="cycle-title">
+       <a class="back-link" href={withBase('')}>&larr; All cycles</a>
+@@ -75,17 +69,17 @@ const otherCycles = cycles.filter((item) => !item.disabled);
+             <button
+               type="button"
+               class="sort-button is-active"
+-              data-cycle-order="story"
++              data-cycle-order="publication"
+               aria-pressed="true"
+               aria-controls={`cycle-grid-${cycle.id}`}
+-            >Story order</button>
++            >Publication order</button>
+             <button
+               type="button"
+               class="sort-button"
+-              data-cycle-order="publication"
++              data-cycle-order="story"
+               aria-pressed="false"
+               aria-controls={`cycle-grid-${cycle.id}`}
+-            >Publication order</button>
++            >Story order</button>
+           </div>
+           <span class="sr-only" aria-live="polite" data-cycle-order-status></span>
+         </div>
+@@ -108,7 +102,7 @@ const otherCycles = cycles.filter((item) => !item.disabled);
+   </div>
+ 
+   <script>
+-    /* Cycle cards: pinned upcoming work plus animated narrative/publication sort. */
++    /* Cycle cards: animated publication/narrative sort, including upcoming work. */
+     (() => {
+       const root = document.querySelector<HTMLElement>('[data-cycle-order-root]');
+       const grid = root?.querySelector<HTMLElement>('[data-cycle-order-grid]');
+@@ -130,19 +124,26 @@ const otherCycles = cycles.filter((item) => !item.disabled);
+         cards.forEach((card) => card.getAnimations().forEach((animation) => animation.cancel()));
+         const firstPositions = new Map(cards.map((card) => [card, card.getBoundingClientRect()]));
+         const previousScrollLeft = grid.scrollLeft;
+-        const upcoming = cards.filter((card) => card.dataset.upcoming === 'true');
+-        const published = cards.filter((card) => card.dataset.upcoming !== 'true');
++        const ordered = cards.slice();
+ 
+-        published.sort((a, b) => {
++        ordered.sort((a, b) => {
+           if (mode === 'story') {
+             return numericData(a, 'storyOrder') - numericData(b, 'storyOrder');
+           }
+ 
++          const aUpcoming = a.dataset.upcoming === 'true';
++          const bUpcoming = b.dataset.upcoming === 'true';
++          if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1;
++
++          if (aUpcoming && bUpcoming) {
++            return numericData(a, 'sourceOrder') - numericData(b, 'sourceOrder');
++          }
++
+           const dateDifference = numericData(b, 'publicationTime') - numericData(a, 'publicationTime');
+           return dateDifference || numericData(a, 'sourceOrder') - numericData(b, 'sourceOrder');
+         });
+ 
+-        for (const card of [...upcoming, ...published]) {
++        for (const card of ordered) {
+           grid.appendChild(card);
+         }
+ 
+diff --git a/src/styles/global.css b/src/styles/global.css
+index 286fb6b..e552fff 100644
+--- a/src/styles/global.css
++++ b/src/styles/global.css
+@@ -3115,45 +3115,43 @@ img {
+   }
+ }
+ 
+-/* --- 193 Lines of Sight: a single, literal wink in the prose --- */
++/* --- 193 Lines of Sight: a recurring wink with a hover/focus response --- */
+ .tal-wink {
+-  position: relative;
+-  display: inline-block;
+-  transform-origin: 50% 62%;
++  display: inline;
++  outline: 1px dotted transparent;
++  outline-offset: 2px;
++  animation: talWordWink 6.4s ease-in-out infinite;
+ }
+ 
+-.tal-wink::after {
+-  content: '';
+-  position: absolute;
+-  top: -0.08em;
+-  right: -0.18em;
+-  width: 0.13em;
+-  height: 0.13em;
+-  border-radius: 50%;
+-  background: currentColor;
+-  box-shadow: 0 0 0.34em currentColor;
+-  opacity: 0;
+-  pointer-events: none;
++@keyframes talWordWink {
++  0%, 71%, 75%, 100% { opacity: 1; }
++  73% { opacity: 0.14; }
+ }
+ 
+-.tal-wink.is-winking {
+-  animation: talWordWink 820ms cubic-bezier(0.22, 1, 0.36, 1) both;
++.tal-wink:hover,
++.tal-wink:focus-visible {
++  animation: talWordWinkNow 520ms ease-in-out both;
+ }
+ 
+-.tal-wink.is-winking::after {
+-  animation: talWordGlint 820ms ease-out both;
++.tal-wink:focus-visible {
++  outline-color: var(--border-strong);
+ }
+ 
+-@keyframes talWordWink {
+-  0%, 22%, 100% { transform: scaleY(1); filter: brightness(1); }
+-  43% { transform: scaleY(0.18); filter: brightness(0.72); }
+-  61% { transform: scaleY(1.03); filter: brightness(1.08); }
++@keyframes talWordWinkNow {
++  0%, 100% { opacity: 1; }
++  46% { opacity: 0.14; }
+ }
+ 
+-@keyframes talWordGlint {
+-  0%, 45%, 100% { opacity: 0; transform: scale(0.25); }
+-  58% { opacity: 0.72; transform: scale(1); }
+-  72% { opacity: 0; transform: scale(1.45); }
++@media (prefers-reduced-motion: reduce) {
++  .tal-wink {
++    animation: none;
++  }
++
++  .tal-wink:hover,
++  .tal-wink:focus-visible {
++    animation: none;
++    opacity: 0.62;
++  }
+ }
+ 
+ /* --- Selected Works long-title fit --- */

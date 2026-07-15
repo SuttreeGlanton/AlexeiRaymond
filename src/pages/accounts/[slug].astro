@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import { getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import OptimizedImage from '../../components/OptimizedImage.astro';
+import AlleyMoneyCoda from '../../components/AlleyMoneyCoda.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
 import { absoluteSiteUrl, withBase } from '../../lib/paths';
 import { imageAsset } from '../../lib/image-assets';
@@ -22,6 +23,7 @@ const fullText = entry.data.fullText === true;
 const isLog = entry.data.format === 'log';
 const isTracked = entry.data.format === 'tracked';
 const isGenesis = entry.id === 'genesis';
+const isAlleyMoney = entry.id === 'alley-money';
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? 'In full' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -107,7 +109,7 @@ const workSchema = fullText && piece ? {
   publishedTime={publishedIso || undefined}
   structuredData={workSchema}
 >
-  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
+  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
     <div class="overline">{overlineLabel}</div>
     <h1 class="page-title account-title" id="account-title">
@@ -145,6 +147,7 @@ const workSchema = fullText && piece ? {
       )}
       <div class="prose archive-prose">
         <Content />
+        {isAlleyMoney && <AlleyMoneyCoda />}
       </div>
     </div>
     {piece && canLinkToPiece(piece) && (

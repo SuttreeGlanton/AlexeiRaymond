@@ -1,0 +1,214 @@
+---
+import cacodemonSheet from '../assets/codas/cacodemon.png';
+---
+
+<figure class="am-coda" data-am-coda data-sprite-sheet={cacodemonSheet.src}>
+  <button
+    class="am-cacodemon"
+    type="button"
+    aria-label="Defeat the Cacodemon"
+    data-am-cacodemon
+  >
+    <canvas width="112" height="112" aria-hidden="true" data-am-cacodemon-canvas></canvas>
+  </button>
+  <span class="sr-only" aria-live="polite" data-am-cacodemon-status></span>
+</figure>
+
+<script>
+  const cacodemonCodas = document.querySelectorAll<HTMLElement>('[data-am-coda]');
+
+  for (const coda of cacodemonCodas) {
+    const button = coda.querySelector('[data-am-cacodemon]');
+    const canvas = coda.querySelector('[data-am-cacodemon-canvas]');
+    const status = coda.querySelector('[data-am-cacodemon-status]');
+    const spriteSheet = coda.dataset.spriteSheet;
+
+    if (!(button instanceof HTMLButtonElement) || !(canvas instanceof HTMLCanvasElement) || !spriteSheet) {
+      continue;
+    }
+
+    const context = canvas.getContext('2d', { willReadFrequently: true });
+    if (!context) continue;
+
+    type SpriteFrame = { x: number; y: number; width: number; height: number };
+
+    // Coordinates measured against the actual sprite sheet (425x859).
+    const idleFrame: SpriteFrame = { x: 239, y: 12, width: 61, height: 66 };
+    const deathFrames: SpriteFrame[] = [
+      { x: 23, y: 765, width: 63, height: 67 },
+      { x: 92, y: 765, width: 63, height: 67 },
+      { x: 165, y: 762, width: 67, height: 76 },
+      { x: 247, y: 771, width: 69, height: 66 },
+      { x: 329, y: 783, width: 75, height: 49 }
+    ];
+
+    // Every frame hangs from a shared baseline so the Cacodemon collapses
+    // downward into its own gib pool rather than each frame recentring.
+    const baseline = Math.round(canvas.height * 0.84);
+
+    const sprite = new Image();
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let playing = false;
+
+    const wait = (milliseconds: number) =>
+      new Promise<void>((resolve) => window.setTimeout(resolve, milliseconds));
+
+    const clear = () => context.clearRect(0, 0, canvas.width, canvas.height);
+
+    const drawFrame = (frame: SpriteFrame) => {
+      clear();
+      context.imageSmoothingEnabled = false;
+
+      const destinationX = Math.round((canvas.width - frame.width) / 2);
+      const destinationY = baseline - frame.height;
+
+      context.drawImage(
+        sprite,
+        frame.x,
+        frame.y,
+        frame.width,
+        frame.height,
+        destinationX,
+        destinationY,
+        frame.width,
+        frame.height
+      );
+
+      // Key out the cyan matte, tolerating anti-aliased fringe pixels.
+      const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
+      for (let index = 0; index < pixels.data.length; index += 4) {
+        const red = pixels.data[index];
+        const green = pixels.data[index + 1];
+        const blue = pixels.data[index + 2];
+
+        if (red < 80 && green > 170 && blue > 170) {
+          pixels.data[index + 3] = 0;
+        }
+      }
+      context.putImageData(pixels, 0, 0);
+    };
+
+    const playDeath = async () => {
+      if (playing) return;
+
+      playing = true;
+      button.disabled = true;
+      button.setAttribute('aria-busy', 'true');
+
+      if (reducedMotion) {
+        drawFrame(deathFrames.at(-1) ?? idleFrame);
+        await wait(140);
+      } else {
+        for (const frame of deathFrames) {
+          drawFrame(frame);
+          await wait(105);
+        }
+      }
+
+      clear();
+      if (status instanceof HTMLElement) status.textContent = 'Cacodemon defeated.';
+      await wait(reducedMotion ? 1100 : 2400);
+
+      drawFrame(idleFrame);
+      if (status instanceof HTMLElement) status.textContent = 'The Cacodemon returned.';
+      button.disabled = false;
+      button.removeAttribute('aria-busy');
+      playing = false;
+    };
+
+    sprite.addEventListener('load', () => {
+      drawFrame(idleFrame);
+      button.addEventListener('click', () => void playDeath());
+    }, { once: true });
+
+    sprite.src = spriteSheet;
+  }
+</script>
+
+<style>
+  :global(.archived-piece-page--alley-money .archive-prose > p),
+  :global(.archived-piece-page--alley-money .archive-prose > p + p) {
+    text-indent: 0;
+  }
+
+  :global(.archived-piece-page--alley-money .archive-prose > p.am-indent) {
+    text-indent: 1.6em;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .am-coda {
+    display: grid;
+    justify-items: center;
+    min-height: 10rem;
+    margin: clamp(4rem, 10vw, 7rem) 0 0;
+    text-align: center;
+    text-indent: 0;
+  }
+
+  .am-cacodemon {
+    width: 112px;
+    height: 112px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: crosshair;
+    animation: am-cacodemon-hover 2.8s ease-in-out infinite;
+    touch-action: manipulation;
+  }
+
+  .am-cacodemon:disabled {
+    cursor: default;
+  }
+
+  .am-cacodemon[aria-busy='true'] {
+    animation: none;
+  }
+
+  .am-cacodemon:focus-visible {
+    outline: 1px solid var(--text-soft);
+    outline-offset: 5px;
+  }
+
+  .am-cacodemon canvas {
+    display: block;
+    width: 112px;
+    height: 112px;
+    image-rendering: pixelated;
+  }
+
+  @keyframes am-cacodemon-hover {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+
+  @media (max-width: 640px) {
+    .am-coda {
+      min-height: 9rem;
+      margin-top: 3.8rem;
+    }
+
+    .am-cacodemon,
+    .am-cacodemon canvas {
+      width: 96px;
+      height: 96px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .am-cacodemon {
+      animation: none;
+    }
+  }
+</style>
