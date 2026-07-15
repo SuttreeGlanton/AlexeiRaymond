@@ -553,6 +553,11 @@
       "cover": "covers/pieces/genesis.jpg",
       "excerpt": "By the web he thought of no longer—by unrequited wings that bore him to the defining moment",
       "genre": "Short fiction",
+      "account": {
+        "slug": "genesis",
+        "label": "Read on site",
+        "title": "Genesis"
+      },
       "cycles": [
         "Fool's Gold",
         "Valentine's Star"

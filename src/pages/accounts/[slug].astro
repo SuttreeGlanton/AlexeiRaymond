@@ -21,6 +21,7 @@ const archived = piece ? isDefunct(piece) : false;
 const fullText = entry.data.fullText === true;
 const isLog = entry.data.format === 'log';
 const isTracked = entry.data.format === 'tracked';
+const isGenesis = entry.id === 'genesis';
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? 'In full' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -106,7 +107,7 @@ const workSchema = fullText && piece ? {
   publishedTime={publishedIso || undefined}
   structuredData={workSchema}
 >
-  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
+  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
     <div class="overline">{overlineLabel}</div>
     <h1 class="page-title account-title" id="account-title">
@@ -240,6 +241,94 @@ const workSchema = fullText && piece ? {
 
         void playOpener();
       }
+    }
+
+    /* Genesis: once the final line has been reached, Adam rewrites Valentin. */
+    const genesisEnd = document.querySelector('[data-genesis-end]');
+    const genesisNames = Array.from(document.querySelectorAll<HTMLElement>('[data-genesis-name]'));
+    const genesisToggle = document.querySelector('[data-genesis-toggle]');
+    const genesisStatus = document.querySelector('[data-genesis-status]');
+    const genesisPage = genesisEnd?.closest('.archived-piece-page--genesis');
+
+    if (
+      genesisEnd instanceof HTMLElement &&
+      genesisPage instanceof HTMLElement &&
+      genesisNames.length > 0
+    ) {
+      type GenesisName = 'valentin' | 'adam';
+      let genesisState: GenesisName = 'valentin';
+      let genesisReady = false;
+      let genesisRewriteTimer = 0;
+      let genesisEndTimer = 0;
+      const genesisReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const applyGenesisState = (nextState: GenesisName, announce = true) => {
+        window.clearTimeout(genesisRewriteTimer);
+
+        const commitRewrite = () => {
+          const rewritten = nextState === 'adam';
+
+          for (const name of genesisNames) {
+            name.textContent = rewritten ? 'Adam' : 'Valentin';
+            name.dataset.genesisCurrent = nextState;
+            name.title = rewritten ? 'Restore Valentin' : 'Rewrite as Adam';
+          }
+
+          genesisState = nextState;
+          genesisReady = true;
+          genesisPage.classList.toggle('is-genesis-adam', rewritten);
+          genesisPage.classList.add('is-genesis-ready');
+          genesisPage.classList.remove('is-genesis-rewriting');
+
+          if (genesisToggle instanceof HTMLButtonElement) {
+            genesisToggle.disabled = false;
+            genesisToggle.setAttribute(
+              'aria-label',
+              rewritten
+                ? 'Restore Valentin throughout the story'
+                : 'Rewrite Valentin as Adam throughout the story'
+            );
+          }
+
+          if (announce && genesisStatus instanceof HTMLElement) {
+            genesisStatus.textContent = rewritten
+              ? 'Adam has overwritten Valentin throughout the story.'
+              : 'Valentin has been restored throughout the story.';
+          }
+        };
+
+        if (genesisReducedMotion) {
+          commitRewrite();
+          return;
+        }
+
+        genesisPage.classList.add('is-genesis-rewriting');
+        genesisRewriteTimer = window.setTimeout(commitRewrite, 180);
+      };
+
+      genesisPage.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!genesisReady || !(target instanceof Element)) return;
+        if (!target.closest('[data-genesis-name], [data-genesis-toggle]')) return;
+
+        applyGenesisState(genesisState === 'adam' ? 'valentin' : 'adam');
+      });
+
+      const genesisObserver = new IntersectionObserver((entries) => {
+        const endingIsVisible = entries.some(
+          (observed) => observed.isIntersecting && observed.intersectionRatio >= 1
+        );
+
+        window.clearTimeout(genesisEndTimer);
+        if (!endingIsVisible) return;
+
+        genesisEndTimer = window.setTimeout(() => {
+          applyGenesisState('adam');
+          genesisObserver.disconnect();
+        }, 1200);
+      }, { threshold: 1 });
+
+      genesisObserver.observe(genesisEnd);
     }
   </script>
 </BaseLayout>
