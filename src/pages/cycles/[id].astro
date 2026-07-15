@@ -115,6 +115,7 @@ const otherCycles = cycles.filter((item) => !item.disabled);
 
       type CycleOrderMode = 'story' | 'publication';
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const mobileLayout = window.matchMedia('(max-width: 640px)');
 
       const numericData = (card: HTMLElement, key: 'storyOrder' | 'sourceOrder' | 'publicationTime') =>
         Number(card.dataset[key] || 0);
@@ -162,7 +163,7 @@ const otherCycles = cycles.filter((item) => !item.disabled);
             : 'Showing pieces in publication order, latest first.';
         }
 
-        if (!reducedMotion) {
+        if (!reducedMotion && !mobileLayout.matches) {
           for (const card of cards) {
             const first = firstPositions.get(card);
             const last = card.getBoundingClientRect();
