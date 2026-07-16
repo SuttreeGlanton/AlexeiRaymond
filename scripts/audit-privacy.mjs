@@ -63,6 +63,23 @@ const contentRules = [
   ['warn', 'plain email address', /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i]
 ];
 
+// These exact public strings resemble assignments but cannot contain secrets.
+// Keep the path and full trimmed line coupled so nearby or edited matches are
+// still surfaced for human review.
+const knownBenignContentFindings = new Map([
+  ['.github/workflows/deploy.yml', new Set([
+    'id-token: write'
+  ])],
+  ['src/content/accounts/remediation.md', new Set([
+    '<p class="lg-ok">✓ self_heal complete | token=refreshed, cache=cleared, assumed permissions=reloaded</p>'
+  ])]
+]);
+
+function isKnownBenignContentFinding(file, label, line) {
+  if (label !== 'secret-looking assignment') return false;
+  return knownBenignContentFindings.get(file)?.has(line.trim()) ?? false;
+}
+
 function checkPath(scope, file, checkSize = false) {
   const clean = normalizePath(file);
 
@@ -126,6 +143,10 @@ function scanContent(scope, file) {
       if (!pattern.test(line)) continue;
 
       if (label === 'plain email address' && /example\.com|noreply\.github\.com/i.test(line)) {
+        continue;
+      }
+
+      if (isKnownBenignContentFinding(clean, label, line)) {
         continue;
       }
 
