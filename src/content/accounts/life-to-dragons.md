@@ -5,7 +5,7 @@ epigraph: true
 ---
 *“Love the animals. God has given them the rudiments of thought and joy untroubled. Don’t trouble it, don’t harass them, don’t deprive them of their happiness, don’t work against God’s intent.”*
 
-\- Fyodor Dostoevsky, *The Brothers Karamazov*
+\- Fyodor Dostoevsky, <em style="white-space: nowrap;">The Brothers Karamazov</em>
 
 <p class="story-opening">Valentin comes alive at the shrill sound of the bell signaling the day’s end. He slides his books into the backpack and takes pride in his movements; he considers them especially elegant. He’s in bloom and hurry because Noa’s classroom was dismissed an hour earlier, and chiefly in his mind lies the image of her pale, nude body in a darkened room, sweating after a heated afternoon. They are each other’s first, and so it enhances and dominates the new daily.</p>
 
