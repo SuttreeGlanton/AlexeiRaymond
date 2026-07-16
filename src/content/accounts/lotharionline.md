@@ -2,78 +2,6 @@
 title: LothariOnline
 fullText: true
 ---
-<style>
-  .lo-coda {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6em;
-    width: min(100%, 43rem);
-    min-height: 3.15rem;
-    margin: clamp(2.75rem, 6vw, 4rem) 0 0;
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--border-strong);
-    border-radius: 8px;
-    padding: 0.8rem 1rem;
-    background: rgba(255, 255, 255, 0.025);
-    color: var(--text-soft);
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
-    font-size: clamp(0.78rem, 1.8vw, 0.94rem);
-    line-height: 1.5;
-    text-indent: 0;
-  }
-
-  .lo-coda-handle {
-    flex: none;
-    color: var(--text);
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
-  .lo-coda-entry {
-    position: relative;
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-
-  .lo-coda-measure {
-    visibility: hidden;
-  }
-
-  .lo-coda-measure,
-  [data-lo-typing] {
-    border-right: 0.08em solid transparent;
-    padding-right: 0.12em;
-  }
-
-  .lo-coda-live {
-    position: absolute;
-    inset: 0;
-  }
-
-  [data-lo-typing] {
-    border-right-color: currentColor;
-    animation: loCursorBlink 900ms steps(1, end) infinite;
-  }
-
-  @keyframes loCursorBlink {
-    0%, 48% { border-right-color: currentColor; }
-    49%, 100% { border-right-color: transparent; }
-  }
-
-  @media (max-width: 640px) {
-    .lo-coda {
-      font-size: 0.7rem;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    [data-lo-typing] {
-      border-right-color: transparent;
-      animation: none;
-    }
-  }
-</style>
-
 What am I looking for? I haven’t thought about it much. The unexamined life, and all that. The fact I’m going through with it, this search, might imply that on some level I must know. But honestly, I couldn’t tell you. The search just *is* and has been for a while now. I imagine a therapist or a psychologist might deduce the reason, or anyone really, with enough insight. Not to say that there’s anything particularly complicated going on here, I don’t mean to compliment myself. Could that be you—the one who’ll understand me?
 
 Anyway. I scroll; I CTRL+F with keywords; I open a few parallel threads to comb through. This user sounds boring; this one clearly got posted maliciously without their consent; this one offers very little to go on—might as well try. I suppose I’m simply in search of fantastic conversations. Wait, that almost sounds like I’m describing myself for invisible perusers. Well, I’m not. I don’t engage that way. Fine, I did it once out of curiosity, to see whether anyone would come say hi, but no one did. Perhaps I undersold myself then, did not bother painting an alluring picture (nor attaching one) along with my username, AdamOne. I much prefer to be the invisible peruser; I let others hawk themselves. There is something rather flattening in describing oneself. Look, here’s another intriguing user with a pithy little sentence to go along with it. I’ll try them. And how about this one? Sounds like we have some overlapping areas of interest; we’re of similar age, male… Might as well. I’ve been meaning to prove to myself I don’t just add those who declare themselves to be female—relic habit since the early days of Omegle, where as a teenager I would skip past any anonymous chatters who’d somehow reveal themselves to be males (like myself). As I enter this guy’s username into the app, I feel the embarrassment of being honest with myself. I know I’ll likely tap out of the chat sooner rather than later. And hell, maybe *he* won’t feel like bothering with me. *Why’s a dude messaging me? Is he gay?* he might think. But okay, Tastybagels11, I’ll give you as much of a shot as you give me. It’s been a while since I’ve had a genuine connection with another man.
@@ -99,11 +27,3 @@ This user bears the decidedly emo handle amfilledwithsadness. She replies to my 
 As it goes on, I become more enamored, and so does she, this Scottish Aimee. We seem to share a wavelength, and it is at this point I’m reminded of the… What shall we call it? The danger? I’m reminded of how I treat every promising conversation with extreme generosity, a fount of energy, and open-endedness: each encounter is a vast, empty highway upon which I could simply drive off into the horizon. And believe me, I somehow have more than enough fuel. Only there are people at home who are waiting for me to come back, and if I drive too far, the return will take longer and longer. I will have to make pit stops, might spend the night in a motel, defer, delay, risk myself on the motorway. Such is the compelling pull of the road, and for some reason, it calls to me that way. And before you speak—yes, *of course* I agree with you. It *is* despicable, it *is* irresponsible. Flowery language will not, *cannot*, hide the gnarled rot. But alas, we are running out of time, and I must devote more of my attention to amfilledwithsadness. Here, at this stage, it’s as though I’m sitting in the middle of the highway—not in a car, no—with the phone in my hand, looking utterly dazed and confused, staring ahead at fierce headlights. You tell me, are they barrelling toward me? While we still have a moment, I’ll admit the questions I must answer, before it is too late: do I know what I’m doing and why? Do I own it? Will I be able to claim ignorance? What if I just keep this fact locked away from one and all, even you, and me? While I sit here typing, beginning to like amfilledwithsadness more and more (*maybeamtoo*), the headlights intensify, flooding my vision with blinding white as the horn howls. Already blinded, I swear I am deafened, too. Though not mute, and certainly not dumb.
 
 It is coming.
-
-<div class="lo-coda" role="img" aria-label="AdamOne types: Hullo, I come in peace and curiosity, followed by an alien emoji.">
-  <span class="lo-coda-handle" aria-hidden="true">AdamOne:</span>
-  <span class="lo-coda-entry" aria-hidden="true">
-    <span class="lo-coda-measure">Hullo, I come in peace and curiosity 👽</span>
-    <span class="lo-coda-live"><span data-lo-typing>Hullo, I come in peace and curiosity 👽</span></span>
-  </span>
-</div>

@@ -7,7 +7,9 @@ import AlleyMoneyCoda from '../../components/AlleyMoneyCoda.astro';
 import ClotheslineDivorceCoda from '../../components/ClotheslineDivorceCoda.astro';
 import DeathwishPresentation from '../../components/DeathwishPresentation.astro';
 import FatherFrostCoda from '../../components/FatherFrostCoda.astro';
+import LothariOnlineCoda from '../../components/LothariOnlineCoda.astro';
 import NoRabbitCoda from '../../components/NoRabbitCoda.astro';
+import SixThousandEightyCoda from '../../components/SixThousandEightyCoda.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
 import { absoluteSiteUrl, withBase } from '../../lib/paths';
 import { imageAsset } from '../../lib/image-assets';
@@ -31,7 +33,9 @@ const isAlleyMoney = entry.id === 'alley-money';
 const isClotheslineDivorce = entry.id === 'clothesline-divorce';
 const isDeathwish = entry.id === 'deathwish';
 const isFatherFrost = entry.id === 'father-frost';
+const isLothariOnline = entry.id === 'lotharionline';
 const isNoRabbit = entry.id === 'no-rabbit';
+const isSixThousandEighty = entry.id === '6080';
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? 'In full' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -156,7 +160,9 @@ const workSchema = fullText && piece ? {
       <div class="prose archive-prose">
         {isDeathwish && <DeathwishPresentation />}
         <Content />
+        {isSixThousandEighty && <SixThousandEightyCoda />}
         {isClotheslineDivorce && <ClotheslineDivorceCoda />}
+        {isLothariOnline && <LothariOnlineCoda />}
         {isNoRabbit && <NoRabbitCoda />}
         {isAlleyMoney && <AlleyMoneyCoda />}
         {isFatherFrost && <FatherFrostCoda />}
@@ -205,56 +211,6 @@ const workSchema = fullText && piece ? {
 
       if (typeof archiveCoverQuery.addEventListener === 'function') {
         archiveCoverQuery.addEventListener('change', scheduleArchiveCoverFocus);
-      }
-    }
-
-    /* LothariOnline's opener: type, catch a typo, correct it, and try again. */
-    const lotharioTyping = document.querySelector('[data-lo-typing]');
-
-    if (lotharioTyping instanceof HTMLElement) {
-      const finalMessage = 'Hullo, I come in peace and curiosity 👽';
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      if (reducedMotion) {
-        lotharioTyping.textContent = finalMessage;
-      } else {
-        const wait = (milliseconds: number) =>
-          new Promise<void>((resolve) => window.setTimeout(resolve, milliseconds));
-
-        const typeText = async (text: string, pace = 68) => {
-          for (const character of text) {
-            lotharioTyping.textContent += character;
-            await wait(pace + Math.random() * 38);
-          }
-        };
-
-        const eraseText = async (count: number) => {
-          for (let index = 0; index < count; index += 1) {
-            lotharioTyping.textContent = (lotharioTyping.textContent ?? '').slice(0, -1);
-            await wait(105);
-          }
-        };
-
-        const playOpener = async () => {
-          while (lotharioTyping.isConnected) {
-            lotharioTyping.textContent = '';
-            await wait(750);
-            await typeText('Hullo, I cmoe');
-            await wait(430);
-            await eraseText(3);
-            await typeText('ome');
-            await wait(240);
-            await typeText(' in peace and curiosoty');
-            await wait(520);
-            await eraseText(3);
-            await typeText('ity');
-            await wait(320);
-            await typeText(' 👽', 105);
-            await wait(2700);
-          }
-        };
-
-        void playOpener();
       }
     }
 

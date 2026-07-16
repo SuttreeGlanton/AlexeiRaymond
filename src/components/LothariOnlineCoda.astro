@@ -1,0 +1,132 @@
+<div class="lo-coda" role="img" aria-label="AdamOne types: Hullo, I come in peace and curiosity, followed by an alien emoji.">
+  <span class="lo-coda-handle" aria-hidden="true">AdamOne:</span>
+  <span class="lo-coda-entry" aria-hidden="true">
+    <span class="lo-coda-measure">Hullo, I come in peace and curiosity 👽</span>
+    <span class="lo-coda-live"><span data-lo-typing>Hullo, I come in peace and curiosity 👽</span></span>
+  </span>
+</div>
+
+<script>
+  /* Type, catch a typo, correct it, and try again. */
+  const lotharioTyping = document.querySelector('[data-lo-typing]');
+
+  if (lotharioTyping instanceof HTMLElement) {
+    const finalMessage = 'Hullo, I come in peace and curiosity 👽';
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reducedMotion) {
+      lotharioTyping.textContent = finalMessage;
+    } else {
+      const wait = (milliseconds: number) =>
+        new Promise<void>((resolve) => window.setTimeout(resolve, milliseconds));
+
+      const typeText = async (text: string, pace = 68) => {
+        for (const character of text) {
+          lotharioTyping.textContent += character;
+          await wait(pace + Math.random() * 38);
+        }
+      };
+
+      const eraseText = async (count: number) => {
+        for (let index = 0; index < count; index += 1) {
+          lotharioTyping.textContent = (lotharioTyping.textContent ?? '').slice(0, -1);
+          await wait(105);
+        }
+      };
+
+      const playOpener = async () => {
+        while (lotharioTyping.isConnected) {
+          lotharioTyping.textContent = '';
+          await wait(750);
+          await typeText('Hullo, I cmoe');
+          await wait(430);
+          await eraseText(3);
+          await typeText('ome');
+          await wait(240);
+          await typeText(' in peace and curiosoty');
+          await wait(520);
+          await eraseText(3);
+          await typeText('ity');
+          await wait(320);
+          await typeText(' 👽', 105);
+          await wait(2700);
+        }
+      };
+
+      void playOpener();
+    }
+  }
+</script>
+
+<!-- Keep the established selectors global during extraction so behavior and specificity stay identical. -->
+<style is:global>
+  .lo-coda {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6em;
+    width: min(100%, 43rem);
+    min-height: 3.15rem;
+    margin: clamp(2.75rem, 6vw, 4rem) 0 0;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    background: rgba(255, 255, 255, 0.025);
+    color: var(--text-soft);
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
+    font-size: clamp(0.78rem, 1.8vw, 0.94rem);
+    line-height: 1.5;
+    text-indent: 0;
+  }
+
+  .lo-coda-handle {
+    flex: none;
+    color: var(--text);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .lo-coda-entry {
+    position: relative;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .lo-coda-measure {
+    visibility: hidden;
+  }
+
+  .lo-coda-measure,
+  [data-lo-typing] {
+    border-right: 0.08em solid transparent;
+    padding-right: 0.12em;
+  }
+
+  .lo-coda-live {
+    position: absolute;
+    inset: 0;
+  }
+
+  [data-lo-typing] {
+    border-right-color: currentColor;
+    animation: loCursorBlink 900ms steps(1, end) infinite;
+  }
+
+  @keyframes loCursorBlink {
+    0%, 48% { border-right-color: currentColor; }
+    49%, 100% { border-right-color: transparent; }
+  }
+
+  @media (max-width: 640px) {
+    .lo-coda {
+      font-size: 0.7rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-lo-typing] {
+      border-right-color: transparent;
+      animation: none;
+    }
+  }
+</style>
