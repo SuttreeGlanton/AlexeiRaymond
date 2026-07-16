@@ -862,45 +862,102 @@ img {
 
 .chronology-item {
   border-top: 1px solid var(--border);
-  padding: 16px 0;
+  padding: clamp(18px, 2.6vw, 24px) 0;
 }
 
 .chronology-item:last-child {
   border-bottom: 1px solid var(--border);
 }
 
-.bibliography-line {
-  margin: 0;
-  color: var(--text-soft);
-  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
-  line-height: 1.6;
-  text-wrap: pretty;
+.chronology-title-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 12px 20px;
 }
 
-.bibliography-line a {
-  border-bottom: 1px solid var(--border-strong);
+.chronology-piece-title {
+  margin: 0;
   color: var(--text);
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.chronology-piece-title a {
+  border-bottom: 1px solid var(--border-strong);
   transition: border-color 240ms ease;
 }
 
-.bibliography-line a:hover,
-.bibliography-line a:focus-visible {
+.chronology-piece-title a:hover,
+.chronology-piece-title a:focus-visible {
   border-color: var(--text);
 }
 
-.bibliography-line .pub {
+.chronology-publication-line {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: clamp(0.88rem, 1.4vw, 0.98rem);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.chronology-publication-line .pub {
+  color: var(--text-soft);
   font-style: italic;
+}
+
+.chronology-publication-separator {
+  padding: 0 0.35em;
+  color: var(--dim);
+}
+
+.chronology-read-link {
+  align-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  border-bottom: 1px solid var(--border-strong);
+  padding: 5px 0 4px;
+  color: var(--text-soft);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.chronology-read-link:hover,
+.chronology-read-link:focus-visible {
+  border-color: var(--text-soft);
+  color: var(--text);
 }
 
 .chronology-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
-  margin-top: 9px;
+  margin-top: 12px;
 }
 
-.chronology-upcoming .bibliography-line {
+.chronology-tags .tags {
+  margin-top: 0;
+}
+
+.chronology-item .tag {
+  border: 0;
+  padding: 4px 0 3px;
   color: var(--muted);
+}
+
+.chronology-item .tags > * + *::before {
+  content: '·';
+  display: inline-block;
+  margin-right: 7px;
+  color: var(--dim);
 }
 
 /* --- Page visuals and chronology sort --- */
@@ -1076,6 +1133,32 @@ img {
   .chronology-heading-row {
     align-items: flex-start;
     flex-direction: column;
+    gap: 14px;
+  }
+
+  .chronology-sort {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .chronology-sort .sort-button {
+    padding-inline: 7px;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
+
+  .chronology-title-row {
+    gap: 10px;
+  }
+
+  .chronology-piece-title {
+    font-size: clamp(1.28rem, 6vw, 1.5rem);
+  }
+
+  .chronology-read-link {
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
   }
 }
 
@@ -2927,18 +3010,6 @@ img {
     animation: none;
     opacity: 1;
   }
-}
-
-/* --- Chronology full-text links --- */
-.chronology-cycle-links .chronology-account-link {
-  border-bottom-color: var(--border-strong);
-  color: var(--text-soft);
-}
-
-.chronology-cycle-links .chronology-account-link:hover,
-.chronology-cycle-links .chronology-account-link:focus-visible {
-  border-bottom-color: var(--text-soft);
-  color: var(--text);
 }
 
 /* --- Full-text cover card metadata --- */

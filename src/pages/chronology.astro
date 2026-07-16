@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TagList from '../components/TagList.astro';
 import chronologyVisual from '../assets/page-visuals/chronology-records.jpg';
-import { canLinkToPiece, cycleByName, cycleNamesForPiece, formatMonthYear, parseDate, publishedNewestFirst, site, upcomingPieces, publicationLabel } from '../lib/data';
+import { canLinkToPiece, cycleByName, cycleNamesForPiece, formatIsoDate, formatMonthYear, parseDate, publishedNewestFirst, site, upcomingPieces, publicationLabel } from '../lib/data';
 import { withBase } from '../lib/paths';
 
 const upcoming = upcomingPieces();
@@ -34,25 +34,32 @@ function cycleLinksForPiece(piece) {
         <section class="chronology-section chronology-upcoming" aria-labelledby="upcoming-title">
           <h2 id="upcoming-title">Upcoming</h2>
           <ul class="chronology-list">
-            {upcoming.map((piece) => (
-              <li class="chronology-item">
-                <p class="bibliography-line">
-                  <span aria-hidden="true">&ldquo;</span>{piece.title}<span aria-hidden="true">&rdquo;</span> is forthcoming in <span class="pub">{publicationLabel(piece)}</span>.
-                </p>
-                <div class="chronology-tags">
-                  <TagList tags={piece.tags} genre={piece.genre} />
-                </div>
-                <div class="chronology-cycle-links" aria-label={cycleLinksForPiece(piece).length > 1 ? 'Cycles' : 'Cycle'}>
-                  <span>{cycleLinksForPiece(piece).length > 1 ? 'Cycles' : 'Cycle'}</span>
-                  {cycleLinksForPiece(piece).map((cycle, index) => (
-                    <>
-                      {index > 0 && <span aria-hidden="true">·</span>}
-                      <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
-                    </>
-                  ))}
-                </div>
-              </li>
-            ))}
+            {upcoming.map((piece) => {
+              const pieceCycles = cycleLinksForPiece(piece);
+
+              return (
+                <li class="chronology-item">
+                  <h3 class="chronology-piece-title">
+                    <span aria-hidden="true">&ldquo;</span>{piece.title}<span aria-hidden="true">&rdquo;</span>
+                  </h3>
+                  <p class="chronology-publication-line">
+                    Forthcoming in <span class="pub">{publicationLabel(piece)}</span>
+                  </p>
+                  <div class="chronology-tags">
+                    <TagList tags={piece.tags.filter((tag) => tag !== 'Upcoming')} genre={piece.genre} />
+                  </div>
+                  <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
+                    <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
+                    {pieceCycles.map((cycle, index) => (
+                      <>
+                        {index > 0 && <span aria-hidden="true">·</span>}
+                        <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
+                      </>
+                    ))}
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}
@@ -61,9 +68,9 @@ function cycleLinksForPiece(piece) {
         <div class="chronology-heading-row">
           <h2 id="published-title">Published</h2>
           <div class="chronology-sort" aria-label="Sort published pieces">
-            <button type="button" class="sort-button is-active" data-sort-order="newest" aria-pressed="true">Latest first</button>
-            <button type="button" class="sort-button" data-sort-order="oldest" aria-pressed="false">Earliest first</button>
-            <button type="button" class="sort-button" data-sort-order="onsite" aria-pressed="false">Read on site first</button>
+            <button type="button" class="sort-button is-active" data-sort-order="newest" aria-label="Sort latest first" aria-pressed="true">Latest</button>
+            <button type="button" class="sort-button" data-sort-order="oldest" aria-label="Sort earliest first" aria-pressed="false">Earliest</button>
+            <button type="button" class="sort-button" data-sort-order="onsite" aria-label="Place works readable on this site first" aria-pressed="false">Read here</button>
           </div>
         </div>
 
@@ -71,6 +78,8 @@ function cycleLinksForPiece(piece) {
           {published.map((piece, index) => {
             const year = parseDate(piece.date)?.getFullYear();
             const previousYear = index > 0 ? parseDate(published[index - 1].date)?.getFullYear() : null;
+            const pieceCycles = cycleLinksForPiece(piece);
+            const monthYear = formatMonthYear(piece.date);
 
             return (
               <>
@@ -82,30 +91,35 @@ function cycleLinksForPiece(piece) {
                   data-date={dateTimestamp(piece.date)}
                   data-on-site={piece.account?.slug ? 'true' : 'false'}
                 >
-                  <p class="bibliography-line">
-                    <span aria-hidden="true">&ldquo;</span>{canLinkToPiece(piece) ? (
-                      <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>{piece.title}</a>
-                    ) : piece.account?.slug ? (
-                      <a href={withBase(`accounts/${piece.account.slug}/`)}>{piece.title}</a>
-                    ) : (
-                      piece.title
-                    )}<span aria-hidden="true">&rdquo;</span>
-                    {' '}first appeared in <span class="pub">{publicationLabel(piece)}</span>{formatMonthYear(piece.date) ? `, ${formatMonthYear(piece.date)}` : ''}.
+                  <div class="chronology-title-row">
+                    <h3 class="chronology-piece-title">
+                      <span aria-hidden="true">&ldquo;</span>{canLinkToPiece(piece) ? (
+                        <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>{piece.title}</a>
+                      ) : (
+                        piece.title
+                      )}<span aria-hidden="true">&rdquo;</span>
+                    </h3>
+                    {piece.account && (
+                      <a class="chronology-read-link" href={withBase(`accounts/${piece.account.slug}/`)} aria-label={`Read ${piece.title} on this site`}>
+                        Read story <span aria-hidden="true">&rarr;</span>
+                      </a>
+                    )}
+                  </div>
+                  <p class="chronology-publication-line">
+                    First published in <span class="pub">{publicationLabel(piece)}</span>
+                    {monthYear && (
+                      <>
+                        <span class="chronology-publication-separator" aria-hidden="true">&middot;</span>
+                        <time datetime={formatIsoDate(piece.date)}>{monthYear}</time>
+                      </>
+                    )}
                   </p>
                   <div class="chronology-tags">
                     <TagList tags={piece.tags} genre={piece.genre} />
                   </div>
-                  <div class="chronology-cycle-links" aria-label={piece.account ? `Links for ${piece.title}` : cycleLinksForPiece(piece).length > 1 ? 'Cycles' : 'Cycle'}>
-                    {piece.account && (
-                      <>
-                        <a class="chronology-account-link" href={withBase(`accounts/${piece.account.slug}/`)} aria-label={`${piece.account.label || 'Read on site'} for ${piece.title}`}>
-                          {piece.account.label || 'Read on site'} <span aria-hidden="true">&rarr;</span>
-                        </a>
-                        <span aria-hidden="true">&middot;</span>
-                      </>
-                    )}
-                    <span>{cycleLinksForPiece(piece).length > 1 ? 'Cycles' : 'Cycle'}</span>
-                    {cycleLinksForPiece(piece).map((cycle, index) => (
+                  <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
+                    <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
+                    {pieceCycles.map((cycle, index) => (
                       <>
                         {index > 0 && <span aria-hidden="true">·</span>}
                         <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
@@ -167,7 +181,7 @@ function cycleLinksForPiece(piece) {
             const separator = document.createElement('li');
             separator.className = 'chron-year-sep chron-group-sep';
             separator.dataset.sortSeparator = '';
-            separator.textContent = group === 'onsite' ? 'Read on site' : 'Other publications';
+            separator.textContent = group === 'onsite' ? 'Available here' : 'Other publications';
             list.insertBefore(separator, item);
             lastGroup = group;
           }
