@@ -1,0 +1,424 @@
+---
+interface Props {
+  variant: 'desktop' | 'mobile';
+}
+
+const { variant } = Astro.props;
+---
+
+<figure
+  class={`guests-eyes guests-eyes--${variant}`}
+  data-guests-eyes
+  data-variant={variant}
+  data-state="closed"
+>
+  <div class="guests-eyes__stage">
+  <svg viewBox="0 0 128 24" shape-rendering="crispEdges" aria-hidden="true">
+    <g class="ge-closed">
+      <path fill="#3a3834" d="M7 9h3v2h5v2h7v1h21v-1h7v-2h5V9h3v5h-3v2h-5v2h-7v1H22v-1h-7v-2h-5v-2H7zM69 8h3v2h5v2h8v1h22v-1h7v-2h5V8h3v5h-3v2h-5v2h-7v1H85v-1h-8v-2h-5v-2h-3z" />
+      <path fill="#5f5b54" d="M13 6h8V5h26v1h7v2h-5V7H21v1h-8zM75 5h8V4h27v1h7v2h-6V6H83v1h-8z" />
+      <path fill="#2b2a27" d="M6 8h2v4H6zM56 8h2v4h-2zM68 7h2v4h-2zM120 7h2v4h-2zM12 15h2v3h-2zM114 14h2v3h-2z" />
+    </g>
+
+    <g class="ge-narrow">
+      <path fill="#3a3834" d="M7 9h4V7h6V6h30v1h7v2h4v6h-4v2h-8v1H20v-1h-8v-2H7zM69 8h4V6h7V5h30v1h7v2h5v6h-5v2h-8v1H82v-1h-8v-2h-5z" />
+      <path fill="#b7b3aa" d="M11 11h6V9h30v1h7v3h-7v1H19v-1h-8zM73 10h7V8h30v1h7v3h-8v1H81v-1h-8z" />
+      <path fill="#68645d" d="M27 9h13v1h3v4H25v-3h2zM91 8h13v1h3v4H89v-3h2z" />
+      <path fill="#1a1917" d="M31 10h7v4h-7zM95 9h7v4h-7z" />
+    </g>
+
+    <g class="ge-open">
+      <path fill="#3a3834" d="M7 10h2V7h3V5h5V3h7V2h18v1h7v2h5v2h3v3h2v6h-2v3h-3v2h-5v2h-7v1H23v-1h-7v-2h-5v-3H8v-3H7zM69 9h2V6h3V4h5V2h7V1h19v1h7v2h5v2h3v3h2v6h-2v3h-3v2h-5v2h-7v1H85v-1h-7v-2h-5v-3h-3v-3h-1z" />
+      <path fill="#b7b3aa" d="M10 10h2V8h3V6h5V5h7V4h12v1h7v1h5v2h3v3h2v4h-2v2h-3v2h-6v2H23v-1h-6v-2h-4v-2h-3zM72 9h2V7h3V5h5V4h7V3h13v1h7v1h5v2h3v3h2v4h-2v2h-3v2h-6v2H86v-1h-6v-2h-4v-2h-3v-2h-1z" />
+      <path fill="#8f8b83" d="M11 9h4V7h7V6h23v1h7v2h3v2h-5V9h-7V8H23v1h-7v2h-5zM73 8h4V6h8V5h24v1h7v2h4v2h-6V8h-7V7H86v1h-8v2h-5zM15 16h6v2h28v-2h6v1h-6v2H21v-1h-6zM77 15h7v2h28v-2h7v1h-7v2H84v-1h-7z" />
+      <path fill="#5f5b54" d="M10 5h6V3h31v1H17v2h-7zM74 4h6V2h31v1H81v2h-7z" />
+      <path fill="#2b2a27" d="M5 9h2v5H5zM59 10h2v5h-2zM67 8h2v5h-2zM124 9h2v5h-2zM12 18h2v3h-2zM116 17h2v3h-2z" />
+    </g>
+
+    <g class="ge-gaze">
+      <path fill="#4b4944" d="M28 7h12v1h4v2h2v2h1v5h-2v2h-4v1H28v-1h-4v-2h-2v-5h1v-2h2V8h3zM91 6h12v1h4v2h2v2h1v5h-2v2h-4v1H91v-1h-4v-2h-2v-5h1V9h2V7h3z" />
+      <path fill="#77736c" d="M30 9h8v1h3v2h1v5h-3v2h-9v-1h-3v-2h-1v-4h1v-2h3zM93 8h8v1h3v2h1v5h-3v2h-9v-1h-3v-2h-1v-4h1V9h3z" />
+      <path fill="#1a1917" d="M31 10h7v1h2v6h-2v1h-7v-1h-2v-6h2zM94 9h7v1h2v6h-2v1h-7v-1h-2v-6h2z" />
+      <path fill="#d0ccc3" d="M31 11h2v2h-2zM94 10h2v2h-2z" />
+    </g>
+
+    <g class="ge-veins-a">
+      <path fill="#7a4038" d="M10 12h5v1h3v1h3v1h3v1h-4v-1h-3v-1h-3v-1h-4zM51 11h6v1h-3v1h-3v2h-4v1h-3v-1h3v-1h3v-2h1zM72 11h5v1h3v1h3v2h3v1h-4v-1h-3v-2h-3v-1h-4zM116 10h6v1h-4v1h-3v2h-4v1h-3v-1h3v-1h3v-2h2z" />
+    </g>
+    <g class="ge-veins-b">
+      <path fill="#7a4038" d="M12 15h3v1h3v2h3v1h-4v-1h-3v-2h-2zM54 14h4v1h-2v2h-4v1h-4v-1h3v-1h3zM75 14h3v1h3v2h4v1h-5v-1h-3v-2h-2zM118 13h4v1h-2v2h-4v1h-4v-1h3v-1h3z" />
+    </g>
+  </svg>
+    <button class="ge-hit ge-hit--left" type="button" data-eye-hit="left" aria-label="Blink left eye"></button>
+    <button class="ge-hit ge-hit--right" type="button" data-eye-hit="right" aria-label="Blink right eye"></button>
+  </div>
+</figure>
+
+<script>
+  const eyesInstances = Array.from(document.querySelectorAll<HTMLElement>('[data-guests-eyes]'));
+
+  if (eyesInstances.length > 0) {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const desktopQuery = window.matchMedia('(min-width: 861px)');
+    let stage = 0; // 0 asleep · 1 awake · 2 wearied · 3 bloodshot
+    let desktopStarted = false;
+    let mobileStarted = false;
+
+    const setStage = (next: number) => {
+      if (next > stage) stage = next;
+    };
+
+    const setState = (
+      element: HTMLElement,
+      state: 'closed' | 'left-narrow' | 'left-open' | 'right-narrow' | 'narrow' | 'open',
+    ) => {
+      element.dataset.state = state;
+    };
+
+    const applyTiredness = (element: HTMLElement, level = stage) => {
+      element.classList.toggle('is-tired-1', level >= 2);
+      element.classList.toggle('is-tired-2', level >= 3);
+    };
+
+    const wake = (element: HTMLElement, then?: () => void) => {
+      if (element.dataset.awake === 'true') {
+        then?.();
+        return;
+      }
+
+      element.dataset.awake = 'true';
+      if (reducedMotion) {
+        setState(element, 'open');
+        then?.();
+        return;
+      }
+
+      setState(element, 'left-narrow');
+      window.setTimeout(() => {
+        setState(element, 'left-open');
+      }, 220);
+      window.setTimeout(() => {
+        setState(element, 'right-narrow');
+      }, 650);
+      window.setTimeout(() => {
+        setState(element, 'open');
+        then?.();
+      }, 920);
+    };
+
+    const startDesktop = () => {
+      if (!desktopQuery.matches || desktopStarted) return;
+      desktopStarted = true;
+
+      const desktopEyes = eyesInstances.find((element) => element.dataset.variant === 'desktop');
+      const prose = document.querySelector('.archive-prose');
+      if (!(desktopEyes instanceof HTMLElement) || !(prose instanceof HTMLElement)) return;
+
+      // Preserve the current visit's state when crossing the responsive breakpoint.
+      if (stage >= 1) {
+        wake(desktopEyes);
+        applyTiredness(desktopEyes);
+      }
+
+      let ticking = false;
+      const update = () => {
+        ticking = false;
+        if (!desktopQuery.matches) return;
+
+        const rect = prose.getBoundingClientRect();
+        const progress = Math.min(1, Math.max(0, (window.innerHeight * 0.85 - rect.top) / rect.height));
+
+        // Do not infer wakefulness from article geometry at initial page load.
+        // The reader must actually move down the page.
+        if (stage < 1 && window.scrollY > 30) {
+          setStage(1);
+          wake(desktopEyes);
+        }
+
+        if (stage >= 1 && progress >= 0.86) setStage(2);
+        if (stage >= 2 && progress >= 0.94) setStage(3);
+        applyTiredness(desktopEyes);
+      };
+
+      const schedule = () => {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(update);
+      };
+
+      window.addEventListener('scroll', schedule, { passive: true });
+      window.addEventListener('resize', schedule);
+      update();
+    };
+
+    const startMobile = () => {
+      if (desktopQuery.matches || mobileStarted) return;
+      mobileStarted = true;
+
+      const mobileEyes = eyesInstances.find((element) => element.dataset.variant === 'mobile');
+      if (!(mobileEyes instanceof HTMLElement)) return;
+
+      const revealTiredness = () => {
+        if (reducedMotion) {
+          setStage(3);
+          applyTiredness(mobileEyes, 3);
+          return;
+        }
+
+        window.setTimeout(() => {
+          setStage(2);
+          applyTiredness(mobileEyes, 2);
+        }, 1100);
+        window.setTimeout(() => {
+          setStage(3);
+          applyTiredness(mobileEyes, 3);
+        }, 2400);
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.5)) return;
+        observer.disconnect();
+
+        window.setTimeout(() => {
+          setStage(1);
+          wake(mobileEyes, revealTiredness);
+        }, reducedMotion ? 0 : 350);
+      }, { threshold: 0.5 });
+
+      observer.observe(mobileEyes);
+    };
+
+    startDesktop();
+    startMobile();
+
+    const handleLayoutChange = () => {
+      if (desktopQuery.matches) startDesktop();
+      else startMobile();
+    };
+
+    if (typeof desktopQuery.addEventListener === 'function') {
+      desktopQuery.addEventListener('change', handleLayoutChange);
+    }
+
+    const clickBlink = (element: HTMLElement, side: 'left' | 'right') => {
+      if (
+        element.dataset.awake !== 'true' ||
+        element.dataset.state !== 'open' ||
+        element.dataset.clickBlink
+      ) return;
+
+      if (reducedMotion) {
+        element.dataset.clickBlink = `${side}-closed`;
+        window.setTimeout(() => delete element.dataset.clickBlink, 120);
+        return;
+      }
+
+      element.dataset.clickBlink = `${side}-narrow`;
+      window.setTimeout(() => { element.dataset.clickBlink = `${side}-closed`; }, 70);
+      window.setTimeout(() => { element.dataset.clickBlink = `${side}-narrow`; }, 155);
+      window.setTimeout(() => { delete element.dataset.clickBlink; }, 245);
+    };
+
+    for (const element of eyesInstances) {
+      const hitAreas = element.querySelectorAll<HTMLButtonElement>('[data-eye-hit]');
+      for (const hitArea of hitAreas) {
+        hitArea.addEventListener('click', () => {
+          clickBlink(element, hitArea.dataset.eyeHit === 'right' ? 'right' : 'left');
+        });
+      }
+    }
+
+    if (!reducedMotion) {
+      const eachVisibleAwake = (callback: (element: HTMLElement) => void) => {
+        for (const element of eyesInstances) {
+          if (
+            element.dataset.awake === 'true' &&
+            element.dataset.state === 'open' &&
+            !element.dataset.clickBlink &&
+            element.getClientRects().length > 0
+          ) callback(element);
+        }
+      };
+
+      const blink = (hold: number) => {
+        eachVisibleAwake((element) => {
+          setState(element, 'narrow');
+          window.setTimeout(() => setState(element, 'closed'), 70);
+          window.setTimeout(() => setState(element, 'narrow'), 70 + hold);
+          window.setTimeout(() => setState(element, 'open'), 150 + hold);
+        });
+      };
+
+      const glance = () => {
+        const direction = Math.random() < 0.5 ? -4 : 4;
+        eachVisibleAwake((element) => element.style.setProperty('--ge-gaze', String(direction)));
+        window.setTimeout(() => {
+          for (const element of eyesInstances) element.style.setProperty('--ge-gaze', '0');
+        }, 1500 + Math.random() * 1800);
+      };
+
+      const blinkIdle = () => {
+        window.setTimeout(() => {
+          if (!document.hidden) blink(Math.random() < 0.12 ? 700 + Math.random() * 450 : 120);
+          blinkIdle();
+        }, 5000 + Math.random() * 6000);
+      };
+
+      const glanceIdle = () => {
+        window.setTimeout(() => {
+          if (!document.hidden) glance();
+          glanceIdle();
+        }, 10000 + Math.random() * 16000);
+      };
+
+      blinkIdle();
+      glanceIdle();
+    }
+  }
+</script>
+
+<style>
+  .guests-eyes {
+    display: grid;
+    justify-items: center;
+    margin: 0;
+    text-indent: 0;
+  }
+
+  .guests-eyes--desktop {
+    margin-top: 20px;
+  }
+
+  .guests-eyes--mobile {
+    min-height: 3rem;
+    margin: clamp(4rem, 10vw, 7rem) 0 0;
+  }
+
+  .guests-eyes__stage {
+    position: relative;
+    width: min(256px, 80vw);
+  }
+
+  .guests-eyes svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .ge-hit {
+    position: absolute;
+    top: 0;
+    width: 46%;
+    height: 100%;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .ge-hit--left { left: 0; }
+  .ge-hit--right { right: 0; }
+
+  .ge-hit:focus-visible {
+    outline: 1px solid var(--border-strong);
+    outline-offset: 2px;
+  }
+
+  .ge-closed,
+  .ge-narrow,
+  .ge-open,
+  .ge-gaze {
+    opacity: 0;
+  }
+
+  [data-state='closed'] .ge-closed,
+  [data-state='narrow'] .ge-narrow,
+  [data-state='open'] .ge-open,
+  [data-state='open'] .ge-gaze {
+    opacity: 1;
+  }
+
+  /* Wake unevenly: the left eye opens and waits for the right. */
+  [data-state='left-narrow'] .ge-narrow,
+  [data-state='left-open'] .ge-open,
+  [data-state='left-open'] .ge-gaze,
+  [data-state='right-narrow'] .ge-open,
+  [data-state='right-narrow'] .ge-gaze {
+    opacity: 1;
+    clip-path: inset(0 50% 0 0);
+  }
+
+  [data-state='left-narrow'] .ge-closed,
+  [data-state='left-open'] .ge-closed,
+  [data-state='right-narrow'] .ge-narrow {
+    opacity: 1;
+    clip-path: inset(0 0 0 50%);
+  }
+
+  /* A clicked eye blinks independently while its neighbour stays open. */
+  [data-click-blink^='left'] .ge-open,
+  [data-click-blink^='left'] .ge-gaze,
+  [data-click-blink^='left'] .ge-veins-a,
+  [data-click-blink^='left'] .ge-veins-b {
+    clip-path: inset(0 0 0 50%);
+  }
+
+  [data-click-blink='left-narrow'] .ge-narrow,
+  [data-click-blink='left-closed'] .ge-closed {
+    opacity: 1;
+    clip-path: inset(0 50% 0 0);
+  }
+
+  [data-click-blink^='right'] .ge-open,
+  [data-click-blink^='right'] .ge-gaze,
+  [data-click-blink^='right'] .ge-veins-a,
+  [data-click-blink^='right'] .ge-veins-b {
+    clip-path: inset(0 50% 0 0);
+  }
+
+  [data-click-blink='right-narrow'] .ge-narrow,
+  [data-click-blink='right-closed'] .ge-closed {
+    opacity: 1;
+    clip-path: inset(0 0 0 50%);
+  }
+
+  .ge-gaze {
+    transform: translateX(calc(var(--ge-gaze, 0) * 1px));
+  }
+
+  .ge-veins-a,
+  .ge-veins-b {
+    opacity: 0;
+    transition: opacity 2.2s ease;
+  }
+
+  [data-state='open'].is-tired-1 .ge-veins-a,
+  [data-state='open'].is-tired-2 .ge-veins-b {
+    opacity: 1;
+  }
+
+  @media (max-width: 860px) {
+    .guests-eyes--desktop {
+      display: none;
+    }
+  }
+
+  @media (min-width: 861px) {
+    .guests-eyes--mobile {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ge-veins-a,
+    .ge-veins-b {
+      transition: none;
+    }
+
+    .ge-gaze {
+      transform: none;
+    }
+  }
+</style>

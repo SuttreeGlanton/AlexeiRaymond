@@ -373,7 +373,12 @@
       "link": "https://www.bloodhoneylit.com/fiction/the-guests-are-here",
       "cover": "covers/pieces/the-guests-are-here.jpg",
       "excerpt": "The uninvited cannot discern their host in the dark though are seen themselves.",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "account": {
+        "slug": "the-guests-are-here",
+        "label": "Read on site",
+        "title": "The Guests Are Here"
+      }
     },
     {
       "title": "The Hunt",

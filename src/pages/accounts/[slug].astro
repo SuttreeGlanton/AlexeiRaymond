@@ -7,6 +7,7 @@ import AlleyMoneyCoda from '../../components/AlleyMoneyCoda.astro';
 import FatherFrostCoda from '../../components/FatherFrostCoda.astro';
 import LifeToDragonsCoda from '../../components/LifeToDragonsCoda.astro';
 import NatureOfSleepCoda from '../../components/NatureOfSleepCoda.astro';
+import GuestsEyesCoda from '../../components/GuestsEyesCoda.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
 import { absoluteSiteUrl, withBase } from '../../lib/paths';
 import { imageAsset } from '../../lib/image-assets';
@@ -30,6 +31,7 @@ const isAlleyMoney = entry.id === 'alley-money';
 const isFatherFrost = entry.id === 'father-frost';
 const isLifeToDragons = entry.id === 'life-to-dragons';
 const isNatureOfSleep = entry.id === 'on-the-nature-of-sleep';
+const isGuestsHere = entry.id === 'the-guests-are-here';
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? 'In full' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -115,7 +117,7 @@ const workSchema = fullText && piece ? {
   publishedTime={publishedIso || undefined}
   structuredData={workSchema}
 >
-  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
+  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
     <div class="overline">{overlineLabel}</div>
     <h1 class="page-title account-title" id="account-title">
@@ -132,24 +134,27 @@ const workSchema = fullText && piece ? {
     )}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
-        <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
-          <div class="archive-cover-media">
-            <OptimizedImage
-              path={piece.cover}
-              image={archiveCoverImage}
-              alt={archiveCoverAlt}
-              loading="eager"
-              sizes="(max-width: 640px) 76vw, (max-width: 860px) 42vw, 280px"
-            />
-            {archiveGenreLabel && <span class="genre-mark" data-genre={archiveGenreSlug}>{archiveGenreLabel}</span>}
-            {archiveDateLabel && <span class="date-mark">{archiveDateLabel}</span>}
-            {piece.excerpt && (
-              <div class="card-overlay" aria-hidden="true">
-                <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
-              </div>
-            )}
-          </div>
-        </aside>
+        <div class={`archive-cover-slot${isGuestsHere ? ' guests-cover-slot' : ''}`}>
+          <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
+            <div class="archive-cover-media">
+              <OptimizedImage
+                path={piece.cover}
+                image={archiveCoverImage}
+                alt={archiveCoverAlt}
+                loading="eager"
+                sizes="(max-width: 640px) 76vw, (max-width: 860px) 42vw, 280px"
+              />
+              {archiveGenreLabel && <span class="genre-mark" data-genre={archiveGenreSlug}>{archiveGenreLabel}</span>}
+              {archiveDateLabel && <span class="date-mark">{archiveDateLabel}</span>}
+              {piece.excerpt && (
+                <div class="card-overlay" aria-hidden="true">
+                  <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
+                </div>
+              )}
+            </div>
+          </aside>
+          {isGuestsHere && <GuestsEyesCoda variant="desktop" />}
+        </div>
       )}
       <div class="prose archive-prose">
         <Content />
@@ -157,6 +162,7 @@ const workSchema = fullText && piece ? {
         {isFatherFrost && <FatherFrostCoda />}
         {isLifeToDragons && <LifeToDragonsCoda />}
         {isNatureOfSleep && <NatureOfSleepCoda />}
+        {isGuestsHere && <GuestsEyesCoda variant="mobile" />}
       </div>
     </div>
     {piece && canLinkToPiece(piece) && (

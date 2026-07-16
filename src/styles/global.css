@@ -2429,6 +2429,10 @@ img {
   margin-top: 0;
 }
 
+.archive-cover-slot {
+  display: contents;
+}
+
 .archive-cover-card {
   width: min(76vw, 280px);
   margin: 0 0 clamp(30px, 7vw, 44px);
@@ -2488,6 +2492,24 @@ img {
   .archive-body-shell.has-archive-cover .archive-prose {
     grid-column: 1;
     grid-row: 1;
+  }
+
+  .archived-piece-page--guests .guests-cover-slot {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: 96px;
+    align-self: start;
+    justify-self: end;
+    width: 100%;
+  }
+
+  .archived-piece-page--guests .guests-cover-slot .archive-cover-card {
+    position: static;
+    top: auto;
+    width: 100%;
+    margin: 0;
   }
 }
 
