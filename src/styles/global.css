@@ -1034,15 +1034,25 @@ img {
   font-weight: 600;
   letter-spacing: 0.18em;
   padding: 7px 11px 6px;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
   text-transform: uppercase;
   transition: background 220ms ease, color 220ms ease;
 }
 
-.sort-button:hover,
 .sort-button:focus-visible,
 .sort-button.is-active {
   background: rgba(255, 255, 255, 0.055);
   color: var(--text-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sort-button:hover {
+    background: rgba(255, 255, 255, 0.055);
+    color: var(--text-soft);
+  }
 }
 
 @media (max-width: 1080px) {
