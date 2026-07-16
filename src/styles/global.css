@@ -558,7 +558,7 @@ img {
   text-transform: uppercase;
 }
 
-/* Genre reads as a quiet label, not a status box Ã¢â‚¬â€ no border, dimmer. */
+/* Genre reads as a quiet label, not a status box ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â no border, dimmer. */
 .genre-chip {
   padding: 4px 0 3px;
   color: var(--muted);
@@ -1693,8 +1693,9 @@ img {
 
 /* --- Footer, sound glyph, and mobile nav polish --- */
 .footer-inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
   gap: 24px;
   padding: 34px 0;
 }
@@ -1721,6 +1722,38 @@ img {
 .footer-nav a:focus-visible {
   border-color: var(--border-strong);
   color: var(--text-soft);
+}
+
+.footer-socials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.footer-social-link {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--dim);
+  transition: background 220ms ease, border-color 220ms ease, color 220ms ease;
+}
+
+.footer-social-link:hover,
+.footer-social-link:focus-visible {
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text-soft);
+}
+
+.footer-social-link svg {
+  display: block;
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
 }
 
 .hero-sound-toggle {
@@ -1760,11 +1793,14 @@ img {
 
 @media (max-width: 860px) {
   .footer-inner {
-    align-items: flex-start;
+    grid-template-columns: 1fr;
+    align-items: center;
+    justify-items: center;
   }
 
   .footer-nav {
-    justify-content: flex-start;
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -1831,8 +1867,12 @@ img {
     order: 1;
   }
 
-  .footer-mark {
+  .footer-socials {
     order: 2;
+  }
+
+  .footer-mark {
+    order: 3;
   }
 }
 
