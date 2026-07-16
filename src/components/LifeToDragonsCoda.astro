@@ -204,6 +204,22 @@
 
     lizard.style.left = `${spots[at]}%`;
 
+    const dart = (target: number) => {
+      if (running) return;
+
+      const facing = spots[target] > spots[at] ? '1' : '-1';
+      lizard.style.setProperty('--ltd-face', facing);
+      at = target;
+      running = true;
+      lizard.classList.add('is-running');
+      lizard.style.left = `${spots[at]}%`;
+
+      window.setTimeout(() => {
+        lizard.classList.remove('is-running');
+        running = false;
+      }, reducedMotion ? 30 : 500);
+    };
+
     const flee = (event?: Event) => {
       if (running) return;
 
@@ -219,19 +235,21 @@
         );
       }
 
-      const facing = spots[target] > spots[at] ? '1' : '-1';
-      lizard.style.setProperty('--ltd-face', facing);
-      at = target;
-      running = true;
-      lizard.classList.add('is-running');
-      lizard.style.left = `${spots[at]}%`;
+      dart(target);
       if (status instanceof HTMLElement) status.textContent = 'The lizard rustles away.';
-
-      window.setTimeout(() => {
-        lizard.classList.remove('is-running');
-        running = false;
-      }, reducedMotion ? 30 : 500);
     };
+
+    // A life of its own: now and then it rustles off unprompted.
+    const wander = () => {
+      window.setTimeout(() => {
+        if (!reducedMotion && !running && !document.hidden) {
+          const others = [0, 1, 2].filter((index) => index !== at);
+          dart(others[Math.floor(Math.random() * others.length)]);
+        }
+        wander();
+      }, 6000 + Math.random() * 9000);
+    };
+    wander();
 
     lizard.addEventListener('pointerenter', flee);
     lizard.addEventListener('click', flee);
@@ -255,7 +273,7 @@
 
   .ltd-coda {
     position: relative;
-    height: 120px;
+    height: 136px;
     margin: clamp(4rem, 10vw, 7rem) 0 0;
     text-indent: 0;
   }
@@ -276,7 +294,7 @@
     position: absolute;
     bottom: 9px;
     left: 44%;
-    width: 104px;
+    width: 142px;
     padding: 4px 2px 0;
     border: 0;
     background: transparent;
@@ -341,8 +359,8 @@
   }
 
   @media (max-width: 640px) {
-    .ltd-coda { height: 104px; }
-    .ltd-lizard { width: 84px; }
+    .ltd-coda { height: 112px; }
+    .ltd-lizard { width: 108px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
