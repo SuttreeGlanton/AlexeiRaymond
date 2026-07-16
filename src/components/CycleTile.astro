@@ -13,6 +13,8 @@ const cover = cycle.cover ? assetPath(cycle.cover) : '';
 const coverImage = imageAsset(cycle.cover);
 const disabled = Boolean(cycle.disabled);
 const href = disabled ? '' : withBase(`cycles/${cycle.id}/`);
+const cycleCoverWidths = [240, 400, 560, 640, 760];
+const cycleCoverSizes = '(max-width: 640px) calc(100vw - 24px), (max-width: 1120px) 33vw, 295px';
 ---
 
 {
@@ -20,7 +22,15 @@ const href = disabled ? '' : withBase(`cycles/${cycle.id}/`);
     <div class="tile tile--disabled" data-cycle-id={cycle.id} aria-disabled="true">
       <div class="tile-media">
         {cover ? (
-          <OptimizedImage path={cycle.cover} image={coverImage} alt={`${cycle.name} cover`} loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1120px) 33vw, 25vw" widths={[240, 400, 560, 760]} />
+          <OptimizedImage
+            path={cycle.cover}
+            image={coverImage}
+            alt={`${cycle.name} cover`}
+            loading="lazy"
+            sizes={cycleCoverSizes}
+            widths={cycleCoverWidths}
+            quality={72}
+          />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
         )}
@@ -39,7 +49,15 @@ const href = disabled ? '' : withBase(`cycles/${cycle.id}/`);
     <a class="tile" data-cycle-id={cycle.id} href={href}>
       <div class="tile-media">
         {cover ? (
-          <OptimizedImage path={cycle.cover} image={coverImage} alt={`${cycle.name} cover`} loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1120px) 33vw, 25vw" widths={[240, 400, 560, 760]} />
+          <OptimizedImage
+            path={cycle.cover}
+            image={coverImage}
+            alt={`${cycle.name} cover`}
+            loading="lazy"
+            sizes={cycleCoverSizes}
+            widths={cycleCoverWidths}
+            quality={72}
+          />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
         )}

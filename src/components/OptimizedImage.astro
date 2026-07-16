@@ -12,6 +12,7 @@ interface Props {
   fetchpriority?: 'high' | 'low' | 'auto';
   widths?: number[];
   sizes?: string;
+  quality?: number;
 }
 
 const {
@@ -22,7 +23,8 @@ const {
   decoding = 'async',
   fetchpriority,
   widths = [240, 400, 560, 760],
-  sizes = '(max-width: 640px) 85vw, (max-width: 860px) 45vw, 360px'
+  sizes = '(max-width: 640px) 85vw, (max-width: 860px) 45vw, 360px',
+  quality
 } = Astro.props;
 
 const fallbackSrc = path ? assetPath(path) : '';
@@ -36,6 +38,7 @@ const fallbackSrc = path ? assetPath(path) : '';
     widths={widths}
     width={Math.max(...widths)}
     sizes={sizes}
+    quality={quality}
     alt={alt}
     loading={loading}
     decoding={decoding}
