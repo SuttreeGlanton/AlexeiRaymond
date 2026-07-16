@@ -178,7 +178,7 @@
       "genre": "Short fiction",
       "account": {
         "slug": "193-lines-of-sight",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "193 Lines of Sight"
       },
       "cycles": [
@@ -201,7 +201,7 @@
       "issue": "#8",
       "account": {
         "slug": "193-thoughts-of-you",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "193 Thoughts of You"
       },
       "cycles": [
@@ -265,7 +265,7 @@
       "issue": "II anthology",
       "account": {
         "slug": "deathwish",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "Deathwish"
       },
       "cycles": [
@@ -331,7 +331,7 @@
       "genre": "Short fiction",
       "account": {
         "slug": "she-loves-her-mother",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "She Loves Her Mother"
       }
     },
@@ -376,7 +376,7 @@
       "genre": "Short fiction",
       "account": {
         "slug": "the-guests-are-here",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "The Guests Are Here"
       }
     },
@@ -395,7 +395,7 @@
       "issue": "(Special Issue: Homeland)",
       "account": {
         "slug": "the-hunt",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "The Hunt"
       }
     },
@@ -441,7 +441,7 @@
       "genre": "Short fiction",
       "account": {
         "slug": "alley-money",
-        "label": "Read on site"
+        "label": "Read story"
       }
     },
     {
@@ -489,7 +489,7 @@
       "genre": "Flash fiction",
       "account": {
         "slug": "clothesline-divorce",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "Clothesline Divorce"
       }
     },
@@ -521,7 +521,7 @@
       "genre": "Flash fiction",
       "account": {
         "slug": "god-underground",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "God Underground"
       },
       "issue": "#2",
@@ -644,7 +644,7 @@
       "genre": "Short fiction",
       "account": {
         "slug": "genesis",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "Genesis"
       },
       "cycles": [
@@ -680,7 +680,7 @@
       "issue": "#4",
       "account": {
         "slug": "his-green-delight",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "His Green Delight"
       }
     },
@@ -713,7 +713,7 @@
       "genre": "Short fiction",
       "account": {
         "slug": "lotharionline",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "LothariOnline"
       }
     },
@@ -791,7 +791,7 @@
       "genre": "Poem",
       "account": {
         "slug": "6080",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "(6,080)"
       }
     },
@@ -809,7 +809,7 @@
       "genre": "Short fiction",
       "account": {
         "slug": "father-frost",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "Father Frost"
       }
     },
@@ -840,7 +840,7 @@
       "genre": "Short fiction",
       "account": {
         "slug": "no-rabbit",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "No, Rabbit"
       },
       "cycles": [
@@ -876,7 +876,7 @@
       "issue": "#5",
       "account": {
         "slug": "on-the-nature-of-sleep",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "On the Nature of Sleep"
       }
     },
@@ -908,7 +908,7 @@
       "issue": "II anthology",
       "account": {
         "slug": "remediation",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "Remediation"
       }
     },
@@ -1048,7 +1048,7 @@
       "issue": "#21.1",
       "account": {
         "slug": "life-to-dragons",
-        "label": "Read on site",
+        "label": "Read story",
         "title": "Life to Dragons"
       }
     },

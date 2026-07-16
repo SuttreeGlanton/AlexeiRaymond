@@ -100,7 +100,7 @@ function cycleLinksForPiece(piece) {
                       )}<span aria-hidden="true">&rdquo;</span>
                     </h3>
                     {piece.account && (
-                      <a class="chronology-read-link" href={withBase(`accounts/${piece.account.slug}/`)} aria-label={`Read ${piece.title} on this site`}>
+                      <a class="chronology-read-link" href={withBase(`accounts/${piece.account.slug}/`)} aria-label={`Read story: ${piece.title} on this site`}>
                         Read story <span aria-hidden="true">&rarr;</span>
                       </a>
                     )}

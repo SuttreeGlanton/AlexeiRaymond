@@ -11,6 +11,7 @@ interface Props {
   showCycle?: boolean;
   storyOrder?: number;
   sourceOrder?: number;
+  priority?: boolean;
   imageSizes?: string;
   imageWidths?: number[];
 }
@@ -20,8 +21,9 @@ const {
   showCycle = false,
   storyOrder,
   sourceOrder,
+  priority = false,
   imageSizes = '(max-width: 640px) 85vw, (max-width: 860px) 45vw, 360px',
-  imageWidths = [240, 400, 560, 760]
+  imageWidths = [240, 400, 560, 640, 760]
 } = Astro.props;
 const upcoming = isUpcoming(piece);
 const defunct = isDefunct(piece);
@@ -50,6 +52,14 @@ const GENRE_SHORT: Record<string, string> = {
 };
 const genreLabel = piece.genre ? (GENRE_SHORT[piece.genre] ?? piece.genre) : '';
 const genreSlug = piece.genre ? piece.genre.toLowerCase().replace(/[^a-z]+/g, '-') : '';
+const imageLoading = priority ? 'eager' : 'lazy';
+const imageFetchPriority = priority ? 'high' : undefined;
+const coverLinkLabel = [
+  genreLabel,
+  dateLabel,
+  `Read ${piece.title} at ${publicationLabel(piece)}.`,
+  'Opens in a new tab.'
+].filter(Boolean).join(' ');
 const metaParts = [
   cycleLabel ? { text: cycleLabel } : null,
   piece.publication ? { text: publicationLabel(piece), className: 'card-publication' } : null
@@ -65,10 +75,10 @@ const metaParts = [
   data-upcoming={upcoming ? 'true' : 'false'}
 >
   {linked ? (
-    <a class="card-cover-link" href={piece.link} target="_blank" rel="noopener noreferrer" tabindex="-1" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>
+    <a class="card-cover-link" href={piece.link} target="_blank" rel="noopener noreferrer" tabindex="-1" aria-label={coverLinkLabel}>
       <div class="card-media">
         {cover ? (
-          <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading="lazy" sizes={imageSizes} widths={imageWidths} />
+          <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
         )}
@@ -84,7 +94,7 @@ const metaParts = [
   ) : (
     <div class="card-media">
       {cover ? (
-        <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading="lazy" sizes={imageSizes} widths={imageWidths} />
+        <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} />
       ) : (
         <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
       )}
@@ -122,6 +132,6 @@ const metaParts = [
     <TagList tags={piece.tags} />
   </div>
   {piece.account && (
-    <a class="account-strip" href={accountHref} aria-label={`${accountLabel} for ${piece.title}`}>{accountLabel} &rarr;</a>
+    <a class="account-strip" href={accountHref} aria-label={`${accountLabel}: ${piece.title} on this site`}>{accountLabel} &rarr;</a>
   )}
 </article>
