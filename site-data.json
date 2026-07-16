@@ -868,7 +868,12 @@
       "cover": "covers/pieces/on-the-nature-of-sleep.jpg",
       "excerpt": "Sincerely, futilely, wretchedly yours. In beating sorrow and purest grief.",
       "genre": "Short fiction",
-      "issue": "#5"
+      "issue": "#5",
+      "account": {
+        "slug": "on-the-nature-of-sleep",
+        "label": "Read on site",
+        "title": "On the Nature of Sleep"
+      }
     },
     {
       "title": "Red, They Are Cherry Red",
@@ -1035,7 +1040,12 @@
       "cover": "covers/pieces/life-to-dragons.jpg",
       "excerpt": "He sees that the dragon’s tan appearance was the sun’s insistence; greenish scales declare its true color.",
       "genre": "Short fiction",
-      "issue": "#21.1"
+      "issue": "#21.1",
+      "account": {
+        "slug": "life-to-dragons",
+        "label": "Read on site",
+        "title": "Life to Dragons"
+      }
     },
     {
       "title": "Star-Crossed",
