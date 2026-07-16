@@ -1,0 +1,463 @@
+diff --git a/site-data.json b/site-data.json
+index 8318076..cacd7c3 100644
+--- a/site-data.json
++++ b/site-data.json
+@@ -373,7 +373,12 @@
+       "link": "https://www.bloodhoneylit.com/fiction/the-guests-are-here",
+       "cover": "covers/pieces/the-guests-are-here.jpg",
+       "excerpt": "The uninvited cannot discern their host in the dark though are seen themselves.",
+-      "genre": "Short fiction"
++      "genre": "Short fiction",
++      "account": {
++        "slug": "the-guests-are-here",
++        "label": "Read on site",
++        "title": "The Guests Are Here"
++      }
+     },
+     {
+       "title": "The Hunt",
+diff --git a/src/components/GuestsEyesCoda.astro b/src/components/GuestsEyesCoda.astro
+new file mode 100644
+index 0000000..8859b2c
+--- /dev/null
++++ b/src/components/GuestsEyesCoda.astro
+@@ -0,0 +1,304 @@
++---
++interface Props {
++  variant: 'desktop' | 'mobile';
++}
++
++const { variant } = Astro.props;
++---
++
++<figure
++  class={`guests-eyes guests-eyes--${variant}`}
++  data-guests-eyes
++  data-variant={variant}
++  data-state="closed"
++  aria-hidden="true"
++>
++  <svg viewBox="0 0 64 12" shape-rendering="crispEdges">
++    <g class="ge-closed">
++      <path fill="#3a3834" d="M35 3h2v1h-2zM5 4h2v1h-2zM36 4h15v1h-15zM6 5h14v1h-14zM38 5h11v1h-11zM50 5h2v1h-2zM8 6h10v1h-10zM19 6h2v1h-2z" />
++      <path fill="#5f5b54" d="M38 6h4v1h-4zM44 6h4v1h-4zM8 7h4v1h-4zM14 7h4v1h-4z" />
++    </g>
++    <g class="ge-narrow">
++      <path fill="#3a3834" d="M36 2h14v1h-14zM6 3h14v1h-14zM34 3h3v1h-3zM50 3h3v1h-3zM4 4h3v1h-3zM19 4h3v1h-3zM35 4h16v1h-16zM5 5h16v1h-16z" />
++      <path fill="#5f5b54" d="M37 3h1v1h-1zM49 3h1v1h-1zM7 4h1v1h-1zM18 4h1v1h-1zM38 5h4v1h-4zM44 5h4v1h-4zM8 6h4v1h-4zM14 6h4v1h-4z" />
++      <path fill="#b7b3aa" d="M38 3h3v1h-3zM47 3h2v1h-2zM8 4h3v1h-3zM16 4h2v1h-2z" />
++      <path fill="#68645d" d="M41 3h2v1h-2zM45 3h2v1h-2zM11 4h2v1h-2zM15 4h1v1h-1z" />
++      <path fill="#1a1917" d="M43 3h2v1h-2zM13 4h2v1h-2z" />
++    </g>
++    <g class="ge-open">
++      <path fill="#3a3834" d="M36 1h14v1h-14zM6 2h14v1h-14zM34 2h2v1h-2zM51 2h2v1h-2zM4 3h2v1h-2zM20 3h2v1h-2zM33 3h1v1h-1zM53 3h1v1h-1zM3 4h1v1h-1zM22 4h1v1h-1zM33 4h1v1h-1zM52 4h1v1h-1zM4 5h1v1h-1zM21 5h1v1h-1zM34 5h2v1h-2zM50 5h2v1h-2zM5 6h2v1h-2zM19 6h2v1h-2zM37 6h12v1h-12zM7 7h12v1h-12z" />
++      <path fill="#5f5b54" d="M36 2h1v1h-1zM50 2h1v1h-1zM6 3h1v1h-1zM19 3h1v1h-1zM34 3h1v1h-1zM52 3h1v1h-1zM4 4h1v1h-1zM21 4h1v1h-1zM34 4h1v1h-1zM51 4h1v1h-1zM5 5h1v1h-1zM20 5h1v1h-1zM36 5h1v1h-1zM49 5h1v1h-1zM7 6h1v1h-1zM18 6h1v1h-1zM38 7h4v1h-4zM44 7h4v1h-4zM8 8h4v1h-4zM14 8h4v1h-4z" />
++      <path fill="#b7b3aa" d="M37 2h4v1h-4zM45 2h5v1h-5zM7 3h4v1h-4zM15 3h4v1h-4zM35 3h5v1h-5zM46 3h6v1h-6zM5 4h5v1h-5zM16 4h5v1h-5zM35 4h5v1h-5zM46 4h5v1h-5zM6 5h4v1h-4zM16 5h4v1h-4zM37 5h4v1h-4zM45 5h4v1h-4zM8 6h3v1h-3zM15 6h3v1h-3z" />
++      <path fill="#68645d" d="M41 2h4v1h-4zM11 3h4v1h-4zM40 3h6v1h-6zM10 4h6v1h-6zM40 4h6v1h-6zM10 5h6v1h-6zM41 5h4v1h-4zM11 6h4v1h-4z" />
++    </g>
++    <g class="ge-pupil">
++      <path fill="#1a1917" d="M42 3h2v1h-2zM12 4h2v1h-2zM42 4h2v1h-2zM12 5h2v1h-2z" />
++    </g>
++    <g class="ge-veins-a">
++      <path fill="#7a4038" d="M34 3h2v1h-2zM4 4h2v1h-2zM35 4h2v1h-2zM49 4h1v1h-1zM5 5h2v1h-2zM19 5h1v1h-1z" />
++    </g>
++    <g class="ge-veins-b">
++      <path fill="#7a4038" d="M50 3h1v1h-1zM20 4h1v1h-1zM49 4h2v1h-2zM19 5h2v1h-2zM36 5h1v1h-1zM6 6h1v1h-1z" />
++      <path fill="#4a322e" d="M38 7h4v1h-4zM44 7h4v1h-4zM8 8h4v1h-4zM14 8h4v1h-4z" />
++    </g>
++  </svg>
++</figure>
++
++<script>
++  const eyesInstances = Array.from(document.querySelectorAll<HTMLElement>('[data-guests-eyes]'));
++
++  if (eyesInstances.length > 0) {
++    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
++    const desktopQuery = window.matchMedia('(min-width: 861px)');
++    let stage = 0; // 0 asleep · 1 awake · 2 wearied · 3 bloodshot
++    let desktopStarted = false;
++    let mobileStarted = false;
++
++    const setStage = (next: number) => {
++      if (next > stage) stage = next;
++    };
++
++    const setState = (element: HTMLElement, state: 'closed' | 'narrow' | 'open') => {
++      element.dataset.state = state;
++    };
++
++    const applyTiredness = (element: HTMLElement, level = stage) => {
++      element.classList.toggle('is-tired-1', level >= 2);
++      element.classList.toggle('is-tired-2', level >= 3);
++    };
++
++    const wake = (element: HTMLElement, then?: () => void) => {
++      if (element.dataset.awake === 'true') {
++        then?.();
++        return;
++      }
++
++      element.dataset.awake = 'true';
++      if (reducedMotion) {
++        setState(element, 'open');
++        then?.();
++        return;
++      }
++
++      setState(element, 'narrow');
++      window.setTimeout(() => {
++        setState(element, 'open');
++        then?.();
++      }, 320);
++    };
++
++    const startDesktop = () => {
++      if (!desktopQuery.matches || desktopStarted) return;
++      desktopStarted = true;
++
++      const desktopEyes = eyesInstances.find((element) => element.dataset.variant === 'desktop');
++      const prose = document.querySelector('.archive-prose');
++      if (!(desktopEyes instanceof HTMLElement) || !(prose instanceof HTMLElement)) return;
++
++      // Preserve the current visit's state when crossing the responsive breakpoint.
++      if (stage >= 1) {
++        wake(desktopEyes);
++        applyTiredness(desktopEyes);
++      }
++
++      let ticking = false;
++      const update = () => {
++        ticking = false;
++        if (!desktopQuery.matches) return;
++
++        const rect = prose.getBoundingClientRect();
++        const progress = Math.min(1, Math.max(0, (window.innerHeight * 0.85 - rect.top) / rect.height));
++
++        // Do not infer wakefulness from article geometry at initial page load.
++        // The reader must actually move down the page.
++        if (stage < 1 && window.scrollY > 30) {
++          setStage(1);
++          wake(desktopEyes);
++        }
++
++        if (stage >= 1 && progress >= 0.86) setStage(2);
++        if (stage >= 2 && progress >= 0.94) setStage(3);
++        applyTiredness(desktopEyes);
++      };
++
++      const schedule = () => {
++        if (ticking) return;
++        ticking = true;
++        window.requestAnimationFrame(update);
++      };
++
++      window.addEventListener('scroll', schedule, { passive: true });
++      window.addEventListener('resize', schedule);
++      update();
++    };
++
++    const startMobile = () => {
++      if (desktopQuery.matches || mobileStarted) return;
++      mobileStarted = true;
++
++      const mobileEyes = eyesInstances.find((element) => element.dataset.variant === 'mobile');
++      if (!(mobileEyes instanceof HTMLElement)) return;
++
++      const revealTiredness = () => {
++        if (reducedMotion) {
++          setStage(3);
++          applyTiredness(mobileEyes, 3);
++          return;
++        }
++
++        window.setTimeout(() => {
++          setStage(2);
++          applyTiredness(mobileEyes, 2);
++        }, 1100);
++        window.setTimeout(() => {
++          setStage(3);
++          applyTiredness(mobileEyes, 3);
++        }, 2400);
++      };
++
++      const observer = new IntersectionObserver((entries) => {
++        if (!entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.5)) return;
++        observer.disconnect();
++
++        window.setTimeout(() => {
++          setStage(1);
++          wake(mobileEyes, revealTiredness);
++        }, reducedMotion ? 0 : 350);
++      }, { threshold: 0.5 });
++
++      observer.observe(mobileEyes);
++    };
++
++    startDesktop();
++    startMobile();
++
++    const handleLayoutChange = () => {
++      if (desktopQuery.matches) startDesktop();
++      else startMobile();
++    };
++
++    if (typeof desktopQuery.addEventListener === 'function') {
++      desktopQuery.addEventListener('change', handleLayoutChange);
++    }
++
++    if (!reducedMotion) {
++      const eachVisibleAwake = (callback: (element: HTMLElement) => void) => {
++        for (const element of eyesInstances) {
++          if (
++            element.dataset.awake === 'true' &&
++            element.dataset.state === 'open' &&
++            element.getClientRects().length > 0
++          ) callback(element);
++        }
++      };
++
++      const blink = (hold: number) => {
++        eachVisibleAwake((element) => {
++          setState(element, 'narrow');
++          window.setTimeout(() => setState(element, 'closed'), 70);
++          window.setTimeout(() => setState(element, 'narrow'), 70 + hold);
++          window.setTimeout(() => setState(element, 'open'), 150 + hold);
++        });
++      };
++
++      const glance = () => {
++        const direction = Math.random() < 0.5 ? -2 : 2;
++        eachVisibleAwake((element) => element.style.setProperty('--ge-gaze', String(direction)));
++        window.setTimeout(() => {
++          for (const element of eyesInstances) element.style.setProperty('--ge-gaze', '0');
++        }, 1500 + Math.random() * 1800);
++      };
++
++      const idle = () => {
++        window.setTimeout(() => {
++          if (!document.hidden) {
++            const roll = Math.random();
++            if (roll < 0.4) blink(120);
++            else if (roll < 0.55) blink(950 + Math.random() * 500);
++            else if (roll < 0.8) glance();
++          }
++          idle();
++        }, 9000 + Math.random() * 17000);
++      };
++
++      idle();
++    }
++  }
++</script>
++
++<style>
++  .guests-eyes {
++    display: grid;
++    justify-items: center;
++    margin: 0;
++    text-indent: 0;
++  }
++
++  .guests-eyes--desktop {
++    margin-top: 20px;
++  }
++
++  .guests-eyes--mobile {
++    min-height: 3rem;
++    margin: clamp(4rem, 10vw, 7rem) 0 0;
++  }
++
++  .guests-eyes svg {
++    display: block;
++    width: 128px;
++    height: auto;
++    overflow: visible;
++  }
++
++  .ge-closed,
++  .ge-narrow,
++  .ge-open,
++  .ge-pupil {
++    opacity: 0;
++  }
++
++  [data-state='closed'] .ge-closed,
++  [data-state='narrow'] .ge-narrow,
++  [data-state='open'] .ge-open,
++  [data-state='open'] .ge-pupil {
++    opacity: 1;
++  }
++
++  .ge-pupil {
++    transform: translateX(calc(var(--ge-gaze, 0) * 1px));
++  }
++
++  .ge-veins-a,
++  .ge-veins-b {
++    opacity: 0;
++    transition: opacity 2.2s ease;
++  }
++
++  [data-state='open'].is-tired-1 .ge-veins-a,
++  [data-state='open'].is-tired-2 .ge-veins-b {
++    opacity: 1;
++  }
++
++  @media (max-width: 860px) {
++    .guests-eyes--desktop {
++      display: none;
++    }
++  }
++
++  @media (min-width: 861px) {
++    .guests-eyes--mobile {
++      display: none;
++    }
++  }
++
++  @media (prefers-reduced-motion: reduce) {
++    .ge-veins-a,
++    .ge-veins-b {
++      transition: none;
++    }
++
++    .ge-pupil {
++      transform: none;
++    }
++  }
++</style>
+diff --git a/src/content/accounts/the-guests-are-here.md b/src/content/accounts/the-guests-are-here.md
+new file mode 100644
+index 0000000..3ffbe4f
+--- /dev/null
++++ b/src/content/accounts/the-guests-are-here.md
+@@ -0,0 +1,6 @@
++---
++title: The Guests Are Here
++fullText: true
++---
++
++It’s time to sleep; they’ll be here soon. Either them, or a few modest hours of erasure—escape. Drifting—maintaining consciousness becomes a pleasant effort. A hand hangs by a thread. To let it fall is bliss beyond. Buried under layers of varied thickness. Too hot. Can't sweat. Cars outside brush asphalt, sound streaking through the night. Why so many cars at this hour? Where are they going—there is nowhere to go. The window stays open, trading heat for a gentle chill. The air feels pure against the exposed skin of the arms, shoulders. Fabric rustles; a cheek pressing into the mattress reliant. The smell of coffee emanating from some stain on the sheets. To be taken care of in the perpetual not-now. Discard this awkward position—there must be a better one. It is abandoned in favour of facing the dark wall. It radiates cold—too biting to rest a forehead against. A few centimetres away is too much as well. What now? The phone—malicious, gasping—lurks nearby. It is incongruent with the softness of the bed, with rest. To look at it is to be slashed with light and decaying energy. Subdue its brightness somewhat and regard it with weary lids. There are no new tidings, impersonal or otherwise. Old and recent loves lie far away, asleep. It is not the hour of friends. The hand drops the phone and snakes beneath the waistband. The palm lies flat against the pelvis there. The curvature and bone are pleasing and still. The body was meant to sleep this way—why won’t it? To be the first in the office darkness, and not usher in electricity. The click click click of switches against the dark. The disappointment and puzzlement of others over the preference to sit in the half-tones of an early morning. The less seen of the office the better. Sole agent of sedition against fluorescence. Don’t jump ahead. Legs brush thin synthetic fabric, eliciting sparks. Crackling in the dark. I will not give you my soul. Do not ask of my state. Rumbling in the deep, muffled by flesh muscle and skin and the counting down of minutes until the fifth hour after midnight. Coloured light electric leaks out of pinpricks in white green and red. We’re on, we’re on, we’re connected. Grandmother maternal, you found those disturbing—an undermining of sleep. The guests won’t mind. Sleep occurs next to these appliances, though not to spite you. You left this earth some March. That long ago? The years go by, and so do I. The singular pillow’s volume recalcitrant against the tyranny of the skull's weight. Comfort remains elusive and unseen vapours billow out of a briefly opened mouth. Teeth unbrushed in the wet dark. Guilt helps them not. To crack the skull and let the matter there breathe. Rinse the mind in vitreous water, wash away the sediment. An indeterminate hum is out there even as the cars halt. The bladder bides its time. Source of marching orders for the feet to stick to the flat, cold floor. Walk to and fro. Waterfall in the night. A repositioning of weight creaks the sturdy, old wood of the bed frame. When was the last time it creaked with love? She was nervous. An embarrassed flurry of impassioned motion. How to champion silence when the body desires motion? They hear and know though you couldn’t tell. The severe lack of touch is only remembered in the mind. The partly closed blinds allow a faint staircase of light to slant on the ceiling. From nowhere to nowhere. Consciousness is no longer a struggle. Some barrier unintentionally broken. Be awake then and see who arrives. No. Don't come in, it is much too crowded here already. Not enough chairs. The uninvited guests stand. Congregate. The host does not wish to communicate, and the heart’s reverberations echo inside, and generalized tears almost breach the eyes. Out of boredom they do not. The eyes are much too tired for the exertion. Eyelashes caress the pillow periodically and too loud. Reading won't do. The spirit is not in it, and the thin e-ink-possessed plastic is slid further from the body. How many words remain unused in this life? How many configurations left? Itches emerge like wildfires across four different locations of the body. Impatient fingers extinguish them two by two. And how to scratch those that do the scratching? With teeth, of course. Ah, if only the body could bend backwards until it cracked folded, and life flowed out into the mattress or up and out of the blinds. It's ok. Hounded by lassitude and sputtering remains of dreams. Stranded in March. Are the parents already disappointed, or were expectations low from the start? What value did they look to produce? Another aching soul toiling. The promise inherent in a child bears middling fruit. Love—the fruit should be nothing but love. And it is. So why the pull of failure and defeat? To apologize and retreat. *Morning gale—come to me*. Tattered, stained sails hang limp in the night. What remains and where? All is known and somewhere the abdomen dully aches a banal, momentary pain. Grandmother paternal, you remain. Height diminished though and your golden hands glow and draw tears from my eyes. A rivulet across the cheek finds and makes contact and is lost in the fabric. A weight, too light, destined to be carried on a shoulder. To be laid to rest. It is coming. You know this. Air is pulled through the asymmetry of nostrils dry and moist. It is exchanged somewhere in hidden, minute depths and is expelled. Life foreseen, though seems forefelt, is not foredone nor foretold. A hand meets stubble now flecked with stark white—brown and reddish no longer. Does it look good, or is it wholly uninteresting? Not talking gets easier. Cries muffle; goodbyes no longer sting. Once you get some distance, you can barely hear any of it. Though is it there, deep somewhere. The mind cycles through attitudes towards deprivation. ‘*Come what may*’ is chosen and clicks into place. A numbing and faux bravery in the absence of sleep and a jolting sneeze to disrupt the stagnant dark. The mockery and untrustworthiness of a yawn pleasingly stretches the musculature of the hidden face. Had enough? The foretaste of death disagrees, dithers, and the body lies strewn in the twists and turns of the colourless trio of blankets. The end of a day is confused for the end of the world. And when it doesn't end, grey, cold flesh will be hidden in clothes still-damp from laundry. Mental detritus settles like ash over bed and room. On the uninvited. Ashen flurries. Static noise. Hollow anger. Then breath runs out. What territory is this? The mind rattles inconsolable and wordless. A helpless sprawling and then a mental block and all falls. Soft notes will soon sound in the sullen murk. Though before it is allowed to happen. An outstretched arm seals the blinds, slides the window shut. Muffle that too. Whatever light. Cold too. The room is stygian and hidden, as are grief and the body's lost pride. The uninvited cannot discern their host in the dark though are seen themselves. Always. Under light blinding or impenetrable dark. They are to be summoned unknowingly, in perpetuity. Make peace. Enough—enough.
+diff --git a/src/pages/accounts/[slug].astro b/src/pages/accounts/[slug].astro
+index 959e026..3bfc90b 100644
+--- a/src/pages/accounts/[slug].astro
++++ b/src/pages/accounts/[slug].astro
+@@ -7,6 +7,7 @@ import AlleyMoneyCoda from '../../components/AlleyMoneyCoda.astro';
+ import FatherFrostCoda from '../../components/FatherFrostCoda.astro';
+ import LifeToDragonsCoda from '../../components/LifeToDragonsCoda.astro';
+ import NatureOfSleepCoda from '../../components/NatureOfSleepCoda.astro';
++import GuestsEyesCoda from '../../components/GuestsEyesCoda.astro';
+ import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
+ import { absoluteSiteUrl, withBase } from '../../lib/paths';
+ import { imageAsset } from '../../lib/image-assets';
+@@ -30,6 +31,7 @@ const isAlleyMoney = entry.id === 'alley-money';
+ const isFatherFrost = entry.id === 'father-frost';
+ const isLifeToDragons = entry.id === 'life-to-dragons';
+ const isNatureOfSleep = entry.id === 'on-the-nature-of-sleep';
++const isGuestsHere = entry.id === 'the-guests-are-here';
+ const archivePresentation = archived || fullText;
+ const overlineLabel = archived ? 'Archived piece' : fullText ? 'In full' : 'Account';
+ const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
+@@ -115,7 +117,7 @@ const workSchema = fullText && piece ? {
+   publishedTime={publishedIso || undefined}
+   structuredData={workSchema}
+ >
+-  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
++  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
+     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
+     <div class="overline">{overlineLabel}</div>
+     <h1 class="page-title account-title" id="account-title">
+@@ -132,24 +134,27 @@ const workSchema = fullText && piece ? {
+     )}
+     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
+       {piece?.cover && (
+-        <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
+-          <div class="archive-cover-media">
+-            <OptimizedImage
+-              path={piece.cover}
+-              image={archiveCoverImage}
+-              alt={archiveCoverAlt}
+-              loading="eager"
+-              sizes="(max-width: 640px) 76vw, (max-width: 860px) 42vw, 280px"
+-            />
+-            {archiveGenreLabel && <span class="genre-mark" data-genre={archiveGenreSlug}>{archiveGenreLabel}</span>}
+-            {archiveDateLabel && <span class="date-mark">{archiveDateLabel}</span>}
+-            {piece.excerpt && (
+-              <div class="card-overlay" aria-hidden="true">
+-                <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
+-              </div>
+-            )}
+-          </div>
+-        </aside>
++        <div class={`archive-cover-slot${isGuestsHere ? ' guests-cover-slot' : ''}`}>
++          <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
++            <div class="archive-cover-media">
++              <OptimizedImage
++                path={piece.cover}
++                image={archiveCoverImage}
++                alt={archiveCoverAlt}
++                loading="eager"
++                sizes="(max-width: 640px) 76vw, (max-width: 860px) 42vw, 280px"
++              />
++              {archiveGenreLabel && <span class="genre-mark" data-genre={archiveGenreSlug}>{archiveGenreLabel}</span>}
++              {archiveDateLabel && <span class="date-mark">{archiveDateLabel}</span>}
++              {piece.excerpt && (
++                <div class="card-overlay" aria-hidden="true">
++                  <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
++                </div>
++              )}
++            </div>
++          </aside>
++          {isGuestsHere && <GuestsEyesCoda variant="desktop" />}
++        </div>
+       )}
+       <div class="prose archive-prose">
+         <Content />
+@@ -157,6 +162,7 @@ const workSchema = fullText && piece ? {
+         {isFatherFrost && <FatherFrostCoda />}
+         {isLifeToDragons && <LifeToDragonsCoda />}
+         {isNatureOfSleep && <NatureOfSleepCoda />}
++        {isGuestsHere && <GuestsEyesCoda variant="mobile" />}
+       </div>
+     </div>
+     {piece && canLinkToPiece(piece) && (
+diff --git a/src/styles/global.css b/src/styles/global.css
+index 5f7ab49..78b84cf 100644
+--- a/src/styles/global.css
++++ b/src/styles/global.css
+@@ -2429,6 +2429,10 @@ img {
+   margin-top: 0;
+ }
+ 
++.archive-cover-slot {
++  display: contents;
++}
++
+ .archive-cover-card {
+   width: min(76vw, 280px);
+   margin: 0 0 clamp(30px, 7vw, 44px);
+@@ -2489,6 +2493,24 @@ img {
+     grid-column: 1;
+     grid-row: 1;
+   }
++
++  .archived-piece-page--guests .guests-cover-slot {
++    display: block;
++    grid-column: 2;
++    grid-row: 1;
++    position: sticky;
++    top: 96px;
++    align-self: start;
++    justify-self: end;
++    width: 100%;
++  }
++
++  .archived-piece-page--guests .guests-cover-slot .archive-cover-card {
++    position: static;
++    top: auto;
++    width: 100%;
++    margin: 0;
++  }
+ }
+ 
+ @media (max-width: 860px) {

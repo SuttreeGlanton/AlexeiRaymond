@@ -1,0 +1,142 @@
+diff --git a/src/components/GuestsEyesCoda.astro b/src/components/GuestsEyesCoda.astro
+index a3aac56..328d79a 100644
+--- a/src/components/GuestsEyesCoda.astro
++++ b/src/components/GuestsEyesCoda.astro
+@@ -11,9 +11,9 @@ const { variant } = Astro.props;
+   data-guests-eyes
+   data-variant={variant}
+   data-state="closed"
+-  aria-hidden="true"
+ >
+-  <svg viewBox="0 0 128 24" shape-rendering="crispEdges">
++  <div class="guests-eyes__stage">
++  <svg viewBox="0 0 128 24" shape-rendering="crispEdges" aria-hidden="true">
+     <g class="ge-closed">
+       <path fill="#3a3834" d="M7 9h3v2h5v2h7v1h21v-1h7v-2h5V9h3v5h-3v2h-5v2h-7v1H22v-1h-7v-2h-5v-2H7zM69 8h3v2h5v2h8v1h22v-1h7v-2h5V8h3v5h-3v2h-5v2h-7v1H85v-1h-8v-2h-5v-2h-3z" />
+       <path fill="#5f5b54" d="M13 6h8V5h26v1h7v2h-5V7H21v1h-8zM75 5h8V4h27v1h7v2h-6V6H83v1h-8z" />
+@@ -49,6 +49,9 @@ const { variant } = Astro.props;
+       <path fill="#7a4038" d="M12 15h3v1h3v2h3v1h-4v-1h-3v-2h-2zM54 14h4v1h-2v2h-4v1h-4v-1h3v-1h3zM75 14h3v1h3v2h4v1h-5v-1h-3v-2h-2zM118 13h4v1h-2v2h-4v1h-4v-1h3v-1h3z" />
+     </g>
+   </svg>
++    <button class="ge-hit ge-hit--left" type="button" data-eye-hit="left" aria-label="Blink left eye"></button>
++    <button class="ge-hit ge-hit--right" type="button" data-eye-hit="right" aria-label="Blink right eye"></button>
++  </div>
+ </figure>
+ 
+ <script>
+@@ -197,12 +200,41 @@ const { variant } = Astro.props;
+       desktopQuery.addEventListener('change', handleLayoutChange);
+     }
+ 
++    const clickBlink = (element: HTMLElement, side: 'left' | 'right') => {
++      if (
++        element.dataset.awake !== 'true' ||
++        element.dataset.state !== 'open' ||
++        element.dataset.clickBlink
++      ) return;
++
++      if (reducedMotion) {
++        element.dataset.clickBlink = `${side}-closed`;
++        window.setTimeout(() => delete element.dataset.clickBlink, 120);
++        return;
++      }
++
++      element.dataset.clickBlink = `${side}-narrow`;
++      window.setTimeout(() => { element.dataset.clickBlink = `${side}-closed`; }, 70);
++      window.setTimeout(() => { element.dataset.clickBlink = `${side}-narrow`; }, 155);
++      window.setTimeout(() => { delete element.dataset.clickBlink; }, 245);
++    };
++
++    for (const element of eyesInstances) {
++      const hitAreas = element.querySelectorAll<HTMLButtonElement>('[data-eye-hit]');
++      for (const hitArea of hitAreas) {
++        hitArea.addEventListener('click', () => {
++          clickBlink(element, hitArea.dataset.eyeHit === 'right' ? 'right' : 'left');
++        });
++      }
++    }
++
+     if (!reducedMotion) {
+       const eachVisibleAwake = (callback: (element: HTMLElement) => void) => {
+         for (const element of eyesInstances) {
+           if (
+             element.dataset.awake === 'true' &&
+             element.dataset.state === 'open' &&
++            !element.dataset.clickBlink &&
+             element.getClientRects().length > 0
+           ) callback(element);
+         }
+@@ -262,13 +294,38 @@ const { variant } = Astro.props;
+     margin: clamp(4rem, 10vw, 7rem) 0 0;
+   }
+ 
++  .guests-eyes__stage {
++    position: relative;
++    width: min(256px, 80vw);
++  }
++
+   .guests-eyes svg {
+     display: block;
+-    width: min(256px, 80vw);
++    width: 100%;
+     height: auto;
+     overflow: visible;
+   }
+ 
++  .ge-hit {
++    position: absolute;
++    top: 0;
++    width: 46%;
++    height: 100%;
++    margin: 0;
++    border: 0;
++    padding: 0;
++    background: transparent;
++    cursor: pointer;
++  }
++
++  .ge-hit--left { left: 0; }
++  .ge-hit--right { right: 0; }
++
++  .ge-hit:focus-visible {
++    outline: 1px solid var(--border-strong);
++    outline-offset: 2px;
++  }
++
+   .ge-closed,
+   .ge-narrow,
+   .ge-open,
+@@ -300,6 +357,33 @@ const { variant } = Astro.props;
+     clip-path: inset(0 0 0 50%);
+   }
+ 
++  /* A clicked eye blinks independently while its neighbour stays open. */
++  [data-click-blink^='left'] .ge-open,
++  [data-click-blink^='left'] .ge-gaze,
++  [data-click-blink^='left'] .ge-veins-a,
++  [data-click-blink^='left'] .ge-veins-b {
++    clip-path: inset(0 0 0 50%);
++  }
++
++  [data-click-blink='left-narrow'] .ge-narrow,
++  [data-click-blink='left-closed'] .ge-closed {
++    opacity: 1;
++    clip-path: inset(0 50% 0 0);
++  }
++
++  [data-click-blink^='right'] .ge-open,
++  [data-click-blink^='right'] .ge-gaze,
++  [data-click-blink^='right'] .ge-veins-a,
++  [data-click-blink^='right'] .ge-veins-b {
++    clip-path: inset(0 50% 0 0);
++  }
++
++  [data-click-blink='right-narrow'] .ge-narrow,
++  [data-click-blink='right-closed'] .ge-closed {
++    opacity: 1;
++    clip-path: inset(0 0 0 50%);
++  }
++
+   .ge-gaze {
+     transform: translateX(calc(var(--ge-gaze, 0) * 1px));
+   }
