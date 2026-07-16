@@ -4,6 +4,11 @@ import { getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 import AlleyMoneyCoda from '../../components/AlleyMoneyCoda.astro';
+import ClotheslineDivorceCoda from '../../components/ClotheslineDivorceCoda.astro';
+import DeathwishPresentation from '../../components/DeathwishPresentation.astro';
+import LothariOnlineCoda from '../../components/LothariOnlineCoda.astro';
+import NoRabbitCoda from '../../components/NoRabbitCoda.astro';
+import SixThousandEightyCoda from '../../components/SixThousandEightyCoda.astro';
 import FatherFrostCoda from '../../components/FatherFrostCoda.astro';
 import LifeToDragonsCoda from '../../components/LifeToDragonsCoda.astro';
 import NatureOfSleepCoda from '../../components/NatureOfSleepCoda.astro';
@@ -28,6 +33,11 @@ const isLog = entry.data.format === 'log';
 const isTracked = entry.data.format === 'tracked';
 const isGenesis = entry.id === 'genesis';
 const isAlleyMoney = entry.id === 'alley-money';
+const isClotheslineDivorce = entry.id === 'clothesline-divorce';
+const isDeathwish = entry.id === 'deathwish';
+const isLothariOnline = entry.id === 'lotharionline';
+const isNoRabbit = entry.id === 'no-rabbit';
+const isSixThousandEighty = entry.id === '6080';
 const isFatherFrost = entry.id === 'father-frost';
 const isLifeToDragons = entry.id === 'life-to-dragons';
 const isNatureOfSleep = entry.id === 'on-the-nature-of-sleep';
@@ -157,7 +167,12 @@ const workSchema = fullText && piece ? {
         </div>
       )}
       <div class="prose archive-prose">
+        {isDeathwish && <DeathwishPresentation />}
         <Content />
+        {isSixThousandEighty && <SixThousandEightyCoda />}
+        {isClotheslineDivorce && <ClotheslineDivorceCoda />}
+        {isLothariOnline && <LothariOnlineCoda />}
+        {isNoRabbit && <NoRabbitCoda />}
         {isAlleyMoney && <AlleyMoneyCoda />}
         {isFatherFrost && <FatherFrostCoda />}
         {isLifeToDragons && <LifeToDragonsCoda />}
@@ -208,56 +223,6 @@ const workSchema = fullText && piece ? {
 
       if (typeof archiveCoverQuery.addEventListener === 'function') {
         archiveCoverQuery.addEventListener('change', scheduleArchiveCoverFocus);
-      }
-    }
-
-    /* LothariOnline's opener: type, catch a typo, correct it, and try again. */
-    const lotharioTyping = document.querySelector('[data-lo-typing]');
-
-    if (lotharioTyping instanceof HTMLElement) {
-      const finalMessage = 'Hullo, I come in peace and curiosity 👽';
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      if (reducedMotion) {
-        lotharioTyping.textContent = finalMessage;
-      } else {
-        const wait = (milliseconds: number) =>
-          new Promise<void>((resolve) => window.setTimeout(resolve, milliseconds));
-
-        const typeText = async (text: string, pace = 68) => {
-          for (const character of text) {
-            lotharioTyping.textContent += character;
-            await wait(pace + Math.random() * 38);
-          }
-        };
-
-        const eraseText = async (count: number) => {
-          for (let index = 0; index < count; index += 1) {
-            lotharioTyping.textContent = (lotharioTyping.textContent ?? '').slice(0, -1);
-            await wait(105);
-          }
-        };
-
-        const playOpener = async () => {
-          while (lotharioTyping.isConnected) {
-            lotharioTyping.textContent = '';
-            await wait(750);
-            await typeText('Hullo, I cmoe');
-            await wait(430);
-            await eraseText(3);
-            await typeText('ome');
-            await wait(240);
-            await typeText(' in peace and curiosoty');
-            await wait(520);
-            await eraseText(3);
-            await typeText('ity');
-            await wait(320);
-            await typeText(' 👽', 105);
-            await wait(2700);
-          }
-        };
-
-        void playOpener();
       }
     }
 
