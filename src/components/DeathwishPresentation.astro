@@ -1,0 +1,184 @@
+<style is:global>
+.archived-piece-page--tracked .prose p,
+.archived-piece-page--tracked .prose p + p {
+  text-indent: 0;
+}
+
+.archived-piece-page--tracked .prose .dw-excerpt,
+.archived-piece-page--tracked .prose .dw-subject {
+  margin-left: clamp(1.15rem, 5vw, 3.2rem);
+}
+
+.archived-piece-page--tracked .prose .dw-subject {
+  margin-right: clamp(0rem, 3vw, 1.6rem);
+}
+
+.archived-piece-page--tracked .prose .dw-scramble {
+  line-height: 1.9;
+}
+
+.archived-piece-page--tracked .prose .dw-fracture {
+  margin: clamp(2.5rem, 7vw, 4.6rem) 0 clamp(2.7rem, 7vw, 4.8rem);
+  color: var(--text);
+  font-size: clamp(0.74rem, 2.8vw, 1.12rem);
+  font-style: italic;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.archived-piece-page--tracked .prose .dw-fracture-lead {
+  max-width: 58ch;
+  margin: 0 auto clamp(1.45rem, 4vw, 2.35rem);
+}
+
+.archived-piece-page--tracked .prose .dw-fracture-row {
+  display: grid;
+  grid-template-columns: 1.05fr 0.82fr 1.22fr;
+  align-items: baseline;
+  gap: clamp(0.2rem, 2.5vw, 1.5rem);
+  margin: 0 0 clamp(0.9rem, 3vw, 1.45rem);
+}
+
+.archived-piece-page--tracked .prose .dw-fracture-row span {
+  white-space: nowrap;
+}
+
+.archived-piece-page--tracked .prose .dw-fracture-last {
+  margin-top: clamp(0.15rem, 1vw, 0.5rem);
+}
+
+.archived-piece-page--tracked .prose .dw-revision {
+  margin: clamp(2rem, 5vw, 3.2rem) 0;
+}
+
+.archived-piece-page--tracked .prose .dw-revision summary {
+  display: block;
+  position: relative;
+  min-height: 44px;
+  margin: 0;
+  border-left: 3px solid #ff7b72;
+  border-radius: 0 8px 8px 0;
+  padding: 0.7rem 1rem 0.85rem clamp(1rem, 3vw, 1.45rem);
+  background: rgba(255, 123, 114, 0.035);
+  color: var(--text);
+  cursor: pointer;
+  list-style: none;
+  text-indent: 0;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+
+.archived-piece-page--tracked .prose .dw-revision summary::-webkit-details-marker {
+  display: none;
+}
+
+.archived-piece-page--tracked .prose .dw-revision summary::marker {
+  content: '';
+}
+
+.archived-piece-page--tracked .prose .dw-revision summary:hover {
+  background: rgba(255, 123, 114, 0.07);
+}
+
+.archived-piece-page--tracked .prose .dw-revision summary:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 5px;
+}
+
+.archived-piece-page--tracked .prose .dw-revision[open] summary {
+  border-left-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.archived-piece-page--tracked .prose .dw-revision-action {
+  display: block;
+  margin-bottom: 0.48rem;
+  color: #ff958d;
+  font-family: var(--sans);
+  font-size: 0.64rem;
+  font-style: normal;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.archived-piece-page--tracked .prose .dw-revision-action::before {
+  content: '+ ';
+}
+
+.archived-piece-page--tracked .prose .dw-revision[open] .dw-revision-action {
+  color: var(--muted);
+}
+
+.archived-piece-page--tracked .prose .dw-revision[open] .dw-revision-action::before {
+  content: '\2212\00a0';
+}
+
+.archived-piece-page--tracked .prose .dw-revision-hide,
+.archived-piece-page--tracked .prose .dw-revision-markup {
+  display: none;
+}
+
+.archived-piece-page--tracked .prose .dw-revision[open] .dw-revision-show,
+.archived-piece-page--tracked .prose .dw-revision[open] .dw-revision-clean {
+  display: none;
+}
+
+.archived-piece-page--tracked .prose .dw-revision[open] .dw-revision-hide,
+.archived-piece-page--tracked .prose .dw-revision[open] .dw-revision-markup {
+  display: inline;
+}
+
+.archived-piece-page--tracked .prose .dw-revision-clean,
+.archived-piece-page--tracked .prose .dw-revision-markup {
+  overflow-wrap: anywhere;
+}
+
+.archived-piece-page--tracked .prose .dw-revision-markup {
+  color: var(--muted);
+}
+
+.archived-piece-page--tracked .prose .dw-revision del,
+.archived-piece-page--tracked .prose .dw-revision ins {
+  color: #ff7b72;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 0.085em;
+}
+
+.archived-piece-page--tracked .prose .dw-revision del {
+  text-decoration-line: line-through;
+}
+
+.archived-piece-page--tracked .prose .dw-revision ins {
+  text-decoration-line: underline;
+  text-underline-offset: 0.16em;
+}
+
+.archived-piece-page--tracked .prose .dw-a11y {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  border: 0;
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .archived-piece-page--tracked .prose .dw-fracture {
+    font-size: clamp(0.68rem, 3.15vw, 0.82rem);
+  }
+
+  .archived-piece-page--tracked .prose .dw-fracture-row {
+    grid-template-columns: 1.05fr 0.8fr 1.25fr;
+    gap: 0.2rem;
+  }
+
+  .archived-piece-page--tracked .prose .dw-revision summary {
+    padding-right: 0.8rem;
+  }
+}
+</style>

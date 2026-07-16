@@ -32,6 +32,7 @@ const fallbackSrc = path ? assetPath(path) : '';
   <Picture
     src={image}
     formats={['webp']}
+    fallbackFormat="jpeg"
     widths={widths}
     width={Math.max(...widths)}
     sizes={sizes}
