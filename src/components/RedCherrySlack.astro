@@ -1,0 +1,281 @@
+---
+import { assetPath } from '../lib/paths';
+
+const avatarSrc = assetPath('images/elea-mercier-avatar.png');
+const messages = [
+  {
+    time: '13:14',
+    text: 'Hi!'
+  },
+  {
+    time: '13:23',
+    text: 'Coming as soon as I can.'
+  },
+  {
+    time: '13:31',
+    text: 'I’m ready but I don’t see you at your desk, haha.'
+  }
+];
+---
+
+<aside
+  class="rcr-slack"
+  data-red-cherry-slack
+  aria-label="Direct messages from Elea Mercier"
+  tabindex="0"
+>
+  <div
+    class="rcr-slack__messages"
+    role="log"
+    aria-live="polite"
+    aria-relevant="additions"
+  >
+    {messages.map((message) => (
+      <div class="rcr-slack__message" data-rcr-slack-message hidden>
+        <img
+          class="rcr-slack__avatar"
+          src={avatarSrc}
+          alt=""
+          width="192"
+          height="192"
+          aria-hidden="true"
+        />
+
+        <div class="rcr-slack__content">
+          <div class="rcr-slack__identity">
+            <strong>Elea Mercier</strong>
+            <time datetime={message.time}>{message.time}</time>
+          </div>
+
+          <p>{message.text}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</aside>
+
+<script>
+  const slackPanel = document.querySelector('[data-red-cherry-slack]');
+  const story = document.querySelector(
+    '.archived-piece-page--red-cherry .archive-prose'
+  );
+
+  if (
+    slackPanel instanceof HTMLElement &&
+    story instanceof HTMLElement &&
+    slackPanel.dataset.slackReady !== 'true'
+  ) {
+    slackPanel.dataset.slackReady = 'true';
+
+    const messages = Array.from(
+      slackPanel.querySelectorAll<HTMLElement>('[data-rcr-slack-message]')
+    );
+    const desktopQuery = window.matchMedia('(min-width: 861px)');
+    const reducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+    const initialScrollY = window.scrollY;
+    let revealedCount = 0;
+    let ticking = false;
+
+    const revealThrough = (targetCount: number) => {
+      const cappedTarget = Math.min(targetCount, messages.length);
+      const startingCount = revealedCount;
+
+      while (revealedCount < cappedTarget) {
+        const message = messages[revealedCount];
+        const queueIndex = revealedCount - startingCount;
+        const delay = reducedMotion ? 0 : queueIndex * 240;
+
+        window.setTimeout(() => {
+          message.hidden = false;
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              message.classList.add('is-visible');
+            });
+          });
+        }, delay);
+
+        revealedCount += 1;
+      }
+    };
+
+    const updateMessages = () => {
+      ticking = false;
+      if (!desktopQuery.matches) return;
+
+      const rect = story.getBoundingClientRect();
+      const storyTop = window.scrollY + rect.top;
+      const storyHeight = Math.max(rect.height, 1);
+      const readingLine = window.scrollY + window.innerHeight * 0.68;
+      const progress = (readingLine - storyTop) / storyHeight;
+      const hasStartedScrolling =
+        Math.abs(window.scrollY - initialScrollY) > 12 || window.scrollY > 80;
+
+      let targetCount = hasStartedScrolling ? 1 : 0;
+
+      if (progress >= 0.5) targetCount = 2;
+      if (progress >= 0.84) targetCount = 3;
+
+      revealThrough(targetCount);
+    };
+
+    const scheduleUpdate = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(updateMessages);
+    };
+
+    updateMessages();
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+
+    if (typeof desktopQuery.addEventListener === 'function') {
+      desktopQuery.addEventListener('change', scheduleUpdate);
+    }
+  }
+</script>
+
+<style is:global>
+  .rcr-slack {
+    display: none;
+  }
+
+  @media (min-width: 861px) {
+    .archived-piece-page--red-cherry .red-cherry-cover-slot {
+      display: flex;
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: 96px;
+      align-self: start;
+      justify-self: end;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .archived-piece-page--red-cherry
+      .red-cherry-cover-slot
+      .archive-cover-card {
+      position: static;
+      top: auto;
+      width: 100%;
+      margin: 0;
+    }
+
+    .rcr-slack {
+      display: block;
+      width: 100%;
+      border: 1px solid #30343a;
+      border-radius: 10px;
+      padding: 12px 11px;
+      background: #1a1d21;
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.3);
+      color: #d1d2d3;
+      font-family: var(--sans);
+      opacity: 0.5;
+      filter: saturate(0.48) brightness(0.84) contrast(0.94);
+      overflow: hidden;
+      transition:
+        opacity 300ms ease,
+        filter 300ms ease,
+        border-color 300ms ease,
+        box-shadow 300ms ease;
+    }
+
+    .rcr-slack:hover,
+    .rcr-slack:focus-visible,
+    .rcr-slack:focus-within {
+      border-color: #454a52;
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.4);
+      opacity: 1;
+      filter: none;
+    }
+
+    .rcr-slack__message {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 9px;
+      max-height: 0;
+      margin-top: 0;
+      opacity: 0;
+      filter: blur(2px);
+      overflow: hidden;
+      transform: translateY(7px);
+      transition:
+        max-height 420ms cubic-bezier(0.22, 1, 0.36, 1),
+        margin-top 420ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 280ms ease,
+        filter 320ms ease,
+        transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .rcr-slack__message.is-visible {
+      max-height: 8rem;
+      opacity: 1;
+      filter: none;
+      transform: translateY(0);
+    }
+
+    .rcr-slack__message:not(:first-child).is-visible {
+      margin-top: 12px;
+    }
+
+    .rcr-slack__avatar {
+      display: block;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 7px;
+      object-fit: cover;
+      overflow: hidden;
+    }
+
+    .rcr-slack__content {
+      min-width: 0;
+    }
+
+    .rcr-slack__identity {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      line-height: 1.15;
+    }
+
+    .rcr-slack__identity strong {
+      color: #f1f2f3;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .rcr-slack__identity time {
+      color: #a3a6aa;
+      font-size: 0.62rem;
+      font-weight: 400;
+    }
+
+    .rcr-slack__message p {
+      margin: 4px 0 0;
+      color: #d1d2d3;
+      font-family: var(--sans);
+      font-size: 0.76rem;
+      line-height: 1.38;
+      text-indent: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rcr-slack,
+    .rcr-slack__message {
+      transition: none;
+    }
+
+    .rcr-slack__message {
+      filter: none;
+      transform: none;
+    }
+  }
+</style>

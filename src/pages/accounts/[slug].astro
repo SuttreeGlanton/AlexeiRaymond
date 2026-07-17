@@ -15,6 +15,7 @@ import NatureOfSleepCoda from '../../components/NatureOfSleepCoda.astro';
 import NutcrackerCoda from '../../components/NutcrackerCoda.astro';
 import GuestsEyesCoda from '../../components/GuestsEyesCoda.astro';
 import TheTrailCoda from '../../components/TheTrailCoda.astro';
+import RedCherrySlack from '../../components/RedCherrySlack.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
 import { absoluteSiteUrl, assetPath, withBase } from '../../lib/paths';
 import { imageAsset } from '../../lib/image-assets';
@@ -159,7 +160,7 @@ const workSchema = fullText && piece ? {
     )}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
-        <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}`}>
+        <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}`}>
           <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
             <div class="archive-cover-media">
               <OptimizedImage
@@ -178,6 +179,7 @@ const workSchema = fullText && piece ? {
               )}
             </div>
           </aside>
+          {isRedCherry && <RedCherrySlack />}
           {isSixThousandEighty && <SixThousandEightyCoda variant="desktop" />}
           {isGuestsHere && <GuestsEyesCoda variant="desktop" />}
           {isTheTrail && <TheTrailCoda variant="desktop" />}
