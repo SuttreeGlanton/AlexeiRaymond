@@ -600,7 +600,12 @@
       "cover": "covers/pieces/the-nutcrackers-charge.jpg",
       "excerpt": "The scene terrifies her but it’s how the story goes—she knows, she knows.",
       "genre": "Flash fiction",
-      "issue": "#10"
+      "issue": "#10",
+      "account": {
+        "slug": "the-nutcrackers-charge",
+        "label": "Read story",
+        "title": "The Nutcracker's Charge"
+      }
     },
     {
       "title": "Truth, or Its Evidence",

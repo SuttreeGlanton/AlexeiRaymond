@@ -12,10 +12,11 @@ import SixThousandEightyCoda from '../../components/SixThousandEightyCoda.astro'
 import FatherFrostCoda from '../../components/FatherFrostCoda.astro';
 import LifeToDragonsCoda from '../../components/LifeToDragonsCoda.astro';
 import NatureOfSleepCoda from '../../components/NatureOfSleepCoda.astro';
+import NutcrackerCoda from '../../components/NutcrackerCoda.astro';
 import GuestsEyesCoda from '../../components/GuestsEyesCoda.astro';
 import TheTrailCoda from '../../components/TheTrailCoda.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
-import { absoluteSiteUrl, withBase } from '../../lib/paths';
+import { absoluteSiteUrl, assetPath, withBase } from '../../lib/paths';
 import { imageAsset } from '../../lib/image-assets';
 
 export async function getStaticPaths() {
@@ -42,6 +43,7 @@ const isSixThousandEighty = entry.id === '6080';
 const isFatherFrost = entry.id === 'father-frost';
 const isLifeToDragons = entry.id === 'life-to-dragons';
 const isNatureOfSleep = entry.id === 'on-the-nature-of-sleep';
+const isNutcrackerCharge = entry.id === 'the-nutcrackers-charge';
 const isGuestsHere = entry.id === 'the-guests-are-here';
 const isTheTrail = entry.id === 'the-trail';
 const archivePresentation = archived || fullText;
@@ -128,6 +130,7 @@ const workSchema = fullText && piece ? {
   ogType={fullText && piece ? 'article' : 'website'}
   publishedTime={publishedIso || undefined}
   structuredData={workSchema}
+  preloadAudio={isNutcrackerCharge ? assetPath('audio/nutcracker-pas-de-deux.mp3') : undefined}
 >
   <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${isTheTrail ? ' archived-piece-page--trail' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
@@ -181,6 +184,7 @@ const workSchema = fullText && piece ? {
         {isFatherFrost && <FatherFrostCoda />}
         {isLifeToDragons && <LifeToDragonsCoda />}
         {isNatureOfSleep && <NatureOfSleepCoda />}
+        {isNutcrackerCharge && <NutcrackerCoda />}
         {isGuestsHere && <GuestsEyesCoda variant="mobile" />}
         {isTheTrail && <TheTrailCoda variant="mobile" />}
       </div>

@@ -1,0 +1,503 @@
+---
+import { assetPath } from '../lib/paths';
+
+const modelSrc = assetPath('models/nutcracker-with-nuts.glb');
+const audioSrc = assetPath('audio/nutcracker-pas-de-deux.mp3');
+---
+
+<figure
+  class="nutcracker-coda"
+  data-nutcracker-coda
+  data-state="loading"
+  data-model-ready="false"
+  aria-labelledby="nutcracker-coda-caption"
+>
+  <div class="nutcracker-coda__stage">
+    <model-viewer
+      class="nutcracker-coda__model"
+      src={modelSrc}
+      alt="A red wooden Nutcracker standing on a round base among loose nuts"
+      loading="eager"
+      reveal="auto"
+      camera-controls
+      touch-action="pan-y"
+      disable-zoom
+      disable-pan
+      interaction-prompt="none"
+      camera-orbit="0deg 75deg 202%"
+      min-camera-orbit="auto 55deg auto"
+      max-camera-orbit="auto 100deg auto"
+      field-of-view="28deg"
+      environment-image="neutral"
+      exposure="1"
+      shadow-intensity="0.65"
+      shadow-softness="0.9"
+      auto-rotate-delay="0"
+      rotation-per-second="8deg"
+      data-nutcracker-model
+    ></model-viewer>
+
+    <button
+      class="nutcracker-coda__trigger"
+      type="button"
+      disabled
+      aria-label="The Nutcracker is loading"
+      aria-pressed="false"
+      data-nutcracker-trigger
+    >
+      <span class="nutcracker-coda__prompt" aria-hidden="true">
+        <span class="nutcracker-coda__prompt-icon"></span>
+        <span data-nutcracker-prompt>Loading…</span>
+      </span>
+    </button>
+  </div>
+
+  <figcaption class="nutcracker-coda__caption" id="nutcracker-coda-caption">
+    <span class="nutcracker-coda__work">Pas de deux</span>
+  </figcaption>
+
+  <span class="nutcracker-coda__live" aria-live="polite" data-nutcracker-live></span>
+  <audio
+    src={audioSrc}
+    preload="auto"
+    aria-hidden="true"
+    data-nutcracker-audio
+  ></audio>
+</figure>
+
+<script>
+  import meshoptDecoderUrl from 'meshoptimizer/meshopt_decoder.js?url';
+
+  type NutcrackerModel = HTMLElement & {
+    loaded?: boolean;
+  };
+
+  type CameraChangeEvent = CustomEvent<{
+    source?: string;
+  }>;
+
+  const nutcrackerCodas = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-nutcracker-coda]')
+  );
+
+  if (nutcrackerCodas.length > 0) {
+    const modelViewerGlobal = window as typeof window & {
+      ModelViewerElement?: { meshoptDecoderLocation?: string };
+    };
+
+    modelViewerGlobal.ModelViewerElement = modelViewerGlobal.ModelViewerElement || {};
+    modelViewerGlobal.ModelViewerElement.meshoptDecoderLocation = meshoptDecoderUrl;
+
+    for (const coda of nutcrackerCodas) {
+      const model = coda.querySelector<NutcrackerModel>('[data-nutcracker-model]');
+      const audio = coda.querySelector<HTMLAudioElement>('[data-nutcracker-audio]');
+      const trigger = coda.querySelector<HTMLButtonElement>('[data-nutcracker-trigger]');
+      const prompt = coda.querySelector<HTMLElement>('[data-nutcracker-prompt]');
+      const live = coda.querySelector<HTMLElement>('[data-nutcracker-live]');
+
+      if (!model || !audio || !trigger || !prompt || !live) continue;
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let modelReady = model.loaded === true;
+      let audioReady = audio.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA;
+      let failed = false;
+      let hasStarted = false;
+      let rotationResumeTimer = 0;
+      let tapPointerId: number | null = null;
+      let tapStartX = 0;
+      let tapStartY = 0;
+      let tapMoved = false;
+
+      const setRotation = (active: boolean) => {
+        model.toggleAttribute('auto-rotate', active && !reducedMotion.matches);
+      };
+
+      const setUi = (
+        state: 'loading' | 'ready' | 'playing' | 'paused' | 'buffering' | 'ended' | 'error',
+        promptText: string,
+        announcement: string,
+        pressed = false
+      ) => {
+        coda.dataset.state = state;
+        prompt.textContent = promptText;
+        trigger.setAttribute('aria-pressed', String(pressed));
+        live.textContent = announcement;
+      };
+
+      const markReadyIfComplete = () => {
+        if (failed || !modelReady || !audioReady) return;
+
+        trigger.disabled = false;
+        trigger.setAttribute('aria-label', hasStarted
+          ? 'Resume Pas de deux and the Nutcracker rotation'
+          : 'Play Pas de deux and rotate the Nutcracker');
+
+        if (audio.paused) {
+          setUi(
+            hasStarted ? 'paused' : 'ready',
+            hasStarted ? 'Resume' : 'Play',
+            hasStarted ? 'The dance is ready to resume.' : 'The Nutcracker is ready.',
+          );
+        }
+      };
+
+      const fail = (message: string) => {
+        failed = true;
+        window.clearTimeout(rotationResumeTimer);
+        setRotation(false);
+        trigger.disabled = true;
+        trigger.setAttribute('aria-label', message);
+        setUi('error', 'Unavailable', message);
+      };
+
+      model.addEventListener('load', () => {
+        modelReady = true;
+        coda.dataset.modelReady = 'true';
+        markReadyIfComplete();
+      }, { once: true });
+
+      model.addEventListener('error', () => {
+        fail('The Nutcracker could not be loaded.');
+      }, { once: true });
+
+      audio.addEventListener('canplay', () => {
+        audioReady = true;
+
+        if (!audio.paused) {
+          setRotation(true);
+          setUi('playing', 'Pause', 'Music and rotation resumed.', true);
+        } else {
+          markReadyIfComplete();
+        }
+      });
+
+      audio.addEventListener('playing', () => {
+        hasStarted = true;
+        setRotation(true);
+        trigger.disabled = false;
+        trigger.setAttribute('aria-label', 'Pause Pas de deux and the Nutcracker rotation');
+        const announcement = reducedMotion.matches
+          ? 'Music playing. Rotation is disabled by your reduced-motion preference.'
+          : 'Music playing. The Nutcracker is rotating.';
+        setUi('playing', 'Pause', announcement, true);
+      });
+
+      audio.addEventListener('pause', () => {
+        window.clearTimeout(rotationResumeTimer);
+        setRotation(false);
+        if (audio.ended || failed) return;
+
+        trigger.setAttribute('aria-label', 'Resume Pas de deux and the Nutcracker rotation');
+        setUi('paused', 'Resume', 'Music and rotation paused.');
+      });
+
+      audio.addEventListener('waiting', () => {
+        window.clearTimeout(rotationResumeTimer);
+        setRotation(false);
+        setUi('buffering', 'Buffering…', 'Music buffering. Rotation paused.', true);
+      });
+
+      audio.addEventListener('ended', () => {
+        window.clearTimeout(rotationResumeTimer);
+        setRotation(false);
+        trigger.setAttribute('aria-label', 'Replay Pas de deux and the Nutcracker rotation');
+        setUi('ended', 'Replay', 'The dance has ended. Activate the Nutcracker to replay.');
+      });
+
+      audio.addEventListener('error', () => {
+        fail('The music could not be loaded.');
+      }, { once: true });
+
+      const togglePlayback = async () => {
+        if (failed || !modelReady || !audioReady) return;
+
+        if (!audio.paused) {
+          audio.pause();
+          return;
+        }
+
+        if (audio.ended) audio.currentTime = 0;
+
+        try {
+          await audio.play();
+        } catch {
+          setRotation(false);
+          trigger.setAttribute('aria-label', 'Try playing Pas de deux again');
+          setUi('paused', 'Try again', 'Playback did not start. Activate the Nutcracker to try again.');
+        }
+      };
+
+      trigger.addEventListener('click', () => {
+        void togglePlayback();
+      });
+
+      model.addEventListener('pointerdown', (event) => {
+        tapPointerId = event.pointerId;
+        tapStartX = event.clientX;
+        tapStartY = event.clientY;
+        tapMoved = false;
+      });
+
+      model.addEventListener('pointermove', (event) => {
+        if (event.pointerId !== tapPointerId) return;
+
+        const movedX = event.clientX - tapStartX;
+        const movedY = event.clientY - tapStartY;
+        if (Math.hypot(movedX, movedY) > 8) tapMoved = true;
+      });
+
+      model.addEventListener('pointerup', (event) => {
+        if (event.pointerId === tapPointerId && !tapMoved) {
+          void togglePlayback();
+        }
+
+        tapPointerId = null;
+      });
+
+      model.addEventListener('pointercancel', () => {
+        tapPointerId = null;
+      });
+
+      model.addEventListener('camera-change', (event) => {
+        const cameraEvent = event as CameraChangeEvent;
+        if (cameraEvent.detail?.source !== 'user-interaction') return;
+        if (audio.paused || audio.ended || reducedMotion.matches) return;
+
+        window.clearTimeout(rotationResumeTimer);
+        setRotation(false);
+        rotationResumeTimer = window.setTimeout(() => {
+          setRotation(!audio.paused && !audio.ended);
+        }, 900);
+      });
+
+      const updateMotionPreference = () => {
+        setRotation(!audio.paused && !audio.ended);
+
+        if (!audio.paused && reducedMotion.matches) {
+          live.textContent = 'Rotation stopped for your reduced-motion preference. Music continues.';
+        }
+      };
+
+      if (typeof reducedMotion.addEventListener === 'function') {
+        reducedMotion.addEventListener('change', updateMotionPreference);
+      }
+
+      audio.load();
+      markReadyIfComplete();
+    }
+
+    void import('@google/model-viewer').catch(() => {
+      for (const coda of nutcrackerCodas) {
+        const trigger = coda.querySelector<HTMLButtonElement>('[data-nutcracker-trigger]');
+        const prompt = coda.querySelector<HTMLElement>('[data-nutcracker-prompt]');
+        const live = coda.querySelector<HTMLElement>('[data-nutcracker-live]');
+
+        coda.dataset.state = 'error';
+        if (trigger) {
+          trigger.disabled = true;
+          trigger.setAttribute('aria-label', 'The 3D viewer could not be loaded');
+        }
+        if (prompt) prompt.textContent = 'Unavailable';
+        if (live) live.textContent = 'The 3D viewer could not be loaded.';
+      }
+    });
+  }
+</script>
+
+<style>
+  .nutcracker-coda {
+    margin: clamp(68px, 10vw, 108px) 0 0;
+    border-top: 1px solid var(--border);
+    padding-top: clamp(38px, 6vw, 58px);
+    font-family: var(--sans);
+    text-indent: 0 !important;
+  }
+
+  .nutcracker-coda__stage {
+    position: relative;
+    width: min(55.5vw, 245px);
+    aspect-ratio: 4 / 5;
+    margin: 0 auto;
+    overflow: hidden;
+    contain: layout paint;
+  }
+
+  .nutcracker-coda__model {
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    cursor: grab;
+    transition: opacity 420ms ease;
+  }
+
+  .nutcracker-coda[data-model-ready='true'] .nutcracker-coda__model {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .nutcracker-coda__model:active {
+    cursor: grabbing;
+  }
+
+  .nutcracker-coda__trigger {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+  }
+
+  .nutcracker-coda__trigger:enabled {
+    cursor: pointer;
+  }
+
+  .nutcracker-coda__trigger:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 4px;
+    border-radius: 999px;
+  }
+
+  .nutcracker-coda__prompt {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 96px;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 999px;
+    padding: 8px 14px 7px;
+    background: rgba(8, 8, 8, 0.72);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.26);
+    backdrop-filter: blur(10px);
+    color: var(--text-soft);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    line-height: 1;
+    text-transform: uppercase;
+    transition: border-color 220ms ease, background 220ms ease, color 220ms ease;
+  }
+
+  .nutcracker-coda__trigger:enabled:hover .nutcracker-coda__prompt,
+  .nutcracker-coda__trigger:focus-visible .nutcracker-coda__prompt {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(14, 14, 14, 0.88);
+    color: var(--text);
+  }
+
+  .nutcracker-coda__prompt-icon {
+    position: relative;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    flex: 0 0 10px;
+  }
+
+  .nutcracker-coda__prompt-icon::before,
+  .nutcracker-coda__prompt-icon::after {
+    content: '';
+    position: absolute;
+  }
+
+  .nutcracker-coda[data-state='ready'] .nutcracker-coda__prompt-icon::before,
+  .nutcracker-coda[data-state='paused'] .nutcracker-coda__prompt-icon::before,
+  .nutcracker-coda[data-state='ended'] .nutcracker-coda__prompt-icon::before {
+    left: 2px;
+    top: 1px;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 7px solid currentColor;
+  }
+
+  .nutcracker-coda[data-state='playing'] .nutcracker-coda__prompt-icon::before,
+  .nutcracker-coda[data-state='playing'] .nutcracker-coda__prompt-icon::after {
+    top: 1px;
+    width: 3px;
+    height: 8px;
+    background: currentColor;
+  }
+
+  .nutcracker-coda[data-state='playing'] .nutcracker-coda__prompt-icon::before {
+    left: 1px;
+  }
+
+  .nutcracker-coda[data-state='playing'] .nutcracker-coda__prompt-icon::after {
+    right: 1px;
+  }
+
+  .nutcracker-coda[data-state='loading'] .nutcracker-coda__prompt-icon::before,
+  .nutcracker-coda[data-state='buffering'] .nutcracker-coda__prompt-icon::before {
+    inset: 0;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: nutcrackerSpin 780ms linear infinite;
+  }
+
+  .nutcracker-coda[data-state='error'] .nutcracker-coda__prompt-icon::before {
+    left: 4px;
+    top: 0;
+    width: 2px;
+    height: 7px;
+    border-radius: 2px;
+    background: currentColor;
+    box-shadow: 0 9px 0 -0.5px currentColor;
+  }
+
+  .nutcracker-coda__caption {
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .nutcracker-coda__work {
+    color: var(--text);
+    font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    letter-spacing: 0.02em;
+  }
+
+  .nutcracker-coda__live {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @keyframes nutcrackerSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  @media (max-width: 520px) {
+    .nutcracker-coda {
+      margin-top: 58px;
+      padding-top: 32px;
+    }
+
+    .nutcracker-coda__trigger {
+      bottom: 12px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nutcracker-coda__model,
+    .nutcracker-coda__prompt {
+      transition: none;
+    }
+
+    .nutcracker-coda[data-state='loading'] .nutcracker-coda__prompt-icon::before,
+    .nutcracker-coda[data-state='buffering'] .nutcracker-coda__prompt-icon::before {
+      animation: none;
+    }
+  }
+</style>
