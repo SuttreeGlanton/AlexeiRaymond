@@ -1,4 +1,12 @@
-<div class="ct-coda" role="img" aria-label="A mechanical flap counter reading 6,080 flips to 6,081, then flips back.">
+---
+interface Props {
+  variant?: 'desktop' | 'mobile';
+}
+
+const { variant = 'mobile' } = Astro.props;
+---
+
+<div class={`ct-coda ct-coda--${variant}`} role="img" aria-label="A mechanical flap counter reading 6,080 flips to 6,081, then flips back.">
   <span class="ct-board" aria-hidden="true">
     <span class="ct-paren">(</span><span class="ct-tile">6</span><span class="ct-comma">,</span><span class="ct-tile">0</span><span class="ct-tile">8</span><span class="ct-tile ct-flipwrap"><span class="ct-base">0</span><span class="ct-flap">1</span></span><span class="ct-paren">)</span>
   </span>
@@ -13,6 +21,7 @@
     text-indent: 0 !important;
     font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
   }
+  .ct-coda--desktop { display: none; }
   .ct-board {
     display: inline-flex;
     align-items: center;
@@ -70,6 +79,34 @@
     67% { transform: rotateX(0deg); filter: brightness(1); }
     86% { transform: rotateX(0deg); filter: brightness(1); }
     89%, 100% { transform: rotateX(-92deg); filter: brightness(1.25); }
+  }
+  @media (min-width: 861px) {
+    .sixty-eighty-cover-slot {
+      display: block;
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: 96px;
+      align-self: start;
+      justify-self: end;
+      width: 100%;
+    }
+    .archive-body-shell.has-archive-cover .sixty-eighty-cover-slot .archive-cover-card {
+      position: static;
+      top: auto;
+      width: 100%;
+      margin: 0;
+    }
+    .ct-coda--desktop {
+      display: flex;
+      width: 100%;
+      margin: clamp(22px, 3vw, 34px) auto 0;
+    }
+    .ct-coda--desktop .ct-board {
+      gap: 0.22em;
+      font-size: clamp(1.25rem, 2.25vw, 1.55rem);
+    }
+    .ct-coda--mobile { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     .ct-flap { animation: none; transform: rotateX(-92deg); }
