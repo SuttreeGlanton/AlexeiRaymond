@@ -35,7 +35,7 @@ const {
   structuredData,
   preloadAudio
 } = Astro.props;
-const resolvedTitle = title.replace(/s+—s+/g, ' | ');
+const resolvedTitle = title.split(' — ').join(' | ');
 const canonical = absoluteSiteUrl(canonicalPath ?? Astro.url.pathname, Astro.site);
 const socialImageSource = pageSocialImage?.src || site.socialCard || '';
 const socialImage = socialImageSource ? absoluteSiteUrl(socialImageSource, Astro.site) : '';
