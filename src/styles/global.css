@@ -2859,12 +2859,36 @@ img {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   border-bottom: 1px solid transparent;
+  transform-origin: center;
+  animation: hero-start-pulse 850ms cubic-bezier(0.22, 1, 0.36, 1) 1.6s 1;
   transition: color 240ms ease, border-color 240ms ease;
 }
+
+@keyframes hero-start-pulse {
+  0%,
+  100% {
+    color: var(--muted);
+    text-shadow: none;
+    transform: scale(1);
+  }
+
+  45% {
+    color: var(--text);
+    text-shadow: 0 0 18px rgba(241, 239, 233, 0.34);
+    transform: scale(1.04);
+  }
+}
+
 .hero-start:hover,
 .hero-start:focus-visible {
   color: var(--text-soft);
   border-bottom-color: var(--border-strong);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-start {
+    animation: none;
+  }
 }
 
 
