@@ -14,6 +14,7 @@ interface Props {
   priority?: boolean;
   imageSizes?: string;
   imageWidths?: number[];
+  titleLines?: string[];
 }
 
 const {
@@ -23,7 +24,8 @@ const {
   sourceOrder,
   priority = false,
   imageSizes = '(max-width: 640px) 85vw, (max-width: 860px) 45vw, 360px',
-  imageWidths = [240, 400, 560, 640, 760]
+  imageWidths = [240, 400, 560, 640, 760],
+  titleLines
 } = Astro.props;
 const upcoming = isUpcoming(piece);
 const defunct = isDefunct(piece);
@@ -111,9 +113,19 @@ const metaParts = [
     {storyOrderLabel && <span class="story-order-mark">Story {storyOrderLabel}</span>}
     <h2 class="card-title">
       {linked ? (
-        <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>{piece.title}</a>
+        <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>
+          {titleLines
+            ? titleLines.map((line, index) => (
+                <>{index > 0 && <br />}{line}</>
+              ))
+            : piece.title}
+        </a>
       ) : (
-        piece.title
+        titleLines
+          ? titleLines.map((line, index) => (
+              <>{index > 0 && <br />}{line}</>
+            ))
+          : piece.title
       )}
     </h2>
     {metaParts.length > 0 && (
