@@ -47,7 +47,7 @@ const isNutcrackerCharge = entry.id === 'the-nutcrackers-charge';
 const isGuestsHere = entry.id === 'the-guests-are-here';
 const isTheTrail = entry.id === 'the-trail';
 const archivePresentation = archived || fullText;
-const overlineLabel = archived ? 'Archived piece' : fullText ? 'In full' : 'Account';
+const overlineLabel = archived ? 'Archived piece' : fullText ? '' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
 const backHref = cycle ? withBase(`cycles/${cycle.id}/`) : withBase('');
 const backLabel = cycle ? cycle.name : 'All cycles';
@@ -134,7 +134,7 @@ const workSchema = fullText && piece ? {
 >
   <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${isTheTrail ? ' archived-piece-page--trail' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
-    <div class="overline">{overlineLabel}</div>
+    {overlineLabel && <div class="overline">{overlineLabel}</div>}
     <h1 class="page-title account-title" id="account-title">
       {entry.id === 'his-green-delight' ? (
         <>His <span class="hgd-green">Green</span> Delight</>
