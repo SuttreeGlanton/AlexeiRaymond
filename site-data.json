@@ -998,7 +998,12 @@
       "link": "https://expatpress.com/mothhead-alexei-raymond",
       "cover": "covers/pieces/mothhead.jpg",
       "excerpt": "the old world is dying, and the new one is unborn yet. Time of moths.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "account": {
+        "slug": "mothhead",
+        "label": "Read story",
+        "title": "Mothhead"
+      }
     },
     {
       "title": "Glassdom",
