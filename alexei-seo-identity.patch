@@ -1,0 +1,71 @@
+diff --git a/src/pages/about.astro b/src/pages/about.astro
+index da525fd..28d17fa 100644
+--- a/src/pages/about.astro
++++ b/src/pages/about.astro
+@@ -3,11 +3,39 @@ import { Image } from 'astro:assets';
+ import BaseLayout from '../layouts/BaseLayout.astro';
+ import aboutVisual from '../assets/page-visuals/about-portrait.jpg';
+ import { site, socialHref, socialLabel } from '../lib/data';
++import { absoluteSiteUrl } from '../lib/paths';
+ 
+ const bloodHoneyUrl = 'https://www.bloodhoneylit.com/';
+ const bloodHoneyName = 'Blood+Honey';
+ const [bioBefore, bioAfter] = site.bio.split(bloodHoneyName);
+ const canLinkBloodHoney = typeof bioAfter === 'string';
++const siteUrl = absoluteSiteUrl('', Astro.site);
++const aboutUrl = absoluteSiteUrl('about/', Astro.site);
++const profileSchema = {
++  '@context': 'https://schema.org',
++  '@type': 'ProfilePage',
++  '@id': `${aboutUrl}#profile`,
++  name: `About ${site.author}`,
++  url: aboutUrl,
++  mainEntity: {
++    '@type': 'Person',
++    '@id': `${siteUrl}#person`,
++    name: site.author,
++    url: siteUrl,
++    description: site.bio,
++    jobTitle: ['Writer', 'Fiction Editor'],
++    worksFor: {
++      '@type': 'Organization',
++      name: bloodHoneyName,
++      url: bloodHoneyUrl
++    },
++    sameAs: [
++      ...site.socials.map(socialHref).filter(Boolean),
++      'https://www.bloodhoneylit.com/alexei-raymond',
++      'https://www.discretionarylove.com/author/alexeiraymond/'
++    ]
++  }
++};
+ // Prefer a pre-encoded address so the plain email does not appear in this
+ // public repository. Fallback keeps the old plain-email path working.
+ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).toString('base64') : '');
+@@ -16,6 +44,7 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
+ <BaseLayout
+   title={`About — ${site.author}`}
+   description="About Alexei Raymond, his writing, editorial work, social profiles, and contact information."
++  structuredData={profileSchema}
+ >
+   <div class="page-shell page-with-visual about-with-visual">
+     <section class="page-hero text-page page-copy about-copy" aria-labelledby="about-title">
+diff --git a/src/pages/index.astro b/src/pages/index.astro
+index ff75893..0b2d85f 100644
+--- a/src/pages/index.astro
++++ b/src/pages/index.astro
+@@ -9,11 +9,12 @@ import { imageAsset } from '../lib/image-assets';
+ const headerImage = imageAsset(site.headerCover);
+ const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
+ const heroWidths = [640, 960, 1280, 1440, 1600, 1800];
++const homeDescription = 'Alexei Raymond is a writer and editor of short fiction, flash, poems, and interconnected story cycles, pursuing visions of unspeakable loveliness.';
+ ---
+ 
+ <BaseLayout
+-  title={site.author}
+-  description="Short fiction, flash, poems, and the pursuit of unspeakable loveliness by Alexei Raymond."
++  title={`${site.author} — Writer & Editor`}
++  description={homeDescription}
+ >
+   <section class="hero" aria-labelledby="home-title" data-color-reveal>
+     {headerImage ? (

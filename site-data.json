@@ -1118,7 +1118,12 @@
       "link": "https://www.theravenreview.org/archive/the-trail-raymond",
       "cover": "covers/pieces/the-trail.jpg",
       "excerpt": "Some say there are ways easier, braver, more cunning, but his heart’s been called to this one.",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "account": {
+        "slug": "the-trail",
+        "label": "Read on site",
+        "title": "The Trail"
+      }
     },
     {
       "title": "Whether Yossarian",

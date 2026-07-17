@@ -13,6 +13,7 @@ import FatherFrostCoda from '../../components/FatherFrostCoda.astro';
 import LifeToDragonsCoda from '../../components/LifeToDragonsCoda.astro';
 import NatureOfSleepCoda from '../../components/NatureOfSleepCoda.astro';
 import GuestsEyesCoda from '../../components/GuestsEyesCoda.astro';
+import TheTrailCoda from '../../components/TheTrailCoda.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
 import { absoluteSiteUrl, withBase } from '../../lib/paths';
 import { imageAsset } from '../../lib/image-assets';
@@ -42,6 +43,7 @@ const isFatherFrost = entry.id === 'father-frost';
 const isLifeToDragons = entry.id === 'life-to-dragons';
 const isNatureOfSleep = entry.id === 'on-the-nature-of-sleep';
 const isGuestsHere = entry.id === 'the-guests-are-here';
+const isTheTrail = entry.id === 'the-trail';
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? 'In full' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -127,7 +129,7 @@ const workSchema = fullText && piece ? {
   publishedTime={publishedIso || undefined}
   structuredData={workSchema}
 >
-  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
+  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${isTheTrail ? ' archived-piece-page--trail' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
     <div class="overline">{overlineLabel}</div>
     <h1 class="page-title account-title" id="account-title">
@@ -144,7 +146,7 @@ const workSchema = fullText && piece ? {
     )}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
-        <div class={`archive-cover-slot${isGuestsHere ? ' guests-cover-slot' : ''}`}>
+        <div class={`archive-cover-slot${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}`}>
           <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
             <div class="archive-cover-media">
               <OptimizedImage
@@ -164,6 +166,7 @@ const workSchema = fullText && piece ? {
             </div>
           </aside>
           {isGuestsHere && <GuestsEyesCoda variant="desktop" />}
+          {isTheTrail && <TheTrailCoda variant="desktop" />}
         </div>
       )}
       <div class="prose archive-prose">
@@ -178,6 +181,7 @@ const workSchema = fullText && piece ? {
         {isLifeToDragons && <LifeToDragonsCoda />}
         {isNatureOfSleep && <NatureOfSleepCoda />}
         {isGuestsHere && <GuestsEyesCoda variant="mobile" />}
+        {isTheTrail && <TheTrailCoda variant="mobile" />}
       </div>
     </div>
     {piece && canLinkToPiece(piece) && (

@@ -1,0 +1,280 @@
+diff --git a/site-data.json b/site-data.json
+index cacd7c3..bec888d 100644
+--- a/site-data.json
++++ b/site-data.json
+@@ -178,7 +178,7 @@
+       "genre": "Short fiction",
+       "account": {
+         "slug": "193-lines-of-sight",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "193 Lines of Sight"
+       },
+       "cycles": [
+@@ -201,7 +201,7 @@
+       "issue": "#8",
+       "account": {
+         "slug": "193-thoughts-of-you",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "193 Thoughts of You"
+       },
+       "cycles": [
+@@ -265,7 +265,7 @@
+       "issue": "II anthology",
+       "account": {
+         "slug": "deathwish",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "Deathwish"
+       },
+       "cycles": [
+@@ -331,7 +331,7 @@
+       "genre": "Short fiction",
+       "account": {
+         "slug": "she-loves-her-mother",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "She Loves Her Mother"
+       }
+     },
+@@ -376,7 +376,7 @@
+       "genre": "Short fiction",
+       "account": {
+         "slug": "the-guests-are-here",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "The Guests Are Here"
+       }
+     },
+@@ -395,7 +395,7 @@
+       "issue": "(Special Issue: Homeland)",
+       "account": {
+         "slug": "the-hunt",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "The Hunt"
+       }
+     },
+@@ -441,7 +441,7 @@
+       "genre": "Short fiction",
+       "account": {
+         "slug": "alley-money",
+-        "label": "Read on site"
++        "label": "Read story"
+       }
+     },
+     {
+@@ -489,7 +489,7 @@
+       "genre": "Flash fiction",
+       "account": {
+         "slug": "clothesline-divorce",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "Clothesline Divorce"
+       }
+     },
+@@ -521,7 +521,7 @@
+       "genre": "Flash fiction",
+       "account": {
+         "slug": "god-underground",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "God Underground"
+       },
+       "issue": "#2",
+@@ -644,7 +644,7 @@
+       "genre": "Short fiction",
+       "account": {
+         "slug": "genesis",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "Genesis"
+       },
+       "cycles": [
+@@ -680,7 +680,7 @@
+       "issue": "#4",
+       "account": {
+         "slug": "his-green-delight",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "His Green Delight"
+       }
+     },
+@@ -713,7 +713,7 @@
+       "genre": "Short fiction",
+       "account": {
+         "slug": "lotharionline",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "LothariOnline"
+       }
+     },
+@@ -791,7 +791,7 @@
+       "genre": "Poem",
+       "account": {
+         "slug": "6080",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "(6,080)"
+       }
+     },
+@@ -809,7 +809,7 @@
+       "genre": "Short fiction",
+       "account": {
+         "slug": "father-frost",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "Father Frost"
+       }
+     },
+@@ -840,7 +840,7 @@
+       "genre": "Short fiction",
+       "account": {
+         "slug": "no-rabbit",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "No, Rabbit"
+       },
+       "cycles": [
+@@ -876,7 +876,7 @@
+       "issue": "#5",
+       "account": {
+         "slug": "on-the-nature-of-sleep",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "On the Nature of Sleep"
+       }
+     },
+@@ -908,7 +908,7 @@
+       "issue": "II anthology",
+       "account": {
+         "slug": "remediation",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "Remediation"
+       }
+     },
+@@ -1048,7 +1048,7 @@
+       "issue": "#21.1",
+       "account": {
+         "slug": "life-to-dragons",
+-        "label": "Read on site",
++        "label": "Read story",
+         "title": "Life to Dragons"
+       }
+     },
+diff --git a/src/components/PieceCard.astro b/src/components/PieceCard.astro
+index 2f78f00..5c72361 100644
+--- a/src/components/PieceCard.astro
++++ b/src/components/PieceCard.astro
+@@ -11,6 +11,7 @@ interface Props {
+   showCycle?: boolean;
+   storyOrder?: number;
+   sourceOrder?: number;
++  priority?: boolean;
+   imageSizes?: string;
+   imageWidths?: number[];
+ }
+@@ -20,8 +21,9 @@ const {
+   showCycle = false,
+   storyOrder,
+   sourceOrder,
++  priority = false,
+   imageSizes = '(max-width: 640px) 85vw, (max-width: 860px) 45vw, 360px',
+-  imageWidths = [240, 400, 560, 760]
++  imageWidths = [240, 400, 560, 640, 760]
+ } = Astro.props;
+ const upcoming = isUpcoming(piece);
+ const defunct = isDefunct(piece);
+@@ -50,6 +52,14 @@ const GENRE_SHORT: Record<string, string> = {
+ };
+ const genreLabel = piece.genre ? (GENRE_SHORT[piece.genre] ?? piece.genre) : '';
+ const genreSlug = piece.genre ? piece.genre.toLowerCase().replace(/[^a-z]+/g, '-') : '';
++const imageLoading = priority ? 'eager' : 'lazy';
++const imageFetchPriority = priority ? 'high' : undefined;
++const coverLinkLabel = [
++  genreLabel,
++  dateLabel,
++  `Read ${piece.title} at ${publicationLabel(piece)}.`,
++  'Opens in a new tab.'
++].filter(Boolean).join(' ');
+ const metaParts = [
+   cycleLabel ? { text: cycleLabel } : null,
+   piece.publication ? { text: publicationLabel(piece), className: 'card-publication' } : null
+@@ -65,10 +75,10 @@ const metaParts = [
+   data-upcoming={upcoming ? 'true' : 'false'}
+ >
+   {linked ? (
+-    <a class="card-cover-link" href={piece.link} target="_blank" rel="noopener noreferrer" tabindex="-1" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>
++    <a class="card-cover-link" href={piece.link} target="_blank" rel="noopener noreferrer" tabindex="-1" aria-label={coverLinkLabel}>
+       <div class="card-media">
+         {cover ? (
+-          <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading="lazy" sizes={imageSizes} widths={imageWidths} />
++          <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} />
+         ) : (
+           <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
+         )}
+@@ -84,7 +94,7 @@ const metaParts = [
+   ) : (
+     <div class="card-media">
+       {cover ? (
+-        <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading="lazy" sizes={imageSizes} widths={imageWidths} />
++        <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} />
+       ) : (
+         <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
+       )}
+@@ -122,6 +132,6 @@ const metaParts = [
+     <TagList tags={piece.tags} />
+   </div>
+   {piece.account && (
+-    <a class="account-strip" href={accountHref} aria-label={`${accountLabel} for ${piece.title}`}>{accountLabel} &rarr;</a>
++    <a class="account-strip" href={accountHref} aria-label={`${accountLabel}: ${piece.title} on this site`}>{accountLabel} &rarr;</a>
+   )}
+ </article>
+diff --git a/src/pages/chronology.astro b/src/pages/chronology.astro
+index 3d58308..03cd758 100644
+--- a/src/pages/chronology.astro
++++ b/src/pages/chronology.astro
+@@ -100,7 +100,7 @@ function cycleLinksForPiece(piece) {
+                       )}<span aria-hidden="true">&rdquo;</span>
+                     </h3>
+                     {piece.account && (
+-                      <a class="chronology-read-link" href={withBase(`accounts/${piece.account.slug}/`)} aria-label={`Read ${piece.title} on this site`}>
++                      <a class="chronology-read-link" href={withBase(`accounts/${piece.account.slug}/`)} aria-label={`Read story: ${piece.title} on this site`}>
+                         Read story <span aria-hidden="true">&rarr;</span>
+                       </a>
+                     )}
+diff --git a/src/pages/cycles/[id].astro b/src/pages/cycles/[id].astro
+index 72829a4..f48ee11 100644
+--- a/src/pages/cycles/[id].astro
++++ b/src/pages/cycles/[id].astro
+@@ -31,6 +31,7 @@ const publishedCyclePieces = cycleSourcePieces
+   .filter((piece) => !isUpcoming(piece))
+   .sort((a, b) => (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0));
+ const cyclePieces = [...upcomingCyclePieces, ...publishedCyclePieces];
++const priorityPiece = cyclePieces.find((piece) => Boolean(piece.cover));
+ const otherCycles = cycles.filter((item) => !item.disabled);
+ ---
+ 
+@@ -95,6 +96,7 @@ const otherCycles = cycles.filter((item) => !item.disabled);
+             piece={piece}
+             storyOrder={hasStoryOrder ? storyIndex.get(piece.title) : undefined}
+             sourceOrder={sourceIndex.get(piece.title)}
++            priority={piece === priorityPiece}
+           />
+         ))}
+       </div>
+diff --git a/src/styles/global.css b/src/styles/global.css
+index 4eedcbd..f1448c3 100644
+--- a/src/styles/global.css
++++ b/src/styles/global.css
+@@ -585,7 +585,7 @@ img {
+   display: block;
+   border-top: 1px dashed var(--border);
+   padding: 10px 18px 11px;
+-  color: var(--dim);
++  color: var(--muted);
+   font-size: 0.66rem;
+   font-weight: 500;
+   letter-spacing: 0.22em;
