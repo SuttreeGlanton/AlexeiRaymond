@@ -3,11 +3,39 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import aboutVisual from '../assets/page-visuals/about-portrait.jpg';
 import { site, socialHref, socialLabel } from '../lib/data';
+import { absoluteSiteUrl } from '../lib/paths';
 
 const bloodHoneyUrl = 'https://www.bloodhoneylit.com/';
 const bloodHoneyName = 'Blood+Honey';
 const [bioBefore, bioAfter] = site.bio.split(bloodHoneyName);
 const canLinkBloodHoney = typeof bioAfter === 'string';
+const siteUrl = absoluteSiteUrl('', Astro.site);
+const aboutUrl = absoluteSiteUrl('about/', Astro.site);
+const profileSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  '@id': `${aboutUrl}#profile`,
+  name: `About ${site.author}`,
+  url: aboutUrl,
+  mainEntity: {
+    '@type': 'Person',
+    '@id': `${siteUrl}#person`,
+    name: site.author,
+    url: siteUrl,
+    description: site.bio,
+    jobTitle: ['Writer', 'Fiction Editor'],
+    worksFor: {
+      '@type': 'Organization',
+      name: bloodHoneyName,
+      url: bloodHoneyUrl
+    },
+    sameAs: [
+      ...site.socials.map(socialHref).filter(Boolean),
+      'https://www.bloodhoneylit.com/alexei-raymond',
+      'https://www.discretionarylove.com/author/alexeiraymond/'
+    ]
+  }
+};
 // Prefer a pre-encoded address so the plain email does not appear in this
 // public repository. Fallback keeps the old plain-email path working.
 const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).toString('base64') : '');
@@ -16,6 +44,7 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
 <BaseLayout
   title={`About — ${site.author}`}
   description="About Alexei Raymond, his writing, editorial work, social profiles, and contact information."
+  structuredData={profileSchema}
 >
   <div class="page-shell page-with-visual about-with-visual">
     <section class="page-hero text-page page-copy about-copy" aria-labelledby="about-title">

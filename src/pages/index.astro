@@ -9,11 +9,12 @@ import { imageAsset } from '../lib/image-assets';
 const headerImage = imageAsset(site.headerCover);
 const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
 const heroWidths = [640, 960, 1280, 1440, 1600, 1800];
+const homeDescription = 'Alexei Raymond is a writer and editor of short fiction, flash, poems, and interconnected story cycles, pursuing visions of unspeakable loveliness.';
 ---
 
 <BaseLayout
-  title={site.author}
-  description="Short fiction, flash, poems, and the pursuit of unspeakable loveliness by Alexei Raymond."
+  title={`${site.author} — Writer & Editor`}
+  description={homeDescription}
 >
   <section class="hero" aria-labelledby="home-title" data-color-reveal>
     {headerImage ? (
