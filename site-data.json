@@ -896,7 +896,12 @@
       "link": "https://dodoeraser.org/2026/02/25/red-they-are-cherry-red/",
       "cover": "covers/pieces/red-they-are-cherry-red.jpg",
       "excerpt": "I transcribe what she’s saying, which will be of no use whatsoever",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "account": {
+        "slug": "red-they-are-cherry-red",
+        "label": "Read story",
+        "title": "Red, They Are Cherry Red"
+      }
     },
     {
       "title": "Remediation",

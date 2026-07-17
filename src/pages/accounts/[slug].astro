@@ -46,6 +46,7 @@ const isNatureOfSleep = entry.id === 'on-the-nature-of-sleep';
 const isNutcrackerCharge = entry.id === 'the-nutcrackers-charge';
 const isGuestsHere = entry.id === 'the-guests-are-here';
 const isTheTrail = entry.id === 'the-trail';
+const isRedCherry = entry.id === 'red-they-are-cherry-red';
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? '' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -132,12 +133,21 @@ const workSchema = fullText && piece ? {
   structuredData={workSchema}
   preloadAudio={isNutcrackerCharge ? assetPath('audio/nutcracker-pas-de-deux.mp3') : undefined}
 >
-  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${isTheTrail ? ' archived-piece-page--trail' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
+  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${isTheTrail ? ' archived-piece-page--trail' : ''}${isRedCherry ? ' archived-piece-page--red-cherry' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
     {overlineLabel && <div class="overline">{overlineLabel}</div>}
-    <h1 class="page-title account-title" id="account-title">
+    <h1
+      class="page-title account-title"
+      id="account-title"
+      tabindex={isRedCherry ? -1 : undefined}
+    >
       {entry.id === 'his-green-delight' ? (
         <>His <span class="hgd-green">Green</span> Delight</>
+      ) : isRedCherry ? (
+        <>
+          <span class="rcr-title-color">Red</span>, They Are{' '}
+          <span class="rcr-title-color">Cherry Red</span>
+        </>
       ) : title}
     </h1>
     {piece && (piece.publication || piece.issue || formatLongDate(piece.date)) && (
@@ -233,6 +243,32 @@ const workSchema = fullText && piece ? {
       if (typeof archiveCoverQuery.addEventListener === 'function') {
         archiveCoverQuery.addEventListener('change', scheduleArchiveCoverFocus);
       }
+    }
+
+    /* Red, They Are Cherry Red: the ending reveals the title's color. */
+    const redCherryTrigger = document.querySelector('[data-red-cherry-return]');
+    const redCherryTitle = document.querySelector('#account-title');
+    const redCherryPage = redCherryTrigger?.closest('.archived-piece-page--red-cherry');
+
+    if (
+      redCherryTrigger instanceof HTMLAnchorElement &&
+      redCherryTitle instanceof HTMLElement &&
+      redCherryPage instanceof HTMLElement
+    ) {
+      const redCherryReducedMotion =
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      redCherryTrigger.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        redCherryPage.classList.add('is-red-revealed');
+        redCherryTitle.focus({ preventScroll: true });
+
+        window.scrollTo({
+          top: 0,
+          behavior: redCherryReducedMotion ? 'auto' : 'smooth'
+        });
+      });
     }
 
     /* Genesis: once the final line has been reached, Adam rewrites Valentin. */
