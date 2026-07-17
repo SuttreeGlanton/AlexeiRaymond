@@ -1,4 +1,6 @@
 ---
+import { assetPath } from '../lib/paths';
+
 interface Props {
   variant: 'desktop' | 'mobile';
 }
@@ -253,6 +255,12 @@ const BLISTERS = [0, 1, 2, 3, 4, 5, 6, 7];
         </button>
       ))}
     </div>
+    <audio
+      src={assetPath('audio/trail-blister-pop.mp3')}
+      preload="auto"
+      aria-hidden="true"
+      data-tt-pop-audio
+    ></audio>
   </figure>
 )}
 
@@ -316,32 +324,99 @@ const BLISTERS = [0, 1, 2, 3, 4, 5, 6, 7];
     if (mobileTrail) {
       const POP_KEY = 'trail-blisters-popped';
       let popped: number[] = [];
-      try { popped = JSON.parse(window.sessionStorage.getItem(POP_KEY) || '[]'); } catch {}
+      try {
+        const stored = JSON.parse(window.sessionStorage.getItem(POP_KEY) || '[]');
+        if (Array.isArray(stored)) {
+          popped = Array.from(new Set(stored.filter((index) => Number.isInteger(index) && index >= 0 && index < 8)));
+        }
+      } catch {}
 
       const blisters = Array.from(mobileTrail.querySelectorAll<HTMLButtonElement>('[data-tt-blister]'));
+      const popAudio = mobileTrail.querySelector('[data-tt-pop-audio]');
+
+      // `preload="auto"` starts the tiny clip with the page, long before the
+      // reader reaches the coda. Calling load() here also primes mobile Safari.
+      if (popAudio instanceof HTMLAudioElement) {
+        popAudio.load();
+      }
+
+      // A completed pack belongs to the previous read-through.
+      if (popped.length === blisters.length) {
+        popped = [];
+        try { window.sessionStorage.removeItem(POP_KEY); } catch {}
+      }
+
+      const playPop = () => {
+        if (!(popAudio instanceof HTMLAudioElement)) return;
+        popAudio.currentTime = 0;
+        const playback = popAudio.play();
+        if (playback) playback.catch(() => {});
+      };
 
       const applyPopped = () => {
+        const remaining = blisters.length - popped.length;
         for (const blister of blisters) {
           const index = Number(blister.dataset.index);
           const isPopped = popped.includes(index);
           blister.classList.toggle('is-popped', isPopped);
           blister.setAttribute('aria-pressed', isPopped ? 'true' : 'false');
+          blister.setAttribute(
+            'aria-label',
+            isPopped
+              ? `Blister ${index + 1} of 8 popped`
+              : remaining === 1
+                ? `Pop final blister and return to the top`
+                : `Pop blister ${index + 1} of 8`
+          );
         }
       };
       applyPopped();
+
+      const resetAtTop = () => {
+        popped = [];
+        try { window.sessionStorage.removeItem(POP_KEY); } catch {}
+        applyPopped();
+      };
+
+      const returnToTop = () => {
+        // Let the final foil snap and visual state land before moving the page.
+        window.setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+
+          if (reducedMotion) {
+            resetAtTop();
+            return;
+          }
+
+          const deadline = window.performance.now() + 2000;
+          const watchScroll = () => {
+            if (window.scrollY <= 1 || window.performance.now() >= deadline) {
+              resetAtTop();
+              return;
+            }
+            window.requestAnimationFrame(watchScroll);
+          };
+          window.requestAnimationFrame(watchScroll);
+        }, 280);
+      };
 
       for (const blister of blisters) {
         blister.addEventListener('click', () => {
           const index = Number(blister.dataset.index);
           if (popped.includes(index)) return;
+          playPop();
           popped.push(index);
           try { window.sessionStorage.setItem(POP_KEY, JSON.stringify(popped)); } catch {}
 
           if (!reducedMotion) {
             blister.classList.add('is-popping');
-            window.setTimeout(() => blister.classList.remove('is-popping'), 160);
+            window.setTimeout(() => blister.classList.remove('is-popping'), 220);
           }
           applyPopped();
+
+          if (popped.length === blisters.length) {
+            returnToTop();
+          }
         });
       }
     }
@@ -505,13 +580,14 @@ const BLISTERS = [0, 1, 2, 3, 4, 5, 6, 7];
   .tt-blister.is-popped { cursor: default; }
 
   .tt-blister.is-popping {
-    animation: ttPop 160ms ease-out;
+    animation: ttPop 220ms ease-out;
   }
 
   @keyframes ttPop {
-    0% { transform: scale(1); }
-    45% { transform: scale(0.88); }
-    100% { transform: scale(1); }
+    0% { transform: scale(1); filter: brightness(1); }
+    38% { transform: scale(0.84); filter: brightness(1.4); }
+    68% { transform: scale(1.04); filter: brightness(1.12); }
+    100% { transform: scale(1); filter: brightness(1); }
   }
 
   /* ---------- breakpoints ---------- */
