@@ -40,7 +40,7 @@ const audioSrc = assetPath('audio/nutcracker-pas-de-deux.mp3');
   <span class="nutcracker-coda__live" aria-live="polite" data-nutcracker-live></span>
   <audio
     src={audioSrc}
-    preload="auto"
+    preload="none"
     aria-hidden="true"
     data-nutcracker-audio
   ></audio>
@@ -123,7 +123,7 @@ const audioSrc = assetPath('audio/nutcracker-pas-de-deux.mp3');
       };
 
       const markReadyIfComplete = () => {
-        if (failed || !modelReady || !audioReady) return;
+        if (failed || !modelReady) return;
 
         trigger.disabled = false;
         trigger.setAttribute('aria-label', hasStarted
@@ -207,7 +207,7 @@ const audioSrc = assetPath('audio/nutcracker-pas-de-deux.mp3');
       }, { once: true });
 
       const togglePlayback = async () => {
-        if (failed || !modelReady || !audioReady) return;
+        if (failed || !modelReady) return;
 
         if (!audio.paused) {
           audio.pause();
@@ -215,6 +215,10 @@ const audioSrc = assetPath('audio/nutcracker-pas-de-deux.mp3');
         }
 
         if (audio.ended) audio.currentTime = 0;
+
+        if (!audioReady) {
+          setUi('buffering', 'Loading…', 'Music loading. The dance will start shortly.', true);
+        }
 
         try {
           await audio.play();
@@ -280,7 +284,6 @@ const audioSrc = assetPath('audio/nutcracker-pas-de-deux.mp3');
         reducedMotion.addEventListener('change', updateMotionPreference);
       }
 
-      audio.load();
       markReadyIfComplete();
     }
 
