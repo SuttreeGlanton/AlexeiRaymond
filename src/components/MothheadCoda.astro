@@ -1,0 +1,234 @@
+---
+/* Mothhead coda: behavior only — wraps every whole-word "moth"/"moths" in the
+   story as a quiet button. Clicks release moths; the final instance bursts
+   once, then becomes a single-moth word until reload. */
+---
+
+<!-- mothhead coda (behavior only) -->
+
+<script>
+  const MH_SPRITES = [
+    "data:image/png;base64,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",
+    "data:image/png;base64,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"
+  ];
+
+  const mhReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mhProse = document.querySelector('.archive-prose');
+
+  if (mhProse) {
+    /* ---- wrap whole-word moth/moths instances ---- */
+    const mhWords: HTMLButtonElement[] = [];
+    const mhWalker = document.createTreeWalker(mhProse, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue || !/\bmoths?\b/i.test(node.nodeValue)) return NodeFilter.FILTER_REJECT;
+        const parent = (node as Text).parentElement;
+        if (!parent || parent.closest('button, a, script, style, .mh-skip')) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    const mhTextNodes: Text[] = [];
+    while (mhWalker.nextNode()) mhTextNodes.push(mhWalker.currentNode as Text);
+
+    for (const node of mhTextNodes) {
+      const text = node.nodeValue ?? '';
+      const frag = document.createDocumentFragment();
+      const re = /\bmoths?\b/gi;
+      let last = 0;
+      let m: RegExpExecArray | null;
+      while ((m = re.exec(text)) !== null) {
+        frag.append(document.createTextNode(text.slice(last, m.index)));
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'mh-word';
+        btn.textContent = m[0];
+        btn.setAttribute('aria-label', `${m[0]} — release a moth`);
+        frag.append(btn);
+        mhWords.push(btn);
+        last = m.index + m[0].length;
+      }
+      frag.append(document.createTextNode(text.slice(last)));
+      node.parentNode?.replaceChild(frag, node);
+    }
+
+    const mhFinal = mhWords.length > 0 ? mhWords[mhWords.length - 1] : null;
+    mhFinal?.classList.add('mh-word--final');
+
+    /* ---- flight ---- */
+    let mhVariant = 0;
+    let mhLive = 0;
+    let mhBurstSpent = false;
+    const MH_MAX_LIVE = 12;
+
+    const mhRest = (word: HTMLButtonElement, ms: number) => {
+      word.classList.add('is-resting');
+      window.setTimeout(() => word.classList.remove('is-resting'), ms);
+    };
+
+    const spawnMothFrom = (rect: DOMRect) => {
+      if (mhLive >= MH_MAX_LIVE) return;
+      mhLive++;
+
+      const sprite = MH_SPRITES[mhVariant++ % MH_SPRITES.length];
+      const x0 = rect.left + rect.width / 2;
+      const y0 = rect.top + rect.height / 2;
+
+      const fly = document.createElement('span');
+      fly.className = 'mh-moth-fly';
+      fly.setAttribute('aria-hidden', 'true');
+      const img = document.createElement('img');
+      img.src = sprite;
+      img.alt = '';
+      fly.append(img);
+      document.body.append(fly);
+
+      const done = () => {
+        fly.remove();
+        mhLive--;
+      };
+
+      if (mhReduceMotion) {
+        /* no flight: appear at the word, fade where it sits */
+        fly.style.transform = `translate(${x0}px, ${y0}px) translate(-50%, -50%)`;
+        fly.animate(
+          [{ opacity: 0 }, { opacity: 1, offset: 0.25 }, { opacity: 1, offset: 0.55 }, { opacity: 0 }],
+          { duration: 1400, easing: 'ease-in-out', fill: 'forwards' }
+        ).finished.then(done, done);
+        return;
+      }
+
+      const angle = Math.random() * Math.PI * 2;
+      const travel = (0.3 + Math.random() * 0.2) * Math.min(window.innerWidth, window.innerHeight);
+      const wobbles = 2 + Math.random() * 2;
+      const amp = 12 + Math.random() * 20;
+      const size = 0.85 + Math.random() * 0.3;
+      const baseRot = (angle * 180) / Math.PI + 90;
+      const dur = 2400 + Math.random() * 1600;
+      const N = 26;
+      const frames: Keyframe[] = [];
+      for (let i = 0; i <= N; i++) {
+        const t = i / N;
+        const along = travel * t;
+        const side = Math.sin(t * Math.PI * wobbles) * amp * (1 - t * 0.35);
+        const dx = Math.cos(angle) * along + Math.cos(angle + Math.PI / 2) * side;
+        const dy = Math.sin(angle) * along + Math.sin(angle + Math.PI / 2) * side;
+        const pop = t < 0.08 ? 0.35 + (t / 0.08) * 0.65 : 1;
+        const bank = Math.cos(t * Math.PI * wobbles) * 14 * (1 - t * 0.4);
+        frames.push({
+          transform: `translate(${x0 + dx}px, ${y0 + dy}px) translate(-50%, -50%) rotate(${baseRot + bank}deg) scale(${size * pop})`,
+          opacity: t < 0.05 ? t / 0.05 : t > 0.78 ? Math.max(0, 1 - (t - 0.78) / 0.22) : 1
+        });
+      }
+
+      img.animate(
+        [{ transform: 'scaleX(1)' }, { transform: 'scaleX(0.5)' }],
+        { duration: 150, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' }
+      );
+      fly.animate(frames, { duration: dur, easing: 'linear', fill: 'forwards' }).finished.then(done, done);
+    };
+
+    for (const word of mhWords) {
+      word.addEventListener('click', () => {
+        if (word.classList.contains('is-resting')) return;
+        const isFinal = word === mhFinal;
+        if (isFinal && !mhBurstSpent) {
+          mhBurstSpent = true;
+          for (let k = 0; k < 8; k++) {
+            window.setTimeout(() => spawnMothFrom(word.getBoundingClientRect()), k * 70);
+          }
+          mhRest(word, 20000);
+        } else {
+          spawnMothFrom(word.getBoundingClientRect());
+          mhRest(word, 8000);
+        }
+      });
+    }
+  }
+</script>
+
+<style is:global>
+  .mh-word {
+    appearance: none;
+    -webkit-appearance: none;
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+    background: none;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: text-shadow 320ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mh-word:hover:not(.is-resting),
+  .mh-word:focus-visible:not(.is-resting) {
+    text-shadow:
+      0 0 9px rgba(236, 214, 176, 0.6),
+      0 0 2px rgba(236, 214, 176, 0.45);
+  }
+
+  .mh-word:focus-visible {
+    outline: 1px solid var(--border-strong);
+    outline-offset: 2px;
+  }
+
+  .mh-word.is-resting {
+    cursor: default;
+  }
+
+  /* The last moth in the story sits by the lamp. */
+  .mh-word--final {
+    animation: mh-lamp 4.2s ease-in-out infinite;
+  }
+
+  @keyframes mh-lamp {
+    0%, 100% {
+      filter: brightness(1);
+      text-shadow:
+        0 0 2px rgba(236, 214, 176, 0.14),
+        0 0 6px rgba(236, 214, 176, 0.06);
+    }
+
+    12% {
+      filter: brightness(1.22);
+      text-shadow:
+        0 0 3px rgba(240, 220, 180, 0.9),
+        0 0 12px rgba(236, 214, 176, 0.6),
+        0 0 28px rgba(236, 214, 176, 0.35);
+    }
+
+    26% {
+      filter: brightness(1);
+      text-shadow:
+        0 0 2px rgba(236, 214, 176, 0.16),
+        0 0 7px rgba(236, 214, 176, 0.07);
+    }
+  }
+
+  .mh-moth-fly {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 45;
+    pointer-events: none;
+  }
+
+  .mh-moth-fly img {
+    display: block;
+    width: clamp(24px, 3vw, 30px);
+    height: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mh-word {
+      transition: none;
+    }
+
+    .mh-word--final {
+      animation: none;
+    }
+  }
+</style>

@@ -16,6 +16,7 @@ import NutcrackerCoda from '../../components/NutcrackerCoda.astro';
 import GuestsEyesCoda from '../../components/GuestsEyesCoda.astro';
 import TheTrailCoda from '../../components/TheTrailCoda.astro';
 import WitnessesCoda from '../../components/WitnessesCoda.astro';
+import MothheadCoda from '../../components/MothheadCoda.astro';
 import RedCherrySlack from '../../components/RedCherrySlack.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
 import { absoluteSiteUrl, assetPath, withBase } from '../../lib/paths';
@@ -50,6 +51,7 @@ const isGuestsHere = entry.id === 'the-guests-are-here';
 const isTheTrail = entry.id === 'the-trail';
 const isRedCherry = entry.id === 'red-they-are-cherry-red';
 const isWitnesses = entry.id === 'witnesses';
+const isMothhead = entry.id === 'mothhead';
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? '' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -226,6 +228,7 @@ const breadcrumbSchema = piece ? {
         {isGuestsHere && <GuestsEyesCoda variant="mobile" />}
         {isTheTrail && <TheTrailCoda variant="mobile" />}
         {isWitnesses && <WitnessesCoda variant="cat" />}
+        {isMothhead && <MothheadCoda />}
       </div>
     </div>
     {piece && canLinkToPiece(piece) && (
