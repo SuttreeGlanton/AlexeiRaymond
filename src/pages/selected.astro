@@ -20,11 +20,7 @@ const selected = featuredPieces();
             piece={piece}
             showCycle={true}
             imageSizes="(max-width: 640px) 112px, (max-width: 860px) 45vw, 360px"
-            titleLines={
-              piece.title === 'Red, They Are Cherry Red'
-                ? ['Red, They Are', 'Cherry Red']
-                : undefined
-            }
+            titleLines={piece.titleLines}
           />
         ))}
       </section>
