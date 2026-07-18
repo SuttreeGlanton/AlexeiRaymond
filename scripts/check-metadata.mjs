@@ -197,12 +197,14 @@ for (const file of htmlFiles) {
 
   if (!title) addError(`${relative}: missing <title>.`);
   if (!description) addError(`${relative}: missing meta description.`);
-  if (!canonical) addError(`${relative}: missing canonical link.`);
+  // The 404 page is noindex and intentionally omits canonical/og:url.
+  const isNotFoundPage = relative === 'dist/404.html';
+  if (!canonical && !isNotFoundPage) addError(`${relative}: missing canonical link.`);
   if (!ogType) addError(`${relative}: missing og:type.`);
   if (!ogSiteName) addError(`${relative}: missing og:site_name.`);
   if (!ogTitle) addError(`${relative}: missing og:title.`);
   if (!ogDescription) addError(`${relative}: missing og:description.`);
-  if (!ogUrl) addError(`${relative}: missing og:url.`);
+  if (!ogUrl && !isNotFoundPage) addError(`${relative}: missing og:url.`);
   if (!twitterCard) addError(`${relative}: missing twitter:card.`);
   if (!twitterTitle) addError(`${relative}: missing twitter:title.`);
   if (!twitterDescription) addError(`${relative}: missing twitter:description.`);
