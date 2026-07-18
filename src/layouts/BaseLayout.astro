@@ -14,12 +14,13 @@ interface Props {
   title?: string;
   description?: string;
   robots?: string;
-  canonicalPath?: string;
+  /** Pass `false` to omit the canonical link entirely (e.g. error pages). */
+  canonicalPath?: string | false;
   socialImage?: { src: string; width?: number; height?: number };
   socialImageAlt?: string;
   ogType?: 'website' | 'article';
   publishedTime?: string;
-  structuredData?: Record<string, unknown>;
+  structuredData?: Record<string, unknown> | Array<Record<string, unknown> | undefined>;
   preloadAudio?: string;
 }
 
@@ -36,7 +37,7 @@ const {
   preloadAudio
 } = Astro.props;
 const resolvedTitle = title.split(' — ').join(' | ');
-const canonical = absoluteSiteUrl(canonicalPath ?? Astro.url.pathname, Astro.site);
+const canonical = canonicalPath === false ? '' : absoluteSiteUrl(canonicalPath ?? Astro.url.pathname, Astro.site);
 const socialImageSource = pageSocialImage?.src || site.socialCard || '';
 const socialImage = socialImageSource ? absoluteSiteUrl(socialImageSource, Astro.site) : '';
 const socialImageWidth = pageSocialImage?.width ?? (site.socialCard ? 1200 : undefined);
@@ -55,7 +56,9 @@ const personSchema = serializeJsonLd({
   url: siteUrl,
   sameAs
 });
-const pageSchema = structuredData ? serializeJsonLd(structuredData) : '';
+const pageSchemas = (Array.isArray(structuredData) ? structuredData : [structuredData])
+  .filter((entry): entry is Record<string, unknown> => Boolean(entry))
+  .map(serializeJsonLd);
 ---
 
 <!doctype html>
@@ -66,7 +69,7 @@ const pageSchema = structuredData ? serializeJsonLd(structuredData) : '';
     <meta name="theme-color" content="#0a0a0a" />
     <meta name="description" content={description} />
     {robots && <meta name="robots" content={robots} />}
-    <link rel="canonical" href={canonical} />
+    {canonical && <link rel="canonical" href={canonical} />}
     <link rel="sitemap" href={withBase('sitemap-index.xml')} />
     <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
     <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
@@ -75,7 +78,7 @@ const pageSchema = structuredData ? serializeJsonLd(structuredData) : '';
     <meta property="og:site_name" content={site.author} />
     <meta property="og:title" content={resolvedTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {canonical && <meta property="og:url" content={canonical} />}
     {ogType === 'article' && <meta property="article:author" content={siteUrl} />}
     {ogType === 'article' && publishedTime && <meta property="article:published_time" content={publishedTime} />}
     <meta name="twitter:card" content={twitterCard} />
@@ -92,7 +95,7 @@ const pageSchema = structuredData ? serializeJsonLd(structuredData) : '';
       </>
     )}
     <script is:inline type="application/ld+json" set:html={personSchema}></script>
-    {pageSchema && <script is:inline type="application/ld+json" set:html={pageSchema}></script>}
+    {pageSchemas.map((schema) => <script is:inline type="application/ld+json" set:html={schema}></script>)}
     <title>{resolvedTitle}</title>
   </head>
   <body>
