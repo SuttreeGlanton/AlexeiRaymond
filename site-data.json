@@ -751,7 +751,12 @@
       "cover": "covers/pieces/witnesses.jpg",
       "excerpt": "This Friday we can get tipsy; I’ll cry, you’ll tell me I’m beautiful, read to me…",
       "genre": "Flash fiction",
-      "issue": "#6"
+      "issue": "#6",
+      "account": {
+        "slug": "witnesses",
+        "label": "Read story",
+        "title": "Witnesses"
+      }
     },
     {
       "title": "Paradigm of the Tyrant",

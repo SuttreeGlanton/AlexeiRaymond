@@ -15,6 +15,7 @@ import NatureOfSleepCoda from '../../components/NatureOfSleepCoda.astro';
 import NutcrackerCoda from '../../components/NutcrackerCoda.astro';
 import GuestsEyesCoda from '../../components/GuestsEyesCoda.astro';
 import TheTrailCoda from '../../components/TheTrailCoda.astro';
+import WitnessesCoda from '../../components/WitnessesCoda.astro';
 import RedCherrySlack from '../../components/RedCherrySlack.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
 import { absoluteSiteUrl, assetPath, withBase } from '../../lib/paths';
@@ -48,6 +49,7 @@ const isNutcrackerCharge = entry.id === 'the-nutcrackers-charge';
 const isGuestsHere = entry.id === 'the-guests-are-here';
 const isTheTrail = entry.id === 'the-trail';
 const isRedCherry = entry.id === 'red-they-are-cherry-red';
+const isWitnesses = entry.id === 'witnesses';
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? '' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -183,7 +185,7 @@ const breadcrumbSchema = piece ? {
     )}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
-        <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}`}>
+        <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}${isWitnesses ? ' witnesses-cover-slot' : ''}`}>
           <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
             <div class="archive-cover-media">
               <OptimizedImage
@@ -206,6 +208,7 @@ const breadcrumbSchema = piece ? {
           {isSixThousandEighty && <SixThousandEightyCoda variant="desktop" />}
           {isGuestsHere && <GuestsEyesCoda variant="desktop" />}
           {isTheTrail && <TheTrailCoda variant="desktop" />}
+          {isWitnesses && <WitnessesCoda variant="moon" />}
         </div>
       )}
       <div class="prose archive-prose">
@@ -222,6 +225,7 @@ const breadcrumbSchema = piece ? {
         {isNutcrackerCharge && <NutcrackerCoda />}
         {isGuestsHere && <GuestsEyesCoda variant="mobile" />}
         {isTheTrail && <TheTrailCoda variant="mobile" />}
+        {isWitnesses && <WitnessesCoda variant="cat" />}
       </div>
     </div>
     {piece && canLinkToPiece(piece) && (
