@@ -1,70 +1,89 @@
----
-import { getImage } from 'astro:assets';
+﻿---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CycleTile from '../components/CycleTile.astro';
 import { cycles, site } from '../lib/data';
-import { assetPath } from '../lib/paths';
+import { assetPath, withBase } from '../lib/paths';
 import { imageAsset } from '../lib/image-assets';
 
-const enabledCycles = cycles.filter((cycle) => !cycle.disabled);
-const heroCover = site.headerCover || '';
-const heroImage = imageAsset(heroCover);
-const socialHero = heroImage
-  ? await getImage({ src: heroImage, width: 1200, format: 'jpeg', quality: 80 })
-  : undefined;
-const ambientAudioSrc = assetPath('audio/ambient.mp3');
+const headerImage = imageAsset(site.headerCover);
+const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
+const heroWidths = [640, 960, 1280, 1440, 1600, 1800];
+const homeDescription = 'Alexei Raymond is a writer and editor of short fiction, flash, poems, and interconnected story cycles, pursuing visions of unspeakable loveliness.';
 ---
 
 <BaseLayout
   title={`${site.author} | Writer & Editor`}
-  description={site.bio}
-  socialImage={socialHero ? { src: socialHero.src } : undefined}
-  socialImageAlt={`${site.author} hero image`}
+  description={homeDescription}
 >
-  <section class="hero" data-color-reveal>
-    {heroCover ? (
-      <div class="hero-media">
-        <img
-          class="hero-image hero-image-mono"
-          src={assetPath(heroCover)}
+  <section class="hero" aria-labelledby="home-title" data-color-reveal>
+    {headerImage ? (
+      <>
+        <Image
+          class="hero-backdrop hero-backdrop--mono"
+          src={headerImage}
           alt=""
-          loading="eager"
-          fetchpriority="high"
+          widths={heroWidths}
+          width={1800}
+          sizes="100vw"
+          format="webp"
+          quality={74}
+          priority
         />
-        <img
-          class="hero-image hero-image-color"
-          src={assetPath(heroCover)}
+        <Image
+          class="hero-backdrop hero-color-reveal"
+          src={headerImage}
           alt=""
+          widths={heroWidths}
+          width={1800}
+          sizes="100vw"
+          format="webp"
+          quality={74}
           loading="eager"
+          decoding="async"
           aria-hidden="true"
         />
-      </div>
+        <div class="hero-scrim" aria-hidden="true"></div>
+      </>
+    ) : headerCover ? (
+      <>
+        <img class="hero-backdrop hero-backdrop--mono" src={headerCover} alt="" fetchpriority="high" />
+        <img class="hero-backdrop hero-color-reveal" src={headerCover} alt="" aria-hidden="true" loading="eager" />
+        <div class="hero-scrim" aria-hidden="true"></div>
+      </>
     ) : null}
-    <div class="hero-inner page-shell">
-      <h1 class="hero-title">{site.author}</h1>
-      <button
-        class="hero-sound"
-        type="button"
-        aria-pressed="false"
-        aria-label="Sound off"
-        title="Sound off"
-        data-sound-toggle
-      >
-        <span class="hero-sound-bars" aria-hidden="true"><span></span><span></span><span></span></span>
-        <span class="hero-sound-state">Off</span>
-      </button>
-      <audio src={ambientAudioSrc} preload="none" loop data-ambient-audio></audio>
+    <div class="page-shell hero-content">
+      <p class="hero-kicker">Short fiction, flash, poems, and the pursuit of unspeakable&nbsp;loveliness.</p>
+      <h1 id="home-title">{site.author}</h1>
+      <a class="hero-start" href={withBase('selected/')}>New here? Start with Selected Works &rarr;</a>
     </div>
+
+    <button class="hero-sound-toggle" type="button" data-sound-toggle aria-pressed="false" aria-label="Sound off" title="Sound off">
+      <span class="hero-sound-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="M4.5 10v4h4l5 4V6l-5 4h-4z"></path>
+          <path class="hero-sound-wave" d="M16.5 8.5c1.4 1.4 1.4 4.6 0 6"></path>
+        </svg>
+      </span>
+      <span class="hero-sound-state">Off</span>
+    </button>
+    <audio data-ambient-audio src={assetPath('audio/ambient.mp3')} loop preload="none"></audio>
   </section>
 
-  <section class="page-shell cycle-section" aria-label="Cycles">
-    <div class="cycle-grid">
-      {enabledCycles.map((cycle) => <CycleTile cycle={cycle} />)}
+  <section class="page-shell" aria-labelledby="cycles-title">
+    <div class="section-head">
+      <h2 id="cycles-title">Cycles</h2>
+      <p class="section-note">Story cycles flow in and out of one another; an interconnected whole emerges.</p>
+    </div>
+    <div class="cycle-grid home-cycle-grid" data-home-cycle-focus>
+      {cycles.map((cycle) => (
+        <CycleTile cycle={cycle} />
+      ))}
     </div>
   </section>
 
   <script>
-    /* Pointer-driven color reveal for the hero cover. */
+    /* Homepage color flashlight: desktop pointer only, reduced-motion safe. */
     const hero = document.querySelector<HTMLElement>('.hero[data-color-reveal]');
     const canReveal =
       hero &&
@@ -94,8 +113,9 @@ const ambientAudioSrc = assetPath('audio/ambient.mp3');
         heroEl.classList.remove('is-color-reveal-active');
       });
     }
-
-    /* Ambient audio toggle. */
+  </script>
+  <script>
+    /* Homepage local ambient sound toggle. */
     const soundButton = document.querySelector<HTMLButtonElement>('[data-sound-toggle]');
     const ambientAudio = document.querySelector<HTMLAudioElement>('[data-ambient-audio]');
 
@@ -121,14 +141,72 @@ const ambientAudioSrc = assetPath('audio/ambient.mp3');
         }
 
         try {
+          setSoundState('...', false);
           await ambientAudio.play();
           setSoundState('On', true);
         } catch {
-          setSoundState('Off', false);
+          setSoundState('Unavailable', false);
         }
       });
-
-      ambientAudio.addEventListener('ended', () => setSoundState('Off', false));
     }
   </script>
+
+  <script>
+    /* Homepage mobile cycle focus color. */
+    (() => {
+      const media = window.matchMedia('(max-width: 640px)');
+      const grid = document.querySelector('[data-home-cycle-focus]');
+
+      if (!grid) return;
+
+      const tiles = Array.from(grid.querySelectorAll('.tile'));
+      if (!tiles.length) return;
+
+      function updateFocus() {
+        if (!media.matches) {
+          tiles.forEach((tile) => tile.classList.remove('is-mobile-focus'));
+          return;
+        }
+
+        const viewportCenter = window.innerHeight / 2;
+        let closestTile = tiles[0];
+        let closestDistance = Infinity;
+
+        tiles.forEach((tile) => {
+          const rect = tile.getBoundingClientRect();
+          const tileCenter = rect.top + rect.height / 2;
+          const distance = Math.abs(tileCenter - viewportCenter);
+          const visible = rect.bottom > 0 && rect.top < window.innerHeight;
+
+          if (visible && distance < closestDistance) {
+            closestDistance = distance;
+            closestTile = tile;
+          }
+        });
+
+        tiles.forEach((tile) => {
+          tile.classList.toggle('is-mobile-focus', tile === closestTile);
+        });
+      }
+
+      let frame = 0;
+
+      function scheduleUpdate() {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(updateFocus);
+      }
+
+      window.addEventListener('scroll', scheduleUpdate, { passive: true });
+      window.addEventListener('resize', scheduleUpdate);
+
+      if (media.addEventListener) {
+        media.addEventListener('change', scheduleUpdate);
+      } else if (media.addListener) {
+        media.addListener(scheduleUpdate);
+      }
+
+      scheduleUpdate();
+    })();
+  </script>
+
 </BaseLayout>
