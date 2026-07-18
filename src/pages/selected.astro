@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PieceCard from '../components/PieceCard.astro';
 import { featuredPieces, site } from '../lib/data';
-import selectedHeader from '../assets/selected-header-city.jpg';
+import selectedHeader from '../assets/selected-header-trees.jpg';
 
 const selected = featuredPieces();
 const selectedHeroWidths = [640, 960, 1280, 1600, 1920, 2048];
@@ -115,17 +115,17 @@ const selectedHeroWidths = [640, 960, 1280, 1600, 1920, 2048];
       height: 100%;
       max-width: none;
       object-fit: cover;
-      object-position: 50% 62%;
+      object-position: 50% 42%;
     }
 
     .selected-hero-backdrop--mono {
-      filter: grayscale(1) brightness(0.37) contrast(1.09);
+      filter: grayscale(1) brightness(0.4) contrast(1.07);
     }
 
     .selected-hero-color-reveal {
       z-index: 0;
       opacity: 0;
-      filter: brightness(1.06) contrast(1.03) saturate(1.14);
+      filter: brightness(1.02) contrast(1.04) saturate(1.12);
       transition: opacity 160ms ease;
       will-change: opacity, mask-image, -webkit-mask-image;
       pointer-events: none;
@@ -133,18 +133,18 @@ const selectedHeroWidths = [640, 960, 1280, 1600, 1920, 2048];
       -webkit-mask-image: radial-gradient(
         circle at var(--reveal-x) var(--reveal-y),
         rgba(0, 0, 0, 1) 0,
-        rgba(0, 0, 0, 1) 36px,
-        rgba(0, 0, 0, 0.88) 68px,
-        rgba(0, 0, 0, 0.44) 104px,
-        rgba(0, 0, 0, 0) 145px
+        rgba(0, 0, 0, 1) 120px,
+        rgba(0, 0, 0, 0.78) 230px,
+        rgba(0, 0, 0, 0.36) 340px,
+        rgba(0, 0, 0, 0) 460px
       );
       mask-image: radial-gradient(
         circle at var(--reveal-x) var(--reveal-y),
         rgba(0, 0, 0, 1) 0,
-        rgba(0, 0, 0, 1) 36px,
-        rgba(0, 0, 0, 0.88) 68px,
-        rgba(0, 0, 0, 0.44) 104px,
-        rgba(0, 0, 0, 0) 145px
+        rgba(0, 0, 0, 1) 120px,
+        rgba(0, 0, 0, 0.78) 230px,
+        rgba(0, 0, 0, 0.36) 340px,
+        rgba(0, 0, 0, 0) 460px
       );
     }
 
@@ -152,7 +152,19 @@ const selectedHeroWidths = [640, 960, 1280, 1600, 1920, 2048];
       opacity: 1;
     }
 
-
+    .selected-hero-scrim {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(
+        180deg,
+        rgba(10, 10, 10, 0.62) 0%,
+        rgba(10, 10, 10, 0.3) 42%,
+        rgba(10, 10, 10, 0.55) 78%,
+        var(--bg) 100%
+      );
+      pointer-events: none;
+    }
 
     .selected-hero-content {
       position: relative;
@@ -186,7 +198,7 @@ const selectedHeroWidths = [640, 960, 1280, 1600, 1920, 2048];
 
     @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
       .selected-hero-backdrop--mono {
-        filter: brightness(0.68) contrast(1.04) saturate(1);
+        filter: brightness(0.72) contrast(1.02) saturate(1);
       }
 
       .selected-hero-color-reveal {
@@ -201,23 +213,7 @@ const selectedHeroWidths = [640, 960, 1280, 1600, 1920, 2048];
       }
 
       .selected-hero-backdrop {
-        object-position: 62% 50%;
-      }
-
-      .selected-hero-scrim {
-        background:
-          linear-gradient(
-            90deg,
-            rgba(10, 10, 10, 0.72) 0%,
-            rgba(10, 10, 10, 0.34) 72%,
-            rgba(10, 10, 10, 0.24) 100%
-          ),
-          linear-gradient(
-            180deg,
-            rgba(10, 10, 10, 0.08) 0%,
-            rgba(10, 10, 10, 0.24) 58%,
-            var(--bg) 100%
-          );
+        object-position: 50% 46%;
       }
 
       .selected-hero-content {
