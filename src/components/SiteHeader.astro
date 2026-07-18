@@ -3,176 +3,100 @@ import { cycles, site } from '../lib/data';
 import { withBase } from '../lib/paths';
 
 const currentPath = Astro.url.pathname;
-const homeHref = withBase('');
-const currentWithoutTrailing = currentPath.replace(/\/$/, '');
-const homeWithoutTrailing = homeHref.replace(/\/$/, '');
-const isHome = currentWithoutTrailing === homeWithoutTrailing;
-const cycleOverviewHref = `${homeHref}#cycles-title`;
-
-const cycleNavItems = cycles.filter((cycle) => !cycle.disabled).map((cycle) => ({
-  label: cycle.name,
-  href: withBase(`cycles/${cycle.id}/`),
-  active: currentPath.startsWith(withBase(`cycles/${cycle.id}/`))
-}));
-
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const navItems = [
-  {
-    label: 'Cycles',
-    glyph: '\u25cc',
-    href: homeHref,
-    active: isHome || currentPath.startsWith(withBase('cycles/'))
-  },
-  {
-    label: 'Selected',
-    glyph: '\u2605',
-    href: withBase('selected/'),
-    active: currentPath.startsWith(withBase('selected/'))
-  },
-  {
-    label: 'Chronology',
-    glyph: '\u2193',
-    href: withBase('chronology/'),
-    active: currentPath.startsWith(withBase('chronology/'))
-  },
-  {
-    label: 'About',
-    glyph: '\u00b6',
-    href: withBase('about/'),
-    active: currentPath.startsWith(withBase('about/'))
-  },
-  {
-    label: 'Elsewhere',
-    glyph: '\u2726',
-    href: withBase('elsewhere/'),
-    active: currentPath.startsWith(withBase('elsewhere/'))
-  }
+  { href: withBase(''), label: 'Home', match: 'home' },
+  { href: withBase('selected/'), label: 'Selected', match: 'selected' },
+  { href: withBase('chronology/'), label: 'Chronology', match: 'chronology' },
+  { href: withBase('about/'), label: 'About', match: 'about' },
+  { href: withBase('elsewhere/'), label: 'Elsewhere', match: 'elsewhere' }
 ];
+const enabledCycles = cycles.filter((cycle) => !cycle.disabled);
 
-const desktopNavItems = [
-  ...navItems.filter((item) => item.label !== 'Cycles'),
-  ...navItems.filter((item) => item.label === 'Cycles')
-];
+function isActive(match: string) {
+  if (match === 'home') return currentPath === `${base}/`;
+  return currentPath.startsWith(`${base}/${match}`);
+}
+
+function isCycleNavActive() {
+  return currentPath.includes(`${base}/cycles/`);
+}
 ---
 
 <header class="site-header" data-site-header>
-  <div class="page-shell header-inner">
-    <a class="brand" href={homeHref}>{site.author}</a>
+  <nav class="site-nav" aria-label="Primary">
+    <a class="site-wordmark" href={withBase('')} aria-current={isActive('home') ? 'page' : undefined}>
+      <span class="site-wordmark-text">{site.author}</span>
+    </a>
 
     <button
       class="mobile-menu-toggle"
       type="button"
-      data-mobile-menu-toggle
       aria-expanded="false"
       aria-controls="mobile-menu-panel"
+      data-mobile-menu-toggle
     >
-      <span class="mobile-menu-label" data-mobile-menu-label>Menu</span>
-      <span class="mobile-menu-icon" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
-      </span>
+      <span class="mobile-menu-toggle-bars" aria-hidden="true"></span>
+      <span class="mobile-menu-toggle-label" data-mobile-menu-label>Menu</span>
     </button>
 
-    <nav class="main-nav" aria-label="Main navigation">
-      {desktopNavItems.map((item) => (
-        item.label === 'Cycles' ? (
-          <div class="nav-cycle-menu">
-            <a class="nav-link" href={item.href} aria-current={item.active ? 'page' : undefined}>
-              <span class="nav-glyph" aria-hidden="true">{item.glyph}</span>
-              <span>{item.label}</span>
-            </a>
-            <div class="nav-cycle-panel" aria-label="Cycle navigation">
-              {cycleNavItems.map((cycle) => (
-                <a href={cycle.href} aria-current={cycle.active ? 'page' : undefined}>{cycle.label}</a>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <a class="nav-link" href={item.href} aria-current={item.active ? 'page' : undefined}>
-            <span class="nav-glyph" aria-hidden="true">{item.glyph}</span>
-            <span>{item.label}</span>
-          </a>
-        )
-      ))}
-    </nav>
-  </div>
-
-  <nav class="mobile-menu-panel" id="mobile-menu-panel" data-mobile-menu-panel aria-label="Mobile navigation" hidden>
-    <div class="mobile-menu-view" data-mobile-menu-main>
-      <span class="mobile-menu-kicker">Navigation</span>
+    <div class="site-nav-links" aria-label="Sections">
       {navItems.map((item) => (
-        item.label === 'Cycles' ? (
-          <button
-            class={`mobile-menu-link mobile-menu-drilldown${item.active ? ' is-active' : ''}`}
-            type="button"
-            data-mobile-cycles-open
-            aria-expanded="false"
-            aria-controls="mobile-cycle-view"
-          >
-            <span class="mobile-menu-glyph" aria-hidden="true">{item.glyph}</span>
-            <span class="mobile-menu-link-text">{item.label}</span>
-            <span class="mobile-menu-chevron" aria-hidden="true">›</span>
-          </button>
-        ) : (
-          <a class="mobile-menu-link" href={item.href} aria-current={item.active ? 'page' : undefined}>
-            <span class="mobile-menu-glyph" aria-hidden="true">{item.glyph}</span>
-            <span class="mobile-menu-link-text">{item.label}</span>
-          </a>
-        )
+        <a href={item.href} aria-current={isActive(item.match) ? 'page' : undefined}>{item.label}</a>
       ))}
     </div>
 
-    <div
-      class="mobile-menu-view mobile-cycle-view"
-      id="mobile-cycle-view"
-      data-mobile-cycle-view
-      aria-label="Cycle navigation"
-      hidden
-    >
-      <div class="mobile-cycle-heading">
-        <button class="mobile-cycle-back" type="button" data-mobile-cycles-back>
-          <span aria-hidden="true">←</span>
-          <span>Back</span>
-        </button>
-        <span class="mobile-menu-kicker">Cycles</span>
-      </div>
-
-      <div class="mobile-cycle-list">
-        {cycleNavItems.map((cycle) => (
-          <a class="mobile-cycle-link" href={cycle.href} aria-current={cycle.active ? 'page' : undefined}>
-            {cycle.label}
+    <div class="site-nav-panel" id="mobile-menu-panel" hidden data-mobile-menu-panel>
+      <div class="site-nav-panel-view" data-mobile-menu-main>
+        {navItems.map((item) => (
+          <a class="site-nav-panel-link" href={item.href} aria-current={isActive(item.match) ? 'page' : undefined}>
+            {item.label}
           </a>
         ))}
+        <button
+          class="site-nav-panel-link site-nav-panel-button"
+          type="button"
+          aria-expanded="false"
+          aria-controls="mobile-cycle-view"
+          data-mobile-cycles-open
+        >
+          Cycles <span aria-hidden="true">&rarr;</span>
+        </button>
       </div>
-
-      <a class="mobile-cycle-overview" href={cycleOverviewHref} aria-current={isHome ? 'page' : undefined}>
-        <span aria-hidden="true">◌</span>
-        <span>View all cycles</span>
-      </a>
+      <div class="site-nav-panel-view" id="mobile-cycle-view" hidden data-mobile-cycle-view>
+        <button class="site-nav-panel-link site-nav-panel-button" type="button" data-mobile-cycles-back>
+          <span aria-hidden="true">&larr;</span> Back
+        </button>
+        {enabledCycles.map((cycle) => (
+          <a class="site-nav-panel-link" href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
+        ))}
+      </div>
     </div>
   </nav>
 </header>
 
 <script>
   (() => {
-    const header = document.querySelector('[data-site-header]');
-    const button = document.querySelector('[data-mobile-menu-toggle]');
-    const panel = document.querySelector('[data-mobile-menu-panel]');
-    const label = document.querySelector('[data-mobile-menu-label]');
-    const mainView = document.querySelector('[data-mobile-menu-main]');
-    const cycleView = document.querySelector('[data-mobile-cycle-view]');
-    const cycleOpen = document.querySelector('[data-mobile-cycles-open]');
-    const cycleBack = document.querySelector('[data-mobile-cycles-back]');
+    const header = document.querySelector<HTMLElement>('[data-site-header]');
+    const button = document.querySelector<HTMLButtonElement>('[data-mobile-menu-toggle]');
+    const panel = document.querySelector<HTMLElement>('[data-mobile-menu-panel]');
+    const label = document.querySelector<HTMLElement>('[data-mobile-menu-label]');
+    const mainView = document.querySelector<HTMLElement>('[data-mobile-menu-main]');
+    const cycleView = document.querySelector<HTMLElement>('[data-mobile-cycle-view]');
+    const cycleOpen = document.querySelector<HTMLButtonElement>('[data-mobile-cycles-open]');
+    const cycleBack = document.querySelector<HTMLButtonElement>('[data-mobile-cycles-back]');
 
     if (!header || !button || !panel || !label || !mainView || !cycleView || !cycleOpen || !cycleBack) return;
 
-    function setCycleView(open) {
+    function setCycleView(open: boolean) {
+      if (!mainView || !cycleView || !cycleOpen) return;
       mainView.hidden = open;
       cycleView.hidden = !open;
       cycleOpen.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
 
-    function setOpen(open) {
+    function setOpen(open: boolean) {
+      if (!header || !button || !panel || !label) return;
       header.classList.toggle('is-mobile-menu-open', open);
       button.setAttribute('aria-expanded', open ? 'true' : 'false');
       panel.hidden = !open;
@@ -199,28 +123,18 @@ const desktopNavItems = [
 
     panel.addEventListener('click', (event) => {
       event.stopPropagation();
-      if (event.target.closest('a')) setOpen(false);
+      if (event.target instanceof Element && event.target.closest('a')) setOpen(false);
     });
 
-    document.addEventListener('click', () => {
-      if (button.getAttribute('aria-expanded') === 'true') setOpen(false);
+    document.addEventListener('click', (event) => {
+      if (!panel.hidden && !header.contains(event.target as Node)) setOpen(false);
     });
 
     document.addEventListener('keydown', (event) => {
-      if (event.key !== 'Escape' || button.getAttribute('aria-expanded') !== 'true') return;
-
-      if (!cycleView.hidden) {
-        setCycleView(false);
-        cycleOpen.focus();
-        return;
+      if (event.key === 'Escape' && !panel.hidden) {
+        setOpen(false);
+        button.focus();
       }
-
-      setOpen(false);
-      button.focus();
-    });
-
-    window.addEventListener('resize', () => {
-      if (!window.matchMedia('(max-width: 640px)').matches) setOpen(false);
     });
   })();
 </script>
