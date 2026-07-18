@@ -4,7 +4,7 @@ import CycleIcon from '../../components/CycleIcon.astro';
 import PieceCard from '../../components/PieceCard.astro';
 import type { Cycle } from '../../lib/data';
 import { cycles, isUpcoming, parseDate, piecesForCycle, site } from '../../lib/data';
-import { withBase } from '../../lib/paths';
+import { absoluteSiteUrl, withBase } from '../../lib/paths';
 
 export function getStaticPaths() {
   return cycles.filter((cycle) => !cycle.disabled).map((cycle) => ({
@@ -33,9 +33,27 @@ const publishedCyclePieces = cycleSourcePieces
 const cyclePieces = [...upcomingCyclePieces, ...publishedCyclePieces];
 const priorityPiece = cyclePieces.find((piece) => Boolean(piece.cover));
 const otherCycles = cycles.filter((item) => !item.disabled);
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: site.author,
+      item: absoluteSiteUrl('', Astro.site)
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: cycle.name,
+      item: absoluteSiteUrl(`cycles/${cycle.id}/`, Astro.site)
+    }
+  ]
+};
 ---
 
-<BaseLayout title={`${cycle.name} — ${site.author}`} description={cycle.blurb || site.bio}>
+<BaseLayout title={`${cycle.name} — ${site.author}`} description={cycle.blurb || site.bio} structuredData={breadcrumbSchema}>
   <div
     class="cycle-shell"
     data-cycle-id={cycle.id}
@@ -199,12 +217,12 @@ const otherCycles = cycles.filter((item) => !item.disabled);
     /* Mobile cycle carousel focused cover color. */
     (() => {
       const media = window.matchMedia('(max-width: 640px)');
-      const carousels = Array.from(document.querySelectorAll('[data-mobile-focus-carousel]'));
+      const carousels = Array.from(document.querySelectorAll<HTMLElement>('[data-mobile-focus-carousel]'));
 
       if (!carousels.length) return;
 
-      function updateCarousel(carousel) {
-        const cards = Array.from(carousel.querySelectorAll('.piece-card'));
+      function updateCarousel(carousel: HTMLElement) {
+        const cards = Array.from(carousel.querySelectorAll<HTMLElement>('.piece-card'));
 
         if (!cards.length) return;
 
