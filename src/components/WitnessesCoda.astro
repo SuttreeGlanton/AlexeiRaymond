@@ -93,6 +93,7 @@ const { variant } = Astro.props;
   /* Witnesses coda: the cat wakes when the reader reaches the end of the story,
      then holds its gaze on the moon. Taps get a small answer, nothing fancy. */
   const wcReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wcCanHover = window.matchMedia('(hover: hover)').matches;
   const wcCats = document.querySelectorAll<HTMLElement>('[data-witnesses-cat]');
 
   for (const fig of wcCats) {
@@ -137,6 +138,9 @@ const { variant } = Astro.props;
 
     const hit = fig.querySelector<HTMLButtonElement>('.wc-cat-hit');
     hit?.addEventListener('click', () => {
+      /* On touch there is no cursor to hover, so a tap is what lets the
+         colour bleed through — and a second tap lets it recede. */
+      if (!wcCanHover) fig.classList.toggle('is-lit');
       if (wcState === 'asleep') {
         /* A sleeping cat only flickers an ear. */
         fig.classList.remove('is-twitch');
@@ -263,6 +267,22 @@ const { variant } = Astro.props;
 
   .wc-cat-lift {
     transform-origin: 62% 100%;
+    filter: grayscale(1);
+    transition: filter 850ms ease;
+  }
+
+  /* The cat lives in the same grey world as everything else; its real
+     warmth only bleeds through where the reader reaches for it — under
+     the cursor on desktop, on a tap on touch. */
+  @media (hover: hover) {
+    .witnesses-coda--cat:hover .wc-cat-lift,
+    .witnesses-coda--cat:focus-within .wc-cat-lift {
+      filter: grayscale(0);
+    }
+  }
+
+  .witnesses-coda--cat.is-lit .wc-cat-lift {
+    filter: grayscale(0);
   }
 
   .witnesses-coda--cat svg {
@@ -359,6 +379,11 @@ const { variant } = Astro.props;
 
     .wc-star {
       opacity: 0.4;
+    }
+
+    /* The warmth still bleeds through, just without the slow fade. */
+    .wc-cat-lift {
+      transition: none;
     }
   }
 </style>
