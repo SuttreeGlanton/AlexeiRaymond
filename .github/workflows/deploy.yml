@@ -33,6 +33,7 @@ jobs:
         run: npm run build
       - name: Quality gates
         run: |
+          npm run check
           npm run check:assets
           npm run check:metadata
           npm run check:links:local

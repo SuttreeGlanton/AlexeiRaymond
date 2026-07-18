@@ -16,7 +16,8 @@
     "check:assets": "node scripts/check-assets.mjs",
     "check:metadata": "node scripts/check-metadata.mjs",
     "clean": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\"",
-    "fix:sitemap": "node scripts/fix-sitemap.mjs"
+    "fix:sitemap": "node scripts/fix-sitemap.mjs",
+    "check": "astro check"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
@@ -28,6 +29,11 @@
     "meshoptimizer": "0.24.0"
   },
   "devDependencies": {
-    "sharp": "^0.35.3"
+    "sharp": "^0.35.3",
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.8.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }
