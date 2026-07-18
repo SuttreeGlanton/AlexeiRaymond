@@ -1,12 +1,15 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import OptimizedImage from '../components/OptimizedImage.astro';
+import TagList from '../components/TagList.astro';
+import chronologyVisual from '../assets/page-visuals/chronology-records.jpg';
 import { canLinkToPiece, cycleByName, cycleNamesForPiece, formatIsoDate, formatMonthYear, parseDate, pieces, publishedNewestFirst, site, upcomingPieces, publicationLabel } from '../lib/data';
 import { withBase } from '../lib/paths';
-import { imageAsset } from '../lib/image-assets';
 
-const published = publishedNewestFirst();
 const upcoming = upcomingPieces();
+const published = publishedNewestFirst();
+const chronologyWidths = [720, 960, 1080, 1200, 1400];
+const chronologySizes = '(max-width: 1080px) 1px, (max-width: 1687px) 64vw, 1080px';
 
 function dateTimestamp(date: string | null) {
   return parseDate(date)?.getTime() ?? 0;
@@ -19,96 +22,142 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
 }
 ---
 
-<BaseLayout title={`Chronology — ${site.author}`} description="Every published piece, newest to oldest.">
-  <div class="page-shell chronology-shell">
-    <section class="page-hero chronology-hero" aria-labelledby="chronology-title">
-      <h1 class="page-title" id="chronology-title">Chronology</h1>
-      <div class="chronology-sort" role="group" aria-label="Sort published pieces">
-        <button type="button" class="sort-button is-active" data-sort-order="newest" aria-pressed="true">Newest first</button>
-        <button type="button" class="sort-button" data-sort-order="oldest" aria-pressed="false">Oldest first</button>
-      </div>
-    </section>
+<BaseLayout title={`Chronology — ${site.author}`} description="A chronological bibliography of published and forthcoming work.">
+  <div class="page-shell page-with-visual chronology-with-visual">
+    <div class="page-copy">
+      <section class="page-hero" aria-labelledby="chronology-title">
+        <h1 class="page-title" id="chronology-title">Chronology</h1>
+        <p class="page-intro cycle-intro">A chronological bibliography of published and forthcoming work.</p>
+      </section>
 
-    <div class="chronology-with-visual">
-      <div class="chronology-main">
-        {upcoming.length > 0 && (
-          <section class="chronology-upcoming" aria-labelledby="upcoming-title">
-            <h2 id="upcoming-title">Upcoming</h2>
-            <ul class="chronology-list">
-              {upcoming.map((piece) => (
-                <li class="chronology-item chronology-item-upcoming">
-                  <article class="chronology-piece">
-                    <header class="chronology-piece-header">
-                      <h3>{piece.title}</h3>
-                      <div class="chronology-badges" aria-label="Piece details">
-                        <span class="status-badge status-badge-upcoming">Upcoming</span>
-                      </div>
-                    </header>
-                    <div class="chronology-meta">
-                      <span>Forthcoming in <span class="card-publication">{piece.publication}</span></span>
-                      {cycleLinksForPiece(piece).map((cycle) => (
-                        <a class="chronology-cycle" href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
-                      ))}
-                    </div>
-                  </article>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+      {upcoming.length > 0 && (
+        <section class="chronology-section chronology-upcoming" aria-labelledby="upcoming-title">
+          <h2 id="upcoming-title">Upcoming</h2>
+          <ul class="chronology-list">
+            {upcoming.map((piece) => {
+              const pieceCycles = cycleLinksForPiece(piece);
 
-        <section aria-label="Published pieces">
-          <h2 class="sr-only">Published</h2>
-          <ul class="chronology-list" data-published-list>
-            {published.map((piece) => {
-              const linked = canLinkToPiece(piece);
               return (
-                <li
-                  class="chronology-item"
-                  data-date={formatIsoDate(piece.date)}
-                  data-timestamp={dateTimestamp(piece.date)}
-                  data-year={parseDate(piece.date)?.getFullYear()}
-                >
-                  <article class="chronology-piece">
-                    <header class="chronology-piece-header">
-                      <h3>
-                        {linked ? (
-                          <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>{piece.title}</a>
-                        ) : (
-                          piece.title
-                        )}
-                      </h3>
-                      <div class="chronology-badges" aria-label="Piece details">
-                        {piece.genre && <span class="status-badge status-badge-genre">{piece.genre}</span>}
-                      </div>
-                    </header>
-                    <div class="chronology-meta">
-                      <span class="card-publication">{piece.publication}</span>
-                      {piece.issue && <span>{piece.issue}</span>}
-                      <span>{formatMonthYear(piece.date)}</span>
-                      {cycleLinksForPiece(piece).map((cycle) => (
-                        <a class="chronology-cycle" href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
-                      ))}
-                    </div>
-                  </article>
+                <li class="chronology-item">
+                  <h3 class="chronology-piece-title">
+                    <span aria-hidden="true">&ldquo;</span>{piece.title}<span aria-hidden="true">&rdquo;</span>
+                  </h3>
+                  <p class="chronology-publication-line">
+                    Forthcoming in <span class="pub">{publicationLabel(piece)}</span>
+                  </p>
+                  <div class="chronology-tags">
+                    <TagList tags={piece.tags.filter((tag) => tag !== 'Upcoming')} genre={piece.genre} />
+                  </div>
+                  <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
+                    <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
+                    {pieceCycles.map((cycle, index) => (
+                      <>
+                        {index > 0 && <span aria-hidden="true">·</span>}
+                        <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
+                      </>
+                    ))}
+                  </div>
                 </li>
               );
             })}
           </ul>
         </section>
-      </div>
+      )}
 
-      <aside class="page-visual chronology-visual" aria-hidden="true" data-chronology-visual>
-        <OptimizedImage
-          path="page-visuals/chronology.jpg"
-          image={imageAsset('page-visuals/chronology.jpg')}
-          alt=""
-          loading="lazy"
-          sizes="(max-width: 860px) 1px, 38vw"
-          widths={[360, 540, 720, 1080]}
-        />
-      </aside>
+      <section class="chronology-section" aria-labelledby="published-title">
+        <div class="chronology-heading-row">
+          <h2 id="published-title">Published</h2>
+          <div class="chronology-sort" aria-label="Sort published pieces">
+            <button type="button" class="sort-button is-active" data-sort-order="newest" aria-label="Sort latest first" aria-pressed="true">Latest</button>
+            <button type="button" class="sort-button" data-sort-order="oldest" aria-label="Sort earliest first" aria-pressed="false">Earliest</button>
+            <button type="button" class="sort-button" data-sort-order="onsite" aria-label="Place works readable on this site first" aria-pressed="false">Read here</button>
+          </div>
+        </div>
+
+        <ul class="chronology-list" data-published-list>
+          {published.map((piece, index) => {
+            const year = parseDate(piece.date)?.getFullYear();
+            const previousYear = index > 0 ? parseDate(published[index - 1].date)?.getFullYear() : null;
+            const pieceCycles = cycleLinksForPiece(piece);
+            const monthYear = formatMonthYear(piece.date);
+
+            return (
+              <>
+                {year && year !== previousYear && (
+                  <li class="chron-year-sep" data-sort-separator aria-hidden="true">{year}</li>
+                )}
+                <li
+                  class="chronology-item"
+                  data-date={dateTimestamp(piece.date)}
+                  data-on-site={piece.account?.slug ? 'true' : 'false'}
+                >
+                  <div class="chronology-title-row">
+                    <h3 class="chronology-piece-title">
+                      <span aria-hidden="true">&ldquo;</span>{canLinkToPiece(piece) ? (
+                        <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>{piece.title}</a>
+                      ) : (
+                        piece.title
+                      )}<span aria-hidden="true">&rdquo;</span>
+                    </h3>
+                    {piece.account && (
+                      <a class="chronology-read-link" href={withBase(`accounts/${piece.account.slug}/`)} aria-label={`Read story: ${piece.title} on this site`}>
+                        Read story <span aria-hidden="true">&rarr;</span>
+                      </a>
+                    )}
+                  </div>
+                  <p class="chronology-publication-line">
+                    First published in <span class="pub">{publicationLabel(piece)}</span>
+                    {monthYear && (
+                      <>
+                        <span class="chronology-publication-separator" aria-hidden="true">&middot;</span>
+                        <time datetime={formatIsoDate(piece.date)}>{monthYear}</time>
+                      </>
+                    )}
+                  </p>
+                  <div class="chronology-tags">
+                    <TagList tags={piece.tags} genre={piece.genre} />
+                  </div>
+                  <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
+                    <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
+                    {pieceCycles.map((cycle, index) => (
+                      <>
+                        {index > 0 && <span aria-hidden="true">·</span>}
+                        <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
+                      </>
+                    ))}
+                  </div>
+                </li>
+              </>
+            );
+          })}
+        </ul>
+      </section>
     </div>
+
+    <aside class="page-visual chronology-visual" aria-hidden="true" data-chronology-visual>
+      <Image
+        src={chronologyVisual}
+        alt=""
+        widths={chronologyWidths}
+        sizes={chronologySizes}
+        format="webp"
+        quality={82}
+        loading="lazy"
+        decoding="async"
+      />
+      <Image
+        class="chronology-color"
+        src={chronologyVisual}
+        alt=""
+        widths={chronologyWidths}
+        sizes={chronologySizes}
+        format="webp"
+        quality={82}
+        loading="lazy"
+        decoding="async"
+        aria-hidden="true"
+      />
+    </aside>
   </div>
 
   <script>
@@ -121,18 +170,41 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
       list.querySelectorAll('[data-sort-separator]').forEach((node) => node.remove());
 
       const items = Array.from(list.querySelectorAll<HTMLElement>('.chronology-item'));
-      let lastYear: number | null = null;
+
+      if (order === 'onsite') {
+        let lastGroup = '';
+
+        for (const item of items) {
+          const group = item.dataset.onSite === 'true' ? 'onsite' : 'other';
+
+          if (group !== lastGroup) {
+            const separator = document.createElement('li');
+            separator.className = 'chron-year-sep chron-group-sep';
+            separator.dataset.sortSeparator = '';
+            separator.textContent = group === 'onsite' ? 'Available here' : 'Other publications';
+            list.insertBefore(separator, item);
+            lastGroup = group;
+          }
+        }
+
+        return;
+      }
+
+      let lastYear = null;
 
       for (const item of items) {
-        const year = Number(item.dataset.year);
-        if (lastYear !== null && year !== lastYear) {
+        const timestamp = Number(item.dataset.date || 0);
+        const year = timestamp ? new Date(timestamp).getFullYear() : null;
+
+        if (year && year !== lastYear) {
           const separator = document.createElement('li');
-          separator.className = 'chronology-separator';
-          separator.setAttribute('data-sort-separator', '');
+          separator.className = 'chron-year-sep';
+          separator.dataset.sortSeparator = '';
           separator.setAttribute('aria-hidden', 'true');
+          separator.textContent = String(year);
           list.insertBefore(separator, item);
+          lastYear = year;
         }
-        lastYear = year;
       }
     }
 
@@ -140,10 +212,21 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
       if (!list) return;
 
       const items = Array.from(list.querySelectorAll<HTMLElement>('.chronology-item'));
+
       items.sort((a, b) => {
-        const aTime = Number(a.dataset.timestamp || '0');
-        const bTime = Number(b.dataset.timestamp || '0');
-        return order === 'oldest' ? aTime - bTime : bTime - aTime;
+        const first = Number(a.dataset.date || 0);
+        const second = Number(b.dataset.date || 0);
+
+        if (order === 'onsite') {
+          const firstOnSite = a.dataset.onSite === 'true';
+          const secondOnSite = b.dataset.onSite === 'true';
+
+          if (firstOnSite !== secondOnSite) {
+            return firstOnSite ? -1 : 1;
+          }
+        }
+
+        return order === 'oldest' ? first - second : second - first;
       });
 
       for (const item of items) {
@@ -151,28 +234,25 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
       }
 
       renderSeparators(order);
-    }
 
-    for (const button of buttons) {
-      button.addEventListener('click', () => {
-        const order = button.dataset.sortOrder;
-        if (!order) return;
-
-        sortPublished(order);
-
-        for (const candidate of buttons) {
-          const active = candidate === button;
-          candidate.classList.toggle('is-active', active);
-          candidate.setAttribute('aria-pressed', active ? 'true' : 'false');
-        }
-      });
+      for (const button of buttons) {
+        const active = button.dataset.sortOrder === order;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      }
     }
 
     renderSeparators('newest');
+
+    for (const button of buttons) {
+      button.addEventListener('click', () => {
+        sortPublished(button.dataset.sortOrder || 'newest');
+      });
+    }
   </script>
 
   <script>
-    /* Pointer-driven color reveal for the chronology visual. */
+    /* Chronology photo color flashlight: desktop pointer only, reduced-motion safe. */
     const visual = document.querySelector<HTMLElement>('[data-chronology-visual]');
     const container = document.querySelector<HTMLElement>('.chronology-with-visual');
     const canReveal =
