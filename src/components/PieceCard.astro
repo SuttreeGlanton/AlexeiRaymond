@@ -65,7 +65,7 @@ const coverLinkLabel = [
 const metaParts = [
   cycleLabel ? { text: cycleLabel } : null,
   piece.publication ? { text: publicationLabel(piece), className: 'card-publication' } : null
-].filter(Boolean);
+].filter((part): part is { text: string; className?: string } => Boolean(part));
 ---
 
 <article
