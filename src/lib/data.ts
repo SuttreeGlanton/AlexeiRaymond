@@ -57,6 +57,8 @@ export interface Piece {
   excerpt?: string;
   genre?: Genre;
   account?: PieceAccount;
+  /** Manual line breaks for card titles that need them. */
+  titleLines?: string[];
 }
 
 export interface Interview {
