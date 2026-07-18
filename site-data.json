@@ -679,7 +679,7 @@
       ],
       "link": "https://bluedaisiesjournal.wixsite.com/bluedaisiesjournal",
       "cover": "covers/pieces/his-green-delight.jpg",
-      "excerpt": "Silence settles between the scarabeous man and the gilt\u00a0woman.",
+      "excerpt": "Silence settles between the scarabeous man and the gilt woman.",
       "genre": "Flash fiction",
       "issue": "#4",
       "account": {
@@ -713,7 +713,7 @@
       ],
       "link": "https://somewords.boards.net/thread/91/alexei-raymond",
       "cover": "covers/pieces/lotharionline.jpg",
-      "excerpt": "Flowery language will not, cannot, hide the gnarled rot.",
+      "excerpt": "Flowery language will not, cannot, hide the gnarled rot.",
       "genre": "Short fiction",
       "account": {
         "slug": "lotharionline",
@@ -900,7 +900,11 @@
         "slug": "red-they-are-cherry-red",
         "label": "Read story",
         "title": "Red, They Are Cherry Red"
-      }
+      },
+      "titleLines": [
+        "Red, They Are",
+        "Cherry Red"
+      ]
     },
     {
       "title": "Remediation",
@@ -1147,7 +1151,7 @@
       "tags": [
         "In print"
       ],
-      "link": "https://www.schoolcraftbooks.com/shop_product_detail.asp?catalog_group_id=MTY&catalog_group_name=TWFjZ3VmZmlu&catalog_id=52&catalog_name=VGhlIE1hY0d1ZmZpbg&pf_id=1737&product_name=VGhlIE1hY0d1ZmZpbiAtIFZvbC4gNDEsIE5vIDEgKE5vdmVtYmVyIDIwMjUp&type=3&target=shop_product_list.asp",
+      "link": "https://www.schoolcraftbooks.com/shop_product_detail.asp?catalog_group_id=MTY&catalog_group_name=TWFjY3VmZmlu&catalog_id=52&catalog_name=VGhlIE1hY0d1ZmZpbg&pf_id=1737&product_name=VGhlIE1hY0d1ZmZpbiAtIFZvbC4gNDEsIE5vIDEgKE5vdmVtYmVyIDIwMjUp&type=3&target=shop_product_list.asp",
       "cover": "covers/pieces/whether-yossarian.jpg",
       "excerpt": "The lone soldier—whether Yossarian, or any other name—plunges into great bewilderment the moment war begins.",
       "genre": "Short fiction",
