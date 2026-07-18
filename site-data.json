@@ -1006,7 +1006,7 @@
       ],
       "link": "https://expatpress.com/mothhead-alexei-raymond",
       "cover": "covers/pieces/mothhead.jpg",
-      "excerpt": "the old world is dying, and the new one is unborn yet. Time of moths.",
+      "excerpt": "...the old world is dying, and the new one is unborn yet. Time of moths.",
       "genre": "Flash fiction",
       "account": {
         "slug": "mothhead",
@@ -1172,4 +1172,5 @@
     "excerpt": "I was told that I made myself a contemporary of the dead."
   }
 }
+
 
