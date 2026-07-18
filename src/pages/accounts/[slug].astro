@@ -78,8 +78,8 @@ const seoGenreLabels: Record<string, string> = {
 };
 const seoGenreLabel = piece?.genre ? (seoGenreLabels[piece.genre] ?? piece.genre) : 'Writing';
 const seoTitle = fullText && piece
-  ? `${piece.title} \u2014 ${seoGenreLabel} by ${site.author}`
-  : `${title} \u2014 ${site.author}`;
+  ? `${piece.title} — ${seoGenreLabel} by ${site.author}`
+  : `${title} — ${site.author}`;
 const seoDescription = fullText && piece
   ? `${piece.genre ?? 'Writing'} by ${site.author}, originally published in ${originalPublication}.${piece.excerpt ? ` ${piece.excerpt}` : ''}`
   : archiveDescription;
@@ -122,6 +122,30 @@ const workSchema = fullText && piece ? {
   inLanguage: 'en',
   isAccessibleForFree: true
 } : undefined;
+const breadcrumbSchema = piece ? {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: site.author,
+      item: authorUrl
+    },
+    ...(cycle ? [{
+      '@type': 'ListItem',
+      position: 2,
+      name: cycle.name,
+      item: absoluteSiteUrl(`cycles/${cycle.id}/`, Astro.site)
+    }] : []),
+    {
+      '@type': 'ListItem',
+      position: cycle ? 3 : 2,
+      name: piece.title,
+      item: accountUrl
+    }
+  ]
+} : undefined;
 ---
 
 <BaseLayout
@@ -131,8 +155,7 @@ const workSchema = fullText && piece ? {
   socialImageAlt={fullText && piece ? archiveCoverAlt : undefined}
   ogType={fullText && piece ? 'article' : 'website'}
   publishedTime={publishedIso || undefined}
-  structuredData={workSchema}
-  preloadAudio={isNutcrackerCharge ? assetPath('audio/nutcracker-pas-de-deux.mp3') : undefined}
+  structuredData={[workSchema, breadcrumbSchema]}
 >
   <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${isTheTrail ? ' archived-piece-page--trail' : ''}${isRedCherry ? ' archived-piece-page--red-cherry' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title">
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
@@ -393,4 +416,3 @@ const workSchema = fullText && piece ? {
     color: var(--text);
   }
 </style>
-
