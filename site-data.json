@@ -100,13 +100,13 @@
     {
       "id": "dreams",
       "name": "Dreams",
-      "blurb": "Figments and fragments; dreams bubbling up.",
+      "blurb": "Figments and fragments; dreams bubbling up. Flash-fiction pieces from the cycle, featuring (6,080): ‘Batter my heart, five-eye’d God.’",
       "cover": "covers/cycles/dreams.jpg"
     },
     {
       "id": "portici",
       "name": "Portici",
-      "blurb": "The Turin cycle; time of moths.",
+      "blurb": "The Turin cycle; time of moths. Stories from the cycle, featuring Glassdom: ‘It’s glassfall—a rain that chimes and glitters the street.’",
       "cover": "covers/cycles/portici.jpg",
       "storyOrder": [
         "Glassdom",
@@ -120,7 +120,7 @@
     {
       "id": "valentines-star",
       "name": "Valentine's Star",
-      "blurb": "The Valentin persona; tribulations of early love.",
+      "blurb": "The Valentin persona; tribulations of early love. Stories from the cycle — ‘And her lips met his—and bliss, bliss, bliss.’",
       "cover": "covers/cycles/valentines-star.jpg",
       "storyOrder": [
         "Under Street Sign and Star",
@@ -150,7 +150,7 @@
     {
       "id": "the-real",
       "name": "The Real",
-      "blurb": "De liefde maeckte van den smidt eenen schilder.",
+      "blurb": "De liefde maeckte van den smidt eenen schilder. Stories from the cycle, featuring Zagagulyn: ‘His rough black hair stands on end.’",
       "cover": "covers/cycles/the-real.jpg",
       "storyOrder": [
         "Zagagulyn",
