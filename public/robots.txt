@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://suttreeglanton.github.io/AlexeiRaymond/sitemap-index.xml
+Sitemap: https://alexeiraymond.com/sitemap-index.xml

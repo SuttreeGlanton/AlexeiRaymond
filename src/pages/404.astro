@@ -11,6 +11,16 @@ import { withBase } from '../lib/paths';
   canonicalPath={false}
 >
   <section class="page-shell page-hero text-page" aria-labelledby="notfound-title">
+    <script is:inline>
+      /* Legacy links: suttreeglanton.github.io/AlexeiRaymond/x used to be the
+         site's home; the custom domain serves from the root. Strip the prefix. */
+      (function () {
+        var m = window.location.pathname.match(/^\/AlexeiRaymond(\/.*)?$/);
+        if (m) {
+          window.location.replace((m[1] || '/') + window.location.search + window.location.hash);
+        }
+      })();
+    </script>
     <div class="overline">404</div>
     <h1 class="page-title" id="notfound-title">Not found</h1>
     <div class="prose">

@@ -1,0 +1,235 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PieceCard from '../components/PieceCard.astro';
+import { featuredPieces, site } from '../lib/data';
+import selectedHeader from '../assets/selected-header-city.jpg';
+
+const selected = featuredPieces();
+const selectedHeroWidths = [640, 960, 1280, 1600, 1920, 2048];
+---
+
+<BaseLayout title={`Selected Works — ${site.author}`} description="A selected variety from across the cycles — flash fiction and short stories by Alexei Raymond, from Mythbreaking to Fool's Gold.">
+  <section class="selected-hero" aria-labelledby="selected-title" data-color-reveal>
+    <Image
+      class="selected-hero-backdrop selected-hero-backdrop--mono"
+      src={selectedHeader}
+      alt=""
+      widths={selectedHeroWidths}
+      width={2048}
+      sizes="100vw"
+      format="webp"
+      quality={80}
+      priority
+    />
+    <Image
+      class="selected-hero-backdrop selected-hero-color-reveal"
+      src={selectedHeader}
+      alt=""
+      widths={selectedHeroWidths}
+      width={2048}
+      sizes="100vw"
+      format="webp"
+      quality={80}
+      loading="eager"
+      decoding="async"
+      aria-hidden="true"
+    />
+    <div class="selected-hero-scrim" aria-hidden="true"></div>
+
+    <div class="page-shell selected-hero-content">
+      <h1 class="page-title" id="selected-title">Selected Works</h1>
+      <p class="page-intro cycle-intro">A selected variety from across the cycles.</p>
+    </div>
+  </section>
+
+  <div class="page-shell">
+    {selected.length > 0 ? (
+      <section class="piece-grid selected-piece-grid" aria-label="Selected works">
+        {selected.map((piece) => (
+          <PieceCard
+            piece={piece}
+            showCycle={true}
+            imageSizes="(max-width: 640px) 112px, (max-width: 860px) 45vw, 360px"
+            titleLines={piece.titleLines}
+          />
+        ))}
+      </section>
+    ) : (
+      <p class="cycle-intro">Selections are being chosen.</p>
+    )}
+  </div>
+
+  <script>
+    /* Selected Works color flashlight: desktop pointer only, reduced-motion safe. */
+    const selectedHero = document.querySelector<HTMLElement>('.selected-hero[data-color-reveal]');
+    const canRevealSelected =
+      selectedHero &&
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (canRevealSelected && selectedHero) {
+      const heroEl = selectedHero;
+      let frame = 0;
+
+      function moveSelectedReveal(event: PointerEvent) {
+        const rect = heroEl.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          heroEl.style.setProperty('--reveal-x', x + '%');
+          heroEl.style.setProperty('--reveal-y', y + '%');
+          heroEl.classList.add('is-color-reveal-active');
+        });
+      }
+
+      heroEl.addEventListener('pointermove', moveSelectedReveal);
+      heroEl.addEventListener('pointerenter', moveSelectedReveal);
+      heroEl.addEventListener('pointerleave', () => {
+        heroEl.classList.remove('is-color-reveal-active');
+      });
+    }
+  </script>
+
+  <style is:global>
+    /* Selected Works has the homepage's photographic language in a shallower banner. */
+    .selected-hero {
+      --reveal-x: 50%;
+      --reveal-y: 50%;
+      position: relative;
+      display: grid;
+      align-items: end;
+      min-height: clamp(270px, 32vw, 420px);
+      margin-bottom: clamp(34px, 5vw, 58px);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .selected-hero-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      object-fit: cover;
+      object-position: 50% 62%;
+    }
+
+    .selected-hero-backdrop--mono {
+      filter: grayscale(1) brightness(0.37) contrast(1.09);
+    }
+
+    .selected-hero-color-reveal {
+      z-index: 0;
+      opacity: 0;
+      filter: brightness(1.04) contrast(1.03) saturate(1.12);
+      transition: opacity 160ms ease;
+      will-change: opacity, mask-image, -webkit-mask-image;
+      pointer-events: none;
+
+      -webkit-mask-image: radial-gradient(
+        circle at var(--reveal-x) var(--reveal-y),
+        rgba(0, 0, 0, 1) 0,
+        rgba(0, 0, 0, 1) 42px,
+        rgba(0, 0, 0, 0.88) 76px,
+        rgba(0, 0, 0, 0.44) 116px,
+        rgba(0, 0, 0, 0) 165px
+      );
+      mask-image: radial-gradient(
+        circle at var(--reveal-x) var(--reveal-y),
+        rgba(0, 0, 0, 1) 0,
+        rgba(0, 0, 0, 1) 42px,
+        rgba(0, 0, 0, 0.88) 76px,
+        rgba(0, 0, 0, 0.44) 116px,
+        rgba(0, 0, 0, 0) 165px
+      );
+    }
+
+    .selected-hero.is-color-reveal-active .selected-hero-color-reveal {
+      opacity: 1;
+    }
+
+    .selected-hero-scrim {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(
+        180deg,
+        rgba(10, 10, 10, 0.62) 0%,
+        rgba(10, 10, 10, 0.3) 42%,
+        rgba(10, 10, 10, 0.55) 78%,
+        var(--bg) 100%
+      );
+      pointer-events: none;
+    }
+
+    .selected-hero-content {
+      position: relative;
+      z-index: 2;
+      padding-top: clamp(96px, 13vw, 160px);
+      padding-bottom: clamp(36px, 5vw, 58px);
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .selected-hero .page-title {
+      max-width: 920px;
+      margin: 0;
+      font-size: clamp(3rem, 7.8vw, 7rem);
+      line-height: 0.93;
+      text-shadow: 0 2px 28px rgba(0, 0, 0, 0.56);
+    }
+
+    .selected-hero .page-intro {
+      position: relative;
+      z-index: 4;
+      max-width: 650px;
+      margin-top: 16px;
+      color: var(--text);
+      font-weight: 500;
+      text-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.98),
+        0 3px 16px rgba(0, 0, 0, 0.96),
+        0 0 34px rgba(0, 0, 0, 0.88);
+    }
+
+    @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+      .selected-hero-backdrop--mono {
+        filter: brightness(0.68) contrast(1.04) saturate(1);
+      }
+
+      .selected-hero-color-reveal {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .selected-hero {
+        min-height: clamp(240px, 72vw, 330px);
+        margin-bottom: 28px;
+      }
+
+      .selected-hero-backdrop {
+        object-position: 62% 50%;
+      }
+
+      .selected-hero-content {
+        padding-top: 92px;
+        padding-bottom: 30px;
+      }
+
+      .selected-hero .page-title {
+        font-size: clamp(3rem, 14vw, 4.5rem);
+      }
+
+      .selected-hero .page-intro {
+        max-width: 30ch;
+        margin-top: 12px;
+        font-size: 0.98rem;
+      }
+    }
+  </style>
+</BaseLayout>
