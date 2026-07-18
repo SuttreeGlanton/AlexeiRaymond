@@ -40,12 +40,13 @@ const coverImage = imageAsset(interview.cover);
   <script>
     /* Elsewhere interview mobile color focus. */
     (() => {
-      const card = document.querySelector('[data-interview-color-card]');
+      const card = document.querySelector<HTMLElement>('[data-interview-color-card]');
       const media = window.matchMedia('(max-width: 640px)');
 
       if (!card) return;
 
       function updateFocus() {
+        if (!card) return;
         if (!media.matches) {
           card.classList.remove('is-mobile-focus');
           return;

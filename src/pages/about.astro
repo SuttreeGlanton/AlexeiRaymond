@@ -101,10 +101,11 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
   <script>
     /* Reveal the email only on interaction, decoded from base64 so it is
        never present as plain text in the page source. */
-    const revealButton = document.querySelector('.contact-reveal');
-    if (revealButton instanceof HTMLElement && revealButton.dataset.email) {
+    const revealButton = document.querySelector<HTMLElement>('.contact-reveal');
+    const encodedEmail = revealButton?.dataset.email;
+    if (revealButton && encodedEmail) {
       revealButton.addEventListener('click', () => {
-        const address = atob(revealButton.dataset.email);
+        const address = atob(encodedEmail);
         const link = document.createElement('a');
         link.href = 'mailto:' + address;
         link.textContent = address;
