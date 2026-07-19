@@ -18,7 +18,7 @@ const socialLinks = site.socials.flatMap((social) => {
   const label = social.label ?? social.name ?? '';
   const href = social.url ?? social.href ?? '';
 
-  return href && (label === 'X' || label === 'Instagram')
+  return href && (label === 'X' || label === 'Instagram' || label === 'Ko-fi')
     ? [{ label, href }]
     : [];
 });
@@ -35,12 +35,18 @@ const socialLinks = site.socials.flatMap((social) => {
           href={item.href}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`${site.author} on ${item.label}`}
+          aria-label={item.label === 'Ko-fi' ? `Support ${site.author} on Ko-fi` : `${site.author} on ${item.label}`}
           title={item.label}
         >
           {item.label === 'X' ? (
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z" />
+            </svg>
+          ) : item.label === 'Ko-fi' ? (
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M5 9.5h11v4.75a4.25 4.25 0 0 1-4.25 4.25h-2.5A4.25 4.25 0 0 1 5 14.25V9.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+              <path d="M16 10.75h1.5a2.63 2.63 0 0 1 0 5.25H16" fill="none" stroke="currentColor" stroke-width="1.7" />
+              <path d="M8.5 3.25v2M12 3.25v2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
             </svg>
           ) : (
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">

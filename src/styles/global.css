@@ -6,7 +6,8 @@
   --text: #f1efe9;
   --text-soft: #c8c5be;
   --muted: #8f8b84;
-  --dim: #5e5a54;
+  /* WCAG AA on --bg: 5.1:1 (was #5e5a54 at 2.9:1, which failed for small text). */
+  --dim: #86817a;
   --border: #272727;
   --border-strong: #3a3a3a;
   --focus: #e8e4da;
@@ -120,6 +121,43 @@ img {
   white-space: nowrap;
 }
 
+/* Brand monogram accordion. The full name is always in the markup (screen
+   readers announce it whole), but on the homepage — while the giant hero H1
+   already says the name — the header folds down to the "AR" initials, keeping
+   the header dressed without repeating the name. The folds drift open when
+   the H1 scrolls away (.brand-is-open) or on hover/focus. Armed by JS via
+   [data-brand-reveal], so no-JS visitors always see the full name. */
+.brand-fold {
+  display: inline-block;
+  max-width: 12ch;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.brand[data-brand-reveal] .brand-fold {
+  max-width: 0;
+  opacity: 0;
+  transition: max-width 460ms cubic-bezier(0.25, 0.8, 0.25, 1), opacity 260ms ease;
+}
+
+.brand[data-brand-reveal] .brand-fold:last-child {
+  transition-delay: 80ms;
+}
+
+.brand[data-brand-reveal].brand-is-open .brand-fold,
+.brand[data-brand-reveal]:hover .brand-fold,
+.brand[data-brand-reveal]:focus-visible .brand-fold {
+  max-width: 12ch;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand[data-brand-reveal] .brand-fold {
+    transition: none;
+  }
+}
+
 .main-nav {
   display: flex;
   align-items: center;
@@ -165,13 +203,20 @@ img {
   text-align: center;
 }
 
-/* Short desktop viewports (1366x768-class laptops): the default hero
-   ends within a few pixels of the fold, a false floor that reads as a
-   finished page. Trim the hero so the Latest strip peeks and cues the
-   scroll. Phones keep the clamp-based padding above. */
+/* Desktop: trim the hero so the Latest strip and the top of the Cycles
+   section peek above the fold — a quiet hint that more lives below,
+   without an explicit scroll cue. Phones keep the clamp-based padding. */
+@media (min-width: 861px) {
+  .hero {
+    padding: clamp(56px, 9vw, 110px) 0 clamp(30px, 4.5vw, 48px);
+  }
+}
+
+/* Short desktop viewports (1366x768-class laptops): trim further so the
+   Latest strip still peeks and cues the scroll. */
 @media (min-width: 861px) and (max-height: 830px) {
   .hero {
-    padding: 64px 0 40px;
+    padding: 52px 0 26px;
   }
 }
 

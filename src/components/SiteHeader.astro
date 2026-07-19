@@ -9,6 +9,16 @@ const homeWithoutTrailing = homeHref.replace(/\/$/, '');
 const isHome = currentWithoutTrailing === homeWithoutTrailing;
 const cycleOverviewHref = `${homeHref}#cycles-title`;
 
+/* Brand monogram parts: "Alexei Raymond" -> A + lexei + R + aymond, so the
+   header can fold the full name down to the "AR" initials on the homepage. */
+const [brandFirst = '', brandLast = ''] = site.author.split(' ');
+const brandParts = {
+  firstInitial: brandFirst.charAt(0),
+  firstRest: brandFirst.slice(1),
+  lastInitial: brandLast.charAt(0),
+  lastRest: brandLast.slice(1)
+};
+
 const cycleNavItems = cycles.filter((cycle) => !cycle.disabled).map((cycle) => ({
   label: cycle.name,
   href: withBase(`cycles/${cycle.id}/`),
@@ -19,7 +29,7 @@ const navItems = [
   {
     label: 'Cycles',
     glyph: '\u25cc',
-    href: homeHref,
+    href: cycleOverviewHref,
     active: isHome || currentPath.startsWith(withBase('cycles/'))
   },
   {
@@ -56,7 +66,7 @@ const desktopNavItems = [
 
 <header class="site-header" data-site-header>
   <div class="page-shell header-inner">
-    <a class="brand" href={homeHref}>{site.author}</a>
+    <a class="brand" href={homeHref} data-site-brand><span class="brand-initial">{brandParts.firstInitial}</span><span class="brand-fold">{brandParts.firstRest}&nbsp;</span><span class="brand-initial">{brandParts.lastInitial}</span><span class="brand-fold">{brandParts.lastRest}</span></a>
 
     <button
       class="mobile-menu-toggle"
@@ -224,5 +234,31 @@ const desktopNavItems = [
     window.addEventListener('resize', () => {
       if (!window.matchMedia('(max-width: 640px)').matches) setOpen(false);
     });
+  })();
+</script>
+
+<script>
+  /* Homepage only: while the giant hero H1 (the same name) is on screen, the
+     header brand stays folded to its "AR" monogram; it unfolds to the full
+     name once the H1 scrolls away. Armed by JS via [data-brand-reveal] so
+     no-JS visitors always see the full name. */
+  (() => {
+    const brand = document.querySelector<HTMLElement>('[data-site-brand]');
+    const homeTitle = document.getElementById('home-title');
+
+    if (!brand || !homeTitle || !('IntersectionObserver' in window)) return;
+
+    brand.setAttribute('data-brand-reveal', '');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          brand.classList.toggle('brand-is-open', !entry.isIntersecting);
+        });
+      },
+      { rootMargin: '-64px 0px 0px 0px', threshold: 0 }
+    );
+
+    observer.observe(homeTitle);
   })();
 </script>
