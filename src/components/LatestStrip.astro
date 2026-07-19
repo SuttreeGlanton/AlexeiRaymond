@@ -1,4 +1,4 @@
----
+﻿---
 import {
   publishedPieces,
   upcomingPieces,
@@ -42,13 +42,13 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
           ) : (
             <span class="latest-strip-title">{latest.title}</span>
           )}
-          <span class="latest-strip-meta"> — <i>{publicationLabel(latest)}</i>{formatMonthYear(latest.date) ? `, ${formatMonthYear(latest.date)}` : ''}</span>
+          <span class="latest-strip-meta"> â€” <i>{publicationLabel(latest)}</i>{formatMonthYear(latest.date) ? `, ${formatMonthYear(latest.date)}` : ''}</span>
         </p>
         {forthcoming && (
           <p class="latest-strip-item">
             <span class="latest-strip-overline">Forthcoming</span>
             <span class="latest-strip-title latest-strip-title--static">{forthcoming.title}</span>
-            <span class="latest-strip-meta"> — <i>{publicationLabel(forthcoming)}</i></span>
+            <span class="latest-strip-meta"> â€” <i>{publicationLabel(forthcoming)}</i></span>
           </p>
         )}
         <p class="latest-strip-item latest-strip-item--chronology">
@@ -144,3 +144,4 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
     }
   }
 </style>
+
