@@ -165,6 +165,16 @@ img {
   text-align: center;
 }
 
+/* Short desktop viewports (1366x768-class laptops): the default hero
+   ends within a few pixels of the fold, a false floor that reads as a
+   finished page. Trim the hero so the Latest strip peeks and cues the
+   scroll. Phones keep the clamp-based padding above. */
+@media (min-width: 861px) and (max-height: 830px) {
+  .hero {
+    padding: 64px 0 40px;
+  }
+}
+
 .hero-backdrop {
   position: absolute;
   inset: 0;
