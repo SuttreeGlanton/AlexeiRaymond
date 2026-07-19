@@ -1,0 +1,117 @@
+---
+import { assetPath } from '../lib/paths';
+---
+
+<audio preload="none" data-alpha-sound>
+  <source src={assetPath('audio/alpha.ogg')} type="audio/ogg; codecs=opus" />
+  <source src={assetPath('audio/alpha.mp3')} type="audio/mpeg" />
+</audio>
+<span class="alpha-sound-status" aria-live="polite" data-alpha-sound-status></span>
+
+<script>
+  const alphaProse = document.querySelector('.archive-prose');
+  const alphaAudio = document.querySelector<HTMLAudioElement>('[data-alpha-sound]');
+  const alphaStatus = document.querySelector<HTMLElement>('[data-alpha-sound-status]');
+  const alphaTargetPhrase = 'Alpha, we are small,';
+
+  if (alphaProse && alphaAudio) {
+    const alphaWalker = document.createTreeWalker(alphaProse, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue?.includes(alphaTargetPhrase)) return NodeFilter.FILTER_REJECT;
+        const parent = (node as Text).parentElement;
+        if (!parent || parent.closest('button, a, script, style')) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    const alphaTextNode = alphaWalker.nextNode() as Text | null;
+
+    if (alphaTextNode) {
+      const text = alphaTextNode.nodeValue ?? '';
+      const targetIndex = text.indexOf(alphaTargetPhrase);
+      const fragment = document.createDocumentFragment();
+      const button = document.createElement('button');
+
+      fragment.append(document.createTextNode(text.slice(0, targetIndex)));
+
+      button.type = 'button';
+      button.className = 'alpha-sound-word';
+      button.textContent = 'Alpha';
+      button.setAttribute('aria-label', 'Play the Alpha soundbite');
+      fragment.append(button);
+
+      fragment.append(document.createTextNode(text.slice(targetIndex + 'Alpha'.length)));
+      alphaTextNode.parentNode?.replaceChild(fragment, alphaTextNode);
+
+      const finishPlayback = (message: string) => {
+        button.removeAttribute('aria-busy');
+        if (alphaStatus) alphaStatus.textContent = message;
+      };
+
+      alphaAudio.addEventListener('ended', () => finishPlayback('Soundbite finished.'));
+      alphaAudio.addEventListener('error', () => finishPlayback('The soundbite could not be played.'));
+
+      button.addEventListener('click', async () => {
+        alphaAudio.pause();
+        alphaAudio.currentTime = 0;
+        button.setAttribute('aria-busy', 'true');
+        if (alphaStatus) alphaStatus.textContent = 'Playing soundbite.';
+
+        try {
+          await alphaAudio.play();
+        } catch {
+          finishPlayback('The soundbite could not be played.');
+        }
+      });
+    }
+  }
+</script>
+
+<style>
+  audio[data-alpha-sound] {
+    display: none;
+  }
+
+  .alpha-sound-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  :global(.alpha-sound-word) {
+    display: inline;
+    appearance: none;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    cursor: text;
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    text-align: inherit;
+    text-decoration: inherit;
+    text-transform: none;
+    vertical-align: baseline;
+    white-space: inherit;
+    -webkit-user-select: text;
+    user-select: text;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  :global(.alpha-sound-word:focus-visible) {
+    border-radius: 2px;
+    outline: 1px solid var(--focus);
+    outline-offset: 2px;
+  }
+</style>

@@ -219,7 +219,12 @@
       "link": "https://www.theargylelitmag.com/fiction-2/alpha",
       "cover": "covers/pieces/alpha.jpg",
       "excerpt": "She was a nexus of love, a manifestation of it.",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "account": {
+        "slug": "alpha",
+        "label": "Read story",
+        "title": "Alpha"
+      }
     },
     {
       "title": "Another Year of Love",
@@ -624,12 +629,11 @@
       "title": "Out of Bounds",
       "cycle": "Mythmaking",
       "publication": "Exclamation Mark Literary Journal",
-      "date": null,
+      "date": "19/07/2026",
       "tags": [
-        "Online",
-        "Upcoming"
+        "Online"
       ],
-      "link": "",
+      "link": "https://exclamationmarklit.com/out-of-bounds/",
       "cover": "covers/pieces/out-of-bounds.jpg",
       "excerpt": "In smoke, a world has fallen.",
       "genre": "Flash fiction"
