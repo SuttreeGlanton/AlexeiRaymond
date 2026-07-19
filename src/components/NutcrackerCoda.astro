@@ -14,7 +14,7 @@ const audioSrc = assetPath('audio/nutcracker-pas-de-deux.mp3');
   <div class="nutcracker-coda__stage">
     <model-viewer
       class="nutcracker-coda__model"
-      src={modelSrc}
+      data-model-src={modelSrc}
       alt="A red wooden Nutcracker standing on a round base among loose nuts"
       loading="eager"
       reveal="auto"
@@ -86,6 +86,13 @@ const audioSrc = assetPath('audio/nutcracker-pas-de-deux.mp3');
     modelViewerGlobal.ModelViewerElement = modelViewerGlobal.ModelViewerElement || {};
     modelViewerGlobal.ModelViewerElement.meshoptDecoderLocation = meshoptDecoderUrl;
 
+    let modelViewerPromise: Promise<unknown> | null = null;
+
+    const loadModelViewer = () => {
+      modelViewerPromise ??= import('@google/model-viewer');
+      return modelViewerPromise;
+    };
+
     for (const coda of nutcrackerCodas) {
       const model = coda.querySelector<NutcrackerModel>('[data-nutcracker-model]');
       const audio = coda.querySelector<HTMLAudioElement>('[data-nutcracker-audio]');
@@ -105,6 +112,7 @@ const audioSrc = assetPath('audio/nutcracker-pas-de-deux.mp3');
       let tapStartX = 0;
       let tapStartY = 0;
       let tapMoved = false;
+      let activationStarted = false;
 
       const setRotation = (active: boolean) => {
         model.toggleAttribute('auto-rotate', active && !reducedMotion.matches);
@@ -284,24 +292,40 @@ const audioSrc = assetPath('audio/nutcracker-pas-de-deux.mp3');
         reducedMotion.addEventListener('change', updateMotionPreference);
       }
 
+      const activateModel = async () => {
+        if (activationStarted || failed) return;
+        activationStarted = true;
+
+        try {
+          await loadModelViewer();
+
+          const deferredModelSrc = model.dataset.modelSrc;
+          if (!deferredModelSrc) {
+            fail('The Nutcracker could not be loaded.');
+            return;
+          }
+
+          model.setAttribute('src', deferredModelSrc);
+        } catch {
+          fail('The 3D viewer could not be loaded.');
+        }
+      };
+
+      if ('IntersectionObserver' in window) {
+        const modelObserver = new IntersectionObserver((entries) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+
+          modelObserver.disconnect();
+          void activateModel();
+        }, { rootMargin: '800px 0px' });
+
+        modelObserver.observe(coda);
+      } else {
+        void activateModel();
+      }
+
       markReadyIfComplete();
     }
-
-    void import('@google/model-viewer').catch(() => {
-      for (const coda of nutcrackerCodas) {
-        const trigger = coda.querySelector<HTMLButtonElement>('[data-nutcracker-trigger]');
-        const prompt = coda.querySelector<HTMLElement>('[data-nutcracker-prompt]');
-        const live = coda.querySelector<HTMLElement>('[data-nutcracker-live]');
-
-        coda.dataset.state = 'error';
-        if (trigger) {
-          trigger.disabled = true;
-          trigger.setAttribute('aria-label', 'The 3D viewer could not be loaded');
-        }
-        if (prompt) prompt.textContent = 'Unavailable';
-        if (live) live.textContent = 'The 3D viewer could not be loaded.';
-      }
-    });
   }
 </script>
 
