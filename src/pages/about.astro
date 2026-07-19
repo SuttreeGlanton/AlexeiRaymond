@@ -64,11 +64,35 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
       {site.socials.length > 0 && (
         <section class="social-block" aria-labelledby="socials-title">
           <h2 id="socials-title">Socials</h2>
-          <ul class="social-list" aria-label="Social links">
+          <ul class="social-list about-social-icon-list" aria-label="Social links">
             {site.socials.map((social) => {
               const href = socialHref(social);
               const label = socialLabel(social);
-              return <li>{href ? <a href={href} target="_blank" rel="noopener noreferrer" aria-label={`${label}. Opens in a new tab.`}>{label}</a> : <span>{label}</span>}</li>;
+
+              return href && (label === 'X' || label === 'Instagram') ? (
+                <li>
+                  <a
+                    class="about-social-icon"
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${site.author} on ${label}. Opens in a new tab.`}
+                    title={label}
+                  >
+                    {label === 'X' ? (
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z" />
+                      </svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.7" />
+                        <circle cx="12" cy="12" r="4.25" fill="none" stroke="currentColor" stroke-width="1.7" />
+                        <circle cx="17.35" cy="6.65" r="1" />
+                      </svg>
+                    )}
+                  </a>
+                </li>
+              ) : null;
             })}
           </ul>
         </section>
@@ -115,3 +139,40 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
     }
   </script>
 </BaseLayout>
+
+<style>
+  .about-social-icon-list {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .about-social-icon-list li {
+    display: flex;
+  }
+
+  .about-social-icon-list .about-social-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    color: var(--dim);
+    transition: background 220ms ease, border-color 220ms ease, color 220ms ease;
+  }
+
+  .about-social-icon-list .about-social-icon:hover,
+  .about-social-icon-list .about-social-icon:focus-visible {
+    border-color: var(--border-strong);
+    background: rgba(255, 255, 255, 0.025);
+    color: var(--text-soft);
+  }
+
+  .about-social-icon-list .about-social-icon svg {
+    display: block;
+    width: 17px;
+    height: 17px;
+    fill: currentColor;
+  }
+</style>
