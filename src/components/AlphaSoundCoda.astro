@@ -94,7 +94,7 @@ import { assetPath } from '../lib/paths';
     padding: 0;
     background: transparent;
     color: inherit;
-    cursor: text;
+    cursor: pointer;
     font: inherit;
     letter-spacing: inherit;
     line-height: inherit;
@@ -107,11 +107,28 @@ import { assetPath } from '../lib/paths';
     user-select: text;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    transition: text-shadow 320ms ease;
+  }
+
+  /* Same quiet affordance as the Mothhead words: a soft glow under the
+     cursor, held while the soundbite plays. */
+  :global(.alpha-sound-word:hover),
+  :global(.alpha-sound-word:focus-visible),
+  :global(.alpha-sound-word[aria-busy='true']) {
+    text-shadow:
+      0 0 9px rgba(232, 228, 214, 0.55),
+      0 0 2px rgba(232, 228, 214, 0.4);
   }
 
   :global(.alpha-sound-word:focus-visible) {
     border-radius: 2px;
     outline: 1px solid var(--focus);
     outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.alpha-sound-word) {
+      transition: none;
+    }
   }
 </style>

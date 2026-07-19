@@ -1,6 +1,6 @@
 ---
 import OptimizedImage from './OptimizedImage.astro';
-import type { Cycle } from '../lib/data';
+import { cycleTeaser, type Cycle } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
 import { imageAsset } from '../lib/image-assets';
 
@@ -9,6 +9,7 @@ interface Props {
 }
 
 const { cycle } = Astro.props;
+const teaser = cycleTeaser(cycle);
 const cover = cycle.cover ? assetPath(cycle.cover) : '';
 const coverImage = imageAsset(cycle.cover);
 const disabled = Boolean(cycle.disabled);
@@ -34,15 +35,15 @@ const cycleCoverSizes = '(max-width: 640px) calc(100vw - 24px), (max-width: 1120
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
         )}
-        {cycle.blurb && (
+        {teaser && (
           <div class="tile-overlay" aria-hidden="true">
-            <p class="tile-blurb">{cycle.blurb}</p>
+            <p class="tile-blurb">{teaser}</p>
           </div>
         )}
       </div>
       <div class="tile-body">
         <h3 class="tile-title">{cycle.name}</h3>
-        {cycle.blurb && <p class="tile-mobile-blurb">{cycle.blurb}</p>}
+        {teaser && <p class="tile-mobile-blurb">{teaser}</p>}
       </div>
     </div>
   ) : (
@@ -61,15 +62,15 @@ const cycleCoverSizes = '(max-width: 640px) calc(100vw - 24px), (max-width: 1120
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
         )}
-        {cycle.blurb && (
+        {teaser && (
           <div class="tile-overlay" aria-hidden="true">
-            <p class="tile-blurb">{cycle.blurb}</p>
+            <p class="tile-blurb">{teaser}</p>
           </div>
         )}
       </div>
       <div class="tile-body">
         <h3 class="tile-title">{cycle.name}</h3>
-        {cycle.blurb && <p class="tile-mobile-blurb">{cycle.blurb}</p>}
+        {teaser && <p class="tile-mobile-blurb">{teaser}</p>}
       </div>
     </a>
   )

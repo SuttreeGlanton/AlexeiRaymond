@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import CycleIcon from '../../components/CycleIcon.astro';
 import PieceCard from '../../components/PieceCard.astro';
 import type { Cycle } from '../../lib/data';
-import { cycles, isUpcoming, parseDate, piecesForCycle, site } from '../../lib/data';
+import { cycles, cycleTeaser, isUpcoming, parseDate, piecesForCycle, site } from '../../lib/data';
 import { absoluteSiteUrl, withBase } from '../../lib/paths';
 
 export function getStaticPaths() {
@@ -63,7 +63,7 @@ const breadcrumbSchema = {
     <section class="page-shell page-hero" aria-labelledby="cycle-title">
       <a class="back-link" href={withBase('')}>&larr; All cycles</a>
       <h1 class="cycle-title" id="cycle-title"><CycleIcon id={cycle.id} />{cycle.name}</h1>
-      {cycle.blurb && <p class="cycle-intro">{cycle.blurb}</p>}
+      {cycleTeaser(cycle) && <p class="cycle-intro">{cycleTeaser(cycle)}</p>}
 
       <nav class="cycle-switcher" aria-label="Cycle navigation">
         <span class="cycle-switcher-label">Cycles</span>

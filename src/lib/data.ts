@@ -155,6 +155,19 @@ export function formatIsoDate(date: string | null): string {
   return `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 }
 
+/**
+ * The blurb's visible teaser: everything before the appended SEO sentence
+ * ("Stories from the cycle…", "Flash-fiction pieces from the cycle…").
+ * The full blurb stays available for meta descriptions; the front of the
+ * site shows only the teaser.
+ */
+export function cycleTeaser(cycle: Pick<Cycle, 'blurb'>): string {
+  if (!cycle.blurb) return '';
+  return cycle.blurb
+    .replace(/\s*[^.!?]*\bfrom the cycle\b[\s\S]*$/, '')
+    .trim();
+}
+
 export function publicationLabel(piece: Pick<Piece, 'publication' | 'issue'>): string {
   return [piece.publication, piece.issue].filter(Boolean).join(' ');
 }
