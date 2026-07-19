@@ -25,7 +25,7 @@ const storyIndex = new Map(storyOrder.map((title, index) => [title, index + 1]))
 const sourceIndex = new Map(cycleSourcePieces.map((piece, index) => [piece.title, index]));
 
 // Publication order is the initial view: upcoming work first, followed by
-// published work newest to oldest. Story order later rearranges every card.
+// published work newest to oldest. Piece order later rearranges every card.
 const upcomingCyclePieces = cycleSourcePieces.filter(isUpcoming);
 const publishedCyclePieces = cycleSourcePieces
   .filter((piece) => !isUpcoming(piece))
@@ -98,7 +98,7 @@ const breadcrumbSchema = {
               data-cycle-order="story"
               aria-pressed="false"
               aria-controls={`cycle-grid-${cycle.id}`}
-            >Story order</button>
+            >Piece order</button>
           </div>
           <span class="sr-only" aria-live="polite" data-cycle-order-status></span>
         </div>
@@ -179,7 +179,7 @@ const breadcrumbSchema = {
 
         if (status) {
           status.textContent = mode === 'story'
-            ? 'Showing pieces in story order.'
+            ? 'Showing pieces in piece order.'
             : 'Showing pieces in publication order, latest first.';
         }
 
