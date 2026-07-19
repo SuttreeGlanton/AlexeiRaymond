@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CycleTile from '../components/CycleTile.astro';
+import LatestStrip from '../components/LatestStrip.astro';
 import { cycles, site } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
 import { imageAsset } from '../lib/image-assets';
@@ -69,6 +70,8 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
     </button>
     <audio data-ambient-audio src={assetPath('audio/ambient.mp3')} loop preload="none"></audio>
   </section>
+
+  <LatestStrip />
 
   <section class="page-shell" aria-labelledby="cycles-title">
     <div class="section-head">

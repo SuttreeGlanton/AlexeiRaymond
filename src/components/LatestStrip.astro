@@ -1,0 +1,146 @@
+---
+import {
+  publishedPieces,
+  upcomingPieces,
+  parseDate,
+  formatMonthYear,
+  publicationLabel,
+  canLinkToPiece,
+} from '../lib/data';
+import { withBase } from '../lib/paths';
+
+/* The venues named in the credit line, chosen for recognisability and
+   aesthetic fit rather than sheer count. Edit freely; five is the ceiling. */
+const CREDIT_VENUES = ['BULL', 'Expat Press', 'The MacGuffin', 'Bending Genres'];
+
+const latest = publishedPieces()
+  .filter((piece) => parseDate(piece.date))
+  .sort((a, b) => (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0))[0];
+
+const forthcoming = upcomingPieces()[0];
+
+const latestHref = latest?.account
+  ? withBase(`accounts/${latest.account.slug}/`)
+  : latest && canLinkToPiece(latest)
+    ? latest.link
+    : '';
+const latestExternal = Boolean(latestHref) && !latest?.account;
+---
+
+{latest && (
+  <section class="page-shell latest-strip" aria-label="Latest and forthcoming work">
+    <div class="latest-strip-band">
+      <div class="latest-strip-row">
+        <p class="latest-strip-item">
+          <span class="latest-strip-overline">Latest</span>
+          {latestHref ? (
+            <a
+              class="latest-strip-title"
+              href={latestHref}
+              {...(latestExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            >{latest.title}</a>
+          ) : (
+            <span class="latest-strip-title">{latest.title}</span>
+          )}
+          <span class="latest-strip-meta"> — <i>{publicationLabel(latest)}</i>{formatMonthYear(latest.date) ? `, ${formatMonthYear(latest.date)}` : ''}</span>
+        </p>
+        {forthcoming && (
+          <p class="latest-strip-item">
+            <span class="latest-strip-overline">Forthcoming</span>
+            <span class="latest-strip-title latest-strip-title--static">{forthcoming.title}</span>
+            <span class="latest-strip-meta"> — <i>{publicationLabel(forthcoming)}</i></span>
+          </p>
+        )}
+        <p class="latest-strip-item latest-strip-item--chronology">
+          <a class="latest-strip-chronology" href={withBase('chronology/')}>Full chronology &rarr;</a>
+        </p>
+      </div>
+      <p class="latest-strip-credit">
+        Published by {CREDIT_VENUES.map((venue, index) => (
+          <>
+            <i>{venue}</i>{index < CREDIT_VENUES.length - 1 ? ', ' : ''}
+          </>
+        ))}, and elsewhere.
+      </p>
+    </div>
+  </section>
+)}
+
+<style>
+  /* No bottom border: the Cycles section-head below draws its own rule. */
+  .latest-strip-band {
+    border-top: 1px solid var(--border);
+    padding: 1.3rem 0 1.2rem;
+    margin: 0.5rem 0 0.75rem;
+  }
+
+  .latest-strip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem 3rem;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .latest-strip-item {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+  }
+
+  .latest-strip-overline {
+    text-transform: uppercase;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    color: var(--dim);
+    margin-right: 0.8em;
+  }
+
+  .latest-strip-title {
+    font-family: var(--serif);
+    font-size: 1.02rem;
+    letter-spacing: 0.01em;
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-strong);
+    transition: border-color 200ms ease;
+  }
+
+  .latest-strip-title--static {
+    border-bottom: none;
+  }
+
+  a.latest-strip-title:hover,
+  a.latest-strip-title:focus-visible {
+    border-color: var(--text);
+  }
+
+  .latest-strip-chronology {
+    font-size: 0.72rem;
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+
+  .latest-strip-chronology:hover,
+  .latest-strip-chronology:focus-visible {
+    color: var(--text);
+  }
+
+  .latest-strip-credit {
+    margin: 0.95rem 0 0;
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--dim);
+  }
+
+  @media (max-width: 860px) {
+    .latest-strip-row {
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+  }
+</style>
