@@ -1,7 +1,8 @@
 ---
 /* Mothhead coda: behavior only — wraps every whole-word "moth"/"moths" in the
-   story as a quiet button. Clicks release moths; the final instance bursts
-   once, then becomes a single-moth word until reload. */
+   story as a quiet button. A click releases moths; the final instance bursts a
+   small swarm on each click and streams a continuous flutter while held down.
+   The live-moth cap keeps either from ever overwhelming the page. */
 ---
 
 <!-- mothhead coda (behavior only) -->
@@ -57,7 +58,7 @@
     /* ---- flight ---- */
     let mhVariant = 0;
     let mhLive = 0;
-    let mhBurstSpent = false;
+    let mhSuppressClick = false;
     const MH_MAX_LIVE = 12;
 
     const mhRest = (word: HTMLButtonElement, ms: number) => {
@@ -129,18 +130,70 @@
 
     for (const word of mhWords) {
       word.addEventListener('click', () => {
+        /* A hold just ended: swallow the trailing click so it doesn't
+           also fire a burst. */
+        if (word === mhFinal && mhSuppressClick) {
+          mhSuppressClick = false;
+          return;
+        }
         if (word.classList.contains('is-resting')) return;
-        const isFinal = word === mhFinal;
-        if (isFinal && !mhBurstSpent) {
-          mhBurstSpent = true;
+        if (word === mhFinal) {
+          /* The final word bursts a swarm every time, on a short cooldown. */
           for (let k = 0; k < 8; k++) {
             window.setTimeout(() => spawnMothFrom(word.getBoundingClientRect()), k * 70);
           }
-          mhRest(word, 20000);
+          mhRest(word, 3000);
         } else {
           spawnMothFrom(word.getBoundingClientRect());
           mhRest(word, 8000);
         }
+      });
+    }
+
+    /* ---- press-and-hold the final word for a continuous release ---- */
+    if (mhFinal) {
+      const MH_HOLD_MS = 240;   /* press longer than this becomes a hold */
+      const MH_EMIT_MS = 130;   /* one moth per this while held (cap still applies) */
+      let holdTimer = 0;
+      let emitTimer = 0;
+
+      const emitOne = () => spawnMothFrom(mhFinal.getBoundingClientRect());
+
+      const stopHold = () => {
+        window.clearTimeout(holdTimer);
+        holdTimer = 0;
+        if (emitTimer) {
+          window.clearInterval(emitTimer);
+          emitTimer = 0;
+        }
+      };
+
+      mhFinal.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0 && event.pointerType === 'mouse') return;
+        mhSuppressClick = false;
+        window.clearTimeout(holdTimer);
+        holdTimer = window.setTimeout(() => {
+          /* Cross into hold mode: the ensuing click is a hold-release, not a tap. */
+          mhSuppressClick = true;
+          mhFinal.classList.remove('is-resting');
+          mhFinal.classList.add('is-holding');
+          emitOne();
+          emitTimer = window.setInterval(emitOne, MH_EMIT_MS);
+        }, MH_HOLD_MS);
+      });
+
+      const endPress = () => {
+        stopHold();
+        mhFinal.classList.remove('is-holding');
+      };
+      mhFinal.addEventListener('pointerup', endPress);
+      mhFinal.addEventListener('pointercancel', endPress);
+      mhFinal.addEventListener('pointerleave', endPress);
+      window.addEventListener('blur', endPress);
+
+      /* Don't let a long press raise the mobile callout / context menu. */
+      mhFinal.addEventListener('contextmenu', (event) => {
+        if (emitTimer) event.preventDefault();
       });
     }
   }
@@ -182,6 +235,19 @@
   /* The last moth in the story sits by the lamp. */
   .mh-word--final {
     animation: mh-lamp 4.2s ease-in-out infinite;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+  }
+
+  /* Held down: the lamp holds steady and bright while moths keep coming. */
+  .mh-word--final.is-holding {
+    animation: none;
+    text-shadow:
+      0 0 3px rgba(240, 220, 180, 0.95),
+      0 0 12px rgba(236, 214, 176, 0.65),
+      0 0 28px rgba(236, 214, 176, 0.4);
   }
 
   @keyframes mh-lamp {
