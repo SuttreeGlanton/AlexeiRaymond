@@ -22,6 +22,7 @@ interface Props {
   publishedTime?: string;
   structuredData?: Record<string, unknown> | Array<Record<string, unknown> | undefined>;
   preloadAudio?: string;
+  headerCoda?: 'moon' | 'counter' | 'pills' | 'eyes';
 }
 
 const {
@@ -34,7 +35,8 @@ const {
   ogType = 'website',
   publishedTime,
   structuredData,
-  preloadAudio
+  preloadAudio,
+  headerCoda
 } = Astro.props;
 const resolvedTitle = title.split(' — ').join(' | ');
 const canonical = canonicalPath === false ? '' : absoluteSiteUrl(canonicalPath ?? Astro.url.pathname, Astro.site);
@@ -99,7 +101,7 @@ const pageSchemas = (Array.isArray(structuredData) ? structuredData : [structure
     <title>{resolvedTitle}</title>
   </head>
   <body>
-    <SiteHeader />
+    <SiteHeader headerCoda={headerCoda} />
     <main class="site-main">
       <slot />
     </main>

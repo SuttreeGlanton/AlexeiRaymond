@@ -1,6 +1,13 @@
 ---
 import { cycles, site } from '../lib/data';
 import { withBase } from '../lib/paths';
+import HeaderCoda from './HeaderCoda.astro';
+
+interface Props {
+  headerCoda?: 'moon' | 'counter' | 'pills' | 'eyes';
+}
+
+const { headerCoda } = Astro.props;
 
 const currentPath = Astro.url.pathname;
 const homeHref = withBase('');
@@ -67,6 +74,12 @@ const desktopNavItems = [
 <header class="site-header" data-site-header>
   <div class="page-shell header-inner">
     <a class="brand" href={homeHref} data-site-brand><span class="brand-initial">{brandParts.firstInitial}</span><span class="brand-fold">{brandParts.firstRest}&nbsp;</span><span class="brand-initial">{brandParts.lastInitial}</span><span class="brand-fold">{brandParts.lastRest}</span></a>
+
+    {headerCoda && (
+      <div class="header-coda-slot">
+        <HeaderCoda type={headerCoda} />
+      </div>
+    )}
 
     <button
       class="mobile-menu-toggle"
@@ -262,3 +275,44 @@ const desktopNavItems = [
     observer.observe(homeTitle);
   })();
 </script>
+
+<style>
+  /* Header coda slot: mobile only. Once the reader scrolls past the story
+     title, the story's miniature coda rises over the brand slot and the name
+     steps aside (the header-coda-on class is toggled from HeaderCoda's
+     script). No-JS and desktop visitors always keep the plain brand. */
+  .header-coda-slot {
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    .header-inner {
+      position: relative;
+    }
+
+    .header-coda-slot {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .brand {
+      transition: opacity 300ms ease, visibility 300ms ease;
+    }
+
+    .header-coda-on .brand {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand {
+      transition: none;
+    }
+  }
+</style>

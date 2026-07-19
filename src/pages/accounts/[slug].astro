@@ -54,6 +54,7 @@ const isRedCherry = entry.id === 'red-they-are-cherry-red';
 const isWitnesses = entry.id === 'witnesses';
 const isMothhead = entry.id === 'mothhead';
 const isAlpha = entry.id === 'alpha';
+const headerCoda = isWitnesses ? 'moon' : isSixThousandEighty ? 'counter' : isTheTrail ? 'pills' : isGuestsHere ? 'eyes' : undefined;
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? '' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -156,6 +157,7 @@ const breadcrumbSchema = piece ? {
 
 <BaseLayout
   title={seoTitle}
+  headerCoda={headerCoda}
   description={seoDescription}
   socialImage={socialCover ? { src: socialCover.src, width: Number(socialCover.attributes.width) || undefined, height: Number(socialCover.attributes.height) || undefined } : undefined}
   socialImageAlt={fullText && piece ? archiveCoverAlt : undefined}
@@ -218,7 +220,11 @@ const breadcrumbSchema = piece ? {
       <div class="prose archive-prose">
         {isDeathwish && <DeathwishPresentation />}
         <Content />
-        {isSixThousandEighty && <SixThousandEightyCoda variant="mobile" />}
+        {isSixThousandEighty && (
+          <div class="coda-relocated-to-header">
+            <SixThousandEightyCoda variant="mobile" />
+          </div>
+        )}
         {isClotheslineDivorce && <ClotheslineDivorceCoda />}
         {isLothariOnline && <LothariOnlineCoda />}
         {isNoRabbit && <NoRabbitCoda />}
@@ -227,7 +233,11 @@ const breadcrumbSchema = piece ? {
         {isLifeToDragons && <LifeToDragonsCoda />}
         {isNatureOfSleep && <NatureOfSleepCoda />}
         {isNutcrackerCharge && <NutcrackerCoda />}
-        {isGuestsHere && <GuestsEyesCoda variant="mobile" />}
+        {isGuestsHere && (
+          <div class="coda-relocated-to-header">
+            <GuestsEyesCoda variant="mobile" />
+          </div>
+        )}
         {isTheTrail && <TheTrailCoda variant="mobile" />}
         {isWitnesses && <WitnessesCoda variant="cat" />}
         {isMothhead && <MothheadCoda />}
@@ -424,5 +434,14 @@ const breadcrumbSchema = piece ? {
   .account-outbound a:focus-visible {
     border-color: var(--text);
     color: var(--text);
+  }
+
+  /* On phones the counter and the eyes live up in the sticky header while
+     reading, so the duplicates at the end of the story would only repeat
+     the trick. Desktop keeps the bottom codas as they were. */
+  @media (max-width: 640px) {
+    .coda-relocated-to-header {
+      display: none;
+    }
   }
 </style>

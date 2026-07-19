@@ -1,0 +1,1010 @@
+---
+/* Header coda: a miniature of the story's coda that takes over the brand
+   slot in the sticky mobile header once the reader scrolls past the title.
+   Mobile only (<= 640px); desktop never renders the slot (SiteHeader CSS). */
+interface Props {
+  type: 'moon' | 'counter' | 'pills' | 'eyes';
+}
+
+const { type } = Astro.props;
+const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
+---
+
+<span class="header-coda" data-header-coda={type}>
+  {type === 'moon' && (
+    <span class="hc-moon" aria-hidden="true">
+      <span class="hc-moon-drift">
+        <span class="hc-moon-bob">
+          <svg viewBox="0 0 64 64" shape-rendering="crispEdges" class="hc-moon-svg">
+          <path fill="rgb(126, 126, 126)" d="M24 1h1v1h-1zM24 2h1v1h-1zM30 2h1v1h-1zM29 3h1v1h-1zM31 3h1v1h-1zM24 4h3v1h-3zM26 5h1v1h-1zM30 5h1v1h-1zM36 5h1v1h-1zM13 6h1v1h-1zM22 6h1v1h-1zM26 6h1v1h-1zM36 6h1v1h-1zM12 7h1v1h-1zM22 7h1v1h-1zM24 7h1v1h-1zM38 7h1v1h-1zM11 8h1v1h-1zM39 8h1v1h-1zM10 9h1v1h-1zM49 9h1v1h-1zM51 9h1v1h-1zM17 10h1v1h-1zM38 10h4v1h-4zM48 10h2v1h-2zM53 10h2v1h-2zM8 11h1v1h-1zM16 11h2v1h-2zM38 11h4v1h-4zM51 11h2v1h-2zM54 11h1v1h-1zM16 12h2v1h-2zM37 12h5v1h-5zM47 12h2v1h-2zM50 12h3v1h-3zM16 13h1v1h-1zM37 13h7v1h-7zM46 13h2v1h-2zM55 13h3v1h-3zM6 14h1v1h-1zM32 14h1v1h-1zM35 14h8v1h-8zM47 14h1v1h-1zM56 14h2v1h-2zM23 15h6v1h-6zM34 15h4v1h-4zM39 15h3v1h-3zM48 15h2v1h-2zM53 15h1v1h-1zM56 15h1v1h-1zM58 15h1v1h-1zM27 16h1v1h-1zM35 16h3v1h-3zM40 16h1v1h-1zM54 16h1v1h-1zM58 16h1v1h-1zM4 17h2v1h-2zM37 17h4v1h-4zM4 18h3v1h-3zM17 18h2v1h-2zM20 18h1v1h-1zM37 18h4v1h-4zM51 18h1v1h-1zM54 18h1v1h-1zM3 19h2v1h-2zM6 19h1v1h-1zM19 19h1v1h-1zM21 19h1v1h-1zM33 19h8v1h-8zM51 19h1v1h-1zM3 20h2v1h-2zM6 20h1v1h-1zM34 20h8v1h-8zM2 21h3v1h-3zM6 21h1v1h-1zM19 21h1v1h-1zM21 21h1v1h-1zM34 21h3v1h-3zM39 21h2v1h-2zM51 21h1v1h-1zM2 22h3v1h-3zM16 22h1v1h-1zM40 22h2v1h-2zM51 22h1v1h-1zM5 23h1v1h-1zM17 23h2v1h-2zM21 23h1v1h-1zM34 23h2v1h-2zM41 23h2v1h-2zM45 23h1v1h-1zM53 23h1v1h-1zM57 23h1v1h-1zM1 24h1v1h-1zM5 24h1v1h-1zM32 24h2v1h-2zM37 24h1v1h-1zM42 24h2v1h-2zM45 24h7v1h-7zM53 24h1v1h-1zM55 24h1v1h-1zM59 24h1v1h-1zM1 25h2v1h-2zM6 25h1v1h-1zM18 25h1v1h-1zM26 25h2v1h-2zM30 25h1v1h-1zM32 25h2v1h-2zM38 25h1v1h-1zM42 25h1v1h-1zM52 25h1v1h-1zM1 26h2v1h-2zM6 26h1v1h-1zM18 26h1v1h-1zM26 26h8v1h-8zM38 26h4v1h-4zM61 26h1v1h-1zM1 27h2v1h-2zM7 27h1v1h-1zM21 27h1v1h-1zM26 27h9v1h-9zM44 27h1v1h-1zM62 27h1v1h-1zM1 28h5v1h-5zM7 28h1v1h-1zM26 28h4v1h-4zM44 28h1v1h-1zM62 28h1v1h-1zM1 29h6v1h-6zM8 29h2v1h-2zM19 29h2v1h-2zM44 29h1v1h-1zM62 29h1v1h-1zM1 30h5v1h-5zM8 30h1v1h-1zM10 30h2v1h-2zM22 30h1v1h-1zM33 30h1v1h-1zM58 30h1v1h-1zM62 30h1v1h-1zM0 31h9v1h-9zM10 31h4v1h-4zM28 31h1v1h-1zM55 31h1v1h-1zM57 31h2v1h-2zM0 32h8v1h-8zM9 32h6v1h-6zM24 32h1v1h-1zM29 32h1v1h-1zM42 32h1v1h-1zM59 32h1v1h-1zM0 33h8v1h-8zM9 33h5v1h-5zM15 33h2v1h-2zM42 33h1v1h-1zM1 34h8v1h-8zM13 34h1v1h-1zM15 34h3v1h-3zM19 34h2v1h-2zM25 34h2v1h-2zM38 34h1v1h-1zM45 34h2v1h-2zM51 34h1v1h-1zM55 34h1v1h-1zM61 34h2v1h-2zM1 35h3v1h-3zM8 35h3v1h-3zM15 35h6v1h-6zM30 35h1v1h-1zM43 35h1v1h-1zM45 35h1v1h-1zM49 35h1v1h-1zM53 35h2v1h-2zM62 35h1v1h-1zM1 36h3v1h-3zM8 36h3v1h-3zM16 36h3v1h-3zM30 36h1v1h-1zM45 36h1v1h-1zM53 36h1v1h-1zM59 36h1v1h-1zM62 36h1v1h-1zM1 37h2v1h-2zM7 37h1v1h-1zM17 37h4v1h-4zM29 37h1v1h-1zM47 37h1v1h-1zM53 37h1v1h-1zM1 38h4v1h-4zM7 38h2v1h-2zM19 38h1v1h-1zM27 38h1v1h-1zM40 38h1v1h-1zM43 38h2v1h-2zM48 38h1v1h-1zM53 38h1v1h-1zM1 39h9v1h-9zM27 39h1v1h-1zM46 39h1v1h-1zM49 39h1v1h-1zM52 39h1v1h-1zM61 39h1v1h-1zM3 40h6v1h-6zM10 40h1v1h-1zM12 40h1v1h-1zM16 40h2v1h-2zM28 40h1v1h-1zM47 40h1v1h-1zM50 40h1v1h-1zM59 40h1v1h-1zM3 41h4v1h-4zM10 41h3v1h-3zM18 41h2v1h-2zM46 41h1v1h-1zM58 41h2v1h-2zM3 42h1v1h-1zM7 42h1v1h-1zM9 42h2v1h-2zM13 42h2v1h-2zM19 42h1v1h-1zM27 42h1v1h-1zM51 42h1v1h-1zM57 42h1v1h-1zM11 43h1v1h-1zM14 43h2v1h-2zM25 43h2v1h-2zM54 43h1v1h-1zM57 43h1v1h-1zM60 43h1v1h-1zM9 44h2v1h-2zM12 44h1v1h-1zM14 44h2v1h-2zM18 44h2v1h-2zM46 44h1v1h-1zM57 44h1v1h-1zM4 45h1v1h-1zM9 45h1v1h-1zM17 45h4v1h-4zM46 45h2v1h-2zM49 45h1v1h-1zM54 45h1v1h-1zM56 45h1v1h-1zM59 45h1v1h-1zM5 46h1v1h-1zM10 46h1v1h-1zM13 46h1v1h-1zM18 46h1v1h-1zM49 46h4v1h-4zM8 47h2v1h-2zM13 47h1v1h-1zM18 47h2v1h-2zM49 47h3v1h-3zM6 48h1v1h-1zM49 48h8v1h-8zM13 49h1v1h-1zM49 49h7v1h-7zM8 50h1v1h-1zM10 50h2v1h-2zM49 50h6v1h-6zM8 51h2v1h-2zM11 51h2v1h-2zM14 51h1v1h-1zM49 51h5v1h-5zM55 51h2v1h-2zM10 52h1v1h-1zM12 52h1v1h-1zM15 52h1v1h-1zM49 52h5v1h-5zM13 53h3v1h-3zM49 53h5v1h-5zM48 54h5v1h-5zM40 55h11v1h-11zM39 56h11v1h-11zM39 57h10v1h-10zM50 57h1v1h-1zM39 58h4v1h-4zM44 58h2v1h-2zM40 59h1v1h-1zM42 59h3v1h-3zM47 59h1v1h-1zM31 61h9v1h-9z" />
+          <path fill="rgb(51, 51, 51)" d="M19 1h5v1h-5zM42 1h4v1h-4zM17 2h6v1h-6zM45 2h3v1h-3zM15 3h4v1h-4zM20 3h6v1h-6zM47 3h2v1h-2zM13 4h6v1h-6zM20 4h3v1h-3zM48 4h3v1h-3zM12 5h10v1h-10zM27 5h3v1h-3zM50 5h2v1h-2zM11 6h2v1h-2zM14 6h8v1h-8zM27 6h3v1h-3zM51 6h2v1h-2zM10 7h2v1h-2zM13 7h9v1h-9zM27 7h8v1h-8zM52 7h3v1h-3zM9 8h2v1h-2zM12 8h24v1h-24zM37 8h2v1h-2zM54 8h1v1h-1zM8 9h2v1h-2zM11 9h28v1h-28zM54 9h2v1h-2zM7 10h2v1h-2zM10 10h6v1h-6zM19 10h19v1h-19zM55 10h2v1h-2zM6 11h2v1h-2zM9 11h6v1h-6zM21 11h15v1h-15zM49 11h1v1h-1zM56 11h2v1h-2zM5 12h2v1h-2zM9 12h6v1h-6zM18 12h18v1h-18zM49 12h1v1h-1zM57 12h2v1h-2zM5 13h1v1h-1zM8 13h7v1h-7zM17 13h19v1h-19zM44 13h2v1h-2zM58 13h2v1h-2zM4 14h2v1h-2zM8 14h24v1h-24zM44 14h3v1h-3zM59 14h1v1h-1zM4 15h1v1h-1zM7 15h14v1h-14zM29 15h5v1h-5zM43 15h4v1h-4zM50 15h3v1h-3zM59 15h2v1h-2zM3 16h2v1h-2zM6 16h14v1h-14zM29 16h5v1h-5zM42 16h11v1h-11zM60 16h2v1h-2zM3 17h1v1h-1zM6 17h14v1h-14zM33 17h3v1h-3zM42 17h8v1h-8zM61 17h1v1h-1zM2 18h2v1h-2zM7 18h10v1h-10zM33 18h3v1h-3zM42 18h8v1h-8zM61 18h1v1h-1zM2 19h1v1h-1zM7 19h8v1h-8zM20 19h1v1h-1zM42 19h9v1h-9zM61 19h2v1h-2zM1 20h2v1h-2zM7 20h7v1h-7zM43 20h8v1h-8zM62 20h1v1h-1zM1 21h1v1h-1zM8 21h6v1h-6zM20 21h1v1h-1zM44 21h7v1h-7zM62 21h1v1h-1zM1 22h1v1h-1zM6 22h8v1h-8zM37 22h3v1h-3zM44 22h7v1h-7zM62 22h1v1h-1zM1 23h1v1h-1zM6 23h11v1h-11zM37 23h4v1h-4zM43 23h1v1h-1zM46 23h6v1h-6zM3 24h1v1h-1zM7 24h11v1h-11zM38 24h4v1h-4zM54 24h1v1h-1zM7 25h11v1h-11zM39 25h3v1h-3zM46 25h2v1h-2zM49 25h2v1h-2zM54 25h1v1h-1zM60 25h1v1h-1zM4 26h1v1h-1zM8 26h10v1h-10zM45 26h10v1h-10zM59 26h2v1h-2zM4 27h1v1h-1zM8 27h11v1h-11zM45 27h10v1h-10zM58 27h4v1h-4zM18 28h1v1h-1zM21 28h2v1h-2zM34 28h1v1h-1zM46 28h9v1h-9zM58 28h4v1h-4zM21 29h1v1h-1zM34 29h1v1h-1zM45 29h10v1h-10zM58 29h4v1h-4zM20 30h2v1h-2zM45 30h11v1h-11zM59 30h3v1h-3zM18 31h6v1h-6zM44 31h11v1h-11zM56 31h1v1h-1zM59 31h2v1h-2zM18 32h6v1h-6zM27 32h2v1h-2zM45 32h11v1h-11zM18 33h1v1h-1zM22 33h2v1h-2zM27 33h2v1h-2zM46 33h9v1h-9zM22 34h3v1h-3zM27 34h2v1h-2zM47 34h3v1h-3zM52 34h3v1h-3zM57 34h1v1h-1zM12 35h3v1h-3zM21 35h2v1h-2zM26 35h4v1h-4zM47 35h2v1h-2zM56 35h2v1h-2zM61 35h1v1h-1zM11 36h4v1h-4zM21 36h1v1h-1zM24 36h6v1h-6zM46 36h3v1h-3zM54 36h5v1h-5zM61 36h1v1h-1zM11 37h4v1h-4zM22 37h5v1h-5zM54 37h7v1h-7zM11 38h5v1h-5zM20 38h1v1h-1zM22 38h5v1h-5zM55 38h6v1h-6zM12 39h5v1h-5zM20 39h3v1h-3zM24 39h1v1h-1zM26 39h1v1h-1zM53 39h7v1h-7zM13 40h2v1h-2zM19 40h8v1h-8zM54 40h5v1h-5zM62 40h1v1h-1zM1 41h1v1h-1zM21 41h1v1h-1zM23 41h6v1h-6zM48 41h2v1h-2zM55 41h3v1h-3zM61 41h2v1h-2zM1 42h2v1h-2zM16 42h2v1h-2zM23 42h2v1h-2zM26 42h1v1h-1zM46 42h4v1h-4zM54 42h3v1h-3zM61 42h2v1h-2zM1 43h2v1h-2zM12 43h1v1h-1zM18 43h1v1h-1zM23 43h2v1h-2zM46 43h4v1h-4zM55 43h2v1h-2zM61 43h2v1h-2zM2 44h1v1h-1zM47 44h2v1h-2zM55 44h2v1h-2zM61 44h2v1h-2zM2 45h2v1h-2zM61 45h1v1h-1zM2 46h2v1h-2zM9 46h1v1h-1zM54 46h1v1h-1zM60 46h2v1h-2zM3 47h3v1h-3zM11 47h1v1h-1zM53 47h1v1h-1zM59 47h2v1h-2zM4 48h2v1h-2zM9 48h1v1h-1zM11 48h1v1h-1zM58 48h3v1h-3zM4 49h2v1h-2zM9 49h1v1h-1zM11 49h2v1h-2zM58 49h2v1h-2zM5 50h2v1h-2zM9 50h1v1h-1zM57 50h3v1h-3zM5 51h3v1h-3zM13 51h1v1h-1zM57 51h2v1h-2zM6 52h3v1h-3zM14 52h1v1h-1zM55 52h3v1h-3zM6 53h3v1h-3zM55 53h2v1h-2zM8 54h2v1h-2zM53 54h3v1h-3zM9 55h2v1h-2zM52 55h3v1h-3zM10 56h2v1h-2zM51 56h3v1h-3zM11 57h2v1h-2zM49 57h1v1h-1zM51 57h2v1h-2zM12 58h3v1h-3zM48 58h4v1h-4zM14 59h2v1h-2zM45 59h2v1h-2zM48 59h2v1h-2zM15 60h2v1h-2zM43 60h6v1h-6zM16 61h5v1h-5zM41 61h6v1h-6zM20 62h3v1h-3zM31 62h14v1h-14zM31 63h1v1h-1z" />
+          <path fill="rgb(75, 75, 75)" d="M23 2h1v1h-1zM26 2h4v1h-4zM19 3h1v1h-1zM26 3h1v1h-1zM30 3h1v1h-1zM19 4h1v1h-1zM23 4h1v1h-1zM22 5h2v1h-2zM37 5h1v1h-1zM30 6h5v1h-5zM37 6h1v1h-1zM25 7h2v1h-2zM35 7h3v1h-3zM36 8h1v1h-1zM39 9h1v1h-1zM50 9h1v1h-1zM9 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM50 10h1v1h-1zM15 11h1v1h-1zM18 11h3v1h-3zM36 11h2v1h-2zM48 11h1v1h-1zM50 11h1v1h-1zM8 12h1v1h-1zM15 12h1v1h-1zM36 12h1v1h-1zM55 12h1v1h-1zM7 13h1v1h-1zM15 13h1v1h-1zM36 13h1v1h-1zM48 13h2v1h-2zM7 14h1v1h-1zM33 14h2v1h-2zM43 14h1v1h-1zM48 14h2v1h-2zM6 15h1v1h-1zM21 15h2v1h-2zM38 15h1v1h-1zM42 15h1v1h-1zM47 15h1v1h-1zM57 15h1v1h-1zM20 16h1v1h-1zM34 16h1v1h-1zM38 16h2v1h-2zM41 16h1v1h-1zM53 16h1v1h-1zM29 17h4v1h-4zM36 17h1v1h-1zM41 17h1v1h-1zM50 17h1v1h-1zM52 17h3v1h-3zM19 18h1v1h-1zM36 18h1v1h-1zM41 18h1v1h-1zM50 18h1v1h-1zM15 19h1v1h-1zM41 19h1v1h-1zM14 20h1v1h-1zM20 20h1v1h-1zM42 20h1v1h-1zM51 20h1v1h-1zM7 21h1v1h-1zM14 21h1v1h-1zM37 21h2v1h-2zM41 21h3v1h-3zM14 22h1v1h-1zM34 22h3v1h-3zM42 22h2v1h-2zM2 23h3v1h-3zM20 23h1v1h-1zM36 23h1v1h-1zM44 23h1v1h-1zM54 23h1v1h-1zM56 23h1v1h-1zM2 24h1v1h-1zM4 24h1v1h-1zM6 24h1v1h-1zM18 24h1v1h-1zM20 24h1v1h-1zM44 24h1v1h-1zM56 24h1v1h-1zM58 24h1v1h-1zM3 25h3v1h-3zM31 25h1v1h-1zM43 25h1v1h-1zM45 25h1v1h-1zM48 25h1v1h-1zM51 25h1v1h-1zM53 25h1v1h-1zM59 25h1v1h-1zM3 26h1v1h-1zM5 26h1v1h-1zM7 26h1v1h-1zM43 26h2v1h-2zM58 26h1v1h-1zM3 27h1v1h-1zM5 27h1v1h-1zM19 27h1v1h-1zM22 27h1v1h-1zM8 28h10v1h-10zM19 28h2v1h-2zM33 28h1v1h-1zM35 28h1v1h-1zM45 28h1v1h-1zM7 29h1v1h-1zM10 29h9v1h-9zM22 29h1v1h-1zM33 29h1v1h-1zM35 29h1v1h-1zM55 29h1v1h-1zM0 30h1v1h-1zM7 30h1v1h-1zM9 30h1v1h-1zM12 30h8v1h-8zM34 30h1v1h-1zM44 30h1v1h-1zM56 30h1v1h-1zM9 31h1v1h-1zM14 31h4v1h-4zM27 31h1v1h-1zM61 31h1v1h-1zM8 32h1v1h-1zM15 32h3v1h-3zM44 32h1v1h-1zM56 32h2v1h-2zM60 32h2v1h-2zM8 33h1v1h-1zM14 33h1v1h-1zM17 33h1v1h-1zM19 33h3v1h-3zM24 33h1v1h-1zM29 33h1v1h-1zM45 33h1v1h-1zM55 33h1v1h-1zM57 33h1v1h-1zM9 34h4v1h-4zM14 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM29 34h1v1h-1zM50 34h1v1h-1zM56 34h1v1h-1zM58 34h1v1h-1zM60 34h1v1h-1zM11 35h1v1h-1zM23 35h3v1h-3zM46 35h1v1h-1zM55 35h1v1h-1zM58 35h1v1h-1zM15 36h1v1h-1zM19 36h2v1h-2zM22 36h2v1h-2zM8 37h3v1h-3zM15 37h2v1h-2zM21 37h1v1h-1zM27 37h2v1h-2zM48 37h1v1h-1zM9 38h2v1h-2zM16 38h3v1h-3zM21 38h1v1h-1zM47 38h1v1h-1zM54 38h1v1h-1zM10 39h2v1h-2zM17 39h3v1h-3zM23 39h1v1h-1zM25 39h1v1h-1zM47 39h2v1h-2zM60 39h1v1h-1zM62 39h1v1h-1zM1 40h2v1h-2zM15 40h1v1h-1zM18 40h1v1h-1zM27 40h1v1h-1zM48 40h2v1h-2zM53 40h1v1h-1zM61 40h1v1h-1zM2 41h1v1h-1zM7 41h2v1h-2zM13 41h5v1h-5zM22 41h1v1h-1zM47 41h1v1h-1zM50 41h1v1h-1zM54 41h1v1h-1zM8 42h1v1h-1zM11 42h2v1h-2zM15 42h1v1h-1zM18 42h1v1h-1zM21 42h2v1h-2zM25 42h1v1h-1zM50 42h1v1h-1zM53 42h1v1h-1zM3 43h1v1h-1zM8 43h3v1h-3zM13 43h1v1h-1zM16 43h2v1h-2zM19 43h1v1h-1zM50 43h1v1h-1zM3 44h1v1h-1zM13 44h1v1h-1zM17 44h1v1h-1zM49 44h1v1h-1zM60 44h1v1h-1zM48 45h1v1h-1zM55 45h1v1h-1zM60 45h1v1h-1zM4 46h1v1h-1zM11 46h2v1h-2zM17 46h1v1h-1zM53 46h1v1h-1zM55 46h1v1h-1zM59 46h1v1h-1zM10 47h1v1h-1zM12 47h1v1h-1zM52 47h1v1h-1zM54 47h2v1h-2zM58 47h1v1h-1zM8 48h1v1h-1zM10 48h1v1h-1zM12 48h1v1h-1zM6 49h1v1h-1zM8 49h1v1h-1zM10 49h1v1h-1zM57 49h1v1h-1zM7 50h1v1h-1zM12 50h2v1h-2zM56 50h1v1h-1zM10 51h1v1h-1zM11 52h1v1h-1zM13 52h1v1h-1zM11 53h2v1h-2zM54 53h1v1h-1zM51 55h1v1h-1zM50 56h1v1h-1zM46 58h2v1h-2zM41 60h2v1h-2zM40 61h1v1h-1zM30 62h1v1h-1zM30 63h1v1h-1z" />
+          <path fill="rgb(153, 153, 153)" d="M25 2h1v1h-1zM31 2h6v1h-6zM27 3h2v1h-2zM32 3h15v1h-15zM27 4h21v1h-21zM24 5h2v1h-2zM31 5h5v1h-5zM38 5h12v1h-12zM23 6h3v1h-3zM35 6h1v1h-1zM38 6h13v1h-13zM23 7h1v1h-1zM39 7h13v1h-13zM40 8h14v1h-14zM40 9h9v1h-9zM52 9h2v1h-2zM42 10h6v1h-6zM51 10h2v1h-2zM42 11h6v1h-6zM53 11h1v1h-1zM55 11h1v1h-1zM7 12h1v1h-1zM42 12h5v1h-5zM53 12h2v1h-2zM56 12h1v1h-1zM6 13h1v1h-1zM50 13h5v1h-5zM50 14h6v1h-6zM58 14h1v1h-1zM5 15h1v1h-1zM54 15h2v1h-2zM5 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM55 16h3v1h-3zM59 16h1v1h-1zM28 17h1v1h-1zM51 17h1v1h-1zM55 17h6v1h-6zM21 18h1v1h-1zM32 18h1v1h-1zM52 18h2v1h-2zM55 18h6v1h-6zM5 19h1v1h-1zM16 19h1v1h-1zM26 19h1v1h-1zM52 19h9v1h-9zM5 20h1v1h-1zM23 20h1v1h-1zM33 20h1v1h-1zM52 20h10v1h-10zM5 21h1v1h-1zM52 21h10v1h-10zM5 22h1v1h-1zM20 22h1v1h-1zM52 22h10v1h-10zM32 23h2v1h-2zM52 23h1v1h-1zM55 23h1v1h-1zM58 23h5v1h-5zM19 24h1v1h-1zM25 24h3v1h-3zM34 24h1v1h-1zM36 24h1v1h-1zM52 24h1v1h-1zM57 24h1v1h-1zM60 24h3v1h-3zM25 25h1v1h-1zM28 25h1v1h-1zM35 25h1v1h-1zM37 25h1v1h-1zM44 25h1v1h-1zM55 25h4v1h-4zM61 25h2v1h-2zM25 26h1v1h-1zM34 26h4v1h-4zM42 26h1v1h-1zM55 26h3v1h-3zM62 26h1v1h-1zM6 27h1v1h-1zM20 27h1v1h-1zM25 27h1v1h-1zM35 27h1v1h-1zM38 27h6v1h-6zM55 27h3v1h-3zM6 28h1v1h-1zM25 28h1v1h-1zM30 28h3v1h-3zM36 28h8v1h-8zM55 28h3v1h-3zM28 29h5v1h-5zM36 29h4v1h-4zM41 29h3v1h-3zM56 29h2v1h-2zM63 29h1v1h-1zM23 30h1v1h-1zM28 30h3v1h-3zM32 30h1v1h-1zM35 30h5v1h-5zM41 30h3v1h-3zM57 30h1v1h-1zM63 30h1v1h-1zM24 31h1v1h-1zM29 31h15v1h-15zM62 31h2v1h-2zM26 32h1v1h-1zM30 32h12v1h-12zM43 32h1v1h-1zM58 32h1v1h-1zM62 32h2v1h-2zM25 33h2v1h-2zM30 33h12v1h-12zM43 33h2v1h-2zM56 33h1v1h-1zM58 33h5v1h-5zM30 34h8v1h-8zM39 34h6v1h-6zM59 34h1v1h-1zM33 35h10v1h-10zM44 35h1v1h-1zM50 35h3v1h-3zM59 35h2v1h-2zM4 36h1v1h-1zM7 36h1v1h-1zM33 36h12v1h-12zM49 36h4v1h-4zM60 36h1v1h-1zM3 37h1v1h-1zM33 37h14v1h-14zM49 37h4v1h-4zM61 37h2v1h-2zM5 38h1v1h-1zM32 38h8v1h-8zM41 38h2v1h-2zM45 38h2v1h-2zM49 38h4v1h-4zM61 38h2v1h-2zM32 39h14v1h-14zM50 39h2v1h-2zM11 40h1v1h-1zM31 40h3v1h-3zM36 40h11v1h-11zM51 40h2v1h-2zM60 40h1v1h-1zM9 41h1v1h-1zM20 41h1v1h-1zM30 41h3v1h-3zM34 41h12v1h-12zM51 41h3v1h-3zM60 41h1v1h-1zM4 42h3v1h-3zM29 42h1v1h-1zM33 42h13v1h-13zM52 42h1v1h-1zM58 42h3v1h-3zM4 43h4v1h-4zM27 43h1v1h-1zM37 43h9v1h-9zM51 43h3v1h-3zM58 43h2v1h-2zM4 44h5v1h-5zM11 44h1v1h-1zM16 44h1v1h-1zM20 44h1v1h-1zM23 44h2v1h-2zM38 44h8v1h-8zM50 44h5v1h-5zM58 44h2v1h-2zM5 45h4v1h-4zM10 45h7v1h-7zM31 45h12v1h-12zM44 45h2v1h-2zM50 45h4v1h-4zM57 45h2v1h-2zM6 46h3v1h-3zM14 46h3v1h-3zM20 46h2v1h-2zM32 46h8v1h-8zM42 46h7v1h-7zM56 46h3v1h-3zM6 47h2v1h-2zM14 47h4v1h-4zM32 47h6v1h-6zM40 47h9v1h-9zM56 47h2v1h-2zM7 48h1v1h-1zM13 48h7v1h-7zM32 48h3v1h-3zM38 48h11v1h-11zM57 48h1v1h-1zM7 49h1v1h-1zM14 49h6v1h-6zM35 49h2v1h-2zM38 49h11v1h-11zM56 49h1v1h-1zM14 50h7v1h-7zM31 50h18v1h-18zM55 50h1v1h-1zM15 51h6v1h-6zM31 51h18v1h-18zM54 51h1v1h-1zM9 52h1v1h-1zM16 52h4v1h-4zM21 52h1v1h-1zM31 52h18v1h-18zM54 52h1v1h-1zM9 53h2v1h-2zM16 53h3v1h-3zM21 53h1v1h-1zM31 53h18v1h-18zM10 54h8v1h-8zM19 54h3v1h-3zM30 54h1v1h-1zM35 54h13v1h-13zM11 55h11v1h-11zM29 55h6v1h-6zM37 55h3v1h-3zM13 56h8v1h-8zM25 56h3v1h-3zM29 56h10v1h-10zM14 57h7v1h-7zM26 57h3v1h-3zM30 57h9v1h-9zM15 58h10v1h-10zM26 58h4v1h-4zM31 58h8v1h-8zM43 58h1v1h-1zM16 59h10v1h-10zM27 59h3v1h-3zM31 59h9v1h-9zM41 59h1v1h-1zM17 60h24v1h-24zM21 61h10v1h-10zM23 62h7v1h-7zM29 63h1v1h-1z" />
+          <path fill="rgb(185, 185, 185)" d="M27 0h10v1h-10zM25 1h17v1h-17zM37 2h8v1h-8zM21 16h5v1h-5zM20 17h8v1h-8zM22 18h10v1h-10zM17 19h2v1h-2zM22 19h4v1h-4zM27 19h6v1h-6zM15 20h5v1h-5zM21 20h2v1h-2zM24 20h9v1h-9zM15 21h4v1h-4zM22 21h12v1h-12zM15 22h1v1h-1zM17 22h3v1h-3zM21 22h13v1h-13zM19 23h1v1h-1zM22 23h10v1h-10zM21 24h4v1h-4zM28 24h4v1h-4zM35 24h1v1h-1zM19 25h6v1h-6zM29 25h1v1h-1zM34 25h1v1h-1zM36 25h1v1h-1zM19 26h6v1h-6zM23 27h2v1h-2zM36 27h2v1h-2zM23 28h2v1h-2zM23 29h5v1h-5zM40 29h1v1h-1zM6 30h1v1h-1zM24 30h4v1h-4zM31 30h1v1h-1zM40 30h1v1h-1zM25 31h2v1h-2zM25 32h1v1h-1zM63 33h1v1h-1zM63 34h1v1h-1zM4 35h4v1h-4zM31 35h2v1h-2zM5 36h2v1h-2zM31 36h2v1h-2zM4 37h3v1h-3zM30 37h3v1h-3zM6 38h1v1h-1zM28 38h4v1h-4zM28 39h4v1h-4zM9 40h1v1h-1zM29 40h2v1h-2zM34 40h2v1h-2zM29 41h1v1h-1zM33 41h1v1h-1zM20 42h1v1h-1zM28 42h1v1h-1zM30 42h3v1h-3zM20 43h3v1h-3zM28 43h9v1h-9zM21 44h2v1h-2zM25 44h13v1h-13zM21 45h10v1h-10zM43 45h1v1h-1zM19 46h1v1h-1zM22 46h10v1h-10zM40 46h2v1h-2zM20 47h12v1h-12zM38 47h2v1h-2zM20 48h12v1h-12zM35 48h3v1h-3zM20 49h15v1h-15zM37 49h1v1h-1zM21 50h10v1h-10zM21 51h10v1h-10zM20 52h1v1h-1zM22 52h9v1h-9zM19 53h2v1h-2zM22 53h9v1h-9zM18 54h1v1h-1zM22 54h8v1h-8zM31 54h4v1h-4zM22 55h7v1h-7zM35 55h2v1h-2zM12 56h1v1h-1zM21 56h4v1h-4zM28 56h1v1h-1zM13 57h1v1h-1zM21 57h5v1h-5zM29 57h1v1h-1zM25 58h1v1h-1zM30 58h1v1h-1zM26 59h1v1h-1zM30 59h1v1h-1z" />
+          </svg>
+        </span>
+        <span class="hc-cloud hc-cloud--a">
+          <svg viewBox="0 0 22 8" shape-rendering="crispEdges">
+            <path fill="rgb(176, 176, 180)" d="M7 1h2v1h-2zM6 2h1v1h-1zM11 2h1v1h-1zM4 3h2v1h-2zM11 3h1v1h-1zM15 3h2v1h-2zM3 4h1v1h-1zM12 4h3v1h-3zM17 4h1v1h-1zM2 5h1v1h-1zM7 5h1v1h-1zM12 5h1v1h-1zM18 5h1v1h-1zM1 6h2v1h-2zM19 6h1v1h-1zM1 7h19v1h-19z" />
+            <path fill="rgb(208, 208, 210)" d="M7 2h4v1h-4zM6 3h5v1h-5zM4 4h8v1h-8zM15 4h2v1h-2zM3 5h4v1h-4zM8 5h4v1h-4zM13 5h5v1h-5zM3 6h16v1h-16z" />
+          </svg>
+        </span>
+        <span class="hc-cloud hc-cloud--b">
+          <svg viewBox="0 0 22 8" shape-rendering="crispEdges">
+            <path fill="rgb(176, 176, 180)" d="M7 1h2v1h-2zM6 2h1v1h-1zM11 2h1v1h-1zM4 3h2v1h-2zM11 3h1v1h-1zM15 3h2v1h-2zM3 4h1v1h-1zM12 4h3v1h-3zM17 4h1v1h-1zM2 5h1v1h-1zM7 5h1v1h-1zM12 5h1v1h-1zM18 5h1v1h-1zM1 6h2v1h-2zM19 6h1v1h-1zM1 7h19v1h-19z" />
+            <path fill="rgb(208, 208, 210)" d="M7 2h4v1h-4zM6 3h5v1h-5zM4 4h8v1h-8zM15 4h2v1h-2zM3 5h4v1h-4zM8 5h4v1h-4zM13 5h5v1h-5zM3 6h16v1h-16z" />
+          </svg>
+        </span>
+      </span>
+    </span>
+  )}
+
+  {type === 'counter' && (
+    <span class="hc-counter" role="img" aria-label="A mechanical flap counter reading 6,080 flips to 6,081, then flips back.">
+      <span class="hc-ct-board" aria-hidden="true">
+        <span class="hc-ct-paren">(</span><span class="hc-ct-tile">6</span><span class="hc-ct-comma">,</span><span class="hc-ct-tile">0</span><span class="hc-ct-tile">8</span><span class="hc-ct-tile hc-ct-flipwrap"><span class="hc-ct-base">0</span><span class="hc-ct-flap">1</span></span><span class="hc-ct-paren">)</span>
+      </span>
+    </span>
+  )}
+
+  {type === 'pills' && (
+    <span class="hc-pills" aria-hidden="true">
+      {PILLS.map((index) => (
+        <span class="hc-pill" data-hc-pill data-index={index}>
+          <svg viewBox="0 0 20 7" shape-rendering="crispEdges">
+<g class="tt-capsule">
+            <rect x="4" y="0" width="12" height="1" fill="rgb(58,55,50)"/>
+            <rect x="2" y="1" width="2" height="1" fill="rgb(58,55,50)"/>
+            <rect x="4" y="1" width="6" height="1" fill="rgb(111,122,94)"/>
+            <rect x="10" y="1" width="1" height="1" fill="rgb(70,74,62)"/>
+            <rect x="11" y="1" width="5" height="1" fill="rgb(183,179,170)"/>
+            <rect x="16" y="1" width="2" height="1" fill="rgb(58,55,50)"/>
+            <rect x="1" y="2" width="1" height="1" fill="rgb(58,55,50)"/>
+            <rect x="2" y="2" width="2" height="1" fill="rgb(111,122,94)"/>
+            <rect x="4" y="2" width="2" height="1" fill="rgb(216,213,204)"/>
+            <rect x="6" y="2" width="4" height="1" fill="rgb(111,122,94)"/>
+            <rect x="10" y="2" width="1" height="1" fill="rgb(70,74,62)"/>
+            <rect x="11" y="2" width="7" height="1" fill="rgb(183,179,170)"/>
+            <rect x="18" y="2" width="1" height="1" fill="rgb(58,55,50)"/>
+            <rect x="1" y="3" width="1" height="1" fill="rgb(58,55,50)"/>
+            <rect x="2" y="3" width="8" height="1" fill="rgb(111,122,94)"/>
+            <rect x="10" y="3" width="1" height="1" fill="rgb(70,74,62)"/>
+            <rect x="11" y="3" width="7" height="1" fill="rgb(183,179,170)"/>
+            <rect x="18" y="3" width="1" height="1" fill="rgb(58,55,50)"/>
+            <rect x="1" y="4" width="1" height="1" fill="rgb(58,55,50)"/>
+            <rect x="2" y="4" width="2" height="1" fill="rgb(87,97,73)"/>
+            <rect x="4" y="4" width="6" height="1" fill="rgb(111,122,94)"/>
+            <rect x="10" y="4" width="1" height="1" fill="rgb(70,74,62)"/>
+            <rect x="11" y="4" width="2" height="1" fill="rgb(183,179,170)"/>
+            <rect x="13" y="4" width="4" height="1" fill="rgb(143,139,132)"/>
+            <rect x="17" y="4" width="1" height="1" fill="rgb(183,179,170)"/>
+            <rect x="18" y="4" width="1" height="1" fill="rgb(58,55,50)"/>
+            <rect x="2" y="5" width="2" height="1" fill="rgb(58,55,50)"/>
+            <rect x="4" y="5" width="2" height="1" fill="rgb(87,97,73)"/>
+            <rect x="6" y="5" width="4" height="1" fill="rgb(111,122,94)"/>
+            <rect x="10" y="5" width="1" height="1" fill="rgb(70,74,62)"/>
+            <rect x="11" y="5" width="1" height="1" fill="rgb(183,179,170)"/>
+            <rect x="12" y="5" width="4" height="1" fill="rgb(143,139,132)"/>
+            <rect x="16" y="5" width="2" height="1" fill="rgb(58,55,50)"/>
+            <rect x="4" y="6" width="12" height="1" fill="rgb(58,55,50)"/>
+            </g>
+          </svg>
+        </span>
+      ))}
+    </span>
+  )}
+
+  {type === 'eyes' && (
+    <span class="hc-eyes" data-hc-eyes data-state="closed">
+      <span class="hc-eyes-stage">
+<svg viewBox="0 0 128 24" shape-rendering="crispEdges" aria-hidden="true">
+    <g class="ge-closed">
+      <path fill="#2b3245" d="M7 9h3v2h5v2h7v1h21v-1h7v-2h5V9h3v5h-3v2h-5v2h-7v1H22v-1h-7v-2h-5v-2H7zM69 8h3v2h5v2h8v1h22v-1h7v-2h5V8h3v5h-3v2h-5v2h-7v1H85v-1h-8v-2h-5v-2h-3z" />
+      <path fill="#3d475f" d="M13 6h8V5h26v1h7v2h-5V7H21v1h-8zM75 5h8V4h27v1h7v2h-6V6H83v1h-8z" />
+      <path fill="#232a3a" d="M6 8h2v4H6zM56 8h2v4h-2zM68 7h2v4h-2zM120 7h2v4h-2zM12 15h2v3h-2zM114 14h2v3h-2z" />
+    </g>
+
+    <g class="ge-narrow">
+      <path fill="#2b3245" d="M7 9h4V7h6V6h30v1h7v2h4v6h-4v2h-8v1H20v-1h-8v-2H7zM69 8h4V6h7V5h30v1h7v2h5v6h-5v2h-8v1H82v-1h-8v-2h-5z" />
+      <path fill="#7c849c" d="M11 11h6V9h30v1h7v3h-7v1H19v-1h-8zM73 10h7V8h30v1h7v3h-8v1H81v-1h-8z" />
+      <path fill="#4a5878" d="M27 9h13v1h3v4H25v-3h2zM91 8h13v1h3v4H89v-3h2z" />
+      <path fill="#10141d" d="M31 10h7v4h-7zM95 9h7v4h-7z" />
+    </g>
+
+    <g class="ge-open">
+      <rect x="24" y="2" width="16" height="1" fill="rgb(61,71,95)"/>
+      <rect x="85" y="2" width="22" height="1" fill="rgb(61,71,95)"/>
+      <rect x="18" y="3" width="6" height="1" fill="rgb(61,71,95)"/>
+      <rect x="24" y="3" width="16" height="1" fill="rgb(43,50,69)"/>
+      <rect x="40" y="3" width="6" height="1" fill="rgb(61,71,95)"/>
+      <rect x="80" y="3" width="5" height="1" fill="rgb(61,71,95)"/>
+      <rect x="85" y="3" width="22" height="1" fill="rgb(43,50,69)"/>
+      <rect x="107" y="3" width="5" height="1" fill="rgb(61,71,95)"/>
+      <rect x="14" y="4" width="4" height="1" fill="rgb(61,71,95)"/>
+      <rect x="18" y="4" width="6" height="1" fill="rgb(43,50,69)"/>
+      <rect x="24" y="4" width="16" height="1" fill="rgb(95,103,126)"/>
+      <rect x="40" y="4" width="6" height="1" fill="rgb(43,50,69)"/>
+      <rect x="46" y="4" width="4" height="1" fill="rgb(61,71,95)"/>
+      <rect x="77" y="4" width="3" height="1" fill="rgb(61,71,95)"/>
+      <rect x="80" y="4" width="5" height="1" fill="rgb(43,50,69)"/>
+      <rect x="85" y="4" width="22" height="1" fill="rgb(95,103,126)"/>
+      <rect x="107" y="4" width="5" height="1" fill="rgb(43,50,69)"/>
+      <rect x="112" y="4" width="3" height="1" fill="rgb(61,71,95)"/>
+      <rect x="12" y="5" width="2" height="1" fill="rgb(61,71,95)"/>
+      <rect x="14" y="5" width="4" height="1" fill="rgb(43,50,69)"/>
+      <rect x="18" y="5" width="6" height="1" fill="rgb(95,103,126)"/>
+      <rect x="24" y="5" width="16" height="1" fill="rgb(124,132,156)"/>
+      <rect x="40" y="5" width="6" height="1" fill="rgb(95,103,126)"/>
+      <rect x="46" y="5" width="4" height="1" fill="rgb(43,50,69)"/>
+      <rect x="50" y="5" width="2" height="1" fill="rgb(61,71,95)"/>
+      <rect x="74" y="5" width="3" height="1" fill="rgb(61,71,95)"/>
+      <rect x="77" y="5" width="3" height="1" fill="rgb(43,50,69)"/>
+      <rect x="80" y="5" width="5" height="1" fill="rgb(95,103,126)"/>
+      <rect x="85" y="5" width="22" height="1" fill="rgb(124,132,156)"/>
+      <rect x="107" y="5" width="5" height="1" fill="rgb(95,103,126)"/>
+      <rect x="112" y="5" width="3" height="1" fill="rgb(43,50,69)"/>
+      <rect x="115" y="5" width="3" height="1" fill="rgb(61,71,95)"/>
+      <rect x="10" y="6" width="2" height="1" fill="rgb(61,71,95)"/>
+      <rect x="12" y="6" width="2" height="1" fill="rgb(43,50,69)"/>
+      <rect x="14" y="6" width="4" height="1" fill="rgb(95,103,126)"/>
+      <rect x="18" y="6" width="28" height="1" fill="rgb(124,132,156)"/>
+      <rect x="46" y="6" width="4" height="1" fill="rgb(95,103,126)"/>
+      <rect x="50" y="6" width="2" height="1" fill="rgb(43,50,69)"/>
+      <rect x="52" y="6" width="2" height="1" fill="rgb(61,71,95)"/>
+      <rect x="73" y="6" width="1" height="1" fill="rgb(61,71,95)"/>
+      <rect x="74" y="6" width="3" height="1" fill="rgb(43,50,69)"/>
+      <rect x="77" y="6" width="3" height="1" fill="rgb(95,103,126)"/>
+      <rect x="80" y="6" width="32" height="1" fill="rgb(124,132,156)"/>
+      <rect x="112" y="6" width="3" height="1" fill="rgb(95,103,126)"/>
+      <rect x="115" y="6" width="3" height="1" fill="rgb(43,50,69)"/>
+      <rect x="118" y="6" width="1" height="1" fill="rgb(61,71,95)"/>
+      <rect x="9" y="7" width="1" height="1" fill="rgb(61,71,95)"/>
+      <rect x="10" y="7" width="2" height="1" fill="rgb(43,50,69)"/>
+      <rect x="12" y="7" width="2" height="1" fill="rgb(95,103,126)"/>
+      <rect x="14" y="7" width="36" height="1" fill="rgb(124,132,156)"/>
+      <rect x="50" y="7" width="2" height="1" fill="rgb(95,103,126)"/>
+      <rect x="52" y="7" width="2" height="1" fill="rgb(43,50,69)"/>
+      <rect x="54" y="7" width="1" height="1" fill="rgb(61,71,95)"/>
+      <rect x="73" y="7" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="74" y="7" width="3" height="1" fill="rgb(95,103,126)"/>
+      <rect x="77" y="7" width="38" height="1" fill="rgb(124,132,156)"/>
+      <rect x="115" y="7" width="3" height="1" fill="rgb(95,103,126)"/>
+      <rect x="118" y="7" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="9" y="8" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="10" y="8" width="2" height="1" fill="rgb(95,103,126)"/>
+      <rect x="12" y="8" width="40" height="1" fill="rgb(124,132,156)"/>
+      <rect x="52" y="8" width="2" height="1" fill="rgb(95,103,126)"/>
+      <rect x="54" y="8" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="72" y="8" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="73" y="8" width="2" height="1" fill="rgb(95,103,126)"/>
+      <rect x="75" y="8" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="117" y="8" width="2" height="1" fill="rgb(95,103,126)"/>
+      <rect x="119" y="8" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="8" y="9" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="9" y="9" width="2" height="1" fill="rgb(95,103,126)"/>
+      <rect x="11" y="9" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="53" y="9" width="2" height="1" fill="rgb(95,103,126)"/>
+      <rect x="55" y="9" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="71" y="9" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="72" y="9" width="3" height="1" fill="rgb(95,103,126)"/>
+      <rect x="75" y="9" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="117" y="9" width="3" height="1" fill="rgb(95,103,126)"/>
+      <rect x="120" y="9" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="7" y="10" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="8" y="10" width="3" height="1" fill="rgb(95,103,126)"/>
+      <rect x="11" y="10" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="53" y="10" width="3" height="1" fill="rgb(95,103,126)"/>
+      <rect x="56" y="10" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="71" y="10" width="4" height="1" fill="rgb(95,103,126)"/>
+      <rect x="75" y="10" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="117" y="10" width="4" height="1" fill="rgb(95,103,126)"/>
+      <rect x="7" y="11" width="4" height="1" fill="rgb(95,103,126)"/>
+      <rect x="11" y="11" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="53" y="11" width="4" height="1" fill="rgb(95,103,126)"/>
+      <rect x="71" y="11" width="3" height="1" fill="rgb(35,42,58)"/>
+      <rect x="74" y="11" width="1" height="1" fill="rgb(95,103,126)"/>
+      <rect x="75" y="11" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="117" y="11" width="4" height="1" fill="rgb(95,103,126)"/>
+      <rect x="7" y="12" width="4" height="1" fill="rgb(95,103,126)"/>
+      <rect x="11" y="12" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="53" y="12" width="1" height="1" fill="rgb(95,103,126)"/>
+      <rect x="54" y="12" width="3" height="1" fill="rgb(35,42,58)"/>
+      <rect x="71" y="12" width="2" height="1" fill="rgb(35,42,58)"/>
+      <rect x="73" y="12" width="2" height="1" fill="rgb(95,103,126)"/>
+      <rect x="75" y="12" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="117" y="12" width="4" height="1" fill="rgb(95,103,126)"/>
+      <rect x="7" y="13" width="4" height="1" fill="rgb(95,103,126)"/>
+      <rect x="11" y="13" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="53" y="13" width="2" height="1" fill="rgb(95,103,126)"/>
+      <rect x="55" y="13" width="2" height="1" fill="rgb(35,42,58)"/>
+      <rect x="71" y="13" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="72" y="13" width="3" height="1" fill="rgb(95,103,126)"/>
+      <rect x="75" y="13" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="117" y="13" width="3" height="1" fill="rgb(95,103,126)"/>
+      <rect x="120" y="13" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="7" y="14" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="8" y="14" width="3" height="1" fill="rgb(95,103,126)"/>
+      <rect x="11" y="14" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="53" y="14" width="3" height="1" fill="rgb(95,103,126)"/>
+      <rect x="56" y="14" width="1" height="1" fill="rgb(43,50,69)"/>
+      <rect x="72" y="14" width="2" height="1" fill="rgb(43,50,69)"/>
+      <rect x="74" y="14" width="1" height="1" fill="rgb(95,103,126)"/>
+      <rect x="75" y="14" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="117" y="14" width="1" height="1" fill="rgb(95,103,126)"/>
+      <rect x="118" y="14" width="2" height="1" fill="rgb(43,50,69)"/>
+      <rect x="8" y="15" width="2" height="1" fill="rgb(43,50,69)"/>
+      <rect x="10" y="15" width="1" height="1" fill="rgb(95,103,126)"/>
+      <rect x="11" y="15" width="42" height="1" fill="rgb(124,132,156)"/>
+      <rect x="53" y="15" width="1" height="1" fill="rgb(95,103,126)"/>
+      <rect x="54" y="15" width="2" height="1" fill="rgb(43,50,69)"/>
+      <rect x="74" y="15" width="3" height="1" fill="rgb(43,50,69)"/>
+      <rect x="77" y="15" width="38" height="1" fill="rgb(124,132,156)"/>
+      <rect x="115" y="15" width="3" height="1" fill="rgb(43,50,69)"/>
+      <rect x="10" y="16" width="2" height="1" fill="rgb(43,50,69)"/>
+      <rect x="12" y="16" width="40" height="1" fill="rgb(124,132,156)"/>
+      <rect x="52" y="16" width="2" height="1" fill="rgb(43,50,69)"/>
+      <rect x="77" y="16" width="4" height="1" fill="rgb(43,50,69)"/>
+      <rect x="81" y="16" width="30" height="1" fill="rgb(124,132,156)"/>
+      <rect x="111" y="16" width="4" height="1" fill="rgb(43,50,69)"/>
+      <rect x="12" y="17" width="4" height="1" fill="rgb(43,50,69)"/>
+      <rect x="16" y="17" width="32" height="1" fill="rgb(124,132,156)"/>
+      <rect x="48" y="17" width="4" height="1" fill="rgb(43,50,69)"/>
+      <rect x="81" y="17" width="9" height="1" fill="rgb(43,50,69)"/>
+      <rect x="90" y="17" width="12" height="1" fill="rgb(124,132,156)"/>
+      <rect x="102" y="17" width="9" height="1" fill="rgb(43,50,69)"/>
+      <rect x="16" y="18" width="7" height="1" fill="rgb(43,50,69)"/>
+      <rect x="23" y="18" width="18" height="1" fill="rgb(124,132,156)"/>
+      <rect x="41" y="18" width="7" height="1" fill="rgb(43,50,69)"/>
+      <rect x="90" y="18" width="12" height="1" fill="rgb(43,50,69)"/>
+      <rect x="111" y="18" width="1" height="1" fill="rgb(58,66,88)"/>
+      <rect x="23" y="19" width="18" height="1" fill="rgb(43,50,69)"/>
+      <rect x="102" y="19" width="9" height="1" fill="rgb(58,66,88)"/>
+      <rect x="16" y="20" width="7" height="1" fill="rgb(58,66,88)"/>
+      <rect x="84" y="20" width="6" height="1" fill="rgb(58,66,88)"/>
+      <rect x="100" y="20" width="2" height="1" fill="rgb(58,66,88)"/>
+      <rect x="23" y="21" width="5" height="1" fill="rgb(58,66,88)"/>
+      <rect x="41" y="21" width="3" height="1" fill="rgb(58,66,88)"/>
+      <rect x="90" y="21" width="6" height="1" fill="rgb(58,66,88)"/>
+      <rect x="32" y="22" width="9" height="1" fill="rgb(58,66,88)"/>
+    </g>
+
+    <g class="ge-gaze">
+      <rect x="32" y="4" width="3" height="1" fill="rgb(57,67,92)"/>
+      <rect x="91" y="4" width="3" height="1" fill="rgb(57,67,92)"/>
+      <rect x="94" y="4" width="1" height="1" fill="rgb(74,88,120)"/>
+      <rect x="95" y="4" width="3" height="1" fill="rgb(57,67,92)"/>
+      <rect x="30" y="5" width="3" height="1" fill="rgb(57,67,92)"/>
+      <rect x="33" y="5" width="1" height="1" fill="rgb(74,88,120)"/>
+      <rect x="34" y="5" width="3" height="1" fill="rgb(57,67,92)"/>
+      <rect x="89" y="5" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="91" y="5" width="7" height="1" fill="rgb(74,88,120)"/>
+      <rect x="98" y="5" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="28" y="6" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="30" y="6" width="7" height="1" fill="rgb(74,88,120)"/>
+      <rect x="37" y="6" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="88" y="6" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="90" y="6" width="9" height="1" fill="rgb(74,88,120)"/>
+      <rect x="99" y="6" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="27" y="7" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="29" y="7" width="9" height="1" fill="rgb(74,88,120)"/>
+      <rect x="38" y="7" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="88" y="7" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="89" y="7" width="2" height="1" fill="rgb(74,88,120)"/>
+      <rect x="91" y="7" width="2" height="1" fill="rgb(198,206,222)"/>
+      <rect x="93" y="7" width="7" height="1" fill="rgb(74,88,120)"/>
+      <rect x="100" y="7" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="27" y="8" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="28" y="8" width="2" height="1" fill="rgb(74,88,120)"/>
+      <rect x="30" y="8" width="2" height="1" fill="rgb(198,206,222)"/>
+      <rect x="32" y="8" width="7" height="1" fill="rgb(74,88,120)"/>
+      <rect x="39" y="8" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="87" y="8" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="88" y="8" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="91" y="8" width="2" height="1" fill="rgb(198,206,222)"/>
+      <rect x="93" y="8" width="4" height="1" fill="rgb(16,20,29)"/>
+      <rect x="97" y="8" width="4" height="1" fill="rgb(74,88,120)"/>
+      <rect x="101" y="8" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="26" y="9" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="27" y="9" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="30" y="9" width="2" height="1" fill="rgb(198,206,222)"/>
+      <rect x="32" y="9" width="4" height="1" fill="rgb(16,20,29)"/>
+      <rect x="36" y="9" width="4" height="1" fill="rgb(74,88,120)"/>
+      <rect x="40" y="9" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="87" y="9" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="88" y="9" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="91" y="9" width="7" height="1" fill="rgb(16,20,29)"/>
+      <rect x="98" y="9" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="101" y="9" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="26" y="10" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="27" y="10" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="30" y="10" width="7" height="1" fill="rgb(16,20,29)"/>
+      <rect x="37" y="10" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="40" y="10" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="87" y="10" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="88" y="10" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="91" y="10" width="7" height="1" fill="rgb(16,20,29)"/>
+      <rect x="98" y="10" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="101" y="10" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="26" y="11" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="27" y="11" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="30" y="11" width="7" height="1" fill="rgb(16,20,29)"/>
+      <rect x="37" y="11" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="40" y="11" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="87" y="11" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="88" y="11" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="91" y="11" width="7" height="1" fill="rgb(16,20,29)"/>
+      <rect x="98" y="11" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="101" y="11" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="26" y="12" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="27" y="12" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="30" y="12" width="7" height="1" fill="rgb(16,20,29)"/>
+      <rect x="37" y="12" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="40" y="12" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="87" y="12" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="88" y="12" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="91" y="12" width="7" height="1" fill="rgb(16,20,29)"/>
+      <rect x="98" y="12" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="101" y="12" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="26" y="13" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="27" y="13" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="30" y="13" width="7" height="1" fill="rgb(16,20,29)"/>
+      <rect x="37" y="13" width="3" height="1" fill="rgb(74,88,120)"/>
+      <rect x="40" y="13" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="87" y="13" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="88" y="13" width="4" height="1" fill="rgb(74,88,120)"/>
+      <rect x="92" y="13" width="5" height="1" fill="rgb(16,20,29)"/>
+      <rect x="97" y="13" width="4" height="1" fill="rgb(74,88,120)"/>
+      <rect x="101" y="13" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="26" y="14" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="27" y="14" width="4" height="1" fill="rgb(74,88,120)"/>
+      <rect x="31" y="14" width="5" height="1" fill="rgb(16,20,29)"/>
+      <rect x="36" y="14" width="4" height="1" fill="rgb(74,88,120)"/>
+      <rect x="40" y="14" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="88" y="14" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="89" y="14" width="11" height="1" fill="rgb(74,88,120)"/>
+      <rect x="100" y="14" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="27" y="15" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="28" y="15" width="11" height="1" fill="rgb(74,88,120)"/>
+      <rect x="39" y="15" width="1" height="1" fill="rgb(57,67,92)"/>
+      <rect x="88" y="15" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="90" y="15" width="9" height="1" fill="rgb(74,88,120)"/>
+      <rect x="99" y="15" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="27" y="16" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="29" y="16" width="9" height="1" fill="rgb(74,88,120)"/>
+      <rect x="38" y="16" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="89" y="16" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="91" y="16" width="7" height="1" fill="rgb(74,88,120)"/>
+      <rect x="98" y="16" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="28" y="17" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="30" y="17" width="7" height="1" fill="rgb(74,88,120)"/>
+      <rect x="37" y="17" width="2" height="1" fill="rgb(57,67,92)"/>
+      <rect x="91" y="17" width="3" height="1" fill="rgb(57,67,92)"/>
+      <rect x="94" y="17" width="1" height="1" fill="rgb(74,88,120)"/>
+      <rect x="95" y="17" width="3" height="1" fill="rgb(57,67,92)"/>
+      <rect x="30" y="18" width="3" height="1" fill="rgb(57,67,92)"/>
+      <rect x="33" y="18" width="1" height="1" fill="rgb(74,88,120)"/>
+      <rect x="34" y="18" width="3" height="1" fill="rgb(57,67,92)"/>
+    </g>
+
+    <g class="ge-veins-a">
+      <rect x="76" y="10" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="77" y="10" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="116" y="10" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="117" y="10" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="10" y="11" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="11" y="11" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="50" y="11" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="51" y="11" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="75" y="11" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="114" y="11" width="2" height="1" fill="rgb(179,74,60)"/>
+      <rect x="12" y="12" width="2" height="1" fill="rgb(179,74,60)"/>
+      <rect x="52" y="12" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="113" y="12" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="14" y="13" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="76" y="13" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="115" y="13" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="116" y="13" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="11" y="14" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="12" y="14" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="51" y="14" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="77" y="14" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="114" y="14" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="13" y="15" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="50" y="15" width="1" height="1" fill="rgb(179,74,60)"/>
+    </g>
+    <g class="ge-veins-b">
+      <rect x="79" y="8" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="110" y="8" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="17" y="9" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="48" y="9" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="78" y="9" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="111" y="9" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="112" y="9" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="15" y="10" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="16" y="10" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="49" y="10" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="78" y="13" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="112" y="13" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="15" y="14" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="49" y="14" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="111" y="14" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="16" y="15" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="79" y="15" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="80" y="15" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="110" y="15" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="17" y="16" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="47" y="16" width="1" height="1" fill="rgb(179,74,60)"/>
+      <rect x="48" y="16" width="1" height="1" fill="rgb(194,82,67)"/>
+      <rect x="110" y="18" width="1" height="1" fill="rgb(110,58,58)"/>
+      <rect x="17" y="19" width="1" height="1" fill="rgb(110,58,58)"/>
+      <rect x="101" y="19" width="9" height="1" fill="rgb(110,58,58)"/>
+      <rect x="18" y="20" width="9" height="1" fill="rgb(110,58,58)"/>
+      <rect x="85" y="20" width="10" height="1" fill="rgb(110,58,58)"/>
+      <rect x="33" y="21" width="10" height="1" fill="rgb(110,58,58)"/>
+    </g>
+  </svg>
+        <button class="hc-eye-hit hc-eye-hit--left" type="button" data-hc-eye-hit="left" aria-label="Blink left eye"></button>
+        <button class="hc-eye-hit hc-eye-hit--right" type="button" data-hc-eye-hit="right" aria-label="Blink right eye"></button>
+      </span>
+    </span>
+  )}
+</span>
+
+<script>
+  const hcRoot = document.querySelector<HTMLElement>('[data-header-coda]');
+
+  if (hcRoot) {
+    const hcType = hcRoot.dataset.headerCoda || '';
+    const hcReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hcMobileQuery = window.matchMedia('(max-width: 640px)');
+    const hcHeader = document.querySelector<HTMLElement>('[data-site-header]');
+    const hcTitle = document.getElementById('account-title');
+    const hcProse = document.querySelector<HTMLElement>('.archive-prose');
+
+    /* ---------- swap trigger: title scrolled away -> coda takes the slot ---------- */
+    let hcActive = false;
+
+    const hcEyes = hcRoot.querySelector<HTMLElement>('[data-hc-eyes]');
+    let hcEyesAwake = false;
+
+    const hcSetEyeState = (state: string) => {
+      if (hcEyes) hcEyes.dataset.state = state;
+    };
+
+    const hcWakeEyes = () => {
+      if (!hcEyes || hcEyesAwake) return;
+      hcEyesAwake = true;
+
+      if (hcReducedMotion) {
+        hcSetEyeState('open');
+        return;
+      }
+
+      /* Same uneven wake as the full coda: left eye first, then the right. */
+      hcSetEyeState('left-narrow');
+      window.setTimeout(() => hcSetEyeState('left-open'), 220);
+      window.setTimeout(() => hcSetEyeState('right-narrow'), 650);
+      window.setTimeout(() => hcSetEyeState('open'), 920);
+    };
+
+    const hcSetActive = (next: boolean) => {
+      if (hcActive === next) return;
+      hcActive = next;
+      hcHeader?.classList.toggle('header-coda-on', next);
+      if (next && hcType === 'eyes' && hcMobileQuery.matches) hcWakeEyes();
+    };
+
+    if (hcHeader && hcTitle && 'IntersectionObserver' in window) {
+      const hcObserver = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            /* Only when the title has passed above the header — never when it
+               is merely below the fold on a short page. */
+            hcSetActive(!entry.isIntersecting && entry.boundingClientRect.top < 72);
+          }
+        },
+        { rootMargin: '-72px 0px 0px 0px', threshold: 0 }
+      );
+      hcObserver.observe(hcTitle);
+    }
+
+    /* ---------- scroll-depth driven bits: pills laid, eyes tire ---------- */
+    const hcPills = Array.from(hcRoot.querySelectorAll<HTMLElement>('[data-hc-pill]'));
+    const hcThresholds = [0.05, 0.18, 0.31, 0.44, 0.57, 0.7, 0.83, 0.94];
+    let hcLaid = 0;
+
+    const hcApplyLaid = () => {
+      hcPills.forEach((pill, index) => {
+        pill.classList.toggle('is-laid', index < hcLaid);
+      });
+    };
+
+    if (hcProse && (hcPills.length > 0 || hcEyes)) {
+      let hcTicking = false;
+
+      const hcUpdate = () => {
+        hcTicking = false;
+        const rect = hcProse.getBoundingClientRect();
+        const progress = Math.min(1, Math.max(0, (window.innerHeight * 0.85 - rect.top) / rect.height));
+
+        if (hcPills.length > 0) {
+          /* The trail starts empty: no dose falls until the reader moves. */
+          if (!(hcLaid === 0 && window.scrollY < 60)) {
+            const due = Math.max(1, hcThresholds.filter((t) => progress >= t).length);
+            if (due > hcLaid) {
+              hcLaid = due;
+              hcApplyLaid();
+            }
+          }
+        }
+
+        if (hcEyes) {
+          hcEyes.classList.toggle('is-tired-1', progress >= 0.86);
+          hcEyes.classList.toggle('is-tired-2', progress >= 0.94);
+        }
+      };
+
+      const hcSchedule = () => {
+        if (hcTicking) return;
+        hcTicking = true;
+        window.requestAnimationFrame(hcUpdate);
+      };
+
+      window.addEventListener('scroll', hcSchedule, { passive: true });
+      window.addEventListener('resize', hcSchedule);
+      hcUpdate();
+    }
+
+    /* ---------- eyes: idle blink, idle glance, tap to blink one ---------- */
+    if (hcEyes) {
+      const hcEyesVisible = () =>
+        hcEyesAwake &&
+        hcEyes.dataset.state === 'open' &&
+        !hcEyes.dataset.clickBlink &&
+        hcEyes.getClientRects().length > 0;
+
+      const hcBlink = (hold: number) => {
+        if (!hcEyesVisible()) return;
+        hcSetEyeState('narrow');
+        window.setTimeout(() => hcSetEyeState('closed'), 70);
+        window.setTimeout(() => hcSetEyeState('narrow'), 70 + hold);
+        window.setTimeout(() => hcSetEyeState('open'), 150 + hold);
+      };
+
+      const hcGlance = () => {
+        if (!hcEyesVisible()) return;
+        const direction = Math.random() < 0.5 ? -4 : 4;
+        hcEyes.style.setProperty('--ge-gaze', String(direction));
+        window.setTimeout(() => {
+          hcEyes.style.setProperty('--ge-gaze', '0');
+        }, 1500 + Math.random() * 1800);
+      };
+
+      if (!hcReducedMotion) {
+        const hcBlinkIdle = () => {
+          window.setTimeout(() => {
+            if (!document.hidden) hcBlink(Math.random() < 0.12 ? 700 + Math.random() * 450 : 120);
+            hcBlinkIdle();
+          }, 5000 + Math.random() * 6000);
+        };
+
+        const hcGlanceIdle = () => {
+          window.setTimeout(() => {
+            if (!document.hidden) hcGlance();
+            hcGlanceIdle();
+          }, 10000 + Math.random() * 16000);
+        };
+
+        hcBlinkIdle();
+        hcGlanceIdle();
+      }
+
+      for (const hit of hcEyes.querySelectorAll<HTMLButtonElement>('[data-hc-eye-hit]')) {
+        hit.addEventListener('click', () => {
+          if (!hcEyesAwake || hcEyes.dataset.state !== 'open' || hcEyes.dataset.clickBlink) return;
+
+          const side = hit.dataset.hcEyeHit === 'right' ? 'right' : 'left';
+
+          if (hcReducedMotion) {
+            hcEyes.dataset.clickBlink = `${side}-closed`;
+            window.setTimeout(() => delete hcEyes.dataset.clickBlink, 120);
+            return;
+          }
+
+          hcEyes.dataset.clickBlink = `${side}-narrow`;
+          window.setTimeout(() => { hcEyes.dataset.clickBlink = `${side}-closed`; }, 70);
+          window.setTimeout(() => { hcEyes.dataset.clickBlink = `${side}-narrow`; }, 155);
+          window.setTimeout(() => { delete hcEyes.dataset.clickBlink; }, 245);
+        });
+      }
+    }
+  }
+</script>
+
+<style>
+  .header-coda {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(7px);
+    transition:
+      opacity 380ms ease 70ms,
+      transform 380ms ease 70ms,
+      visibility 380ms ease 70ms;
+  }
+
+  :global(.header-coda-on) .header-coda {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .header-coda {
+      transition: none;
+    }
+  }
+
+  /* ---------- Witnesses: the moon, adrift among clouds ---------- */
+  .hc-moon {
+    position: relative;
+    display: block;
+    width: 118px;
+    height: 36px;
+  }
+
+  .hc-moon-drift {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    display: block;
+    animation: hc-moon-drift 11s ease-in-out infinite alternate;
+  }
+
+  .hc-moon-bob {
+    display: block;
+    animation: hc-moon-bob 6.5s ease-in-out infinite alternate;
+  }
+
+  .hc-moon-svg {
+    display: block;
+    width: 30px;
+    height: auto;
+    animation: hc-moon-glow 7s ease-in-out infinite alternate;
+  }
+
+  @keyframes hc-moon-drift {
+    from { transform: translateX(0); }
+    to { transform: translateX(28px); }
+  }
+
+  @keyframes hc-moon-bob {
+    from { transform: translateY(1px); }
+    to { transform: translateY(-2px); }
+  }
+
+  /* The clouds live inside the moon's drift element, so wherever the moon
+     goes they go too; their own animations are only a short local wander
+     around it, never an independent journey across the header. */
+  .hc-cloud {
+    position: absolute;
+    display: block;
+    width: 21px;
+    pointer-events: none;
+  }
+
+  .hc-cloud svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .hc-cloud--a {
+    top: 0;
+    left: -5px;
+    opacity: 0.85;
+    animation: hc-cloud-wander-a 7s ease-in-out infinite alternate;
+  }
+
+  .hc-cloud--b {
+    top: 23px;
+    left: 14px;
+    width: 16px;
+    opacity: 0.65;
+    animation: hc-cloud-wander-b 8.5s ease-in-out infinite alternate;
+    animation-delay: -3s;
+  }
+
+  @keyframes hc-cloud-wander-a {
+    from { transform: translateX(-7px); }
+    to { transform: translateX(16px); }
+  }
+
+  @keyframes hc-cloud-wander-b {
+    from { transform: translateX(12px); }
+    to { transform: translateX(-8px); }
+  }
+
+  @keyframes hc-moon-glow {
+    from { filter: drop-shadow(0 0 1px rgba(185, 185, 185, 0.2)); }
+    to { filter: drop-shadow(0 0 5px rgba(185, 185, 185, 0.55)); }
+  }
+
+  /* ---------- 6080: the flap counter ---------- */
+  .hc-counter {
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
+  }
+
+  .hc-ct-board {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.22em;
+    font-size: 0.9rem;
+    perspective: 320px;
+  }
+
+  .hc-ct-paren,
+  .hc-ct-comma {
+    color: var(--muted);
+  }
+
+  .hc-ct-comma {
+    margin: 0 -0.05em;
+    align-self: flex-end;
+  }
+
+  .hc-ct-tile {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 1.45em;
+    height: 1.8em;
+    border-radius: 0.14em;
+    background: linear-gradient(180deg, #98948c 0%, #8a867e 48%, #7f7b73 52%, #8a867e 100%);
+    color: #ffffff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 2px 8px rgba(0, 0, 0, 0.5);
+    font-weight: 500;
+  }
+
+  .hc-ct-tile::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.28);
+  }
+
+  .hc-ct-flipwrap {
+    background: none;
+    box-shadow: none;
+  }
+
+  .hc-ct-flipwrap::after {
+    display: none;
+  }
+
+  .hc-ct-base,
+  .hc-ct-flap {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 0.14em;
+    background: linear-gradient(180deg, #98948c 0%, #8a867e 48%, #7f7b73 52%, #8a867e 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .hc-ct-base::after,
+  .hc-ct-flap::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.28);
+  }
+
+  .hc-ct-flap {
+    transform-origin: 50% 0;
+    transform: rotateX(-92deg);
+    animation: hcCtFlap 11s ease-in-out infinite;
+    backface-visibility: hidden;
+  }
+
+  @keyframes hcCtFlap {
+    0%, 64% { transform: rotateX(-92deg); filter: brightness(1.25); }
+    67% { transform: rotateX(0deg); filter: brightness(1); }
+    86% { transform: rotateX(0deg); filter: brightness(1); }
+    89%, 100% { transform: rotateX(-92deg); filter: brightness(1.25); }
+  }
+
+  /* ---------- The Trail: doses laid one by one ---------- */
+  .hc-pills {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hc-pill {
+    display: block;
+    width: 22px;
+    opacity: 0;
+    transform: translateY(-6px) rotate(var(--hc-tilt, 0deg));
+    transition: opacity 380ms ease, transform 380ms cubic-bezier(0.3, 1.3, 0.5, 1);
+  }
+
+  .hc-pill svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* every other dose lands the other way round */
+  .hc-pill[data-index='1'] svg,
+  .hc-pill[data-index='3'] svg,
+  .hc-pill[data-index='5'] svg,
+  .hc-pill[data-index='7'] svg {
+    transform: scaleX(-1);
+  }
+
+  .hc-pill.is-laid {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--hc-tilt, 0deg));
+  }
+
+  .hc-pill[data-index='0'] { --hc-tilt: -7deg; margin-top: -2px; }
+  .hc-pill[data-index='1'] { --hc-tilt: 5deg; margin-top: 2px; }
+  .hc-pill[data-index='2'] { --hc-tilt: -3deg; margin-top: -1px; }
+  .hc-pill[data-index='3'] { --hc-tilt: 8deg; margin-top: 3px; }
+  .hc-pill[data-index='4'] { --hc-tilt: -6deg; margin-top: -2px; }
+  .hc-pill[data-index='5'] { --hc-tilt: 3deg; margin-top: 1px; }
+  .hc-pill[data-index='6'] { --hc-tilt: -4deg; margin-top: -1px; }
+  .hc-pill[data-index='7'] { --hc-tilt: 0deg; }
+
+  /* ---------- The Guests: the eyes ---------- */
+  .hc-eyes {
+    display: block;
+    width: 106px;
+  }
+
+  .hc-eyes-stage {
+    position: relative;
+    display: block;
+  }
+
+  .hc-eyes svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .hc-eye-hit {
+    position: absolute;
+    top: 0;
+    width: 46%;
+    height: 100%;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  .hc-eye-hit--left { left: 0; }
+  .hc-eye-hit--right { right: 0; }
+
+  .hc-eye-hit:focus-visible {
+    outline: 1px solid var(--border-strong);
+    outline-offset: 2px;
+  }
+
+  .ge-closed,
+  .ge-narrow,
+  .ge-open,
+  .ge-gaze {
+    opacity: 0;
+  }
+
+  [data-state='closed'] .ge-closed,
+  [data-state='narrow'] .ge-narrow,
+  [data-state='open'] .ge-open,
+  [data-state='open'] .ge-gaze {
+    opacity: 1;
+  }
+
+  /* Wake unevenly: the left eye opens and waits for the right. */
+  [data-state='left-narrow'] .ge-narrow,
+  [data-state='left-open'] .ge-open,
+  [data-state='left-open'] .ge-gaze,
+  [data-state='right-narrow'] .ge-open,
+  [data-state='right-narrow'] .ge-gaze {
+    opacity: 1;
+    clip-path: inset(0 50% 0 0);
+  }
+
+  [data-state='left-narrow'] .ge-closed,
+  [data-state='left-open'] .ge-closed,
+  [data-state='right-narrow'] .ge-narrow {
+    opacity: 1;
+    clip-path: inset(0 0 0 50%);
+  }
+
+  /* A tapped eye blinks independently while its neighbour stays open. */
+  [data-click-blink^='left'] .ge-open,
+  [data-click-blink^='left'] .ge-gaze,
+  [data-click-blink^='left'] .ge-veins-a,
+  [data-click-blink^='left'] .ge-veins-b {
+    clip-path: inset(0 0 0 50%);
+  }
+
+  [data-click-blink='left-narrow'] .ge-narrow,
+  [data-click-blink='left-closed'] .ge-closed {
+    opacity: 1;
+    clip-path: inset(0 50% 0 0);
+  }
+
+  [data-click-blink^='right'] .ge-open,
+  [data-click-blink^='right'] .ge-gaze,
+  [data-click-blink^='right'] .ge-veins-a,
+  [data-click-blink^='right'] .ge-veins-b {
+    clip-path: inset(0 50% 0 0);
+  }
+
+  [data-click-blink='right-narrow'] .ge-narrow,
+  [data-click-blink='right-closed'] .ge-closed {
+    opacity: 1;
+    clip-path: inset(0 0 0 50%);
+  }
+
+  .ge-gaze {
+    transform: translateX(calc(var(--ge-gaze, 0) * 1px));
+  }
+
+  .ge-veins-a,
+  .ge-veins-b {
+    opacity: 0;
+    transition: opacity 2.2s ease;
+  }
+
+  [data-state='open'].is-tired-1 .ge-veins-a,
+  [data-state='open'].is-tired-2 .ge-veins-b {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hc-moon-drift,
+    .hc-moon-bob,
+    .hc-moon-svg,
+    .hc-cloud {
+      animation: none;
+    }
+
+    .hc-ct-flap {
+      animation: none;
+      transform: rotateX(-92deg);
+    }
+
+    .hc-pill {
+      transition: none;
+    }
+
+    .ge-veins-a,
+    .ge-veins-b {
+      transition: none;
+    }
+
+    .ge-gaze {
+      transform: none;
+    }
+  }
+</style>
