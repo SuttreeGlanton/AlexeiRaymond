@@ -79,7 +79,9 @@ const { variant } = Astro.props;
       /* after the sunrise transformation the dark has lost its power:
          the lamp stays lit even beside the night-terror passage */
       if (phase === 'night' && !gold) return false;
-      if (userWants === 'auto') return phase === 'opening';
+      /* With no reader override, morning relights the lamp after the forced
+         darkness and keeps it available for the later confrontation. */
+      if (userWants === 'auto') return phase !== 'night';
       return userWants === 'on';
     };
 
@@ -523,8 +525,8 @@ const { variant } = Astro.props;
   }
 
   /* the waver: quick dips scheduled by script */
-  .is-dim .rl-red,
-  .is-dim .rl-gold {
+  .rabbitlamp-coda[data-lit='on'].is-dim:not([data-gold]) .rl-red,
+  .rabbitlamp-coda[data-lit='on'][data-gold].is-dim .rl-gold {
     opacity: 0.3;
     transition: opacity 90ms ease;
   }
