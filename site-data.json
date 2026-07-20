@@ -302,7 +302,12 @@
       "link": "https://eulogy.press/#now-raymond",
       "cover": "covers/pieces/now.jpg",
       "excerpt": "I am here, this is Now,",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "account": {
+        "slug": "now",
+        "label": "Read story",
+        "title": "Now"
+      }
     },
     {
       "title": "Of Lips and War",

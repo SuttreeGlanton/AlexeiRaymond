@@ -17,6 +17,7 @@ import GuestsEyesCoda from '../../components/GuestsEyesCoda.astro';
 import TheTrailCoda from '../../components/TheTrailCoda.astro';
 import WitnessesCoda from '../../components/WitnessesCoda.astro';
 import NightGlowsCoda from '../../components/NightGlowsCoda.astro';
+import NowClockCoda from '../../components/NowClockCoda.astro';
 import MothheadCoda from '../../components/MothheadCoda.astro';
 import AlphaSoundCoda from '../../components/AlphaSoundCoda.astro';
 import RedCherrySlack from '../../components/RedCherrySlack.astro';
@@ -56,7 +57,8 @@ const isWitnesses = entry.id === 'witnesses';
 const isHowTheNightGlows = entry.id === 'how-the-night-glows';
 const isMothhead = entry.id === 'mothhead';
 const isAlpha = entry.id === 'alpha';
-const headerCoda = isWitnesses ? 'moon' : isSixThousandEighty ? 'counter' : isTheTrail ? 'pills' : isGuestsHere ? 'eyes' : undefined;
+const isNow = entry.id === 'now';
+const headerCoda = isWitnesses ? 'moon' : isSixThousandEighty ? 'counter' : isTheTrail ? 'pills' : isGuestsHere ? 'eyes' : isNow ? 'clock' : undefined;
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? '' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -193,7 +195,7 @@ const breadcrumbSchema = piece ? {
     )}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
-        <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}${isWitnesses ? ' witnesses-cover-slot' : ''}`}>
+        <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}${isWitnesses ? ' witnesses-cover-slot' : ''}${isNow ? ' now-cover-slot' : ''}`}>
           <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
             <div class="archive-cover-media">
               <OptimizedImage
@@ -217,6 +219,7 @@ const breadcrumbSchema = piece ? {
           {isGuestsHere && <GuestsEyesCoda variant="desktop" />}
           {isTheTrail && <TheTrailCoda variant="desktop" />}
           {isWitnesses && <WitnessesCoda variant="moon" />}
+          {isNow && <NowClockCoda />}
         </div>
       )}
       <div class="prose archive-prose">

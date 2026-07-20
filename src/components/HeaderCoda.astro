@@ -3,7 +3,7 @@
    slot in the sticky mobile header once the reader scrolls past the title.
    Mobile only (<= 640px); desktop never renders the slot (SiteHeader CSS). */
 interface Props {
-  type: 'moon' | 'counter' | 'pills' | 'eyes';
+  type: 'moon' | 'counter' | 'pills' | 'eyes' | 'clock';
 }
 
 const { type } = Astro.props;
@@ -448,6 +448,17 @@ const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
       </span>
     </span>
   )}
+  {type === 'clock' && (
+    <button class="hc-clock" type="button" data-hc-clock aria-label="Stop the clock">
+      <span class="hc-clk-display" data-hc-clk-display aria-hidden="true">
+        <span class="hc-clk-time" data-hc-clk-time></span>
+        <span class="hc-clk-sub">
+          <span class="hc-clk-day" data-hc-clk-day></span>
+          <span class="hc-clk-date" data-hc-clk-date></span>
+        </span>
+      </span>
+    </button>
+  )}
 </span>
 
 <script>
@@ -616,6 +627,156 @@ const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
           window.setTimeout(() => { hcEyes.dataset.clickBlink = `${side}-narrow`; }, 155);
           window.setTimeout(() => { delete hcEyes.dataset.clickBlink; }, 245);
         });
+      }
+    }
+
+    /* ---------- clock: seven-segment present time; stoppable, briefly ---------- */
+    const hcClock = hcRoot.querySelector<HTMLButtonElement>('[data-hc-clock]');
+    const hcClockDisplay = hcRoot.querySelector<HTMLElement>('[data-hc-clk-display]');
+
+    if (hcClock && hcClockDisplay) {
+      /* segments: a top, b top-right, c bottom-right, d bottom, e bottom-left,
+         f top-left, g middle — as chunky rects, one SVG per digit */
+      const SEGS: Record<string, string> = {
+        a: '<rect x="2" y="0" width="6" height="2"/>',
+        b: '<rect x="8" y="2" width="2" height="6"/>',
+        c: '<rect x="8" y="10" width="2" height="6"/>',
+        d: '<rect x="2" y="16" width="6" height="2"/>',
+        e: '<rect x="0" y="10" width="2" height="6"/>',
+        f: '<rect x="0" y="2" width="2" height="6"/>',
+        g: '<rect x="2" y="8" width="6" height="2"/>'
+      };
+      const DIGIT_SEGS = ['abcdef', 'bc', 'abged', 'abgcd', 'fgbc', 'afgcd', 'afgedc', 'abc', 'abcdefg', 'abfgcd'];
+
+      const digitSvg = () => {
+        let inner = '';
+        for (const key of Object.keys(SEGS)) {
+          inner += SEGS[key].replace('/>', ` class="hc-seg hc-seg--${key}"/>`);
+        }
+        return `<svg viewBox="0 0 10 18" shape-rendering="crispEdges" class="hc-clk-digit">${inner}</svg>`;
+      };
+      const colonSvg = () =>
+        '<svg viewBox="0 0 4 18" shape-rendering="crispEdges" class="hc-clk-colon"><rect x="1" y="4" width="2" height="2" class="hc-seg"/><rect x="1" y="12" width="2" height="2" class="hc-seg"/></svg>';
+
+      const dotSvg = () =>
+        '<svg viewBox="0 0 4 18" shape-rendering="crispEdges" class="hc-clk-dot"><rect x="1" y="16" width="2" height="2" class="hc-seg"/></svg>';
+
+      const clkTimeRow = hcClockDisplay.querySelector<HTMLElement>('[data-hc-clk-time]');
+      const clkDayLabel = hcClockDisplay.querySelector<HTMLElement>('[data-hc-clk-day]');
+      const clkDateRow = hcClockDisplay.querySelector<HTMLElement>('[data-hc-clk-date]');
+      if (clkTimeRow && clkDayLabel && clkDateRow) {
+
+      clkTimeRow.innerHTML =
+        digitSvg() + digitSvg() + colonSvg() + digitSvg() + digitSvg() + colonSvg() + digitSvg() + digitSvg();
+      clkDateRow.innerHTML =
+        digitSvg() + digitSvg() + dotSvg() + digitSvg() + digitSvg() + dotSvg() +
+        digitSvg() + digitSvg() + digitSvg() + digitSvg();
+
+      const clkDigits = Array.from(clkTimeRow.querySelectorAll<SVGElement>('.hc-clk-digit'));
+      const clkColons = Array.from(clkTimeRow.querySelectorAll<SVGElement>('.hc-clk-colon'));
+      const clkDateDigits = Array.from(clkDateRow.querySelectorAll<SVGElement>('.hc-clk-digit'));
+      const CLK_DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
+      const showDigit = (el: SVGElement, value: number) => {
+        const lit = DIGIT_SEGS[value];
+        for (const seg of el.querySelectorAll<SVGElement>('.hc-seg')) {
+          const key = seg.getAttribute('class')?.match(/hc-seg--(\w)/)?.[1] ?? '';
+          seg.classList.toggle('is-lit', lit.includes(key));
+        }
+      };
+
+      let clkStopped = false;
+      let clkBusy = false;
+
+      const clkRender = () => {
+        const now = new Date();
+        const parts = [now.getHours(), now.getMinutes(), now.getSeconds()];
+        let i = 0;
+        for (const value of parts) {
+          showDigit(clkDigits[i++], Math.floor(value / 10));
+          showDigit(clkDigits[i++], value % 10);
+        }
+        const blinkOn = now.getSeconds() % 2 === 0;
+        for (const colon of clkColons) colon.classList.toggle('is-lit', blinkOn);
+
+        clkDayLabel.textContent = CLK_DAYS[now.getDay()];
+        const day = now.getDate();
+        const month = now.getMonth() + 1;
+        const year = now.getFullYear();
+        const dateValues = [
+          Math.floor(day / 10), day % 10,
+          Math.floor(month / 10), month % 10,
+          Math.floor(year / 1000), Math.floor((year / 100) % 10),
+          Math.floor((year / 10) % 10), year % 10
+        ];
+        dateValues.forEach((value, index) => showDigit(clkDateDigits[index], value));
+        for (const dot of clkDateRow.querySelectorAll<SVGElement>('.hc-clk-dot .hc-seg')) {
+          dot.classList.add('is-lit');
+        }
+      };
+
+      clkRender();
+      window.setInterval(() => {
+        if (!clkStopped) clkRender();
+      }, 250);
+
+      const clkShake = (strength: number) =>
+        new Promise<void>((resolve) => {
+          if (hcReducedMotion) { resolve(); return; }
+          const anim = hcClockDisplay.animate(
+            [
+              { transform: 'translate(0, 0)' },
+              { transform: `translate(${strength}px, ${-strength * 0.4}px) rotate(${strength * 0.7}deg)` },
+              { transform: `translate(${-strength * 0.8}px, ${strength * 0.35}px) rotate(${-strength * 0.5}deg)` },
+              { transform: `translate(${strength * 0.5}px, 0)` },
+              { transform: 'translate(0, 0)' }
+            ],
+            { duration: 280 + strength * 40, easing: 'ease-in-out' }
+          );
+          anim.finished.then(() => resolve(), () => resolve());
+        });
+
+      const clkWait = (ms: number) =>
+        new Promise<void>((r) => window.setTimeout(r, hcReducedMotion ? Math.min(ms, 400) : ms));
+
+      const clkFinalShake = () =>
+        new Promise<void>((resolve) => {
+          if (hcReducedMotion) { resolve(); return; }
+          const anim = hcClockDisplay.animate(
+            [
+              { transform: 'translate(0, 0) rotate(0deg)' },
+              { transform: 'translate(5px, -3px) rotate(3deg)' },
+              { transform: 'translate(-6px, 3px) rotate(-3.4deg)' },
+              { transform: 'translate(6px, -2px) rotate(3.4deg)' },
+              { transform: 'translate(-5px, 3px) rotate(-3deg)' },
+              { transform: 'translate(3.5px, -1.5px) rotate(2deg)' },
+              { transform: 'translate(-1.8px, 0.8px) rotate(-1deg)' },
+              { transform: 'translate(0.8px, 0) rotate(0.4deg)' },
+              { transform: 'translate(0, 0) rotate(0deg)' }
+            ],
+            { duration: 700, easing: 'cubic-bezier(0.36, 0.07, 0.19, 0.97)' }
+          );
+          anim.finished.then(() => resolve(), () => resolve());
+        });
+
+      hcClock.addEventListener('click', async () => {
+        if (clkBusy) return;
+        clkBusy = true;
+        clkStopped = true;
+        hcClock.dataset.state = 'stopped';
+
+        await clkWait(900);
+        await clkShake(1.2);
+        await clkWait(430);
+        await clkShake(2.4);
+        await clkWait(320);
+        await clkFinalShake();
+
+        clkStopped = false;
+        clkRender();
+        delete hcClock.dataset.state;
+        clkBusy = false;
+      });
       }
     }
   }
@@ -1006,5 +1167,101 @@ const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
     .ge-gaze {
       transform: none;
     }
+  }
+
+  /* ---------- clock: red LED digits in the brand slot ---------- */
+  .hc-clock {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  .hc-clock:focus-visible {
+    outline: 1px solid var(--border-strong);
+    outline-offset: 3px;
+  }
+
+  .hc-clk-display {
+    display: grid;
+    justify-items: start;
+    row-gap: 2px;
+  }
+
+  /* time row: cover pink */
+  .hc-clk-time {
+    display: flex;
+    align-items: center;
+    gap: 2.5px;
+    filter: drop-shadow(0 0 5px rgba(255, 79, 160, 0.35));
+  }
+
+  .hc-clk-time :global(.hc-clk-digit) {
+    display: block;
+    width: 9px;
+    height: 16px;
+  }
+
+  .hc-clk-time :global(.hc-clk-colon) {
+    display: block;
+    width: 4px;
+    height: 16px;
+  }
+
+  .hc-clk-time :global(.hc-seg) {
+    fill: rgba(255, 79, 160, 0.09);
+  }
+
+  .hc-clk-time :global(.hc-clk-colon.is-lit .hc-seg),
+  .hc-clk-time :global(.hc-seg.is-lit) {
+    fill: #ff4fa0;
+  }
+
+  /* sub row: weekday + date, cover violet */
+  .hc-clk-sub {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    filter: drop-shadow(0 0 4px rgba(157, 107, 255, 0.3));
+  }
+
+  .hc-clk-day {
+    font-family: var(--sans);
+    font-size: 0.42rem;
+    letter-spacing: 0.16em;
+    color: #9d6bff;
+  }
+
+  .hc-clk-date {
+    display: flex;
+    align-items: center;
+    gap: 1.5px;
+  }
+
+  .hc-clk-date :global(.hc-clk-digit) {
+    display: block;
+    width: 5.5px;
+    height: 10px;
+  }
+
+  .hc-clk-date :global(.hc-clk-dot) {
+    display: block;
+    width: 2.5px;
+    height: 10px;
+  }
+
+  .hc-clk-date :global(.hc-seg) {
+    fill: rgba(157, 107, 255, 0.12);
+  }
+
+  .hc-clk-date :global(.hc-seg.is-lit) {
+    fill: #9d6bff;
   }
 </style>

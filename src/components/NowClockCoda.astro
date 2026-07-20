@@ -1,0 +1,348 @@
+---
+/* Now: a digital clock keeps the reader's own present in the margin —
+   weekday, date, and seconds running. Stopping it is possible, briefly:
+   the clock lies still, shudders three times with the last one violent,
+   then runs again at the true present. Colours are the story cover's
+   pink and violet. Desktop only: mobile has the header LED clock. */
+---
+
+<figure class="nowclock-coda" data-nowclock>
+  <button class="nc-clock" type="button" data-nc-hit aria-label="Stop the clock">
+    <span class="nc-panel" aria-hidden="true">
+      <span class="nc-days" data-nc-days>
+        <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+      </span>
+      <span class="nc-time" data-nc-time></span>
+      <span class="nc-date" data-nc-date></span>
+    </span>
+  </button>
+  <span class="nc-status" aria-live="polite" data-nc-status></span>
+</figure>
+
+<script>
+  const ncRoot = document.querySelector<HTMLElement>('[data-nowclock]');
+
+  if (ncRoot) {
+    const ncReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hit = ncRoot.querySelector<HTMLButtonElement>('[data-nc-hit]');
+    const status = ncRoot.querySelector<HTMLElement>('[data-nc-status]');
+    const timeRow = ncRoot.querySelector<HTMLElement>('[data-nc-time]');
+    const dateRow = ncRoot.querySelector<HTMLElement>('[data-nc-date]');
+    const dayLabels = Array.from(ncRoot.querySelectorAll<HTMLElement>('[data-nc-days] span'));
+
+    if (hit && timeRow && dateRow) {
+      /* seven-segment digits as chunky rects */
+      const SEGS: Record<string, string> = {
+        a: '<rect x="2" y="0" width="6" height="2"/>',
+        b: '<rect x="8" y="2" width="2" height="6"/>',
+        c: '<rect x="8" y="10" width="2" height="6"/>',
+        d: '<rect x="2" y="16" width="6" height="2"/>',
+        e: '<rect x="0" y="10" width="2" height="6"/>',
+        f: '<rect x="0" y="2" width="2" height="6"/>',
+        g: '<rect x="2" y="8" width="6" height="2"/>'
+      };
+      const DIGIT_SEGS = ['abcdef', 'bc', 'abged', 'abgcd', 'fgbc', 'afgcd', 'afgedc', 'abc', 'abcdefg', 'abfgcd'];
+
+      const digitSvg = (cls: string) => {
+        let inner = '';
+        for (const key of Object.keys(SEGS)) {
+          inner += SEGS[key].replace('/>', ` class="nc-seg nc-seg--${key}"/>`);
+        }
+        return `<svg viewBox="0 0 10 18" shape-rendering="crispEdges" class="${cls}">${inner}</svg>`;
+      };
+      const colonSvg = () =>
+        '<svg viewBox="0 0 4 18" shape-rendering="crispEdges" class="nc-colon"><rect x="1" y="4" width="2" height="2" class="nc-seg"/><rect x="1" y="12" width="2" height="2" class="nc-seg"/></svg>';
+      const dotSvg = () =>
+        '<svg viewBox="0 0 4 18" shape-rendering="crispEdges" class="nc-dot"><rect x="1" y="16" width="2" height="2" class="nc-seg"/></svg>';
+
+      timeRow.innerHTML =
+        digitSvg('nc-digit') + digitSvg('nc-digit') + colonSvg() +
+        digitSvg('nc-digit') + digitSvg('nc-digit') + colonSvg() +
+        digitSvg('nc-digit') + digitSvg('nc-digit');
+      dateRow.innerHTML =
+        digitSvg('nc-digit nc-digit--small') + digitSvg('nc-digit nc-digit--small') + dotSvg() +
+        digitSvg('nc-digit nc-digit--small') + digitSvg('nc-digit nc-digit--small') + dotSvg() +
+        digitSvg('nc-digit nc-digit--small') + digitSvg('nc-digit nc-digit--small') +
+        digitSvg('nc-digit nc-digit--small') + digitSvg('nc-digit nc-digit--small');
+
+      const timeDigits = Array.from(timeRow.querySelectorAll<SVGElement>('.nc-digit'));
+      const colons = Array.from(timeRow.querySelectorAll<SVGElement>('.nc-colon'));
+      const dateDigits = Array.from(dateRow.querySelectorAll<SVGElement>('.nc-digit'));
+
+      const showDigit = (el: SVGElement, value: number) => {
+        const lit = DIGIT_SEGS[value];
+        for (const seg of el.querySelectorAll<SVGElement>('.nc-seg')) {
+          const key = seg.getAttribute('class')?.match(/nc-seg--(\w)/)?.[1] ?? '';
+          seg.classList.toggle('is-lit', lit.includes(key));
+        }
+      };
+
+      let ncStopped = false;
+      let ncBusy = false;
+
+      const render = () => {
+        /* new Date() is the visitor's own clock — every reader sees their
+           local present. */
+        const now = new Date();
+        const time = [now.getHours(), now.getMinutes(), now.getSeconds()];
+        let i = 0;
+        for (const value of time) {
+          showDigit(timeDigits[i++], Math.floor(value / 10));
+          showDigit(timeDigits[i++], value % 10);
+        }
+        const blinkOn = now.getSeconds() % 2 === 0;
+        for (const colon of colons) {
+          for (const seg of colon.querySelectorAll<SVGElement>('.nc-seg')) {
+            seg.classList.toggle('is-lit', blinkOn);
+          }
+        }
+        const day = now.getDate();
+        const month = now.getMonth() + 1;
+        const year = now.getFullYear();
+        const dateValues = [
+          Math.floor(day / 10), day % 10,
+          Math.floor(month / 10), month % 10,
+          Math.floor(year / 1000), Math.floor((year / 100) % 10),
+          Math.floor((year / 10) % 10), year % 10
+        ];
+        dateValues.forEach((value, index) => showDigit(dateDigits[index], value));
+        for (const dot of dateRow.querySelectorAll<SVGElement>('.nc-dot .nc-seg')) {
+          dot.classList.add('is-lit');
+        }
+        dayLabels.forEach((label, index) => label.classList.toggle('is-lit', index === now.getDay()));
+      };
+
+      render();
+      window.setInterval(() => {
+        if (!ncStopped) render();
+      }, 250);
+
+      const shake = (strength: number) =>
+        new Promise<void>((resolve) => {
+          if (ncReducedMotion) { resolve(); return; }
+          const anim = hit.animate(
+            [
+              { transform: 'translate(0, 0) rotate(0deg)' },
+              { transform: `translate(${strength}px, ${-strength * 0.4}px) rotate(${strength * 0.5}deg)` },
+              { transform: `translate(${-strength * 0.85}px, ${strength * 0.3}px) rotate(${-strength * 0.4}deg)` },
+              { transform: `translate(${strength * 0.5}px, 0) rotate(${strength * 0.2}deg)` },
+              { transform: 'translate(0, 0) rotate(0deg)' }
+            ],
+            { duration: 300 + strength * 24, easing: 'ease-in-out' }
+          );
+          anim.finished.then(() => resolve(), () => resolve());
+        });
+
+      /* the third shudder: violent, with an overshoot before it settles */
+      const finalShake = () =>
+        new Promise<void>((resolve) => {
+          if (ncReducedMotion) { resolve(); return; }
+          const anim = hit.animate(
+            [
+              { transform: 'translate(0, 0) rotate(0deg)' },
+              { transform: 'translate(7px, -4px) rotate(4.5deg)' },
+              { transform: 'translate(-8px, 4px) rotate(-5deg)' },
+              { transform: 'translate(8px, -3px) rotate(5deg)' },
+              { transform: 'translate(-7px, 4px) rotate(-4.5deg)' },
+              { transform: 'translate(5px, -2px) rotate(3deg)' },
+              { transform: 'translate(-2.5px, 1px) rotate(-1.4deg)' },
+              { transform: 'translate(1px, 0) rotate(0.5deg)' },
+              { transform: 'translate(0, 0) rotate(0deg)' }
+            ],
+            { duration: 760, easing: 'cubic-bezier(0.36, 0.07, 0.19, 0.97)' }
+          );
+          anim.finished.then(() => resolve(), () => resolve());
+        });
+
+      const wait = (ms: number) =>
+        new Promise<void>((r) => window.setTimeout(r, ncReducedMotion ? Math.min(ms, 400) : ms));
+
+      hit.addEventListener('click', async () => {
+        if (ncBusy) return;
+        ncBusy = true;
+        ncStopped = true;
+        ncRoot.dataset.state = 'stopped';
+        if (status) status.textContent = 'The clock stops.';
+
+        /* Now lies still — then coils. Three shudders, the last violent. */
+        await wait(900);
+        await shake(1.4);
+        await wait(430);
+        await shake(3);
+        await wait(320);
+        await finalShake();
+
+        ncStopped = false;
+        render();
+        ncRoot.dataset.state = 'running';
+        if (status) status.textContent = 'It refuses. It runs again.';
+        ncBusy = false;
+      });
+    }
+  }
+</script>
+
+<style is:global>
+  /* Now: the cover slot becomes the sticky column so the clock rides
+     beneath the cover, mirroring the guests/trail/witnesses pattern. */
+  @media (min-width: 861px) {
+    .archived-piece-page .now-cover-slot {
+      display: block;
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: 96px;
+      align-self: start;
+      justify-self: end;
+      width: 100%;
+    }
+
+    .archived-piece-page .now-cover-slot .archive-cover-card {
+      position: static;
+      top: auto;
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  /* The spread line in the story text: this … is … Now */
+  .archive-prose .now-spread {
+    display: flex;
+    justify-content: space-between;
+    text-indent: 0;
+    font-style: italic;
+  }
+</style>
+
+<style>
+  .nowclock-coda {
+    margin: 26px 0 0;
+    display: grid;
+    justify-items: center;
+    text-indent: 0;
+  }
+
+  .nc-clock {
+    display: block;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  .nc-clock:focus-visible {
+    outline: 1px solid var(--border-strong);
+    outline-offset: 5px;
+  }
+
+  .nowclock-coda[data-state='stopped'] .nc-clock {
+    cursor: default;
+  }
+
+  .nc-panel {
+    display: grid;
+    justify-items: center;
+    row-gap: 8px;
+    padding: 13px 17px 12px;
+    background: linear-gradient(165deg, #17161a 0%, #121115 55%, #0f0e12 100%);
+    border: 1px solid #2a2731;
+    border-radius: 10px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 10px 26px rgba(0, 0, 0, 0.45);
+  }
+
+  /* weekday strip: the current day glows violet */
+  .nc-days {
+    display: flex;
+    gap: 7px;
+    font-family: var(--sans);
+    font-size: 0.4rem;
+    letter-spacing: 0.14em;
+    color: rgba(157, 107, 255, 0.16);
+  }
+
+  .nc-days :global(span.is-lit) {
+    color: #9d6bff;
+    text-shadow: 0 0 6px rgba(157, 107, 255, 0.5);
+  }
+
+  /* time: cover pink */
+  .nc-time {
+    display: flex;
+    align-items: center;
+    gap: 3.5px;
+    filter: drop-shadow(0 0 6px rgba(255, 79, 160, 0.35));
+  }
+
+  .nc-time :global(.nc-digit) {
+    display: block;
+    width: 15px;
+    height: 27px;
+  }
+
+  .nc-time :global(.nc-colon) {
+    display: block;
+    width: 6px;
+    height: 27px;
+  }
+
+  .nc-time :global(.nc-seg) {
+    fill: rgba(255, 79, 160, 0.09);
+  }
+
+  .nc-time :global(.nc-seg.is-lit) {
+    fill: #ff4fa0;
+  }
+
+  /* date: cover violet */
+  .nc-date {
+    display: flex;
+    align-items: center;
+    gap: 2.5px;
+    filter: drop-shadow(0 0 5px rgba(157, 107, 255, 0.3));
+  }
+
+  .nc-date :global(.nc-digit--small) {
+    display: block;
+    width: 9px;
+    height: 16px;
+  }
+
+  .nc-date :global(.nc-dot) {
+    display: block;
+    width: 4px;
+    height: 16px;
+  }
+
+  .nc-date :global(.nc-seg) {
+    fill: rgba(157, 107, 255, 0.1);
+  }
+
+  .nc-date :global(.nc-seg.is-lit) {
+    fill: #9d6bff;
+  }
+
+  .nc-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 860px) {
+    .nowclock-coda {
+      display: none;
+    }
+  }
+</style>
