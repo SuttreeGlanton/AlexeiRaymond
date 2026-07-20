@@ -2,7 +2,9 @@
 title: How the Night Glows
 fullText: true
 ---
-“I’m taking the bathroom!” Natalie exclaimed as she opened the hotel room door. Adam followed, carrying the combined weight of shopping bags and backpacks equipped for travel. Both removed their shoes, and their freed feet sank into the carpeted floor. A mercy. Adam murmured a recap of the day, mostly to himself, as Natalie ducked into the bathroom.
+*The trip would be over in less than a week. And then. Home?*
+
+<p style="text-indent: 2.6em;">“I’m taking the bathroom!” Natalie exclaimed as she opened the hotel room door. Adam followed, carrying the combined weight of shopping bags and backpacks equipped for travel. Both removed their shoes, and their freed feet sank into the carpeted floor. A mercy. Adam murmured a recap of the day, mostly to himself, as Natalie ducked into the bathroom.</p>
 
 “Man, we actually managed to spend the entire day out, huh? Good thing we decided to not come back and take a nap. Wish I could just shut off the need to sleep altogether...”
 
@@ -60,7 +62,7 @@ With the soft click of the switch, the room was softly lit by the large window, 
 
 “Yeah, one sec.”
 
-“Don’t forget to close the curtains. The light in the morning…” She trailed off. Adam’s lean, night-shrouded figure stood at the far end of the room. The air on his skin was chilly, and in the dark, he felt no need to hide his body. He held still, nursing an indeterminate, dull ache. The trip would be over in less than a week. And then. Home?
+“Don’t forget to close the curtains. The light in the morning…” She trailed off. Adam’s lean, night-shrouded figure stood at the far end of the room. The air on his skin was chilly, and in the dark, he felt no need to hide his body. He held still, nursing an indeterminate, dull ache.
 
 A moment later, he once again found himself drawn—as if by default, as if having no other choice—to the broad window. Ache moved him. He could suddenly name it—yes, *toska*. It demanded to be radiated outward, to be allowed a breath of air, or perhaps escape. He sat by the window and watched drops innumerable cling to it from the outside, hurled against it via misty rain from the upper reaches of Tokyo sky. He then looked at the streets and intersections below. Finding nothing in the lower reaches, Adam cast his eyes toward the metropolitan horizon and its endless unknowns.
 

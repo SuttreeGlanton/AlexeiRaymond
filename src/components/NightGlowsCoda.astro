@@ -7,6 +7,7 @@
    are pixel art, in keeping with the site's other codas. Same on all
    viewports; it lives at the end of the story, a classic bottom coda. */
 import tokyoGif from '../assets/codas/tokyo-night.gif?url';
+import { assetPath } from '../lib/paths';
 ---
 
 <figure class="night-glows-coda" data-night-glows data-state="intact">
@@ -42,6 +43,7 @@ import tokyoGif from '../assets/codas/tokyo-night.gif?url';
       <span class="ng-shard ng-shard--b6" style="--bx:60px; --by:120px; --br:-240deg; animation-delay:0.12s;"><svg viewBox="0 0 7 7" shape-rendering="crispEdges"><path d="M4 0h2v1h-2zM3 1h3v1h-3zM2 2h4v1h-4zM2 3h5v1h-5zM1 4h5v1h-5zM3 5h3v1h-3zM4 6h1v1h-1z" /></svg></span>
     </span>
 
+    <audio src={assetPath('audio/night-city.ogg')} preload="auto" loop data-ng-ambient></audio>
     <button class="ng-hit" type="button" data-ng-hit aria-label="Strike the window"></button>
   </div>
 </figure>
@@ -78,7 +80,23 @@ import tokyoGif from '../assets/codas/tokyo-night.gif?url';
 
       ngCoda.setAttribute('data-state', next);
       ngHit.setAttribute('aria-label', ngLabels[next]);
-      if (next === 'smashed') ngHit.disabled = true;
+
+      if (next === 'smashed') {
+        ngHit.disabled = true;
+
+        /* The city keeps sounding after the glass is gone. The strike that
+           triggers this is a user gesture, so playback is permitted; if the
+           file is absent or autoplay is refused, fail silent. */
+        const ngAmbient = ngCoda.querySelector<HTMLAudioElement>('[data-ng-ambient]');
+        if (ngAmbient) {
+          ngAmbient.volume = 0;
+          const ngFade = window.setInterval(() => {
+            ngAmbient.volume = Math.min(0.55, ngAmbient.volume + 0.05);
+            if (ngAmbient.volume >= 0.55) window.clearInterval(ngFade);
+          }, 160);
+          ngAmbient.play().catch(() => window.clearInterval(ngFade));
+        }
+      }
     });
   }
 </script>
