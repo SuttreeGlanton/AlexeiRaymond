@@ -494,7 +494,7 @@ const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
           hcRabbit.dataset.lit = state.on ? 'on' : 'off';
           hcRabbit.dataset.phase = state.phase;
           hcRabbit.setAttribute('aria-pressed', state.on ? 'true' : 'false');
-          hcRabbit.classList.toggle('is-waver-gentle', state.phase === 'waver' && state.on && hcReducedMotion);
+          hcRabbit.classList.toggle('is-waver-gentle', state.phase === 'waver' && state.on && !state.gold && hcReducedMotion);
           if (state.gold) hcRabbit.dataset.gold = 'true';
           else delete hcRabbit.dataset.gold;
         };
@@ -914,8 +914,7 @@ const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
     opacity: 1;
   }
 
-  .hc-rabbit[data-lit='on'].is-dim:not([data-gold]) :global(.rl-red),
-  .hc-rabbit[data-lit='on'][data-gold].is-dim :global(.rl-gold) {
+  .hc-rabbit[data-lit='on'].is-dim:not([data-gold]) :global(.rl-red) {
     opacity: 0.3;
     transition-duration: 90ms;
   }
@@ -925,8 +924,7 @@ const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
     transition-duration: 60ms;
   }
 
-  .hc-rabbit.is-waver-gentle :global(.rl-red),
-  .hc-rabbit.is-waver-gentle :global(.rl-gold) {
+  .hc-rabbit.is-waver-gentle :global(.rl-red) {
     animation: rl-gentle 3.8s ease-in-out infinite;
   }
 

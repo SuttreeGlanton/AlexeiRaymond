@@ -117,19 +117,19 @@ const { variant } = Astro.props;
       window.clearTimeout(flickerTimer);
       setDim(false);
 
-      const wavering = phase === 'waver' && effectiveOn();
+      const wavering = phase === 'waver' && effectiveOn() && !gold;
       for (const fig of rlFigs) fig.classList.toggle('is-waver-gentle', wavering && rlReducedMotion);
       if (!wavering || rlReducedMotion) return;
 
       const dip = () => {
-        if (phase !== 'waver' || !effectiveOn()) return;
+        if (phase !== 'waver' || !effectiveOn() || gold) return;
         setDim(true);
         window.setTimeout(() => {
           setDim(false);
           /* occasionally a second, shorter falter close behind */
           if (Math.random() < 0.3) {
             window.setTimeout(() => {
-              if (phase !== 'waver' || !effectiveOn()) return;
+              if (phase !== 'waver' || !effectiveOn() || gold) return;
               setDim(true);
               window.setTimeout(() => {
                 setDim(false);
@@ -525,20 +525,18 @@ const { variant } = Astro.props;
   }
 
   /* the waver: quick dips scheduled by script */
-  .rabbitlamp-coda[data-lit='on'].is-dim:not([data-gold]) .rl-red,
-  .rabbitlamp-coda[data-lit='on'][data-gold].is-dim .rl-gold {
+  .rabbitlamp-coda[data-lit='on'].is-dim:not([data-gold]) .rl-red {
     opacity: 0.3;
     transition: opacity 90ms ease;
   }
 
-  .is-dim .rl-halo {
+  .rabbitlamp-coda.is-dim:not([data-gold]) .rl-halo {
     opacity: 0.32;
     transition: opacity 90ms ease;
   }
 
   /* reduced motion: a slow, gentle breathing instead of flicker */
-  .is-waver-gentle .rl-red,
-  .is-waver-gentle .rl-gold {
+  .is-waver-gentle .rl-red {
     animation: rl-gentle 3.8s ease-in-out infinite;
   }
 
