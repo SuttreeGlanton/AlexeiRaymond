@@ -60,7 +60,7 @@ const isMothhead = entry.id === 'mothhead';
 const isAlpha = entry.id === 'alpha';
 const isNow = entry.id === 'now';
 const isTruth = entry.id === 'truth-or-its-evidence';
-const headerCoda = isWitnesses ? 'moon' : isSixThousandEighty ? 'counter' : isTheTrail ? 'pills' : isGuestsHere ? 'eyes' : isNow ? 'clock' : undefined;
+const headerCoda = isWitnesses ? 'moon' : isSixThousandEighty ? 'counter' : isTheTrail ? 'pills' : isGuestsHere ? 'eyes' : isNow ? 'clock' : isTruth ? 'rabbit' : undefined;
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? '' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -250,7 +250,6 @@ const breadcrumbSchema = piece ? {
         {isWitnesses && <WitnessesCoda variant="cat" />}
         {isHowTheNightGlows && <NightGlowsCoda />}
         {isMothhead && <MothheadCoda />}
-        {isTruth && <RabbitLampCoda variant="mobile" />}
         {isAlpha && <AlphaSoundCoda />}
       </div>
     </div>

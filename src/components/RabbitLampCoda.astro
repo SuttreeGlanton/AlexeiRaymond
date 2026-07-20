@@ -4,7 +4,8 @@
    will not give it back; morning returns it to the reader's hand; it
    wavers when the boy confronts his mother; and the final words —
    "Charging, charging." — turn its glow to sunrise gold for good.
-   Desktop tracks the story via text markers; mobile is a simple lamp. */
+   Desktop shows the full figure; the mobile header uses the same state and
+   behavior, cropped down to the rabbit's head. */
 interface Props {
   variant: 'desktop' | 'mobile';
 }
@@ -59,7 +60,6 @@ const { variant } = Astro.props;
 
   if (rlFigs.length > 0) {
     const rlReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const rlDesktop = window.matchMedia('(min-width: 861px)').matches;
     const prose = document.querySelector<HTMLElement>('.archive-prose');
 
     const KEY = 'truth-lamp';
@@ -71,10 +71,9 @@ const { variant } = Astro.props;
       try { window.sessionStorage.setItem(KEY, JSON.stringify({ gold, user: userWants })); } catch {}
     };
 
-    /* phases: opening -> night -> day -> waver -> day. Mobile skips them. */
+    /* phases: opening -> night -> day -> waver -> day */
     type Phase = 'opening' | 'night' | 'day' | 'waver';
-    let phase: Phase = rlDesktop ? 'opening' : 'day';
-    if (!rlDesktop && userWants === 'auto') userWants = 'on';
+    let phase: Phase = 'opening';
 
     const effectiveOn = (): boolean => {
       /* after the sunrise transformation the dark has lost its power:
@@ -85,6 +84,17 @@ const { variant } = Astro.props;
     };
 
     let flickerTimer = 0;
+
+    const broadcastState = () => {
+      window.dispatchEvent(new CustomEvent('truth-lamp-state', {
+        detail: { on: effectiveOn(), gold, phase }
+      }));
+    };
+
+    const setDim = (dim: boolean) => {
+      for (const fig of rlFigs) fig.classList.toggle('is-dim', dim);
+      window.dispatchEvent(new CustomEvent('truth-lamp-dim', { detail: { dim } }));
+    };
 
     const applyState = () => {
       const on = effectiveOn();
@@ -97,12 +107,13 @@ const { variant } = Astro.props;
         hit?.setAttribute('aria-pressed', on ? 'true' : 'false');
       }
       scheduleFlicker();
+      broadcastState();
     };
 
     /* ---- the waver: restrained, irregular dips while lit ---- */
     const scheduleFlicker = () => {
       window.clearTimeout(flickerTimer);
-      for (const fig of rlFigs) fig.classList.remove('is-dim');
+      setDim(false);
 
       const wavering = phase === 'waver' && effectiveOn();
       for (const fig of rlFigs) fig.classList.toggle('is-waver-gentle', wavering && rlReducedMotion);
@@ -110,16 +121,16 @@ const { variant } = Astro.props;
 
       const dip = () => {
         if (phase !== 'waver' || !effectiveOn()) return;
-        for (const fig of rlFigs) fig.classList.add('is-dim');
+        setDim(true);
         window.setTimeout(() => {
-          for (const fig of rlFigs) fig.classList.remove('is-dim');
+          setDim(false);
           /* occasionally a second, shorter falter close behind */
           if (Math.random() < 0.3) {
             window.setTimeout(() => {
               if (phase !== 'waver' || !effectiveOn()) return;
-              for (const fig of rlFigs) fig.classList.add('is-dim');
+              setDim(true);
               window.setTimeout(() => {
-                for (const fig of rlFigs) fig.classList.remove('is-dim');
+                setDim(false);
               }, 90 + Math.random() * 80);
             }, 140 + Math.random() * 120);
           }
@@ -137,29 +148,37 @@ const { variant } = Astro.props;
       }
     };
 
-    for (const fig of rlFigs) {
-      const hit = fig.querySelector<HTMLButtonElement>('[data-rl-hit]');
-      hit?.addEventListener('click', () => {
-        if (phase === 'night' && !gold) {
-          /* the dark refuses: a failed ember, nothing more */
-          if (!rlReducedMotion) {
+    const toggleLamp = (fig?: HTMLElement) => {
+      if (phase === 'night' && !gold) {
+        /* the dark refuses: a failed ember, nothing more */
+        if (!rlReducedMotion) {
+          if (fig) {
             fig.classList.remove('is-refuse');
             void fig.offsetWidth;
             fig.classList.add('is-refuse');
             window.setTimeout(() => fig.classList.remove('is-refuse'), 300);
           }
-          say('The dark refuses the light.');
-          return;
         }
-        userWants = effectiveOn() ? 'off' : 'on';
-        save();
-        applyState();
-        say(userWants === 'on' ? 'The night-light is on.' : 'The night-light is off.');
-      });
+        window.dispatchEvent(new CustomEvent('truth-lamp-refused'));
+        say('The dark refuses the light.');
+        return;
+      }
+      userWants = effectiveOn() ? 'off' : 'on';
+      save();
+      applyState();
+      say(userWants === 'on' ? 'The night-light is on.' : 'The night-light is off.');
+    };
+
+    for (const fig of rlFigs) {
+      const hit = fig.querySelector<HTMLButtonElement>('[data-rl-hit]');
+      hit?.addEventListener('click', () => toggleLamp(fig));
     }
 
-    /* ---- desktop: story markers drive the phase ---- */
-    if (rlDesktop && prose) {
+    window.addEventListener('truth-lamp-toggle', () => toggleLamp());
+    window.addEventListener('truth-lamp-request-state', broadcastState);
+
+    /* ---- story markers drive the phase on both desktop and mobile ---- */
+    if (prose) {
       const MARKERS: Array<[string, Phase]> = [
         ['and extinguished it', 'night'],
         ['Hours later, when the morning', 'day'],
@@ -234,6 +253,7 @@ const { variant } = Astro.props;
           btn.setAttribute('aria-pressed', 'true');
           save();
           applyState();
+          window.dispatchEvent(new CustomEvent('truth-lamp-charged'));
           say('The light turns to sunrise.');
         };
         if (gold) {
@@ -314,18 +334,6 @@ const { variant } = Astro.props;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: rl-gilt-shimmer 8s ease-in-out infinite;
-    }
-
-    .archive-prose .rl-charging.is-charged .rl-charging-text {
-      background: linear-gradient(
-        105deg,
-        #c08a1e 10%,
-        #f4c04a 38%,
-        #fff3b0 50%,
-        #ffcf4d 62%,
-        #c08a1e 90%
-      );
-      background-size: 240% 100%;
     }
   }
 

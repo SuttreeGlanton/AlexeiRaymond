@@ -3,7 +3,7 @@
    slot in the sticky mobile header once the reader scrolls past the title.
    Mobile only (<= 640px); desktop never renders the slot (SiteHeader CSS). */
 interface Props {
-  type: 'moon' | 'counter' | 'pills' | 'eyes' | 'clock';
+  type: 'moon' | 'counter' | 'pills' | 'eyes' | 'clock' | 'rabbit';
 }
 
 const { type } = Astro.props;
@@ -459,6 +459,9 @@ const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
       </span>
     </button>
   )}
+  {type === 'rabbit' && (
+    <button class="hc-rabbit" type="button" data-hc-rabbit aria-label="The rabbit night-light" aria-pressed="false"></button>
+  )}
 </span>
 
 <script>
@@ -471,6 +474,57 @@ const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
     const hcHeader = document.querySelector<HTMLElement>('[data-site-header]');
     const hcTitle = document.getElementById('account-title');
     const hcProse = document.querySelector<HTMLElement>('.archive-prose');
+
+    /* ---------- Truth: clone the existing lamp sprite; share its gilt state ---------- */
+    const hcRabbit = hcRoot.querySelector<HTMLButtonElement>('[data-hc-rabbit]');
+
+    if (hcType === 'rabbit' && hcRabbit) {
+      const source = document.querySelector<SVGElement>('.rabbitlamp-coda--desktop .rl-svg');
+
+      if (source) {
+        const clone = source.cloneNode(true) as SVGElement;
+        clone.setAttribute('viewBox', '0 0 48 51');
+        clone.setAttribute('aria-hidden', 'true');
+        clone.setAttribute('focusable', 'false');
+        hcRabbit.append(clone);
+
+        type RabbitState = { on: boolean; gold: boolean; phase: string };
+
+        const applyRabbitState = (state: RabbitState) => {
+          hcRabbit.dataset.lit = state.on ? 'on' : 'off';
+          hcRabbit.dataset.phase = state.phase;
+          hcRabbit.setAttribute('aria-pressed', state.on ? 'true' : 'false');
+          hcRabbit.classList.toggle('is-waver-gentle', state.phase === 'waver' && state.on && hcReducedMotion);
+          if (state.gold) hcRabbit.dataset.gold = 'true';
+          else delete hcRabbit.dataset.gold;
+        };
+
+        window.addEventListener('truth-lamp-state', (event) => {
+          applyRabbitState((event as CustomEvent<RabbitState>).detail);
+        });
+
+        window.addEventListener('truth-lamp-dim', (event) => {
+          const dim = (event as CustomEvent<{ dim: boolean }>).detail.dim;
+          hcRabbit.classList.toggle('is-dim', dim);
+        });
+
+        window.addEventListener('truth-lamp-refused', () => {
+          if (hcReducedMotion) return;
+          hcRabbit.classList.remove('is-refuse');
+          void hcRabbit.offsetWidth;
+          hcRabbit.classList.add('is-refuse');
+          window.setTimeout(() => hcRabbit.classList.remove('is-refuse'), 300);
+        });
+
+        hcRabbit.addEventListener('click', () => {
+          window.dispatchEvent(new CustomEvent('truth-lamp-toggle'));
+        });
+
+        /* Covers either script order: an already-running lamp answers this;
+           otherwise its initial state broadcast arrives after setup. */
+        window.dispatchEvent(new CustomEvent('truth-lamp-request-state'));
+      }
+    }
 
     /* ---------- swap trigger: title scrolled away -> coda takes the slot ---------- */
     let hcActive = false;
@@ -807,6 +861,83 @@ const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
 
   @media (prefers-reduced-motion: reduce) {
     .header-coda {
+      transition: none;
+    }
+  }
+
+  /* ---------- Truth, or Its Evidence: the lit rabbit ---------- */
+  .hc-rabbit {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    filter: drop-shadow(0 0 4px rgba(246, 94, 66, 0.5));
+    transition: filter 340ms ease;
+  }
+
+  .hc-rabbit:focus-visible {
+    border-radius: 3px;
+    outline: 1px solid var(--border-strong);
+    outline-offset: 3px;
+  }
+
+  .hc-rabbit[data-lit='off'] {
+    filter: none;
+  }
+
+  .hc-rabbit[data-lit='on'][data-gold] {
+    filter: drop-shadow(0 0 5px rgba(255, 201, 94, 0.58));
+  }
+
+  .hc-rabbit[data-hc-rabbit] :global(.rl-svg) {
+    display: block;
+    width: 30px;
+    height: 32px;
+  }
+
+  .hc-rabbit :global(.rl-layer) {
+    opacity: 0;
+    transition: opacity 340ms ease;
+  }
+
+  .hc-rabbit[data-lit='off'] :global(.rl-off),
+  .hc-rabbit[data-lit='on']:not([data-gold]) :global(.rl-red),
+  .hc-rabbit[data-lit='on'][data-gold] :global(.rl-gold) {
+    opacity: 1;
+  }
+
+  .hc-rabbit.is-dim :global(.rl-red),
+  .hc-rabbit.is-dim :global(.rl-gold) {
+    opacity: 0.3;
+    transition-duration: 90ms;
+  }
+
+  .hc-rabbit.is-refuse :global(.rl-red) {
+    opacity: 0.07;
+    transition-duration: 60ms;
+  }
+
+  .hc-rabbit.is-waver-gentle :global(.rl-red),
+  .hc-rabbit.is-waver-gentle :global(.rl-gold) {
+    animation: rl-gentle 3.8s ease-in-out infinite;
+  }
+
+  @keyframes rl-gentle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.68; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hc-rabbit,
+    .hc-rabbit :global(.rl-layer) {
       transition: none;
     }
   }
