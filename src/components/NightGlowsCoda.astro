@@ -1,6 +1,6 @@
----
+﻿---
 /* Coda for "How the Night Glows": the hotel window over night-time Shinjuku.
-   The city waits in grey behind the glass. Three strikes, like in the story —
+   The city waits in grey behind the glass. Three strikes, like in the story â€”
    the first leaves a mark, the second webs the glass and opens a hole at the
    point of impact, the third smashes the pane until only a jagged perimeter
    remains, and only then does the city bloom into colour. All glass effects
@@ -12,7 +12,7 @@ import { assetPath } from '../lib/paths';
 
 <figure class="night-glows-coda" data-night-glows data-state="intact">
   <div class="ng-window">
-    <img class="ng-city" src={tokyoGif} alt="Rainy nighttime view over Shinjuku, Tokyo — squares of orange and white light out of the dark." loading="lazy" />
+    <img class="ng-city" src={tokyoGif} alt="Rainy nighttime view over Shinjuku, Tokyo â€” squares of orange and white light out of the dark." loading="lazy" />
     <div class="ng-sheen" aria-hidden="true"></div>
     <img class="ng-city-clear" src={tokyoGif} alt="" aria-hidden="true" loading="lazy" />
 
@@ -43,7 +43,7 @@ import { assetPath } from '../lib/paths';
       <span class="ng-shard ng-shard--b6" style="--bx:60px; --by:120px; --br:-240deg; animation-delay:0.12s;"><svg viewBox="0 0 7 7" shape-rendering="crispEdges"><path d="M4 0h2v1h-2zM3 1h3v1h-3zM2 2h4v1h-4zM2 3h5v1h-5zM1 4h5v1h-5zM3 5h3v1h-3zM4 6h1v1h-1z" /></svg></span>
     </span>
 
-    <audio src={assetPath('audio/night-city.ogg')} preload="auto" loop data-ng-ambient></audio>
+    <audio src={assetPath('audio/night-city.ogg')} preload="auto" data-ng-ambient></audio>
     <button class="ng-hit" type="button" data-ng-hit aria-label="Strike the window"></button>
   </div>
 </figure>
@@ -335,3 +335,5 @@ import { assetPath } from '../lib/paths';
     }
   }
 </style>
+
+
