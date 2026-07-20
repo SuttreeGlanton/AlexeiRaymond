@@ -243,7 +243,13 @@
     cursor: default;
   }
 
+  /* Subdued, Now goes grey; colour returns the moment it breaks free. */
+  .nowclock-coda[data-state='stopped'] .nc-panel {
+    filter: grayscale(1);
+  }
+
   .nc-panel {
+    transition: filter 260ms ease;
     display: grid;
     justify-items: center;
     row-gap: 8px;

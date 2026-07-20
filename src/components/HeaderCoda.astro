@@ -1193,6 +1193,12 @@ const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
     display: grid;
     justify-items: start;
     row-gap: 2px;
+    transition: filter 260ms ease;
+  }
+
+  /* Subdued, Now goes grey; colour returns the moment it breaks free. */
+  .hc-clock[data-state='stopped'] .hc-clk-display {
+    filter: grayscale(1);
   }
 
   /* time row: cover pink */
