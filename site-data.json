@@ -705,7 +705,12 @@
       "cover": "covers/pieces/how-the-night-glows.jpg",
       "excerpt": "Something else hid within him, his toska a mere symptom. Something partitioned off.",
       "genre": "Short fiction",
-      "issue": "#176"
+      "issue": "#176",
+      "account": {
+        "slug": "how-the-night-glows",
+        "label": "Read story",
+        "title": "How the Night Glows"
+      }
     },
     {
       "title": "LothariOnline",

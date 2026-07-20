@@ -16,6 +16,7 @@ import NutcrackerCoda from '../../components/NutcrackerCoda.astro';
 import GuestsEyesCoda from '../../components/GuestsEyesCoda.astro';
 import TheTrailCoda from '../../components/TheTrailCoda.astro';
 import WitnessesCoda from '../../components/WitnessesCoda.astro';
+import NightGlowsCoda from '../../components/NightGlowsCoda.astro';
 import MothheadCoda from '../../components/MothheadCoda.astro';
 import AlphaSoundCoda from '../../components/AlphaSoundCoda.astro';
 import RedCherrySlack from '../../components/RedCherrySlack.astro';
@@ -52,6 +53,7 @@ const isGuestsHere = entry.id === 'the-guests-are-here';
 const isTheTrail = entry.id === 'the-trail';
 const isRedCherry = entry.id === 'red-they-are-cherry-red';
 const isWitnesses = entry.id === 'witnesses';
+const isHowTheNightGlows = entry.id === 'how-the-night-glows';
 const isMothhead = entry.id === 'mothhead';
 const isAlpha = entry.id === 'alpha';
 const headerCoda = isWitnesses ? 'moon' : isSixThousandEighty ? 'counter' : isTheTrail ? 'pills' : isGuestsHere ? 'eyes' : undefined;
@@ -240,6 +242,7 @@ const breadcrumbSchema = piece ? {
         )}
         {isTheTrail && <TheTrailCoda variant="mobile" />}
         {isWitnesses && <WitnessesCoda variant="cat" />}
+        {isHowTheNightGlows && <NightGlowsCoda />}
         {isMothhead && <MothheadCoda />}
         {isAlpha && <AlphaSoundCoda />}
       </div>
