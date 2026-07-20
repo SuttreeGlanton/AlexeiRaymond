@@ -1,4 +1,4 @@
-﻿---
+---
 import { getCollection, render } from 'astro:content';
 import { getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -22,7 +22,7 @@ import MothheadCoda from '../../components/MothheadCoda.astro';
 import AlphaSoundCoda from '../../components/AlphaSoundCoda.astro';
 import RedCherrySlack from '../../components/RedCherrySlack.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
-import { absoluteSiteUrl, assetPath, withBase } from '../../lib/paths';
+import { absoluteSiteUrl, withBase } from '../../lib/paths';
 import { imageAsset } from '../../lib/image-assets';
 
 export async function getStaticPaths() {

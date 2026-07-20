@@ -717,7 +717,10 @@ const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
 
       clkRender();
       window.setInterval(() => {
-        if (!clkStopped) clkRender();
+        /* The slot is mobile-only; on wider viewports (and in hidden tabs)
+           the clock is invisible, so don't burn frames redrawing it. */
+        if (clkStopped || document.hidden || !hcMobileQuery.matches) return;
+        clkRender();
       }, 250);
 
       const clkShake = (strength: number) =>

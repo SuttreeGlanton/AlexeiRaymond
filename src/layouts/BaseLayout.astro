@@ -21,7 +21,6 @@ interface Props {
   ogType?: 'website' | 'article';
   publishedTime?: string;
   structuredData?: Record<string, unknown> | Array<Record<string, unknown> | undefined>;
-  preloadAudio?: string;
   headerCoda?: 'moon' | 'counter' | 'pills' | 'eyes' | 'clock';
 }
 
@@ -35,7 +34,6 @@ const {
   ogType = 'website',
   publishedTime,
   structuredData,
-  preloadAudio,
   headerCoda
 } = Astro.props;
 const resolvedTitle = title.split(' — ').join(' | ');
@@ -75,7 +73,6 @@ const pageSchemas = (Array.isArray(structuredData) ? structuredData : [structure
     <link rel="sitemap" href={withBase('sitemap-index.xml')} />
     <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
     <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
-    {preloadAudio && <link rel="preload" as="audio" href={preloadAudio} type="audio/mpeg" />}
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={site.author} />
     <meta property="og:title" content={resolvedTitle} />

@@ -618,7 +618,7 @@ img {
   text-transform: uppercase;
 }
 
-/* Genre reads as a quiet label, not a status box ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â no border, dimmer. */
+/* Genre reads as a quiet label, not a status box — no border, dimmer. */
 .genre-chip {
   padding: 4px 0 3px;
   color: var(--muted);

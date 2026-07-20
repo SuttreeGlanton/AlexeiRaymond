@@ -3,7 +3,8 @@
    weekday, date, and seconds running. Stopping it is possible, briefly:
    the clock lies still, shudders three times with the last one violent,
    then runs again at the true present. Colours are the story cover's
-   pink and violet. Desktop only: mobile has the header LED clock. */
+   pink and violet. It rides under the cover down to 641px; on phones
+   (<= 640px) the header LED clock takes over instead. */
 ---
 
 <figure class="nowclock-coda" data-nowclock>
@@ -346,7 +347,7 @@
     white-space: nowrap;
   }
 
-  @media (max-width: 860px) {
+  @media (max-width: 640px) {
     .nowclock-coda {
       display: none;
     }
