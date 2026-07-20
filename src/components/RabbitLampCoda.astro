@@ -1,0 +1,437 @@
+---
+/* Truth, or Its Evidence: the rabbit night-light keeps watch beside the
+   story. It is lit red for the opening comfort; the night takes it and
+   will not give it back; morning returns it to the reader's hand; it
+   wavers when the boy confronts his mother; and the final words —
+   "Charging, charging." — turn its glow to sunrise gold for good.
+   Desktop tracks the story via text markers; mobile is a simple lamp. */
+interface Props {
+  variant: 'desktop' | 'mobile';
+}
+
+const { variant } = Astro.props;
+---
+
+<figure class={`rabbitlamp-coda rabbitlamp-coda--${variant}`} data-rabbitlamp data-variant={variant} data-lit="off">
+  <button class="rl-lamp" type="button" data-rl-hit aria-pressed="false" aria-label="The rabbit night-light">
+    <span class="rl-halo" aria-hidden="true"></span>
+    <svg viewBox="0 0 46 76" shape-rendering="crispEdges" class="rl-svg" aria-hidden="true">
+      <g class="rl-layer rl-off">
+      <path fill="rgb(24,20,19)" d="M14 1h2v1h-2zM30 1h2v1h-2zM13 2h1v1h-1zM16 2h1v1h-1zM29 2h1v1h-1zM32 2h1v1h-1zM13 3h1v1h-1zM17 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM13 4h1v1h-1zM17 4h1v1h-1zM28 4h1v1h-1zM32 4h1v1h-1zM13 5h1v1h-1zM18 5h1v1h-1zM27 5h1v1h-1zM32 5h1v1h-1zM12 6h1v1h-1zM18 6h1v1h-1zM27 6h1v1h-1zM33 6h1v1h-1zM12 7h1v1h-1zM19 7h1v1h-1zM26 7h1v1h-1zM33 7h1v1h-1zM12 8h1v1h-1zM19 8h1v1h-1zM26 8h1v1h-1zM33 8h1v1h-1zM12 9h1v1h-1zM19 9h1v1h-1zM26 9h1v1h-1zM33 9h1v1h-1zM12 10h1v1h-1zM20 10h1v1h-1zM25 10h1v1h-1zM33 10h1v1h-1zM12 11h1v1h-1zM20 11h1v1h-1zM25 11h1v1h-1zM33 11h1v1h-1zM12 12h1v1h-1zM20 12h1v1h-1zM25 12h1v1h-1zM33 12h1v1h-1zM12 13h1v1h-1zM20 13h1v1h-1zM25 13h1v1h-1zM33 13h1v1h-1zM13 14h1v1h-1zM20 14h1v1h-1zM25 14h1v1h-1zM32 14h1v1h-1zM13 15h1v1h-1zM21 15h1v1h-1zM24 15h1v1h-1zM32 15h1v1h-1zM13 16h1v1h-1zM21 16h1v1h-1zM24 16h1v1h-1zM32 16h1v1h-1zM13 17h1v1h-1zM21 17h1v1h-1zM24 17h1v1h-1zM32 17h1v1h-1zM13 18h1v1h-1zM21 18h1v1h-1zM24 18h1v1h-1zM32 18h1v1h-1zM14 19h1v1h-1zM21 19h1v1h-1zM24 19h1v1h-1zM31 19h1v1h-1zM14 20h1v1h-1zM21 20h1v1h-1zM24 20h1v1h-1zM31 20h1v1h-1zM14 21h1v1h-1zM21 21h1v1h-1zM24 21h1v1h-1zM31 21h1v1h-1zM14 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM31 22h1v1h-1zM15 23h1v1h-1zM21 23h1v1h-1zM24 23h1v1h-1zM30 23h1v1h-1zM15 24h1v1h-1zM21 24h1v1h-1zM24 24h1v1h-1zM30 24h1v1h-1zM15 25h1v1h-1zM22 25h2v1h-2zM30 25h1v1h-1zM16 26h1v1h-1zM29 26h1v1h-1zM16 27h1v1h-1zM29 27h1v1h-1zM15 28h1v1h-1zM30 28h1v1h-1zM14 29h1v1h-1zM31 29h1v1h-1zM13 30h1v1h-1zM32 30h1v1h-1zM13 31h1v1h-1zM32 31h1v1h-1zM13 32h1v1h-1zM32 32h1v1h-1zM12 33h1v1h-1zM33 33h1v1h-1zM12 34h1v1h-1zM33 34h1v1h-1zM12 35h1v1h-1zM33 35h1v1h-1zM13 36h1v1h-1zM32 36h1v1h-1zM13 37h1v1h-1zM32 37h1v1h-1zM13 38h1v1h-1zM32 38h1v1h-1zM14 39h1v1h-1zM31 39h1v1h-1zM15 40h1v1h-1zM30 40h1v1h-1zM16 41h1v1h-1zM29 41h1v1h-1zM17 42h1v1h-1zM28 42h1v1h-1zM17 43h1v1h-1zM28 43h1v1h-1zM15 44h2v1h-2zM29 44h2v1h-2zM14 45h1v1h-1zM31 45h1v1h-1zM13 46h1v1h-1zM32 46h1v1h-1zM13 47h1v1h-1zM32 47h1v1h-1zM12 48h1v1h-1zM33 48h1v1h-1zM12 49h1v1h-1zM33 49h1v1h-1zM11 50h1v1h-1zM34 50h1v1h-1zM11 51h1v1h-1zM34 51h1v1h-1zM11 52h1v1h-1zM34 52h1v1h-1zM10 53h1v1h-1zM35 53h1v1h-1zM10 54h1v1h-1zM35 54h1v1h-1zM10 55h1v1h-1zM35 55h1v1h-1zM10 56h1v1h-1zM35 56h1v1h-1zM9 57h1v1h-1zM36 57h1v1h-1zM8 58h1v1h-1zM37 58h1v1h-1zM8 59h1v1h-1zM37 59h1v1h-1zM7 60h1v1h-1zM38 60h1v1h-1zM7 61h1v1h-1zM38 61h1v1h-1zM7 62h1v1h-1zM38 62h1v1h-1zM7 63h1v1h-1zM38 63h1v1h-1zM7 64h1v1h-1zM38 64h1v1h-1zM7 65h1v1h-1zM38 65h1v1h-1zM8 66h1v1h-1zM37 66h1v1h-1zM9 67h1v1h-1zM36 67h1v1h-1zM10 68h1v1h-1zM35 68h1v1h-1zM8 69h2v1h-2zM20 69h6v1h-6zM36 69h2v1h-2zM7 70h1v1h-1zM19 70h1v1h-1zM26 70h1v1h-1zM38 70h1v1h-1zM7 71h1v1h-1zM19 71h1v1h-1zM26 71h1v1h-1zM38 71h1v1h-1zM8 72h1v1h-1zM18 72h1v1h-1zM27 72h1v1h-1zM37 72h1v1h-1zM9 73h3v1h-3zM15 73h3v1h-3zM28 73h3v1h-3zM34 73h3v1h-3zM12 74h3v1h-3zM31 74h3v1h-3z"/>
+      <path fill="rgb(32,27,26)" d="M14 2h2v1h-2zM30 2h2v1h-2zM14 3h3v1h-3zM29 3h3v1h-3zM14 4h3v1h-3zM29 4h3v1h-3zM14 5h4v1h-4zM28 5h4v1h-4zM13 6h5v1h-5zM28 6h5v1h-5zM13 7h6v1h-6zM27 7h6v1h-6zM13 8h6v1h-6zM27 8h6v1h-6zM13 9h6v1h-6zM27 9h6v1h-6zM13 10h7v1h-7zM26 10h7v1h-7zM13 11h7v1h-7zM26 11h7v1h-7zM13 12h7v1h-7zM26 12h7v1h-7zM13 13h7v1h-7zM26 13h7v1h-7zM14 14h6v1h-6zM26 14h6v1h-6zM14 15h7v1h-7zM25 15h7v1h-7zM14 16h7v1h-7zM25 16h7v1h-7zM14 17h7v1h-7zM25 17h7v1h-7zM14 18h7v1h-7zM25 18h7v1h-7zM15 19h6v1h-6zM25 19h6v1h-6zM15 20h6v1h-6zM25 20h6v1h-6zM15 21h6v1h-6zM25 21h6v1h-6zM15 22h6v1h-6zM25 22h6v1h-6zM16 23h5v1h-5zM25 23h5v1h-5zM16 24h5v1h-5zM25 24h5v1h-5zM16 25h6v1h-6zM24 25h6v1h-6zM17 26h12v1h-12zM17 27h12v1h-12zM16 28h2v1h-2zM21 28h9v1h-9zM15 29h2v1h-2zM21 29h10v1h-10zM14 30h3v1h-3zM20 30h12v1h-12zM14 31h18v1h-18zM14 32h18v1h-18zM13 33h20v1h-20zM13 34h20v1h-20zM13 35h20v1h-20zM14 36h18v1h-18zM14 37h18v1h-18zM14 38h18v1h-18zM15 39h5v1h-5zM21 39h3v1h-3zM25 39h1v1h-1zM27 39h4v1h-4zM16 40h3v1h-3zM20 40h1v1h-1zM22 40h2v1h-2zM26 40h1v1h-1zM28 40h2v1h-2zM17 41h1v1h-1zM22 41h2v1h-2zM18 43h10v1h-10zM12 50h1v1h-1zM11 53h1v1h-1zM11 55h1v1h-1zM10 57h2v1h-2zM35 57h1v1h-1zM9 58h2v1h-2zM12 58h1v1h-1zM34 58h1v1h-1zM36 58h1v1h-1zM9 59h3v1h-3zM35 59h2v1h-2zM8 60h5v1h-5zM34 60h4v1h-4zM8 61h4v1h-4zM15 61h1v1h-1zM30 61h1v1h-1zM35 61h3v1h-3zM8 62h5v1h-5zM16 62h1v1h-1zM18 62h1v1h-1zM28 62h1v1h-1zM34 62h4v1h-4zM8 63h5v1h-5zM34 63h4v1h-4zM8 64h7v1h-7zM32 64h6v1h-6zM8 65h6v1h-6zM33 65h5v1h-5zM9 66h6v1h-6zM16 66h1v1h-1zM30 66h1v1h-1zM32 66h5v1h-5zM10 67h6v1h-6zM31 67h5v1h-5zM11 68h6v1h-6zM18 68h1v1h-1zM28 68h7v1h-7zM10 69h9v1h-9zM27 69h9v1h-9zM8 70h11v1h-11zM27 70h11v1h-11zM8 71h11v1h-11zM27 71h11v1h-11zM9 72h9v1h-9zM28 72h9v1h-9zM12 73h3v1h-3zM31 73h3v1h-3z"/>
+      <path fill="rgb(48,40,38)" d="M18 28h3v1h-3zM17 29h4v1h-4zM17 30h3v1h-3zM20 39h1v1h-1zM24 39h1v1h-1zM26 39h1v1h-1zM19 40h1v1h-1zM21 40h1v1h-1zM24 40h2v1h-2zM27 40h1v1h-1zM18 41h4v1h-4zM24 41h5v1h-5zM18 42h10v1h-10zM17 44h2v1h-2zM20 44h1v1h-1zM22 44h1v1h-1zM24 44h1v1h-1zM26 44h1v1h-1zM28 44h1v1h-1zM15 45h3v1h-3zM29 45h2v1h-2zM14 46h3v1h-3zM18 46h1v1h-1zM28 46h1v1h-1zM30 46h2v1h-2zM14 47h3v1h-3zM30 47h2v1h-2zM13 48h4v1h-4zM30 48h3v1h-3zM13 49h3v1h-3zM31 49h2v1h-2zM13 50h2v1h-2zM16 50h1v1h-1zM30 50h1v1h-1zM32 50h2v1h-2zM12 51h4v1h-4zM31 51h3v1h-3zM12 52h3v1h-3zM32 52h2v1h-2zM12 53h4v1h-4zM31 53h4v1h-4zM11 54h4v1h-4zM17 54h2v1h-2zM28 54h1v1h-1zM32 54h3v1h-3zM12 55h4v1h-4zM31 55h4v1h-4zM11 56h5v1h-5zM20 56h1v1h-1zM30 56h1v1h-1zM32 56h3v1h-3zM12 57h4v1h-4zM31 57h4v1h-4zM11 58h1v1h-1zM13 58h2v1h-2zM16 58h1v1h-1zM20 58h1v1h-1zM30 58h1v1h-1zM32 58h2v1h-2zM35 58h1v1h-1zM12 59h4v1h-4zM19 59h2v1h-2zM25 59h2v1h-2zM31 59h4v1h-4zM13 60h4v1h-4zM19 60h1v1h-1zM26 60h1v1h-1zM30 60h4v1h-4zM12 61h3v1h-3zM16 61h4v1h-4zM26 61h2v1h-2zM29 61h1v1h-1zM31 61h4v1h-4zM13 62h3v1h-3zM17 62h1v1h-1zM27 62h1v1h-1zM29 62h5v1h-5zM13 63h5v1h-5zM19 63h1v1h-1zM27 63h1v1h-1zM29 63h5v1h-5zM15 64h4v1h-4zM20 64h1v1h-1zM22 64h1v1h-1zM24 64h1v1h-1zM26 64h1v1h-1zM28 64h4v1h-4zM14 65h8v1h-8zM23 65h1v1h-1zM25 65h8v1h-8zM15 66h1v1h-1zM17 66h13v1h-13zM31 66h1v1h-1zM16 67h15v1h-15zM17 68h1v1h-1zM19 68h9v1h-9zM19 69h1v1h-1zM26 69h1v1h-1z"/>
+      <path fill="rgb(64,53,51)" d="M19 44h1v1h-1zM21 44h1v1h-1zM23 44h1v1h-1zM25 44h1v1h-1zM27 44h1v1h-1zM18 45h11v1h-11zM17 46h1v1h-1zM19 46h9v1h-9zM29 46h1v1h-1zM17 47h13v1h-13zM17 48h6v1h-6zM24 48h6v1h-6zM16 49h6v1h-6zM25 49h6v1h-6zM15 50h1v1h-1zM17 50h4v1h-4zM26 50h4v1h-4zM31 50h1v1h-1zM16 51h4v1h-4zM27 51h4v1h-4zM15 52h4v1h-4zM20 52h1v1h-1zM26 52h1v1h-1zM28 52h4v1h-4zM16 53h4v1h-4zM27 53h4v1h-4zM15 54h2v1h-2zM19 54h1v1h-1zM26 54h2v1h-2zM29 54h3v1h-3zM16 55h5v1h-5zM25 55h1v1h-1zM27 55h4v1h-4zM16 56h3v1h-3zM25 56h2v1h-2zM28 56h2v1h-2zM31 56h1v1h-1zM16 57h5v1h-5zM25 57h1v1h-1zM27 57h4v1h-4zM15 58h1v1h-1zM17 58h3v1h-3zM25 58h5v1h-5zM31 58h1v1h-1zM16 59h3v1h-3zM21 59h1v1h-1zM23 59h1v1h-1zM27 59h4v1h-4zM17 60h2v1h-2zM20 60h3v1h-3zM24 60h2v1h-2zM27 60h3v1h-3zM20 61h6v1h-6zM28 61h1v1h-1zM19 62h8v1h-8zM18 63h1v1h-1zM20 63h7v1h-7zM28 63h1v1h-1zM19 64h1v1h-1zM21 64h1v1h-1zM23 64h1v1h-1zM25 64h1v1h-1zM27 64h1v1h-1zM22 65h1v1h-1zM24 65h1v1h-1z"/>
+      <path fill="rgb(80,66,63)" d="M23 48h1v1h-1zM22 49h3v1h-3zM21 50h5v1h-5zM20 51h7v1h-7zM19 52h1v1h-1zM21 52h5v1h-5zM27 52h1v1h-1zM20 53h7v1h-7zM20 54h3v1h-3zM24 54h2v1h-2zM21 55h4v1h-4zM26 55h1v1h-1zM19 56h1v1h-1zM21 56h4v1h-4zM27 56h1v1h-1zM21 57h4v1h-4zM26 57h1v1h-1zM21 58h4v1h-4zM22 59h1v1h-1zM24 59h1v1h-1zM23 60h1v1h-1z"/>
+      <path fill="rgb(96,80,77)" d="M23 54h1v1h-1z"/>
+      </g>
+      <g class="rl-layer rl-red">
+      <path fill="rgb(58,16,13)" d="M14 1h2v1h-2zM30 1h2v1h-2zM13 2h1v1h-1zM16 2h1v1h-1zM29 2h1v1h-1zM32 2h1v1h-1zM13 3h1v1h-1zM17 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM13 4h1v1h-1zM17 4h1v1h-1zM28 4h1v1h-1zM32 4h1v1h-1zM13 5h1v1h-1zM18 5h1v1h-1zM27 5h1v1h-1zM32 5h1v1h-1zM12 6h1v1h-1zM18 6h1v1h-1zM27 6h1v1h-1zM33 6h1v1h-1zM12 7h1v1h-1zM19 7h1v1h-1zM26 7h1v1h-1zM33 7h1v1h-1zM12 8h1v1h-1zM19 8h1v1h-1zM26 8h1v1h-1zM33 8h1v1h-1zM12 9h1v1h-1zM19 9h1v1h-1zM26 9h1v1h-1zM33 9h1v1h-1zM12 10h1v1h-1zM20 10h1v1h-1zM25 10h1v1h-1zM33 10h1v1h-1zM12 11h1v1h-1zM20 11h1v1h-1zM25 11h1v1h-1zM33 11h1v1h-1zM12 12h1v1h-1zM20 12h1v1h-1zM25 12h1v1h-1zM33 12h1v1h-1zM12 13h1v1h-1zM20 13h1v1h-1zM25 13h1v1h-1zM33 13h1v1h-1zM13 14h1v1h-1zM20 14h1v1h-1zM25 14h1v1h-1zM32 14h1v1h-1zM13 15h1v1h-1zM21 15h1v1h-1zM24 15h1v1h-1zM32 15h1v1h-1zM13 16h1v1h-1zM21 16h1v1h-1zM24 16h1v1h-1zM32 16h1v1h-1zM13 17h1v1h-1zM21 17h1v1h-1zM24 17h1v1h-1zM32 17h1v1h-1zM13 18h1v1h-1zM21 18h1v1h-1zM24 18h1v1h-1zM32 18h1v1h-1zM14 19h1v1h-1zM21 19h1v1h-1zM24 19h1v1h-1zM31 19h1v1h-1zM14 20h1v1h-1zM21 20h1v1h-1zM24 20h1v1h-1zM31 20h1v1h-1zM14 21h1v1h-1zM21 21h1v1h-1zM24 21h1v1h-1zM31 21h1v1h-1zM14 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM31 22h1v1h-1zM15 23h1v1h-1zM21 23h1v1h-1zM24 23h1v1h-1zM30 23h1v1h-1zM15 24h1v1h-1zM21 24h1v1h-1zM24 24h1v1h-1zM30 24h1v1h-1zM15 25h1v1h-1zM22 25h2v1h-2zM30 25h1v1h-1zM16 26h1v1h-1zM29 26h1v1h-1zM16 27h1v1h-1zM29 27h1v1h-1zM15 28h1v1h-1zM30 28h1v1h-1zM14 29h1v1h-1zM31 29h1v1h-1zM13 30h1v1h-1zM32 30h1v1h-1zM13 31h1v1h-1zM32 31h1v1h-1zM13 32h1v1h-1zM32 32h1v1h-1zM12 33h1v1h-1zM33 33h1v1h-1zM12 34h1v1h-1zM33 34h1v1h-1zM12 35h1v1h-1zM33 35h1v1h-1zM13 36h1v1h-1zM32 36h1v1h-1zM13 37h1v1h-1zM32 37h1v1h-1zM13 38h1v1h-1zM32 38h1v1h-1zM14 39h1v1h-1zM31 39h1v1h-1zM15 40h1v1h-1zM30 40h1v1h-1zM16 41h1v1h-1zM29 41h1v1h-1zM17 42h1v1h-1zM28 42h1v1h-1zM17 43h1v1h-1zM28 43h1v1h-1zM15 44h2v1h-2zM29 44h2v1h-2zM14 45h1v1h-1zM31 45h1v1h-1zM13 46h1v1h-1zM32 46h1v1h-1zM13 47h1v1h-1zM32 47h1v1h-1zM12 48h1v1h-1zM33 48h1v1h-1zM12 49h1v1h-1zM33 49h1v1h-1zM11 50h1v1h-1zM34 50h1v1h-1zM11 51h1v1h-1zM34 51h1v1h-1zM11 52h1v1h-1zM34 52h1v1h-1zM10 53h1v1h-1zM35 53h1v1h-1zM10 54h1v1h-1zM35 54h1v1h-1zM10 55h1v1h-1zM35 55h1v1h-1zM10 56h1v1h-1zM35 56h1v1h-1zM9 57h1v1h-1zM36 57h1v1h-1zM8 58h1v1h-1zM37 58h1v1h-1zM8 59h1v1h-1zM37 59h1v1h-1zM7 60h1v1h-1zM38 60h1v1h-1zM7 61h1v1h-1zM38 61h1v1h-1zM7 62h1v1h-1zM38 62h1v1h-1zM7 63h1v1h-1zM38 63h1v1h-1zM7 64h1v1h-1zM38 64h1v1h-1zM7 65h1v1h-1zM38 65h1v1h-1zM8 66h1v1h-1zM37 66h1v1h-1zM9 67h1v1h-1zM36 67h1v1h-1zM10 68h1v1h-1zM35 68h1v1h-1zM8 69h2v1h-2zM20 69h6v1h-6zM36 69h2v1h-2zM7 70h1v1h-1zM19 70h1v1h-1zM26 70h1v1h-1zM38 70h1v1h-1zM7 71h1v1h-1zM19 71h1v1h-1zM26 71h1v1h-1zM38 71h1v1h-1zM8 72h1v1h-1zM18 72h1v1h-1zM27 72h1v1h-1zM37 72h1v1h-1zM9 73h3v1h-3zM15 73h3v1h-3zM28 73h3v1h-3zM34 73h3v1h-3zM12 74h3v1h-3zM31 74h3v1h-3z"/>
+      <path fill="rgb(74,18,16)" d="M14 2h2v1h-2zM30 2h2v1h-2zM14 3h3v1h-3zM29 3h3v1h-3zM14 4h3v1h-3zM29 4h3v1h-3zM14 5h4v1h-4zM28 5h4v1h-4zM13 6h5v1h-5zM28 6h5v1h-5zM13 7h6v1h-6zM27 7h6v1h-6zM13 8h6v1h-6zM27 8h6v1h-6zM13 9h6v1h-6zM27 9h6v1h-6zM13 10h7v1h-7zM26 10h7v1h-7zM13 11h7v1h-7zM26 11h7v1h-7zM13 12h7v1h-7zM26 12h7v1h-7zM13 13h7v1h-7zM26 13h7v1h-7zM14 14h6v1h-6zM26 14h6v1h-6zM14 15h7v1h-7zM25 15h7v1h-7zM14 16h7v1h-7zM25 16h7v1h-7zM14 17h7v1h-7zM25 17h7v1h-7zM14 18h7v1h-7zM25 18h7v1h-7zM15 19h6v1h-6zM25 19h6v1h-6zM15 20h6v1h-6zM25 20h6v1h-6zM15 21h6v1h-6zM25 21h6v1h-6zM15 22h6v1h-6zM25 22h6v1h-6zM16 23h5v1h-5zM25 23h5v1h-5zM16 24h5v1h-5zM25 24h5v1h-5zM16 25h6v1h-6zM24 25h6v1h-6zM17 26h12v1h-12zM17 27h12v1h-12zM16 28h2v1h-2zM21 28h9v1h-9zM15 29h2v1h-2zM21 29h10v1h-10zM14 30h3v1h-3zM20 30h12v1h-12zM14 31h18v1h-18zM14 32h18v1h-18zM13 33h20v1h-20zM13 34h20v1h-20zM13 35h20v1h-20zM14 36h7v1h-7zM22 36h1v1h-1zM24 36h1v1h-1zM26 36h6v1h-6zM14 37h4v1h-4zM22 37h2v1h-2zM29 37h3v1h-3zM14 38h3v1h-3zM22 38h2v1h-2zM30 38h2v1h-2zM15 39h1v1h-1zM22 39h2v1h-2zM22 40h2v1h-2zM22 41h2v1h-2zM9 59h1v1h-1zM8 60h2v1h-2zM37 60h1v1h-1zM8 61h2v1h-2zM37 61h1v1h-1zM8 62h3v1h-3zM36 62h2v1h-2zM8 63h2v1h-2zM37 63h1v1h-1zM8 64h3v1h-3zM36 64h2v1h-2zM8 65h4v1h-4zM35 65h3v1h-3zM9 66h4v1h-4zM34 66h3v1h-3zM10 67h2v1h-2zM35 67h1v1h-1zM11 68h2v1h-2zM14 68h3v1h-3zM30 68h2v1h-2zM34 68h1v1h-1zM10 69h8v1h-8zM29 69h7v1h-7zM8 70h11v1h-11zM27 70h11v1h-11zM8 71h11v1h-11zM27 71h11v1h-11zM9 72h9v1h-9zM28 72h9v1h-9zM12 73h3v1h-3zM31 73h3v1h-3z"/>
+      <path fill="rgb(122,26,22)" d="M18 28h3v1h-3zM17 29h4v1h-4zM17 30h3v1h-3zM21 36h1v1h-1zM23 36h1v1h-1zM25 36h1v1h-1zM18 37h4v1h-4zM24 37h5v1h-5zM17 38h5v1h-5zM24 38h6v1h-6zM16 39h4v1h-4zM27 39h4v1h-4zM16 40h3v1h-3zM28 40h2v1h-2zM17 41h1v1h-1zM19 43h1v1h-1zM11 53h1v1h-1zM11 55h1v1h-1zM10 57h2v1h-2zM35 57h1v1h-1zM9 58h2v1h-2zM36 58h1v1h-1zM10 59h2v1h-2zM35 59h2v1h-2zM10 60h3v1h-3zM34 60h3v1h-3zM10 61h2v1h-2zM35 61h2v1h-2zM11 62h2v1h-2zM34 62h2v1h-2zM10 63h3v1h-3zM34 63h3v1h-3zM11 64h3v1h-3zM33 64h3v1h-3zM12 65h2v1h-2zM33 65h2v1h-2zM13 66h2v1h-2zM32 66h2v1h-2zM12 67h4v1h-4zM31 67h4v1h-4zM13 68h1v1h-1zM29 68h1v1h-1zM32 68h2v1h-2zM18 69h1v1h-1zM27 69h2v1h-2z"/>
+      <path fill="rgb(168,40,31)" d="M20 39h2v1h-2zM24 39h3v1h-3zM19 40h3v1h-3zM24 40h4v1h-4zM18 41h4v1h-4zM24 41h5v1h-5zM18 42h3v1h-3zM22 42h1v1h-1zM24 42h1v1h-1zM26 42h2v1h-2zM18 43h1v1h-1zM20 43h8v1h-8zM15 45h1v1h-1zM14 46h1v1h-1zM14 47h1v1h-1zM13 48h2v1h-2zM32 48h1v1h-1zM13 49h1v1h-1zM12 50h2v1h-2zM33 50h1v1h-1zM12 51h2v1h-2zM33 51h1v1h-1zM12 52h1v1h-1zM12 53h2v1h-2zM33 53h2v1h-2zM11 54h2v1h-2zM34 54h1v1h-1zM12 55h2v1h-2zM33 55h2v1h-2zM11 56h2v1h-2zM15 56h1v1h-1zM34 56h1v1h-1zM12 57h2v1h-2zM33 57h2v1h-2zM11 58h3v1h-3zM33 58h3v1h-3zM12 59h2v1h-2zM33 59h2v1h-2zM13 60h2v1h-2zM32 60h2v1h-2zM12 61h4v1h-4zM30 61h1v1h-1zM32 61h3v1h-3zM13 62h2v1h-2zM16 62h3v1h-3zM28 62h2v1h-2zM32 62h2v1h-2zM13 63h3v1h-3zM31 63h3v1h-3zM14 64h3v1h-3zM30 64h3v1h-3zM14 65h4v1h-4zM29 65h4v1h-4zM15 66h4v1h-4zM28 66h4v1h-4zM16 67h4v1h-4zM27 67h4v1h-4zM17 68h12v1h-12zM19 69h1v1h-1zM26 69h1v1h-1z"/>
+      <path fill="rgb(214,58,42)" d="M21 42h1v1h-1zM23 42h1v1h-1zM25 42h1v1h-1zM17 44h4v1h-4zM22 44h1v1h-1zM24 44h1v1h-1zM26 44h3v1h-3zM16 45h4v1h-4zM27 45h4v1h-4zM15 46h4v1h-4zM28 46h4v1h-4zM15 47h3v1h-3zM29 47h3v1h-3zM15 48h2v1h-2zM30 48h2v1h-2zM14 49h2v1h-2zM31 49h2v1h-2zM14 50h3v1h-3zM30 50h3v1h-3zM14 51h2v1h-2zM31 51h2v1h-2zM13 52h3v1h-3zM31 52h3v1h-3zM14 53h2v1h-2zM31 53h2v1h-2zM13 54h2v1h-2zM17 54h1v1h-1zM32 54h2v1h-2zM14 55h2v1h-2zM31 55h2v1h-2zM13 56h2v1h-2zM30 56h4v1h-4zM14 57h2v1h-2zM31 57h2v1h-2zM14 58h3v1h-3zM30 58h3v1h-3zM14 59h2v1h-2zM19 59h1v1h-1zM31 59h2v1h-2zM15 60h2v1h-2zM19 60h1v1h-1zM26 60h1v1h-1zM30 60h2v1h-2zM16 61h4v1h-4zM26 61h2v1h-2zM29 61h1v1h-1zM31 61h1v1h-1zM15 62h1v1h-1zM27 62h1v1h-1zM30 62h2v1h-2zM16 63h4v1h-4zM27 63h4v1h-4zM17 64h4v1h-4zM22 64h1v1h-1zM24 64h1v1h-1zM26 64h4v1h-4zM18 65h11v1h-11zM19 66h9v1h-9zM20 67h7v1h-7z"/>
+      <path fill="rgb(246,94,66)" d="M21 44h1v1h-1zM23 44h1v1h-1zM25 44h1v1h-1zM20 45h7v1h-7zM19 46h4v1h-4zM24 46h4v1h-4zM18 47h3v1h-3zM26 47h3v1h-3zM17 48h4v1h-4zM26 48h4v1h-4zM16 49h3v1h-3zM28 49h3v1h-3zM17 50h2v1h-2zM28 50h2v1h-2zM16 51h2v1h-2zM29 51h2v1h-2zM16 52h3v1h-3zM28 52h3v1h-3zM16 53h2v1h-2zM29 53h2v1h-2zM15 54h2v1h-2zM18 54h2v1h-2zM26 54h6v1h-6zM16 55h2v1h-2zM29 55h2v1h-2zM16 56h3v1h-3zM20 56h1v1h-1zM28 56h2v1h-2zM16 57h2v1h-2zM29 57h2v1h-2zM17 58h2v1h-2zM20 58h1v1h-1zM28 58h2v1h-2zM16 59h3v1h-3zM20 59h1v1h-1zM25 59h6v1h-6zM17 60h2v1h-2zM20 60h1v1h-1zM27 60h3v1h-3zM20 61h2v1h-2zM25 61h1v1h-1zM28 61h1v1h-1zM19 62h4v1h-4zM24 62h3v1h-3zM20 63h7v1h-7zM21 64h1v1h-1zM23 64h1v1h-1zM25 64h1v1h-1z"/>
+      <path fill="rgb(255,138,102)" d="M23 46h1v1h-1zM21 47h5v1h-5zM21 48h5v1h-5zM19 49h9v1h-9zM19 50h2v1h-2zM22 50h1v1h-1zM24 50h1v1h-1zM26 50h2v1h-2zM18 51h2v1h-2zM27 51h2v1h-2zM19 52h2v1h-2zM26 52h2v1h-2zM18 53h2v1h-2zM27 53h2v1h-2zM20 54h1v1h-1zM18 55h3v1h-3zM25 55h1v1h-1zM27 55h2v1h-2zM19 56h1v1h-1zM25 56h3v1h-3zM18 57h3v1h-3zM25 57h1v1h-1zM27 57h2v1h-2zM19 58h1v1h-1zM22 58h1v1h-1zM24 58h4v1h-4zM21 59h4v1h-4zM21 60h5v1h-5zM22 61h3v1h-3zM23 62h1v1h-1z"/>
+      <path fill="rgb(255,192,150)" d="M21 50h1v1h-1zM23 50h1v1h-1zM25 50h1v1h-1zM20 51h7v1h-7zM21 52h2v1h-2zM24 52h2v1h-2zM20 53h2v1h-2zM25 53h2v1h-2zM21 54h2v1h-2zM24 54h2v1h-2zM21 55h1v1h-1zM26 55h1v1h-1zM21 56h2v1h-2zM24 56h1v1h-1zM21 57h4v1h-4zM26 57h1v1h-1zM21 58h1v1h-1zM23 58h1v1h-1z"/>
+      <path fill="rgb(255,238,214)" d="M23 52h1v1h-1zM22 53h3v1h-3zM23 54h1v1h-1zM22 55h3v1h-3zM23 56h1v1h-1z"/>
+      </g>
+      <g class="rl-layer rl-gold">
+      <path fill="rgb(58,38,12)" d="M14 1h2v1h-2zM30 1h2v1h-2zM13 2h1v1h-1zM16 2h1v1h-1zM29 2h1v1h-1zM32 2h1v1h-1zM13 3h1v1h-1zM17 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM13 4h1v1h-1zM17 4h1v1h-1zM28 4h1v1h-1zM32 4h1v1h-1zM13 5h1v1h-1zM18 5h1v1h-1zM27 5h1v1h-1zM32 5h1v1h-1zM12 6h1v1h-1zM18 6h1v1h-1zM27 6h1v1h-1zM33 6h1v1h-1zM12 7h1v1h-1zM19 7h1v1h-1zM26 7h1v1h-1zM33 7h1v1h-1zM12 8h1v1h-1zM19 8h1v1h-1zM26 8h1v1h-1zM33 8h1v1h-1zM12 9h1v1h-1zM19 9h1v1h-1zM26 9h1v1h-1zM33 9h1v1h-1zM12 10h1v1h-1zM20 10h1v1h-1zM25 10h1v1h-1zM33 10h1v1h-1zM12 11h1v1h-1zM20 11h1v1h-1zM25 11h1v1h-1zM33 11h1v1h-1zM12 12h1v1h-1zM20 12h1v1h-1zM25 12h1v1h-1zM33 12h1v1h-1zM12 13h1v1h-1zM20 13h1v1h-1zM25 13h1v1h-1zM33 13h1v1h-1zM13 14h1v1h-1zM20 14h1v1h-1zM25 14h1v1h-1zM32 14h1v1h-1zM13 15h1v1h-1zM21 15h1v1h-1zM24 15h1v1h-1zM32 15h1v1h-1zM13 16h1v1h-1zM21 16h1v1h-1zM24 16h1v1h-1zM32 16h1v1h-1zM13 17h1v1h-1zM21 17h1v1h-1zM24 17h1v1h-1zM32 17h1v1h-1zM13 18h1v1h-1zM21 18h1v1h-1zM24 18h1v1h-1zM32 18h1v1h-1zM14 19h1v1h-1zM21 19h1v1h-1zM24 19h1v1h-1zM31 19h1v1h-1zM14 20h1v1h-1zM21 20h1v1h-1zM24 20h1v1h-1zM31 20h1v1h-1zM14 21h1v1h-1zM21 21h1v1h-1zM24 21h1v1h-1zM31 21h1v1h-1zM14 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM31 22h1v1h-1zM15 23h1v1h-1zM21 23h1v1h-1zM24 23h1v1h-1zM30 23h1v1h-1zM15 24h1v1h-1zM21 24h1v1h-1zM24 24h1v1h-1zM30 24h1v1h-1zM15 25h1v1h-1zM22 25h2v1h-2zM30 25h1v1h-1zM16 26h1v1h-1zM29 26h1v1h-1zM16 27h1v1h-1zM29 27h1v1h-1zM15 28h1v1h-1zM30 28h1v1h-1zM14 29h1v1h-1zM31 29h1v1h-1zM13 30h1v1h-1zM32 30h1v1h-1zM13 31h1v1h-1zM32 31h1v1h-1zM13 32h1v1h-1zM32 32h1v1h-1zM12 33h1v1h-1zM33 33h1v1h-1zM12 34h1v1h-1zM33 34h1v1h-1zM12 35h1v1h-1zM33 35h1v1h-1zM13 36h1v1h-1zM32 36h1v1h-1zM13 37h1v1h-1zM32 37h1v1h-1zM13 38h1v1h-1zM32 38h1v1h-1zM14 39h1v1h-1zM31 39h1v1h-1zM15 40h1v1h-1zM30 40h1v1h-1zM16 41h1v1h-1zM29 41h1v1h-1zM17 42h1v1h-1zM28 42h1v1h-1zM17 43h1v1h-1zM28 43h1v1h-1zM15 44h2v1h-2zM29 44h2v1h-2zM14 45h1v1h-1zM31 45h1v1h-1zM13 46h1v1h-1zM32 46h1v1h-1zM13 47h1v1h-1zM32 47h1v1h-1zM12 48h1v1h-1zM33 48h1v1h-1zM12 49h1v1h-1zM33 49h1v1h-1zM11 50h1v1h-1zM34 50h1v1h-1zM11 51h1v1h-1zM34 51h1v1h-1zM11 52h1v1h-1zM34 52h1v1h-1zM10 53h1v1h-1zM35 53h1v1h-1zM10 54h1v1h-1zM35 54h1v1h-1zM10 55h1v1h-1zM35 55h1v1h-1zM10 56h1v1h-1zM35 56h1v1h-1zM9 57h1v1h-1zM36 57h1v1h-1zM8 58h1v1h-1zM37 58h1v1h-1zM8 59h1v1h-1zM37 59h1v1h-1zM7 60h1v1h-1zM38 60h1v1h-1zM7 61h1v1h-1zM38 61h1v1h-1zM7 62h1v1h-1zM38 62h1v1h-1zM7 63h1v1h-1zM38 63h1v1h-1zM7 64h1v1h-1zM38 64h1v1h-1zM7 65h1v1h-1zM38 65h1v1h-1zM8 66h1v1h-1zM37 66h1v1h-1zM9 67h1v1h-1zM36 67h1v1h-1zM10 68h1v1h-1zM35 68h1v1h-1zM8 69h2v1h-2zM20 69h6v1h-6zM36 69h2v1h-2zM7 70h1v1h-1zM19 70h1v1h-1zM26 70h1v1h-1zM38 70h1v1h-1zM7 71h1v1h-1zM19 71h1v1h-1zM26 71h1v1h-1zM38 71h1v1h-1zM8 72h1v1h-1zM18 72h1v1h-1zM27 72h1v1h-1zM37 72h1v1h-1zM9 73h3v1h-3zM15 73h3v1h-3zM28 73h3v1h-3zM34 73h3v1h-3zM12 74h3v1h-3zM31 74h3v1h-3z"/>
+      <path fill="rgb(74,47,16)" d="M14 2h2v1h-2zM30 2h2v1h-2zM14 3h3v1h-3zM29 3h3v1h-3zM14 4h3v1h-3zM29 4h3v1h-3zM14 5h4v1h-4zM28 5h4v1h-4zM13 6h5v1h-5zM28 6h5v1h-5zM13 7h6v1h-6zM27 7h6v1h-6zM13 8h6v1h-6zM27 8h6v1h-6zM13 9h6v1h-6zM27 9h6v1h-6zM13 10h7v1h-7zM26 10h7v1h-7zM13 11h7v1h-7zM26 11h7v1h-7zM13 12h7v1h-7zM26 12h7v1h-7zM13 13h7v1h-7zM26 13h7v1h-7zM14 14h6v1h-6zM26 14h6v1h-6zM14 15h7v1h-7zM25 15h7v1h-7zM14 16h7v1h-7zM25 16h7v1h-7zM14 17h7v1h-7zM25 17h7v1h-7zM14 18h7v1h-7zM25 18h7v1h-7zM15 19h6v1h-6zM25 19h6v1h-6zM15 20h6v1h-6zM25 20h6v1h-6zM15 21h6v1h-6zM25 21h6v1h-6zM15 22h6v1h-6zM25 22h6v1h-6zM16 23h5v1h-5zM25 23h5v1h-5zM16 24h5v1h-5zM25 24h5v1h-5zM16 25h6v1h-6zM24 25h6v1h-6zM17 26h12v1h-12zM17 27h12v1h-12zM16 28h2v1h-2zM21 28h9v1h-9zM15 29h2v1h-2zM21 29h10v1h-10zM14 30h3v1h-3zM20 30h12v1h-12zM14 31h18v1h-18zM14 32h18v1h-18zM13 33h20v1h-20zM13 34h20v1h-20zM13 35h20v1h-20zM14 36h7v1h-7zM22 36h1v1h-1zM24 36h1v1h-1zM26 36h6v1h-6zM14 37h4v1h-4zM22 37h2v1h-2zM29 37h3v1h-3zM14 38h3v1h-3zM22 38h2v1h-2zM30 38h2v1h-2zM15 39h1v1h-1zM22 39h2v1h-2zM22 40h2v1h-2zM22 41h2v1h-2zM9 59h1v1h-1zM8 60h2v1h-2zM37 60h1v1h-1zM8 61h2v1h-2zM37 61h1v1h-1zM8 62h3v1h-3zM36 62h2v1h-2zM8 63h2v1h-2zM37 63h1v1h-1zM8 64h3v1h-3zM36 64h2v1h-2zM8 65h4v1h-4zM35 65h3v1h-3zM9 66h4v1h-4zM34 66h3v1h-3zM10 67h2v1h-2zM35 67h1v1h-1zM11 68h2v1h-2zM14 68h3v1h-3zM30 68h2v1h-2zM34 68h1v1h-1zM10 69h8v1h-8zM29 69h7v1h-7zM8 70h11v1h-11zM27 70h11v1h-11zM8 71h11v1h-11zM27 71h11v1h-11zM9 72h9v1h-9zM28 72h9v1h-9zM12 73h3v1h-3zM31 73h3v1h-3z"/>
+      <path fill="rgb(130,80,26)" d="M18 28h3v1h-3zM17 29h4v1h-4zM17 30h3v1h-3zM21 36h1v1h-1zM23 36h1v1h-1zM25 36h1v1h-1zM18 37h4v1h-4zM24 37h5v1h-5zM17 38h5v1h-5zM24 38h6v1h-6zM16 39h4v1h-4zM27 39h4v1h-4zM16 40h3v1h-3zM28 40h2v1h-2zM17 41h1v1h-1zM19 43h1v1h-1zM11 53h1v1h-1zM11 55h1v1h-1zM10 57h2v1h-2zM35 57h1v1h-1zM9 58h2v1h-2zM36 58h1v1h-1zM10 59h2v1h-2zM35 59h2v1h-2zM10 60h3v1h-3zM34 60h3v1h-3zM10 61h2v1h-2zM35 61h2v1h-2zM11 62h2v1h-2zM34 62h2v1h-2zM10 63h3v1h-3zM34 63h3v1h-3zM11 64h3v1h-3zM33 64h3v1h-3zM12 65h2v1h-2zM33 65h2v1h-2zM13 66h2v1h-2zM32 66h2v1h-2zM12 67h4v1h-4zM31 67h4v1h-4zM13 68h1v1h-1zM29 68h1v1h-1zM32 68h2v1h-2zM18 69h1v1h-1zM27 69h2v1h-2z"/>
+      <path fill="rgb(176,107,26)" d="M20 39h2v1h-2zM24 39h3v1h-3zM19 40h3v1h-3zM24 40h4v1h-4zM18 41h4v1h-4zM24 41h5v1h-5zM18 42h3v1h-3zM22 42h1v1h-1zM24 42h1v1h-1zM26 42h2v1h-2zM18 43h1v1h-1zM20 43h8v1h-8zM15 45h1v1h-1zM14 46h1v1h-1zM14 47h1v1h-1zM13 48h2v1h-2zM32 48h1v1h-1zM13 49h1v1h-1zM12 50h2v1h-2zM33 50h1v1h-1zM12 51h2v1h-2zM33 51h1v1h-1zM12 52h1v1h-1zM12 53h2v1h-2zM33 53h2v1h-2zM11 54h2v1h-2zM34 54h1v1h-1zM12 55h2v1h-2zM33 55h2v1h-2zM11 56h2v1h-2zM15 56h1v1h-1zM34 56h1v1h-1zM12 57h2v1h-2zM33 57h2v1h-2zM11 58h3v1h-3zM33 58h3v1h-3zM12 59h2v1h-2zM33 59h2v1h-2zM13 60h2v1h-2zM32 60h2v1h-2zM12 61h4v1h-4zM30 61h1v1h-1zM32 61h3v1h-3zM13 62h2v1h-2zM16 62h3v1h-3zM28 62h2v1h-2zM32 62h2v1h-2zM13 63h3v1h-3zM31 63h3v1h-3zM14 64h3v1h-3zM30 64h3v1h-3zM14 65h4v1h-4zM29 65h4v1h-4zM15 66h4v1h-4zM28 66h4v1h-4zM16 67h4v1h-4zM27 67h4v1h-4zM17 68h12v1h-12zM19 69h1v1h-1zM26 69h1v1h-1z"/>
+      <path fill="rgb(217,138,36)" d="M21 42h1v1h-1zM23 42h1v1h-1zM25 42h1v1h-1zM17 44h4v1h-4zM22 44h1v1h-1zM24 44h1v1h-1zM26 44h3v1h-3zM16 45h4v1h-4zM27 45h4v1h-4zM15 46h4v1h-4zM28 46h4v1h-4zM15 47h3v1h-3zM29 47h3v1h-3zM15 48h2v1h-2zM30 48h2v1h-2zM14 49h2v1h-2zM31 49h2v1h-2zM14 50h3v1h-3zM30 50h3v1h-3zM14 51h2v1h-2zM31 51h2v1h-2zM13 52h3v1h-3zM31 52h3v1h-3zM14 53h2v1h-2zM31 53h2v1h-2zM13 54h2v1h-2zM17 54h1v1h-1zM32 54h2v1h-2zM14 55h2v1h-2zM31 55h2v1h-2zM13 56h2v1h-2zM30 56h4v1h-4zM14 57h2v1h-2zM31 57h2v1h-2zM14 58h3v1h-3zM30 58h3v1h-3zM14 59h2v1h-2zM19 59h1v1h-1zM31 59h2v1h-2zM15 60h2v1h-2zM19 60h1v1h-1zM26 60h1v1h-1zM30 60h2v1h-2zM16 61h4v1h-4zM26 61h2v1h-2zM29 61h1v1h-1zM31 61h1v1h-1zM15 62h1v1h-1zM27 62h1v1h-1zM30 62h2v1h-2zM16 63h4v1h-4zM27 63h4v1h-4zM17 64h4v1h-4zM22 64h1v1h-1zM24 64h1v1h-1zM26 64h4v1h-4zM18 65h11v1h-11zM19 66h9v1h-9zM20 67h7v1h-7z"/>
+      <path fill="rgb(242,169,59)" d="M21 44h1v1h-1zM23 44h1v1h-1zM25 44h1v1h-1zM20 45h7v1h-7zM19 46h4v1h-4zM24 46h4v1h-4zM18 47h3v1h-3zM26 47h3v1h-3zM17 48h4v1h-4zM26 48h4v1h-4zM16 49h3v1h-3zM28 49h3v1h-3zM17 50h2v1h-2zM28 50h2v1h-2zM16 51h2v1h-2zM29 51h2v1h-2zM16 52h3v1h-3zM28 52h3v1h-3zM16 53h2v1h-2zM29 53h2v1h-2zM15 54h2v1h-2zM18 54h2v1h-2zM26 54h6v1h-6zM16 55h2v1h-2zM29 55h2v1h-2zM16 56h3v1h-3zM20 56h1v1h-1zM28 56h2v1h-2zM16 57h2v1h-2zM29 57h2v1h-2zM17 58h2v1h-2zM20 58h1v1h-1zM28 58h2v1h-2zM16 59h3v1h-3zM20 59h1v1h-1zM25 59h6v1h-6zM17 60h2v1h-2zM20 60h1v1h-1zM27 60h3v1h-3zM20 61h2v1h-2zM25 61h1v1h-1zM28 61h1v1h-1zM19 62h4v1h-4zM24 62h3v1h-3zM20 63h7v1h-7zM21 64h1v1h-1zM23 64h1v1h-1zM25 64h1v1h-1z"/>
+      <path fill="rgb(255,201,94)" d="M23 46h1v1h-1zM21 47h5v1h-5zM21 48h5v1h-5zM19 49h9v1h-9zM19 50h2v1h-2zM22 50h1v1h-1zM24 50h1v1h-1zM26 50h2v1h-2zM18 51h2v1h-2zM27 51h2v1h-2zM19 52h2v1h-2zM26 52h2v1h-2zM18 53h2v1h-2zM27 53h2v1h-2zM20 54h1v1h-1zM18 55h3v1h-3zM25 55h1v1h-1zM27 55h2v1h-2zM19 56h1v1h-1zM25 56h3v1h-3zM18 57h3v1h-3zM25 57h1v1h-1zM27 57h2v1h-2zM19 58h1v1h-1zM22 58h1v1h-1zM24 58h4v1h-4zM21 59h4v1h-4zM21 60h5v1h-5zM22 61h3v1h-3zM23 62h1v1h-1z"/>
+      <path fill="rgb(255,228,154)" d="M21 50h1v1h-1zM23 50h1v1h-1zM25 50h1v1h-1zM20 51h7v1h-7zM21 52h2v1h-2zM24 52h2v1h-2zM20 53h2v1h-2zM25 53h2v1h-2zM21 54h2v1h-2zM24 54h2v1h-2zM21 55h1v1h-1zM26 55h1v1h-1zM21 56h2v1h-2zM24 56h1v1h-1zM21 57h4v1h-4zM26 57h1v1h-1zM21 58h1v1h-1zM23 58h1v1h-1z"/>
+      <path fill="rgb(255,247,214)" d="M23 52h1v1h-1zM22 53h3v1h-3zM23 54h1v1h-1zM22 55h3v1h-3zM23 56h1v1h-1z"/>
+      </g>
+    </svg>
+  </button>
+  <span class="rl-status" aria-live="polite" data-rl-status></span>
+</figure>
+
+<script>
+  const rlFigs = Array.from(document.querySelectorAll<HTMLElement>('[data-rabbitlamp]'));
+
+  if (rlFigs.length > 0) {
+    const rlReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const rlDesktop = window.matchMedia('(min-width: 861px)').matches;
+    const prose = document.querySelector<HTMLElement>('.archive-prose');
+
+    const KEY = 'truth-lamp';
+    let store: { gold?: boolean; user?: 'auto' | 'on' | 'off' } = {};
+    try { store = JSON.parse(window.sessionStorage.getItem(KEY) || '{}'); } catch {}
+    let gold = Boolean(store.gold);
+    let userWants: 'auto' | 'on' | 'off' = store.user ?? 'auto';
+    const save = () => {
+      try { window.sessionStorage.setItem(KEY, JSON.stringify({ gold, user: userWants })); } catch {}
+    };
+
+    /* phases: opening -> night -> day -> waver -> day. Mobile skips them. */
+    type Phase = 'opening' | 'night' | 'day' | 'waver';
+    let phase: Phase = rlDesktop ? 'opening' : 'day';
+    if (!rlDesktop && userWants === 'auto') userWants = 'on';
+
+    const effectiveOn = (): boolean => {
+      if (phase === 'night') return false;
+      if (userWants === 'auto') return phase === 'opening';
+      return userWants === 'on';
+    };
+
+    let flickerTimer = 0;
+
+    const applyState = () => {
+      const on = effectiveOn();
+      for (const fig of rlFigs) {
+        fig.dataset.lit = on ? 'on' : 'off';
+        if (gold) fig.dataset.gold = 'true';
+        else delete fig.dataset.gold;
+        fig.dataset.phase = phase;
+        const hit = fig.querySelector<HTMLButtonElement>('[data-rl-hit]');
+        hit?.setAttribute('aria-pressed', on ? 'true' : 'false');
+      }
+      scheduleFlicker();
+    };
+
+    /* ---- the waver: restrained, irregular dips while lit ---- */
+    const scheduleFlicker = () => {
+      window.clearTimeout(flickerTimer);
+      for (const fig of rlFigs) fig.classList.remove('is-dim');
+
+      const wavering = phase === 'waver' && effectiveOn();
+      for (const fig of rlFigs) fig.classList.toggle('is-waver-gentle', wavering && rlReducedMotion);
+      if (!wavering || rlReducedMotion) return;
+
+      const dip = () => {
+        if (phase !== 'waver' || !effectiveOn()) return;
+        for (const fig of rlFigs) fig.classList.add('is-dim');
+        window.setTimeout(() => {
+          for (const fig of rlFigs) fig.classList.remove('is-dim');
+          /* occasionally a second, shorter falter close behind */
+          if (Math.random() < 0.3) {
+            window.setTimeout(() => {
+              if (phase !== 'waver' || !effectiveOn()) return;
+              for (const fig of rlFigs) fig.classList.add('is-dim');
+              window.setTimeout(() => {
+                for (const fig of rlFigs) fig.classList.remove('is-dim');
+              }, 90 + Math.random() * 80);
+            }, 140 + Math.random() * 120);
+          }
+        }, 100 + Math.random() * 170);
+        flickerTimer = window.setTimeout(dip, 950 + Math.random() * 1400);
+      };
+      flickerTimer = window.setTimeout(dip, 600 + Math.random() * 900);
+    };
+
+    /* ---- lamp button ---- */
+    const say = (text: string) => {
+      for (const fig of rlFigs) {
+        const status = fig.querySelector<HTMLElement>('[data-rl-status]');
+        if (status) status.textContent = text;
+      }
+    };
+
+    for (const fig of rlFigs) {
+      const hit = fig.querySelector<HTMLButtonElement>('[data-rl-hit]');
+      hit?.addEventListener('click', () => {
+        if (phase === 'night') {
+          /* the dark refuses: a failed ember, nothing more */
+          if (!rlReducedMotion) {
+            fig.classList.remove('is-refuse');
+            void fig.offsetWidth;
+            fig.classList.add('is-refuse');
+            window.setTimeout(() => fig.classList.remove('is-refuse'), 300);
+          }
+          say('The dark refuses the light.');
+          return;
+        }
+        userWants = effectiveOn() ? 'off' : 'on';
+        save();
+        applyState();
+        say(userWants === 'on' ? 'The night-light is on.' : 'The night-light is off.');
+      });
+    }
+
+    /* ---- desktop: story markers drive the phase ---- */
+    if (rlDesktop && prose) {
+      const MARKERS: Array<[string, Phase]> = [
+        ['and extinguished it', 'night'],
+        ['Hours later, when the morning', 'day'],
+        ['You didn\u2019t throw it away', 'waver'],
+        ['guide him home', 'day']
+      ];
+      const markerEls: Array<[HTMLElement, Phase]> = [];
+      const paras = Array.from(prose.querySelectorAll<HTMLElement>('p'));
+      for (const [needle, ph] of MARKERS) {
+        const el = paras.find((p) => (p.textContent || '').includes(needle));
+        if (el) markerEls.push([el, ph]);
+      }
+
+      let ticking = false;
+      const update = () => {
+        ticking = false;
+        const focus = window.innerHeight * 0.6;
+        let next: Phase = 'opening';
+        for (const [el, ph] of markerEls) {
+          if (el.getBoundingClientRect().top < focus) next = ph;
+        }
+        if (next !== phase) {
+          phase = next;
+          applyState();
+        }
+      };
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          ticking = true;
+          window.requestAnimationFrame(update);
+        }
+      }, { passive: true });
+      update();
+    }
+
+    /* ---- "Charging, charging." — the one-time golden trigger ---- */
+    const PHRASE = 'Charging, charging.';
+    if (prose) {
+      const walker = document.createTreeWalker(prose, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          if (!node.nodeValue?.includes(PHRASE)) return NodeFilter.FILTER_REJECT;
+          const parent = (node as Text).parentElement;
+          if (!parent || parent.closest('button, a, script, style')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      const textNode = walker.nextNode() as Text | null;
+      if (textNode) {
+        const text = textNode.nodeValue ?? '';
+        const at = text.indexOf(PHRASE);
+        const frag = document.createDocumentFragment();
+        frag.append(document.createTextNode(text.slice(0, at)));
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'rl-charging';
+        btn.textContent = PHRASE;
+        btn.setAttribute('aria-label', 'Charging, charging \u2014 let the morning through');
+        btn.setAttribute('aria-pressed', 'false');
+        frag.append(btn);
+        frag.append(document.createTextNode(text.slice(at + PHRASE.length)));
+        textNode.parentNode?.replaceChild(frag, textNode);
+
+        const charge = () => {
+          gold = true;
+          if (userWants !== 'off') userWants = 'on';
+          btn.classList.add('is-charged');
+          btn.setAttribute('aria-pressed', 'true');
+          save();
+          applyState();
+          say('The light turns to sunrise.');
+        };
+        if (gold) {
+          btn.classList.add('is-charged');
+          btn.setAttribute('aria-pressed', 'true');
+        }
+        btn.addEventListener('click', () => {
+          if (!gold) charge();
+        });
+      }
+    }
+
+    applyState();
+  }
+</script>
+
+<style is:global>
+  /* Truth: the cover slot becomes the sticky column so the night-light
+     rides beneath the cover, mirroring the house pattern. */
+  @media (min-width: 861px) {
+    .archived-piece-page .truth-cover-slot {
+      display: block;
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: 96px;
+      align-self: start;
+      justify-self: end;
+      width: 100%;
+    }
+
+    .archived-piece-page .truth-cover-slot .archive-cover-card {
+      position: static;
+      top: auto;
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  /* The final words: quietly clickable, permanently golden once taken. */
+  .archive-prose .rl-charging {
+    display: inline;
+    appearance: none;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    text-shadow: 0 0 9px rgba(255, 201, 94, 0.16);
+    transition: text-shadow 400ms ease, color 600ms ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .archive-prose .rl-charging:hover:not(.is-charged),
+  .archive-prose .rl-charging:focus-visible:not(.is-charged) {
+    text-shadow:
+      0 0 12px rgba(255, 201, 94, 0.45),
+      0 0 3px rgba(255, 228, 154, 0.35);
+  }
+
+  .archive-prose .rl-charging:focus-visible {
+    border-radius: 2px;
+    outline: 1px solid var(--border-strong);
+    outline-offset: 2px;
+  }
+
+  .archive-prose .rl-charging.is-charged {
+    color: #ffc95e;
+    cursor: default;
+    text-shadow:
+      0 0 11px rgba(255, 201, 94, 0.4),
+      0 0 3px rgba(255, 228, 154, 0.3);
+  }
+</style>
+
+<style>
+  .rabbitlamp-coda {
+    margin: 0;
+    text-indent: 0;
+    display: grid;
+    justify-items: center;
+  }
+
+  .rabbitlamp-coda--desktop {
+    margin-top: 26px;
+  }
+
+  .rabbitlamp-coda--mobile {
+    margin: clamp(4rem, 10vw, 6.5rem) 0 0;
+  }
+
+  .rl-lamp {
+    position: relative;
+    display: block;
+    width: 118px;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  .rl-lamp:focus-visible {
+    outline: 1px solid var(--border-strong);
+    outline-offset: 6px;
+    border-radius: 8px;
+  }
+
+  .rl-svg {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+    z-index: 1;
+  }
+
+  .rl-layer {
+    transition: opacity 340ms ease;
+  }
+
+  .rl-red,
+  .rl-gold {
+    opacity: 0;
+  }
+
+  [data-lit='on']:not([data-gold]) .rl-red {
+    opacity: 1;
+  }
+
+  [data-lit='on'][data-gold] .rl-gold {
+    opacity: 1;
+  }
+
+  /* halo behind the lamp */
+  .rl-halo {
+    position: absolute;
+    inset: -22%;
+    z-index: 0;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 420ms ease;
+    background: radial-gradient(circle at 50% 62%, rgba(246, 94, 66, 0.32) 0%, rgba(246, 94, 66, 0.1) 45%, transparent 70%);
+    pointer-events: none;
+  }
+
+  [data-lit='on'] .rl-halo {
+    opacity: 1;
+  }
+
+  [data-lit='on'][data-gold] .rl-halo {
+    background: radial-gradient(circle at 50% 62%, rgba(255, 201, 94, 0.36) 0%, rgba(255, 201, 94, 0.12) 45%, transparent 70%);
+  }
+
+  /* the waver: quick dips scheduled by script */
+  .is-dim .rl-red,
+  .is-dim .rl-gold {
+    opacity: 0.5;
+    transition: opacity 90ms ease;
+  }
+
+  .is-dim .rl-halo {
+    opacity: 0.55;
+    transition: opacity 90ms ease;
+  }
+
+  /* reduced motion: a slow, gentle breathing instead of flicker */
+  .is-waver-gentle .rl-red,
+  .is-waver-gentle .rl-gold {
+    animation: rl-gentle 3.8s ease-in-out infinite;
+  }
+
+  @keyframes rl-gentle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.82; }
+  }
+
+  /* night refusal: the faintest failed ember, then nothing */
+  .is-refuse .rl-red {
+    opacity: 0.07;
+    transition: opacity 60ms ease;
+  }
+
+  .rl-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 860px) {
+    .rabbitlamp-coda--desktop { display: none; }
+  }
+
+  @media (min-width: 861px) {
+    .rabbitlamp-coda--mobile { display: none; }
+  }
+</style>

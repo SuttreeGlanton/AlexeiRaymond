@@ -628,7 +628,12 @@
       "cover": "covers/pieces/truth-or-its-evidence.jpg",
       "excerpt": "Somewhere in his besieged mind rattled an unassailable, choking truth.",
       "genre": "Short fiction",
-      "issue": "#3"
+      "issue": "#3",
+      "account": {
+        "slug": "truth-or-its-evidence",
+        "label": "Read story",
+        "title": "Truth, or Its Evidence"
+      }
     },
     {
       "title": "Out of Bounds",
