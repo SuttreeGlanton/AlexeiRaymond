@@ -12,7 +12,13 @@ import { assetPath } from '../lib/paths';
 
 <figure class="night-glows-coda" data-night-glows data-state="intact">
   <div class="ng-window">
-    <img class="ng-city" src={tokyoGif} alt="Rainy nighttime view over Shinjuku, Tokyo — squares of orange and white light out of the dark." loading="lazy" />
+    <img
+      class="ng-city"
+      src={tokyoGif}
+      alt="Rainy nighttime view over Shinjuku, Tokyo — squares of orange and white light out of the dark."
+      loading="eager"
+      fetchpriority="high"
+    />
     <div class="ng-sheen" aria-hidden="true"></div>
     <img class="ng-city-clear" src={tokyoGif} alt="" aria-hidden="true" loading="lazy" />
 
@@ -335,5 +341,4 @@ import { assetPath } from '../lib/paths';
     }
   }
 </style>
-
 
