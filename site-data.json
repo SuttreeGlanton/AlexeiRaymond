@@ -38,6 +38,7 @@
       "name": "Mythbreaking",
       "blurb": "The Anton persona; the shedding and breaking of old worlds as a new world struggles to be born.",
       "cover": "covers/cycles/mythbreaking.jpg",
+      "banner": "cycle-banners/mythbreaking.jpg",
       "storyOrder": [
         "Boxer",
         "193 Lines of Sight",
@@ -62,6 +63,7 @@
       "name": "Mythmaking",
       "blurb": "A psyche’s architecture; foundations, early cataclysms, and experience prior to words.",
       "cover": "covers/cycles/mythmaking.jpg",
+      "banner": "cycle-banners/mythmaking.jpg",
       "storyOrder": [
         "No, Rabbit",
         "Clothesline Divorce",
@@ -84,6 +86,7 @@
       "name": "Fool's Gold",
       "blurb": "The Adam persona; its partitions and the gold in the center.",
       "cover": "covers/cycles/fools-gold.jpg",
+      "banner": "cycle-banners/fools-gold.jpg",
       "storyOrder": [
         "Genesis",
         "His Green Delight",
@@ -101,13 +104,15 @@
       "id": "dreams",
       "name": "Dreams",
       "blurb": "Figments and fragments; dreams bubbling up. Flash-fiction pieces from the cycle, featuring (6,080): ‘Batter my heart, five-eye’d God.’",
-      "cover": "covers/cycles/dreams.jpg"
+      "cover": "covers/cycles/dreams.jpg",
+      "banner": "cycle-banners/dreams.jpg"
     },
     {
       "id": "portici",
       "name": "Portici",
       "blurb": "The Turin cycle; time of moths. Stories from the cycle, featuring Glassdom: ‘It’s glassfall—a rain that chimes and glitters the street.’",
       "cover": "covers/cycles/portici.jpg",
+      "banner": "cycle-banners/portici.jpg",
       "storyOrder": [
         "Glassdom",
         "La Luna",
@@ -122,6 +127,7 @@
       "name": "Valentine's Star",
       "blurb": "The Valentin persona; tribulations of early love. Stories from the cycle — ‘And her lips met his—and bliss, bliss, bliss.’",
       "cover": "covers/cycles/valentines-star.jpg",
+      "banner": "cycle-banners/valentines-star.jpg",
       "storyOrder": [
         "Under Street Sign and Star",
         "Waiting for Beloved",
@@ -135,6 +141,7 @@
       "name": "Conscription",
       "blurb": "Hauntings of white and blue; olive-drab and refusal.",
       "cover": "covers/cycles/conscription.jpg",
+      "banner": "cycle-banners/conscription.jpg",
       "storyOrder": [
         "God Underground",
         "Blackbird",
@@ -152,6 +159,7 @@
       "name": "The Real",
       "blurb": "De liefde maeckte van den smidt eenen schilder. Stories from the cycle, featuring Zagagulyn: ‘His rough black hair stands on end.’",
       "cover": "covers/cycles/the-real.jpg",
+      "banner": "cycle-banners/the-real.jpg",
       "storyOrder": [
         "Zagagulyn",
         "Embers",

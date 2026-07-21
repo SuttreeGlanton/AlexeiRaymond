@@ -37,6 +37,8 @@ export interface Cycle {
   name: string;
   blurb: string;
   cover: string;
+  /** Wide, pre-composed photograph used by the cycle page hero. */
+  banner: string;
   /** Cycle-specific narrative sequence. Omitted for cycles without a fixed order. */
   storyOrder?: string[];
   disabled?: boolean;

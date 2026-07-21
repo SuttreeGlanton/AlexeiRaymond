@@ -1474,6 +1474,10 @@ img {
 
 /* --- Cycle page switcher --- */
 
+.cycle-navigation {
+  margin-bottom: clamp(30px, 4.5vw, 54px);
+}
+
 .cycle-switcher {
   display: flex;
   align-items: baseline;
@@ -2810,6 +2814,24 @@ img {
   }
 
   .archived-piece-page--guests .guests-cover-slot .archive-cover-card {
+    position: static;
+    top: auto;
+    width: 100%;
+    margin: 0;
+  }
+
+  .archive-body-shell.has-archive-cover .lothario-cover-slot {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: 96px;
+    align-self: start;
+    justify-self: end;
+    width: 100%;
+  }
+
+  .archive-body-shell.has-archive-cover .lothario-cover-slot .archive-cover-card {
     position: static;
     top: auto;
     width: 100%;

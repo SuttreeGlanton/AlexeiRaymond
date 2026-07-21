@@ -224,6 +224,7 @@ if (Array.isArray(data.cycles)) {
     requireString(cycle.name, `${label}.name`);
     requireString(cycle.blurb, `${label}.blurb`);
     checkAsset(label, cycle.cover, ['src/assets']);
+    checkAsset(`${label} banner`, cycle.banner, ['src/assets']);
 
     if (cycle.id && !isSlug(cycle.id)) {
       addError(`${label}.id: "${cycle.id}" should be a lowercase slug.`);

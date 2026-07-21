@@ -1,9 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import CycleIcon from '../../components/CycleIcon.astro';
+import CycleHero from '../../components/CycleHero.astro';
 import PieceCard from '../../components/PieceCard.astro';
 import type { Cycle } from '../../lib/data';
-import { cycles, cycleTeaser, isUpcoming, parseDate, piecesForCycle, site } from '../../lib/data';
+import { cycles, isUpcoming, parseDate, piecesForCycle, site } from '../../lib/data';
+import { imageAsset } from '../../lib/image-assets';
 import { absoluteSiteUrl, withBase } from '../../lib/paths';
 
 export function getStaticPaths() {
@@ -18,6 +19,8 @@ interface Props {
 }
 
 const { cycle } = Astro.props;
+const cycleBanner = imageAsset(cycle.banner);
+if (!cycleBanner) throw new Error(`Missing banner for cycle: ${cycle.name}`);
 const cycleSourcePieces = piecesForCycle(cycle.name);
 const storyOrder = cycle.storyOrder ?? [];
 const hasStoryOrder = cycle.id !== 'dreams' && storyOrder.length > 0;
@@ -60,11 +63,9 @@ const breadcrumbSchema = {
     data-cycle-order-root={hasStoryOrder ? '' : undefined}
     data-order-mode={hasStoryOrder ? 'publication' : undefined}
   >
-    <section class="page-shell page-hero" aria-labelledby="cycle-title">
-      <a class="back-link" href={withBase('')}>&larr; All cycles</a>
-      <h1 class="cycle-title" id="cycle-title"><CycleIcon id={cycle.id} />{cycle.name}</h1>
-      {cycleTeaser(cycle) && <p class="cycle-intro">{cycleTeaser(cycle)}</p>}
+    <CycleHero cycle={cycle} image={cycleBanner} />
 
+    <section class="page-shell cycle-navigation" aria-label="Cycle navigation">
       <nav class="cycle-switcher" aria-label="Cycle navigation">
         <span class="cycle-switcher-label">Cycles</span>
         <div class="cycle-switcher-links">
