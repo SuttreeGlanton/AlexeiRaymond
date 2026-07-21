@@ -30,4 +30,4 @@ The words her mother then shot into the darkness were not new. No one could endu
 
 *If you’re so sad, why don’t you just—*
 
-She loves her mother.
+<span data-slhm-trigger>She</span> loves her mother.

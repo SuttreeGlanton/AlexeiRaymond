@@ -1,0 +1,230 @@
+---
+import { Image } from 'astro:assets';
+import idaPortrait from '../assets/codas/ida-portrait.webp';
+import { assetPath } from '../lib/paths';
+---
+
+<dialog
+  class="slhm-portrait"
+  data-slhm-portrait
+  aria-label="Portrait of the daughter"
+>
+  <div class="slhm-portrait__window">
+    <button
+      class="slhm-portrait__close"
+      type="button"
+      data-slhm-close
+      aria-label="Close portrait"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+    <Image
+      class="slhm-portrait__image"
+      src={idaPortrait}
+      alt="Pencil portrait of the daughter"
+      width={760}
+      format="webp"
+      quality={84}
+      loading="eager"
+      fetchpriority="low"
+      decoding="async"
+    />
+  </div>
+</dialog>
+
+<audio
+  src={assetPath('audio/ida.mp3')}
+  preload="auto"
+  data-slhm-cue
+  aria-hidden="true"
+></audio>
+
+<script>
+  const slhmTrigger = document.querySelector<HTMLElement>('[data-slhm-trigger]');
+  const slhmDialog = document.querySelector<HTMLDialogElement>('[data-slhm-portrait]');
+  const slhmClose = slhmDialog?.querySelector<HTMLButtonElement>('[data-slhm-close]');
+  const slhmCue = document.querySelector<HTMLAudioElement>('[data-slhm-cue]');
+
+  if (slhmTrigger && slhmDialog && slhmDialog.dataset.ready !== 'true') {
+    slhmDialog.dataset.ready = 'true';
+    let lastTouchAt = 0;
+    let cuePlayed = false;
+    let cueStarting = false;
+
+    const playCueOnce = async () => {
+      if (!slhmCue || cuePlayed || cueStarting) return;
+
+      cueStarting = true;
+      slhmCue.currentTime = 0;
+
+      try {
+        await slhmCue.play();
+        cuePlayed = true;
+      } catch {
+        // Leave the cue available if the browser declines this attempt.
+      } finally {
+        cueStarting = false;
+      }
+    };
+
+    const openPortrait = () => {
+      window.getSelection()?.removeAllRanges();
+
+      if (!slhmDialog.open) {
+        slhmDialog.show();
+        void playCueOnce();
+      }
+    };
+
+    slhmTrigger.addEventListener('dblclick', (event) => {
+      event.preventDefault();
+      openPortrait();
+    });
+
+    slhmTrigger.addEventListener('pointerup', (event) => {
+      if (event.pointerType === 'mouse') return;
+
+      const now = performance.now();
+      const isDoubleTap = now - lastTouchAt > 40 && now - lastTouchAt < 450;
+      lastTouchAt = now;
+
+      if (!isDoubleTap) return;
+
+      event.preventDefault();
+      lastTouchAt = 0;
+      openPortrait();
+    });
+
+    slhmClose?.addEventListener('click', () => slhmDialog.close());
+
+    document.addEventListener('pointerdown', (event) => {
+      const target = event.target;
+      if (!(target instanceof Node) || !slhmDialog.open) return;
+      if (!slhmDialog.contains(target) && !slhmTrigger.contains(target)) {
+        slhmDialog.close();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && slhmDialog.open) slhmDialog.close();
+    });
+  }
+</script>
+
+<style is:global>
+  [data-slhm-trigger] {
+    cursor: text;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .slhm-portrait {
+    position: absolute;
+    z-index: 4;
+    top: auto;
+    right: auto;
+    bottom: 0;
+    left: 50%;
+    width: min(18rem, calc(100% - 1.5rem));
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid rgba(223, 210, 188, 0.42);
+    border-radius: 12px;
+    background: #11100f;
+    box-shadow:
+      0 14px 36px rgba(0, 0, 0, 0.54),
+      0 0 0 1px rgba(0, 0, 0, 0.28);
+    color: var(--text);
+    transform: translateX(-50%);
+  }
+
+  .slhm-portrait[open] {
+    animation: slhmPortraitIn 180ms ease-out both;
+  }
+
+  .archive-prose {
+    position: relative;
+  }
+
+  .slhm-portrait__window {
+    position: relative;
+    padding: 0.3rem;
+    overflow: hidden;
+    border-radius: inherit;
+    background: #11100f;
+  }
+
+  .slhm-portrait__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    border-radius: 8px;
+    object-fit: contain;
+  }
+
+  .slhm-portrait__close {
+    position: absolute;
+    z-index: 1;
+    top: 0.72rem;
+    right: 0.72rem;
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    place-items: center;
+    padding: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 0;
+    border-radius: 0;
+    outline: 0;
+    background: transparent;
+    box-shadow: none;
+    color: rgba(48, 45, 43, 0.72);
+    font: 300 1.45rem/1 var(--sans);
+    cursor: pointer;
+    transition: color 140ms ease, text-shadow 140ms ease;
+  }
+
+  .slhm-portrait__close:hover,
+  .slhm-portrait__close:focus-visible {
+    background: transparent;
+    color: rgba(30, 27, 25, 0.9);
+  }
+
+  .slhm-portrait__close:focus-visible {
+    outline: 0;
+    text-shadow: 0 0 3px rgba(250, 247, 241, 0.9);
+  }
+
+  @keyframes slhmPortraitIn {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(8px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .slhm-portrait {
+      width: min(15.5rem, calc(100% - 1rem));
+    }
+
+    .slhm-portrait__window {
+      padding: 0.25rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slhm-portrait[open] {
+      animation: none;
+    }
+  }
+</style>

@@ -22,6 +22,7 @@ import RabbitLampCoda from '../../components/RabbitLampCoda.astro';
 import MothheadCoda from '../../components/MothheadCoda.astro';
 import AlphaSoundCoda from '../../components/AlphaSoundCoda.astro';
 import RedCherrySlack from '../../components/RedCherrySlack.astro';
+import SheLovesHerMotherPortrait from '../../components/SheLovesHerMotherPortrait.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
 import { absoluteSiteUrl, withBase } from '../../lib/paths';
 import { imageAsset } from '../../lib/image-assets';
@@ -60,6 +61,7 @@ const isMothhead = entry.id === 'mothhead';
 const isAlpha = entry.id === 'alpha';
 const isNow = entry.id === 'now';
 const isTruth = entry.id === 'truth-or-its-evidence';
+const isSheLovesHerMother = entry.id === 'she-loves-her-mother';
 const headerCoda = isWitnesses ? 'moon' : isSixThousandEighty ? 'counter' : isTheTrail ? 'pills' : isGuestsHere ? 'eyes' : isNow ? 'clock' : isTruth ? 'rabbit' : undefined;
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? '' : 'Account';
@@ -229,6 +231,7 @@ const breadcrumbSchema = piece ? {
       <div class="prose archive-prose">
         {isDeathwish && <DeathwishPresentation />}
         <Content />
+        {isSheLovesHerMother && <SheLovesHerMotherPortrait />}
         {isSixThousandEighty && (
           <div class="coda-relocated-to-header">
             <SixThousandEightyCoda variant="mobile" />
