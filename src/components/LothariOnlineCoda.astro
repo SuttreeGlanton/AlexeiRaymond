@@ -1,4 +1,12 @@
-<div class="lo-coda" role="img" aria-label="AdamOne types: Hullo, I come in peace and curiosity, followed by an alien emoji.">
+---
+interface Props {
+  variant?: 'desktop' | 'mobile';
+}
+
+const { variant = 'mobile' } = Astro.props;
+---
+
+<div class={`lo-coda lo-coda--${variant}`} role="img" aria-label="AdamOne types: Hullo, I come in peace and curiosity, followed by an alien emoji.">
   <span class="lo-coda-handle" aria-hidden="true">AdamOne:</span>
   <span class="lo-coda-entry" aria-hidden="true">
     <span class="lo-coda-measure">Hullo, I come in peace and curiosity 👽</span>
@@ -84,6 +92,10 @@
     text-indent: 0;
   }
 
+  .lo-coda--desktop {
+    display: none;
+  }
+
   .lo-coda-handle {
     flex: none;
     color: var(--text);
@@ -125,6 +137,23 @@
   @media (max-width: 640px) {
     .lo-coda {
       font-size: 0.7rem;
+    }
+  }
+
+  @media (min-width: 861px) {
+    .lo-coda--desktop {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.3rem;
+      width: 100%;
+      min-height: 0;
+      margin: 1.25rem 0 0;
+      font-size: 0.72rem;
+    }
+
+    .lo-coda--mobile {
+      display: none;
     }
   }
 

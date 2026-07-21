@@ -197,7 +197,7 @@ const breadcrumbSchema = piece ? {
     )}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
-        <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}${isWitnesses ? ' witnesses-cover-slot' : ''}${isNow ? ' now-cover-slot' : ''}${isTruth ? ' truth-cover-slot' : ''}`}>
+        <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}${isWitnesses ? ' witnesses-cover-slot' : ''}${isNow ? ' now-cover-slot' : ''}${isTruth ? ' truth-cover-slot' : ''}${isLothariOnline ? ' lothario-cover-slot' : ''}`}>
           <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
             <div class="archive-cover-media">
               <OptimizedImage
@@ -223,6 +223,7 @@ const breadcrumbSchema = piece ? {
           {isWitnesses && <WitnessesCoda variant="moon" />}
           {isNow && <NowClockCoda />}
           {isTruth && <RabbitLampCoda variant="desktop" />}
+          {isLothariOnline && <LothariOnlineCoda variant="desktop" />}
         </div>
       )}
       <div class="prose archive-prose">
@@ -234,7 +235,7 @@ const breadcrumbSchema = piece ? {
           </div>
         )}
         {isClotheslineDivorce && <ClotheslineDivorceCoda />}
-        {isLothariOnline && <LothariOnlineCoda />}
+        {isLothariOnline && <LothariOnlineCoda variant="mobile" />}
         {isNoRabbit && <NoRabbitCoda />}
         {isAlleyMoney && <AlleyMoneyCoda />}
         {isFatherFrost && <FatherFrostCoda />}

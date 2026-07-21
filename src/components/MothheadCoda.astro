@@ -1,7 +1,8 @@
 ---
-/* Mothhead coda: behavior only — wraps every whole-word "moth"/"moths" in the
-   story as a quiet button. A click releases moths; the final instance bursts a
-   small swarm on each click and streams a continuous flutter while held down.
+/* Mothhead coda: behavior only — wraps every whole-word "moth"/"moths" and the
+   Italian "falene" in the story as a quiet button. A click releases moths; the
+   final instance bursts a small swarm on each click and streams a continuous
+   flutter while held down.
    The live-moth cap keeps either from ever overwhelming the page. */
 ---
 
@@ -17,11 +18,11 @@
   const mhProse = document.querySelector('.archive-prose');
 
   if (mhProse) {
-    /* ---- wrap whole-word moth/moths instances ---- */
+    /* ---- wrap whole-word moth/moths/falene instances ---- */
     const mhWords: HTMLButtonElement[] = [];
     const mhWalker = document.createTreeWalker(mhProse, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
-        if (!node.nodeValue || !/\bmoths?\b/i.test(node.nodeValue)) return NodeFilter.FILTER_REJECT;
+        if (!node.nodeValue || !/\b(?:moths?|falene)\b/i.test(node.nodeValue)) return NodeFilter.FILTER_REJECT;
         const parent = (node as Text).parentElement;
         if (!parent || parent.closest('button, a, script, style, .mh-skip')) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
@@ -34,7 +35,7 @@
     for (const node of mhTextNodes) {
       const text = node.nodeValue ?? '';
       const frag = document.createDocumentFragment();
-      const re = /\bmoths?\b/gi;
+      const re = /\b(?:moths?|falene)\b/gi;
       let last = 0;
       let m: RegExpExecArray | null;
       while ((m = re.exec(text)) !== null) {
