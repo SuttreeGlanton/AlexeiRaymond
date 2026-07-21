@@ -491,6 +491,12 @@ img {
   line-height: 1.05;
 }
 
+/* Keep the longest homepage cycle name on one line without shrinking its peers. */
+.home-cycle-grid > .tile[data-cycle-id='valentines-star'] .tile-title {
+  font-size: clamp(1.4rem, 2.05vw, 2.1rem);
+  white-space: nowrap;
+}
+
 .card-meta,
 .card-note,
 .coming-soon {
