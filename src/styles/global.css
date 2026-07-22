@@ -2729,6 +2729,14 @@ img {
   font-style: italic;
 }
 
+.archived-piece-page .prose .god-underground-mark {
+  color: var(--text);
+}
+
+.archived-piece-page .prose .god-underground-no-break {
+  white-space: nowrap;
+}
+
 .archived-piece-page.has-epigraph .prose p:first-child {
   font-family: var(--serif);
   line-height: 1.5;
