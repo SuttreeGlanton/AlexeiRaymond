@@ -1,0 +1,231 @@
+---
+import { pieces } from '../lib/data';
+
+const keepLastTwoWordsTogether = (text: string) =>
+  text.trim().replace(/\s+(\S+)$/u, '\u00a0$1');
+
+const teasers = pieces
+  .filter((piece) => Boolean(piece.excerpt?.trim()))
+  .map((piece) => ({
+    excerpt: keepLastTwoWordsTogether(piece.excerpt!),
+    title: piece.title
+  }));
+
+const firstTeaser = teasers[0];
+---
+
+{firstTeaser && (
+  <div
+    class="teaser-accordion"
+    data-teaser-accordion
+    data-teasers={JSON.stringify(teasers)}
+    role="group"
+    aria-label="Excerpts from the archive"
+    tabindex="0"
+  >
+    <p class="teaser-accordion-line" aria-live="off">
+      <span class="teaser-accordion-anchor" aria-hidden="true">“</span><span class="teaser-accordion-fold" data-teaser-fold>
+        <span class="teaser-accordion-copy" data-teaser-copy>{firstTeaser.excerpt}”</span>
+      </span>
+    </p>
+    <p class="teaser-accordion-source" data-teaser-source>— {firstTeaser.title}</p>
+  </div>
+)}
+
+<script>
+  (() => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const HOLD_MS = 5000;
+    const FOLD_MS = 480;
+
+    document.querySelectorAll<HTMLElement>('[data-teaser-accordion]').forEach((root) => {
+      const fold = root.querySelector<HTMLElement>('[data-teaser-fold]');
+      const copy = root.querySelector<HTMLElement>('[data-teaser-copy]');
+      const source = root.querySelector<HTMLElement>('[data-teaser-source]');
+      const rawTeasers = root.dataset.teasers;
+
+      if (!fold || !copy || !source || !rawTeasers) return;
+
+      let teasers: Array<{ excerpt: string; title: string }> = [];
+
+      try {
+        teasers = JSON.parse(rawTeasers);
+      } catch {
+        return;
+      }
+
+      if (teasers.length < 2 || reducedMotion.matches) return;
+
+      let index = 0;
+      let timer = 0;
+      let paused = false;
+
+      function measureFold() {
+        if (!copy || !fold) return;
+        fold.style.setProperty('--teaser-width', `${Math.ceil(copy.getBoundingClientRect().width)}px`);
+      }
+
+      function showTeaser(nextIndex: number) {
+        if (!copy || !source) return;
+        const teaser = teasers[nextIndex];
+        copy.textContent = `${teaser.excerpt}”`;
+        source.textContent = `— ${teaser.title}`;
+        measureFold();
+      }
+
+      function scheduleFold() {
+        window.clearTimeout(timer);
+        if (paused) return;
+        timer = window.setTimeout(foldToNext, HOLD_MS);
+      }
+
+      function foldToNext() {
+        if (paused) return;
+        root.classList.add('is-folded');
+
+        timer = window.setTimeout(() => {
+          index = (index + 1) % teasers.length;
+          showTeaser(index);
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              root.classList.remove('is-folded');
+              scheduleFold();
+            });
+          });
+        }, FOLD_MS);
+      }
+
+      function pause() {
+        paused = true;
+        window.clearTimeout(timer);
+        root.classList.remove('is-folded');
+      }
+
+      function resume() {
+        paused = false;
+        scheduleFold();
+      }
+
+      root.addEventListener('pointerenter', pause);
+      root.addEventListener('pointerleave', resume);
+      root.addEventListener('focusin', pause);
+      root.addEventListener('focusout', resume);
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) pause();
+        else if (!root.matches(':hover') && !root.matches(':focus-within')) resume();
+      });
+
+      reducedMotion.addEventListener('change', (event) => {
+        if (event.matches) pause();
+        else resume();
+      });
+
+      measureFold();
+      document.fonts?.ready.then(measureFold);
+      window.addEventListener('resize', measureFold, { passive: true });
+      scheduleFold();
+    });
+  })();
+</script>
+
+<style>
+  .teaser-accordion {
+    --teaser-limit: min(28vw, 23.5rem);
+    width: 100%;
+    min-height: 6.2rem;
+    max-width: 26rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 1rem 1.1rem 0.95rem;
+    background: rgba(17, 17, 17, 0.55);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
+    color: var(--muted);
+    outline-offset: 6px;
+    backdrop-filter: blur(18px);
+    text-align: left;
+  }
+
+  .teaser-accordion-line {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    min-height: 0;
+    margin: 0;
+    color: var(--text-soft);
+    font-family: var(--serif);
+    font-size: clamp(0.96rem, 1.25vw, 1.08rem);
+    font-style: italic;
+    line-height: 1.38;
+    text-align: left;
+  }
+
+  .teaser-accordion-anchor {
+    flex: 0 0 auto;
+    margin-right: -0.04em;
+  }
+
+  .teaser-accordion-fold {
+    display: inline-block;
+    max-width: var(--teaser-width, var(--teaser-limit));
+    overflow: hidden;
+    opacity: 1;
+    white-space: nowrap;
+    text-align: left;
+    vertical-align: top;
+    transition:
+      max-width 460ms cubic-bezier(0.25, 0.8, 0.25, 1),
+      opacity 260ms ease;
+  }
+
+  .teaser-accordion-copy {
+    display: block;
+    width: max-content;
+    max-width: var(--teaser-limit);
+    white-space: normal;
+    text-wrap: pretty;
+    text-align: left;
+  }
+
+  .teaser-accordion-source {
+    margin: 0.08rem 0 0;
+    color: var(--dim);
+    font-family: var(--sans);
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    opacity: 1;
+    text-align: left;
+    transition: opacity 220ms ease;
+  }
+
+  .teaser-accordion.is-folded .teaser-accordion-fold {
+    max-width: 0;
+    opacity: 0;
+  }
+
+  .teaser-accordion.is-folded .teaser-accordion-source {
+    opacity: 0;
+  }
+
+  @media (max-width: 860px) {
+    .teaser-accordion {
+      --teaser-limit: calc(100vw - 58px);
+      min-height: 7rem;
+      max-width: none;
+      border-radius: 12px;
+    }
+
+    .teaser-accordion-line {
+      min-height: 0;
+      font-size: 1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .teaser-accordion-fold,
+    .teaser-accordion-source {
+      transition: none;
+    }
+  }
+</style>

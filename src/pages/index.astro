@@ -3,6 +3,7 @@ import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CycleTile from '../components/CycleTile.astro';
 import LatestStrip from '../components/LatestStrip.astro';
+import TeaserAccordion from '../components/TeaserAccordion.astro';
 import { cycles, site } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
 import { imageAsset } from '../lib/image-assets';
@@ -60,6 +61,37 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
       <h1 id="home-title">{site.author}</h1>
       <a class="hero-start" href={withBase('selected/')}>New here? Start with Selected Works &rarr;</a>
     </div>
+
+    <div class="hero-teaser-feed">
+      <TeaserAccordion />
+    </div>
+
+    <style>
+      .hero-teaser-feed {
+        position: absolute;
+        right: clamp(116px, calc(4vw + 94px), 152px);
+        bottom: clamp(18px, 4vw, 44px);
+        z-index: 3;
+        width: min(26rem, calc(100% - 210px));
+      }
+
+      @media (max-width: 860px) {
+        .hero-teaser-feed {
+          position: relative;
+          right: auto;
+          bottom: auto;
+          width: min(calc(100% - 32px), 28rem);
+          margin: clamp(26px, 5vw, 36px) 16px 0 auto;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .hero-teaser-feed {
+          width: calc(100% - 22px);
+          margin: 30px auto 0;
+        }
+      }
+    </style>
 
     <button class="hero-sound-toggle" type="button" data-sound-toggle aria-pressed="false" aria-label="Sound off" title="Sound off">
       <span class="hero-sound-icon" aria-hidden="true">
