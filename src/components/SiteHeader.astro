@@ -35,31 +35,26 @@ const cycleNavItems = cycles.filter((cycle) => !cycle.disabled).map((cycle) => (
 const navItems = [
   {
     label: 'Cycles',
-    glyph: '\u25cc',
     href: cycleOverviewHref,
     active: isHome || currentPath.startsWith(withBase('cycles/'))
   },
   {
     label: 'Selected',
-    glyph: '\u2605',
     href: withBase('selected/'),
     active: currentPath.startsWith(withBase('selected/'))
   },
   {
     label: 'Chronology',
-    glyph: '\u2193',
     href: withBase('chronology/'),
     active: currentPath.startsWith(withBase('chronology/'))
   },
   {
     label: 'About',
-    glyph: '\u00b6',
     href: withBase('about/'),
     active: currentPath.startsWith(withBase('about/'))
   },
   {
     label: 'Elsewhere',
-    glyph: '\u2726',
     href: withBase('elsewhere/'),
     active: currentPath.startsWith(withBase('elsewhere/'))
   }
@@ -101,7 +96,6 @@ const desktopNavItems = [
         item.label === 'Cycles' ? (
           <div class="nav-cycle-menu">
             <a class="nav-link" href={item.href} aria-current={item.active ? 'page' : undefined}>
-              <span class="nav-glyph" aria-hidden="true">{item.glyph}</span>
               <span>{item.label}</span>
             </a>
             <div class="nav-cycle-panel" aria-label="Cycle navigation">
@@ -112,7 +106,6 @@ const desktopNavItems = [
           </div>
         ) : (
           <a class="nav-link" href={item.href} aria-current={item.active ? 'page' : undefined}>
-            <span class="nav-glyph" aria-hidden="true">{item.glyph}</span>
             <span>{item.label}</span>
           </a>
         )
@@ -132,13 +125,11 @@ const desktopNavItems = [
             aria-expanded="false"
             aria-controls="mobile-cycle-view"
           >
-            <span class="mobile-menu-glyph" aria-hidden="true">{item.glyph}</span>
             <span class="mobile-menu-link-text">{item.label}</span>
             <span class="mobile-menu-chevron" aria-hidden="true">›</span>
           </button>
         ) : (
           <a class="mobile-menu-link" href={item.href} aria-current={item.active ? 'page' : undefined}>
-            <span class="mobile-menu-glyph" aria-hidden="true">{item.glyph}</span>
             <span class="mobile-menu-link-text">{item.label}</span>
           </a>
         )
@@ -169,7 +160,6 @@ const desktopNavItems = [
       </div>
 
       <a class="mobile-cycle-overview" href={cycleOverviewHref} aria-current={isHome ? 'page' : undefined}>
-        <span aria-hidden="true">◌</span>
         <span>View all cycles</span>
       </a>
     </div>

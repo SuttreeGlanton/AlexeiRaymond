@@ -163,10 +163,11 @@ img {
   align-items: center;
   gap: clamp(12px, 2.2vw, 28px);
   color: var(--text-soft);
-  font-size: 0.82rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-transform: none;
 }
 
 .main-nav a {
@@ -244,6 +245,30 @@ img {
 
 .hero-content {
   position: relative;
+  text-align: left;
+}
+
+/* Keep the original desktop hero/image footprint after reducing the title by
+   20%. The original title wrapped to two lines; the smaller title fits on one,
+   so reserve the full responsive height of the removed line as well. */
+@media (min-width: 641px) {
+  .hero-content {
+    padding-bottom: clamp(3.696rem, 13.728vw, 11.405rem);
+  }
+}
+
+/* Give the Mole Antonelliana its own clear field on desktop. Wrapping the
+   name into a compact left-hand block adds one title line, so subtract that
+   exact line height from the existing compensation to preserve the restored
+   Turin image frame. */
+@media (min-width: 861px) {
+  .hero-content {
+    padding-bottom: clamp(1.232rem, 4.576vw, 3.802rem);
+  }
+
+  .hero h1 {
+    max-width: 58%;
+  }
 }
 
 .eyebrow,
@@ -257,8 +282,10 @@ img {
 
 .hero-kicker {
   max-width: 760px;
-  margin: 0 auto;
+  margin: 0;
   color: var(--text);
+  font-family: var(--serif);
+  font-style: normal;
   font-size: clamp(0.82rem, 1.35vw, 0.96rem);
   font-weight: 500;
   letter-spacing: 0.14em;
@@ -283,7 +310,7 @@ img {
 
 .hero h1 {
   margin-top: clamp(30px, 4.5vw, 52px);
-  font-size: clamp(3.5rem, 13vw, 10.8rem);
+  font-size: clamp(2.8rem, 10.4vw, 8.64rem);
   line-height: 0.88;
 }
 
@@ -1281,31 +1308,11 @@ img {
   clip-path: inset(0 round 24px);
 }
 
-/* --- Nav glyphs and homepage color reveal --- */
+/* --- Homepage color reveal --- */
 
 .nav-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.48em;
-}
-
-.nav-glyph {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1em;
-  color: var(--text-soft);
-  font-family: var(--serif);
-  font-size: 1.32em;
-  line-height: 0;
-  /* Paint the glyph onto itself to thicken these thin dingbats. */
-  -webkit-text-stroke: 0.4px currentColor;
-  transition: color 240ms ease;
-}
-
-.main-nav a:hover .nav-glyph,
-.main-nav a[aria-current='page'] .nav-glyph {
-  color: var(--text-soft);
 }
 
 .hero {
@@ -1370,18 +1377,6 @@ img {
   }
 }
 
-@media (max-width: 640px) {
-  .nav-link {
-    gap: 0.38em;
-  }
-
-  .nav-glyph {
-    font-size: 1em;
-  }
-}
-
-
-
 /* --- Desktop cycle hover menu --- */
 .nav-cycle-menu {
   position: relative;
@@ -1400,7 +1395,7 @@ img {
   border: 1px solid var(--border-strong);
   border-radius: 14px;
   padding: 10px;
-  background: rgba(10, 10, 10, 0.82);
+  background: rgba(10, 10, 10, 0.9);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.48);
   backdrop-filter: blur(18px);
   opacity: 0;
@@ -1978,16 +1973,6 @@ img {
     white-space: nowrap;
   }
 
-  .nav-link {
-    gap: 0.25em;
-  }
-
-  .nav-glyph {
-    min-width: 0.82em;
-    font-size: 0.92em;
-    -webkit-text-stroke: 0.22px currentColor;
-  }
-
   .footer-nav {
     gap: 8px 14px;
   }
@@ -1999,9 +1984,6 @@ img {
     letter-spacing: 0.04em;
   }
 
-  .nav-glyph {
-    display: none;
-  }
 }
 
 /* --- Footer glyph and mobile sound tightening --- */
@@ -2398,17 +2380,6 @@ img {
     color: var(--text);
   }
 
-  .mobile-menu-glyph {
-    display: inline-grid;
-    place-items: center;
-    width: 1.1em;
-    color: var(--text-soft);
-    font-family: var(--serif);
-    font-size: 1rem;
-    line-height: 1;
-    -webkit-text-stroke: 0.25px currentColor;
-  }
-
   .mobile-menu-link-text {
     font-family: var(--serif);
     font-size: 1.23rem;
@@ -2502,21 +2473,16 @@ img {
   .mobile-cycle-overview {
     display: flex;
     align-items: center;
-    gap: 8px;
     margin-top: 4px;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     padding: 10px 8px 3px;
     color: var(--dim);
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    transition: color 180ms ease;
-  }
-
-  .mobile-cycle-overview span:first-child {
     font-family: var(--serif);
     font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    transition: color 180ms ease;
   }
 
   .mobile-cycle-overview:hover,
@@ -2948,12 +2914,13 @@ img {
 .hero-start {
   display: inline-block;
   margin-top: 18px;
-  color: var(--muted);
+  color: #fff;
   font-family: var(--sans);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.9);
   border-bottom: 1px solid transparent;
   transform-origin: center;
   animation: hero-start-pulse 850ms cubic-bezier(0.22, 1, 0.36, 1) 1.6s 1;
@@ -2963,21 +2930,23 @@ img {
 @keyframes hero-start-pulse {
   0%,
   100% {
-    color: var(--muted);
-    text-shadow: none;
+    color: #fff;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.9);
     transform: scale(1);
   }
 
   45% {
-    color: var(--text);
-    text-shadow: 0 0 18px rgba(241, 239, 233, 0.34);
+    color: #fff;
+    text-shadow:
+      0 1px 12px rgba(0, 0, 0, 0.9),
+      0 0 18px rgba(255, 255, 255, 0.42);
     transform: scale(1.04);
   }
 }
 
 .hero-start:hover,
 .hero-start:focus-visible {
-  color: var(--text-soft);
+  color: #fff;
   border-bottom-color: var(--border-strong);
 }
 
@@ -3010,9 +2979,9 @@ img {
     display: inline-flex;
     align-items: center;
     max-width: 100%;
-    white-space: nowrap;
-    font-size: clamp(0.52rem, 2.35vw, 0.62rem);
-    letter-spacing: 0.08em;
+    white-space: normal;
+    font-size: clamp(0.82rem, 3.5vw, 0.9rem);
+    letter-spacing: 0.02em;
   }
 }
 
