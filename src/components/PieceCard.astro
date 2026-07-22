@@ -23,8 +23,8 @@ const {
   storyOrder,
   sourceOrder,
   priority = false,
-  imageSizes = '(max-width: 640px) 85vw, (max-width: 860px) 45vw, 360px',
-  imageWidths = [240, 400, 560, 640, 760],
+  imageSizes = '(max-width: 640px) 69vw, (max-width: 860px) 45vw, 360px',
+  imageWidths = [240, 400, 480, 520, 560, 640, 760],
   titleLines
 } = Astro.props;
 const upcoming = isUpcoming(piece);
@@ -57,6 +57,7 @@ const genreSlug = piece.genre ? piece.genre.toLowerCase().replace(/[^a-z]+/g, '-
 const imageLoading = priority ? 'eager' : 'lazy';
 const imageFetchPriority = priority ? 'high' : undefined;
 const coverLinkLabel = [
+  `${piece.title} cover`,
   genreLabel,
   dateLabel,
   `Read ${piece.title} at ${publicationLabel(piece)}.`,
@@ -80,7 +81,7 @@ const metaParts = [
     <a class="card-cover-link" href={piece.link} target="_blank" rel="noopener noreferrer" tabindex="-1" aria-label={coverLinkLabel}>
       <div class="card-media">
         {cover ? (
-          <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} />
+          <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} quality={72} />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
         )}
@@ -96,7 +97,7 @@ const metaParts = [
   ) : (
     <div class="card-media">
       {cover ? (
-        <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} />
+        <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} quality={72} />
       ) : (
         <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
       )}

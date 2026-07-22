@@ -34,7 +34,6 @@ const publishedCyclePieces = cycleSourcePieces
   .filter((piece) => !isUpcoming(piece))
   .sort((a, b) => (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0));
 const cyclePieces = [...upcomingCyclePieces, ...publishedCyclePieces];
-const priorityPiece = cyclePieces.find((piece) => Boolean(piece.cover));
 const otherCycles = cycles.filter((item) => !item.disabled);
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -115,7 +114,6 @@ const breadcrumbSchema = {
             piece={piece}
             storyOrder={hasStoryOrder ? storyIndex.get(piece.title) : undefined}
             sourceOrder={sourceIndex.get(piece.title)}
-            priority={piece === priorityPiece}
           />
         ))}
       </div>

@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CycleTile from '../components/CycleTile.astro';
 import LatestStrip from '../components/LatestStrip.astro';
@@ -20,26 +20,28 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
   <section class="hero" aria-labelledby="home-title" data-color-reveal>
     {headerImage ? (
       <>
-        <Image
+        <Picture
           class="hero-backdrop hero-backdrop--mono"
           src={headerImage}
           alt=""
           widths={heroWidths}
           width={1800}
           sizes="100vw"
-          format="webp"
-          quality={74}
+          formats={['avif']}
+          fallbackFormat="webp"
+          quality={55}
           priority
         />
-        <Image
+        <Picture
           class="hero-backdrop hero-color-reveal"
           src={headerImage}
           alt=""
           widths={heroWidths}
           width={1800}
           sizes="100vw"
-          format="webp"
-          quality={74}
+          formats={['avif']}
+          fallbackFormat="webp"
+          quality={55}
           loading="eager"
           decoding="async"
           aria-hidden="true"
