@@ -2537,6 +2537,10 @@ img {
     isolation: isolate;
   }
 
+  .home-cycle-grid > .tile .tile-title {
+    font-size: clamp(1.45rem, 2.15vw, 2.2rem);
+  }
+
   .home-cycle-grid > .tile {
     position: absolute;
     top: clamp(18px, 2.5vw, 30px);

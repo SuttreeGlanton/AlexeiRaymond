@@ -1,0 +1,41 @@
+diff --git a/site-data.json b/site-data.json
+index ca7c91f..cf4ec83 100644
+--- a/site-data.json
++++ b/site-data.json
+@@ -841,7 +841,7 @@
+       ],
+       "link": "https://donotsubmit.net/father-frost-by-alexei-raymond/",
+       "cover": "covers/pieces/father-frost.jpg",
+-      "excerpt": "maybe I did the thing, thing where nothin’ make sense ‘cept to bang on my fuckin’ empty useless bad head",
++      "excerpt": "...maybe I did the thing, thing where nothin’ make sense ‘cept to bang on my fuckin’ empty useless bad head",
+       "genre": "Short fiction",
+       "account": {
+         "slug": "father-frost",
+diff --git a/src/pages/index.astro b/src/pages/index.astro
+index f951dce..e330bd2 100644
+--- a/src/pages/index.astro
++++ b/src/pages/index.astro
+@@ -110,7 +110,7 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
+   <section class="page-shell" aria-labelledby="cycles-title">
+     <div class="section-head">
+       <h2 id="cycles-title">Cycles</h2>
+-      <p class="section-note">Story cycles flow in and out of one another; an interconnected whole emerges.</p>
++      <p class="section-note">Story cycles flow in and out of one another; an interconnected whole&nbsp;emerges.</p>
+     </div>
+     <div class="cycle-grid home-cycle-grid" data-home-cycle-focus data-home-cycle-fan data-cycle-flux>
+       {cycles.map((cycle) => (
+diff --git a/src/styles/global.css b/src/styles/global.css
+index 1fb20a6..6676080 100644
+--- a/src/styles/global.css
++++ b/src/styles/global.css
+@@ -2537,6 +2537,10 @@ img {
+     isolation: isolate;
+   }
+ 
++  .home-cycle-grid > .tile .tile-title {
++    font-size: clamp(1.45rem, 2.15vw, 2.2rem);
++  }
++
+   .home-cycle-grid > .tile {
+     position: absolute;
+     top: clamp(18px, 2.5vw, 30px);
