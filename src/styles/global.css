@@ -518,6 +518,7 @@ img {
 .tile-title {
   font-size: clamp(1.5rem, 2.3vw, 2.35rem);
   line-height: 1.05;
+  text-align: center;
 }
 
 /* Keep the longest homepage cycle name on one line without shrinking its peers. */
