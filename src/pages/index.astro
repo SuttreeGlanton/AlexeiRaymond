@@ -112,7 +112,7 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
       <h2 id="cycles-title">Cycles</h2>
       <p class="section-note">Story cycles flow in and out of one another; an interconnected whole emerges.</p>
     </div>
-    <div class="cycle-grid home-cycle-grid" data-home-cycle-focus>
+    <div class="cycle-grid home-cycle-grid" data-home-cycle-focus data-home-cycle-fan>
       {cycles.map((cycle) => (
         <CycleTile cycle={cycle} />
       ))}
@@ -186,6 +186,113 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         }
       });
     }
+  </script>
+
+  <script>
+    /* Homepage desktop cycle fan focus. */
+    (() => {
+      const desktop = window.matchMedia('(min-width: 861px)');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const fan = document.querySelector<HTMLElement>('[data-home-cycle-fan]');
+
+      if (!fan) return;
+
+      const tiles = Array.from(fan.querySelectorAll<HTMLElement>('.tile'));
+      if (!tiles.length) return;
+
+      const defaultTile =
+        tiles.find((tile) => tile.dataset.cycleId === 'portici') ??
+        tiles[Math.floor(tiles.length / 2)];
+
+      function setFanFocus(focusedTile?: HTMLElement) {
+        tiles.forEach((tile) => {
+          tile.classList.toggle('is-fan-focus', tile === focusedTile);
+        });
+      }
+
+      function restoreFanFocus() {
+        if (!desktop.matches) {
+          setFanFocus();
+          return;
+        }
+
+        const keyboardTile = tiles.find((tile) => tile.matches(':focus-visible'));
+        setFanFocus(keyboardTile ?? defaultTile);
+      }
+
+      function playFanEntrance() {
+        fan.classList.remove('is-fan-pending');
+        fan.classList.add('is-fan-entering');
+
+        window.setTimeout(() => {
+          fan.classList.remove('is-fan-entering');
+          restoreFanFocus();
+        }, 1320);
+      }
+
+      function armFanEntrance() {
+        if (!desktop.matches || reducedMotion.matches) {
+          restoreFanFocus();
+          return;
+        }
+
+        fan.classList.add('is-fan-pending');
+        setFanFocus();
+
+        if (!('IntersectionObserver' in window)) {
+          playFanEntrance();
+          return;
+        }
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            if (!entries.some((entry) => entry.isIntersecting)) return;
+
+            observer.disconnect();
+            window.setTimeout(playFanEntrance, 180);
+          },
+          {
+            rootMargin: '0px 0px -12% 0px',
+            threshold: 0.18,
+          },
+        );
+
+        observer.observe(fan);
+      }
+
+      tiles.forEach((tile) => {
+        tile.addEventListener('pointerenter', () => {
+          if (
+            desktop.matches &&
+            !fan.classList.contains('is-fan-pending') &&
+            !fan.classList.contains('is-fan-entering')
+          ) {
+            setFanFocus(tile);
+          }
+        });
+
+        tile.addEventListener('focusin', () => {
+          if (desktop.matches) setFanFocus(tile);
+        });
+      });
+
+      fan.addEventListener('pointerleave', restoreFanFocus);
+      fan.addEventListener('focusout', (event) => {
+        const nextTarget = event.relatedTarget;
+
+        if (!(nextTarget instanceof Node) || !fan.contains(nextTarget)) {
+          restoreFanFocus();
+        }
+      });
+
+      if (desktop.addEventListener) {
+        desktop.addEventListener('change', restoreFanFocus);
+      } else if (desktop.addListener) {
+        desktop.addListener(restoreFanFocus);
+      }
+
+      armFanEntrance();
+    })();
   </script>
 
   <script>

@@ -2514,6 +2514,178 @@ img {
   }
 }
 
+/* --- Desktop homepage cycle fan --- */
+@keyframes home-cycle-fan-out {
+  from {
+    opacity: 0.9;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transform:
+      translateX(-50%)
+      translateY(34px)
+      rotate(0deg)
+      scale(0.96);
+  }
+}
+
+@media (min-width: 861px) {
+  .home-cycle-grid {
+    position: relative;
+    display: block;
+    height: clamp(450px, 45vw, 540px);
+    margin-bottom: clamp(64px, 8vw, 110px);
+    padding-bottom: 0;
+    isolation: isolate;
+  }
+
+  .home-cycle-grid > .tile {
+    position: absolute;
+    top: clamp(18px, 2.5vw, 30px);
+    left: 50%;
+    z-index: var(--fan-z);
+    width: clamp(215px, 21vw, 258px);
+    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
+    transform:
+      translateX(calc(-50% + var(--fan-x)))
+      translateY(var(--fan-y))
+      rotate(var(--fan-rotate));
+    transform-origin: 50% 100%;
+    transition:
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 320ms ease,
+      border-color 320ms ease,
+      background 320ms ease;
+  }
+
+  .home-cycle-grid > .tile:nth-child(1) {
+    --fan-x: clamp(-390px, -36.5vw, -315px);
+    --fan-y: 44px;
+    --fan-rotate: -14deg;
+    --fan-z: 1;
+  }
+
+  .home-cycle-grid > .tile:nth-child(2) {
+    --fan-x: clamp(-282px, -26vw, -224px);
+    --fan-y: 22px;
+    --fan-rotate: -10deg;
+    --fan-z: 2;
+  }
+
+  .home-cycle-grid > .tile:nth-child(3) {
+    --fan-x: clamp(-174px, -15.6vw, -134px);
+    --fan-y: 7px;
+    --fan-rotate: -6deg;
+    --fan-z: 3;
+  }
+
+  .home-cycle-grid > .tile:nth-child(4) {
+    --fan-x: clamp(-62px, -5.2vw, -45px);
+    --fan-y: 0px;
+    --fan-rotate: -2deg;
+    --fan-z: 4;
+  }
+
+  .home-cycle-grid > .tile:nth-child(5) {
+    --fan-x: clamp(45px, 5.2vw, 62px);
+    --fan-y: 0px;
+    --fan-rotate: 2deg;
+    --fan-z: 4;
+  }
+
+  .home-cycle-grid > .tile:nth-child(6) {
+    --fan-x: clamp(134px, 15.6vw, 174px);
+    --fan-y: 7px;
+    --fan-rotate: 6deg;
+    --fan-z: 3;
+  }
+
+  .home-cycle-grid > .tile:nth-child(7) {
+    --fan-x: clamp(224px, 26vw, 282px);
+    --fan-y: 22px;
+    --fan-rotate: 10deg;
+    --fan-z: 2;
+  }
+
+  .home-cycle-grid > .tile:nth-child(8) {
+    --fan-x: clamp(315px, 36.5vw, 390px);
+    --fan-y: 44px;
+    --fan-rotate: 14deg;
+    --fan-z: 1;
+  }
+
+  .home-cycle-grid > .tile:nth-child(4),
+  .home-cycle-grid > .tile:nth-child(5) {
+    --fan-delay: 0ms;
+  }
+
+  .home-cycle-grid > .tile:nth-child(3),
+  .home-cycle-grid > .tile:nth-child(6) {
+    --fan-delay: 50ms;
+  }
+
+  .home-cycle-grid > .tile:nth-child(2),
+  .home-cycle-grid > .tile:nth-child(7) {
+    --fan-delay: 100ms;
+  }
+
+  .home-cycle-grid > .tile:nth-child(1),
+  .home-cycle-grid > .tile:nth-child(8) {
+    --fan-delay: 150ms;
+  }
+
+  .home-cycle-grid > .tile.is-fan-focus,
+  .home-cycle-grid > .tile:hover,
+  .home-cycle-grid > .tile:focus-visible {
+    z-index: 20;
+    border-color: var(--border-strong);
+    background: var(--panel-lift);
+    box-shadow:
+      0 28px 64px rgba(0, 0, 0, 0.58),
+      0 0 0 1px rgba(255, 255, 255, 0.035);
+    transform:
+      translateX(calc(-50% + var(--fan-x)))
+      translateY(-30px)
+      rotate(0deg)
+      scale(1.075);
+  }
+
+  .home-cycle-grid > .tile.is-fan-focus img {
+    filter: grayscale(0) brightness(0.96) contrast(1.04);
+    transform: scale(1.018);
+  }
+
+  .home-cycle-grid.is-fan-pending > .tile {
+    z-index: var(--fan-z);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    opacity: 0.9;
+    transform:
+      translateX(-50%)
+      translateY(34px)
+      rotate(0deg)
+      scale(0.96);
+    transition: none;
+  }
+
+  .home-cycle-grid.is-fan-pending > .tile img {
+    filter: grayscale(1) brightness(0.62) contrast(1.05);
+    transform: none;
+  }
+
+  .home-cycle-grid.is-fan-entering > .tile {
+    animation:
+      home-cycle-fan-out
+      1050ms
+      cubic-bezier(0.16, 1, 0.3, 1)
+      var(--fan-delay, 0ms)
+      both;
+  }
+}
+
+@media (min-width: 861px) and (prefers-reduced-motion: reduce) {
+  .home-cycle-grid > .tile {
+    animation: none;
+  }
+}
+
 /* --- Homepage mobile cycle focus color --- */
 @media (max-width: 640px) {
   .home-cycle-grid .tile.is-mobile-focus {
