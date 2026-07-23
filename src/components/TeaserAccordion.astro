@@ -54,11 +54,18 @@ const firstTeaser = teasers[0];
         return;
       }
 
-      if (teasers.length < 2 || reducedMotion.matches) return;
+      if (!teasers.length) return;
 
       let index = 0;
       let timer = 0;
       let paused = false;
+
+      function shuffleTeasers(items: Array<{ excerpt: string; title: string }>) {
+        for (let currentIndex = items.length - 1; currentIndex > 0; currentIndex -= 1) {
+          const randomIndex = Math.floor(Math.random() * (currentIndex + 1));
+          [items[currentIndex], items[randomIndex]] = [items[randomIndex], items[currentIndex]];
+        }
+      }
 
       function measureFold() {
         if (!copy || !fold) return;
@@ -73,6 +80,27 @@ const firstTeaser = teasers[0];
         measureFold();
       }
 
+      function advanceToNextTeaser() {
+        if (index < teasers.length - 1) {
+          index += 1;
+          return;
+        }
+
+        const previousTeaser = teasers[index];
+        shuffleTeasers(teasers);
+
+        if (teasers[0] === previousTeaser) {
+          [teasers[0], teasers[1]] = [teasers[1], teasers[0]];
+        }
+
+        index = 0;
+      }
+
+      shuffleTeasers(teasers);
+      showTeaser(index);
+
+      if (teasers.length < 2 || reducedMotion.matches) return;
+
       function scheduleFold() {
         window.clearTimeout(timer);
         if (paused) return;
@@ -84,7 +112,7 @@ const firstTeaser = teasers[0];
         root.classList.add('is-folded');
 
         timer = window.setTimeout(() => {
-          index = (index + 1) % teasers.length;
+          advanceToNextTeaser();
           showTeaser(index);
 
           requestAnimationFrame(() => {
