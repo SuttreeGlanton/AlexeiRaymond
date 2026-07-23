@@ -193,9 +193,11 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
     (() => {
       const desktop = window.matchMedia('(min-width: 861px)');
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-      const fan = document.querySelector<HTMLElement>('[data-home-cycle-fan]');
+      const fanElement = document.querySelector<HTMLElement>('[data-home-cycle-fan]');
 
-      if (!fan) return;
+      if (!fanElement) return;
+
+      const fan: HTMLElement = fanElement;
 
       const tiles = Array.from(fan.querySelectorAll<HTMLElement>('.tile'));
       if (!tiles.length) return;
