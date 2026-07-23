@@ -202,10 +202,6 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
       const tiles = Array.from(fan.querySelectorAll<HTMLElement>('.tile'));
       if (!tiles.length) return;
 
-      const defaultTile =
-        tiles.find((tile) => tile.dataset.cycleId === 'portici') ??
-        tiles[Math.floor(tiles.length / 2)];
-
       function setFanFocus(focusedTile?: HTMLElement) {
         tiles.forEach((tile) => {
           tile.classList.toggle('is-fan-focus', tile === focusedTile);
@@ -218,12 +214,10 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
           return;
         }
 
-        /* The card already under the reader's cursor wins, then keyboard
-           focus, then the default — so a cursor parked where a card lands
-           gets its lift the moment the fan settles. */
+        /* Only genuine pointer or keyboard focus should lift a card. */
         const hoverTile = tiles.find((tile) => tile.matches(':hover'));
         const keyboardTile = tiles.find((tile) => tile.matches(':focus-visible'));
-        setFanFocus(hoverTile ?? keyboardTile ?? defaultTile);
+        setFanFocus(hoverTile ?? keyboardTile);
       }
 
       function playFanEntrance() {
