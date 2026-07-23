@@ -364,8 +364,10 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
        block) and nothing else changes. Colour stays reserved for card focus:
        a contact point retracts the moment either of its cards is focused. */
     (() => {
-      const grid = document.querySelector<HTMLElement>('[data-cycle-flux]');
-      if (!grid) return;
+      const gridElement = document.querySelector<HTMLElement>('[data-cycle-flux]');
+      if (!gridElement) return;
+
+      const grid: HTMLElement = gridElement;
 
       const desktop = window.matchMedia('(min-width: 861px) and (hover: hover) and (pointer: fine)');
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -382,9 +384,11 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
       type Spot = {
         id: number; lowIdx: number; highIdx: number;
         pair: [number, number];
-        baseX: number; baseY: number; seed: number; phase: number;
+        baseX: number; baseY: number; direction: number;
+        seed: number; phase: number;
         retract: number;
-        disp: SVGElement; grad: SVGElement; warp: SVGElement;
+        disp: SVGElement; noiseShift: SVGElement;
+        grad: SVGElement; warp: SVGElement;
         lobA: SVGElement; lobB: SVGElement; zoneG: SVGElement;
       };
 
@@ -397,7 +401,9 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
       let running = false;
       let start = 0;
 
-      const R = 34; // contact-zone radius (matches the small scale we settled on)
+      /* Still local to the boundary, but broad enough for the eye to follow
+         one cover pushing into the other instead of only catching a flicker. */
+      const R = 42;
 
       function coverURL(tile: HTMLElement): string | null {
         const img = tile.querySelector<HTMLImageElement>('.tile-media img');
@@ -442,9 +448,9 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
 
         // shared goo filter for the tongue masks
         const goo = el('filter', { id: 'fx-goo', x: '-60%', y: '-60%', width: '220%', height: '220%', 'color-interpolation-filters': 'sRGB' });
-        goo.appendChild(el('feGaussianBlur', { in: 'SourceGraphic', stdDeviation: '7', result: 'b' }));
-        goo.appendChild(el('feColorMatrix', { in: 'b', type: 'matrix', values: '1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10', result: 'g' }));
-        goo.appendChild(el('feGaussianBlur', { in: 'g', stdDeviation: '1.2' }));
+        goo.appendChild(el('feGaussianBlur', { in: 'SourceGraphic', stdDeviation: '5.5', result: 'b' }));
+        goo.appendChild(el('feColorMatrix', { in: 'b', type: 'matrix', values: '1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -11', result: 'g' }));
+        goo.appendChild(el('feGaussianBlur', { in: 'g', stdDeviation: '0.8' }));
         defs.appendChild(goo);
 
         // register each tile's cover, replicating its CSS transform so the flux
@@ -500,6 +506,10 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
           const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
           const upper = (highIdx === i ? ra : rb);
           const lower = (lowIdx === i ? ra : rb);
+          const lowToHigh =
+            (upper.left + upper.width / 2) >= (lower.left + lower.width / 2)
+              ? 1
+              : -1;
           // The visible boundary is the upper card's edge that faces the lower
           // card (where the lower one peeks out); straddle it so the zone covers
           // both surfaces instead of smudging one card's interior.
@@ -512,25 +522,40 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
           for (let s = 0; s < 2; s++) {
             const frac = 0.22 + Math.random() * 0.56;
             spots.push(makeSpot(sid++, lowIdx, highIdx, [i, i + 1],
-              seamX + (Math.random() * 16 - 8), top + (bot - top) * frac));
+              seamX + (Math.random() * 16 - 8), top + (bot - top) * frac,
+              lowToHigh));
           }
         }
       }
 
-      function makeSpot(id: number, lowIdx: number, highIdx: number, pair: [number, number], cx: number, cy: number): Spot {
+      function makeSpot(
+        id: number,
+        lowIdx: number,
+        highIdx: number,
+        pair: [number, number],
+        cx: number,
+        cy: number,
+        direction: number,
+      ): Spot {
         const warp = el('filter', { id: `fx-warp-${id}`, filterUnits: 'userSpaceOnUse', 'color-interpolation-filters': 'sRGB' });
-        warp.appendChild(el('feTurbulence', { type: 'fractalNoise', baseFrequency: '0.02 0.03', numOctaves: '2', seed: String(Math.floor(Math.random() * 90) + 1), result: 'n' }));
-        const disp = el('feDisplacementMap', { in: 'SourceGraphic', in2: 'n', scale: '0', xChannelSelector: 'R', yChannelSelector: 'G', result: 'w' });
+        warp.appendChild(el('feTurbulence', { type: 'fractalNoise', baseFrequency: '0.016 0.027', numOctaves: '2', seed: String(Math.floor(Math.random() * 90) + 1), result: 'n' }));
+        const noiseShift = el('feOffset', { in: 'n', dx: '0', dy: '0', result: 'movingNoise' });
+        warp.appendChild(noiseShift);
+        const disp = el('feDisplacementMap', { in: 'SourceGraphic', in2: 'movingNoise', scale: '0', xChannelSelector: 'R', yChannelSelector: 'G', result: 'w' });
         warp.appendChild(disp);
         warp.appendChild(el('feColorMatrix', { in: 'w', type: 'saturate', values: '0', result: 'gs' }));
         const ct = el('feComponentTransfer');
-        (['R', 'G', 'B'] as const).forEach((ch) => ct.appendChild(el('feFunc' + ch, { type: 'linear', slope: '0.62' })));
+        (['R', 'G', 'B'] as const).forEach((ch) => ct.appendChild(el('feFunc' + ch, {
+          type: 'linear',
+          slope: '0.68',
+          intercept: '-0.02',
+        })));
         warp.appendChild(ct);
         defs!.appendChild(warp);
 
         const grad = el('radialGradient', { id: `fx-zone-${id}`, gradientUnits: 'userSpaceOnUse', r: String(R) });
         grad.appendChild(el('stop', { offset: '0', 'stop-color': '#fff' }));
-        grad.appendChild(el('stop', { offset: '0.42', 'stop-color': '#fff' }));
+        grad.appendChild(el('stop', { offset: '0.62', 'stop-color': '#fff' }));
         grad.appendChild(el('stop', { offset: '1', 'stop-color': '#000' }));
         defs!.appendChild(grad);
 
@@ -558,9 +583,9 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         layer!.appendChild(zoneG);
 
         return {
-          id, lowIdx, highIdx, pair, baseX: cx, baseY: cy,
+          id, lowIdx, highIdx, pair, baseX: cx, baseY: cy, direction,
           seed: Math.random() * 10, phase: Math.random() * 100, retract: 0,
-          disp, grad, warp, lobA, lobB, zoneG,
+          disp, noiseShift, grad, warp, lobA, lobB, zoneG,
         };
       }
 
@@ -568,21 +593,52 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         const A: { x: number; y: number; r: number }[] = [];
         const B: { x: number; y: number; r: number }[] = [];
         const strength = 1 - 0.92 * s.retract;
+        /* Reciprocal pressure makes the contact legible as an exchange: the
+           lower card reaches farther, then the upper card answers. Neither
+           side ever goes fully still, so the flux remains ambient. */
+        const exchange = Math.sin(time * 0.62 + s.phase);
+        const driveA = 0.76 + 0.24 * exchange;
+        const driveB = 0.76 - 0.24 * exchange;
+        const dir = s.direction;
         for (let i = 0; i < 3; i++) {
           const ph = s.seed + i * 1.9;
-          const yb = cy + (i - 1) * 13 + 5 * Math.sin(time * 0.5 + ph);
-          const reach = clamp(0.45 + 0.5 * Math.sin(time * 0.5 + ph), 0.15, 1) * strength;
-          const len = 12 + reach * 24, xr = cx - 8 + 3 * Math.sin(time * 0.4 + ph);
-          A.push({ x: xr, y: yb, r: 7 + reach * 3 });
-          for (let k = 1; k <= 3; k++) { const f = k / 3, w = 6 * Math.sin(time * 0.6 + ph + k); A.push({ x: xr + len * f, y: yb + w * 0.6, r: (7 + reach * 4) * (1 - 0.45 * f) }); }
+          const yb = cy + (i - 1) * 14 + 6 * Math.sin(time * 0.52 + ph);
+          const reach =
+            clamp(0.62 + 0.38 * Math.sin(time * 0.56 + ph), 0.24, 1) *
+            driveA *
+            strength;
+          const len = 16 + reach * 30;
+          const xr = cx - dir * 9 + dir * 3 * Math.sin(time * 0.42 + ph);
+          A.push({ x: xr, y: yb, r: 8 + reach * 4 });
+          for (let k = 1; k <= 4; k++) {
+            const f = k / 4;
+            const w = 8 * Math.sin(time * 0.64 + ph + k);
+            A.push({
+              x: xr + dir * len * f,
+              y: yb + w * 0.62,
+              r: (8 + reach * 5) * (1 - 0.4 * f),
+            });
+          }
         }
         for (let i = 0; i < 3; i++) {
           const ph = s.seed + 4 + i * 1.7;
-          const yb = cy + (i - 1) * 13 + 5 * Math.sin(time * 0.45 + ph);
-          const reach = clamp(0.45 + 0.5 * Math.sin(time * 0.55 + ph), 0.15, 1) * strength;
-          const len = 12 + reach * 22, xr = cx + 8 + 3 * Math.sin(time * 0.5 + ph);
-          B.push({ x: xr, y: yb, r: 7 + reach * 3 });
-          for (let k = 1; k <= 3; k++) { const f = k / 3, w = 6 * Math.sin(time * 0.55 + ph + k); B.push({ x: xr - len * f, y: yb + w * 0.6, r: (7 + reach * 4) * (1 - 0.4 * f) }); }
+          const yb = cy + (i - 1) * 14 + 6 * Math.sin(time * 0.48 + ph);
+          const reach =
+            clamp(0.62 + 0.38 * Math.sin(time * 0.59 + ph), 0.24, 1) *
+            driveB *
+            strength;
+          const len = 16 + reach * 29;
+          const xr = cx + dir * 9 + dir * 3 * Math.sin(time * 0.46 + ph);
+          B.push({ x: xr, y: yb, r: 8 + reach * 4 });
+          for (let k = 1; k <= 4; k++) {
+            const f = k / 4;
+            const w = 8 * Math.sin(time * 0.6 + ph + k);
+            B.push({
+              x: xr - dir * len * f,
+              y: yb + w * 0.62,
+              r: (8 + reach * 5) * (1 - 0.38 * f),
+            });
+          }
         }
         return { A, B };
       }
@@ -610,7 +666,9 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
 
           const { A, B } = tongues(s, cx, cy, time);
           paint(s.lobA, A); paint(s.lobB, B);
-          s.disp.setAttribute('scale', (9 + 2 * Math.sin(time * 0.3 + s.phase)).toFixed(1));
+          s.noiseShift.setAttribute('dx', (7 * Math.sin(time * 0.24 + s.phase)).toFixed(1));
+          s.noiseShift.setAttribute('dy', (9 * Math.cos(time * 0.2 + s.phase)).toFixed(1));
+          s.disp.setAttribute('scale', (16 + 4 * Math.sin(time * 0.34 + s.phase)).toFixed(1));
           s.zoneG.setAttribute('opacity', (1 - s.retract).toFixed(2));
         }
         raf = requestAnimationFrame(frame);
