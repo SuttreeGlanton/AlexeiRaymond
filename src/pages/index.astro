@@ -383,11 +383,11 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         return e as SVGElement;
       };
 
-      type Lobe = {
-        x: number; y: number;
-        /* Ellipses are oriented in the seam's own frame. Unequal axes keep
-           the moving liquid from resolving into a row of round beads. */
-        rx: number; ry: number; angle: number;
+      type PaintLayer = {
+        group: SVGGElement;
+        ellipses: SVGEllipseElement[];
+        rotations: SVGTransform[];
+        active: boolean[];
       };
 
       type Spot = {
@@ -403,8 +403,8 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         seed: number; phase: number; retract: number;
         disp: SVGElement; noiseShift: SVGElement; grad: SVGElement; warp: SVGElement;
         spillLow: SVGElement; spillHigh: SVGElement; zoneAngle: number;
-        lobA: SVGElement; lobB: SVGElement; filmLow: SVGElement; filmHigh: SVGElement;
-        zoneG: SVGElement;
+        lobA: PaintLayer; lobB: PaintLayer; filmLow: PaintLayer; filmHigh: PaintLayer;
+        zoneG: SVGElement; opacity: string;
       };
 
       let svg: SVGElement | null = null;
@@ -415,6 +415,8 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
       let raf = 0;
       let running = false;
       let start = 0;
+      let lastBusy: boolean | null = null;
+      let tileFocus: boolean[] = [];
 
       /* Make the exchange immediately legible without introducing jitter:
          every motion still follows long sine curves, but the liquid clock is
@@ -428,6 +430,9 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
       const R = 34;
       const ZONE_TANGENT_SCALE = 1.65;
       const ZONE_NORMAL_SCALE = 0.46;
+      const FILTER_EXTENT = R * ZONE_TANGENT_SCALE + 18;
+      const TONGUE_LOBES = 18;
+      const FILM_LOBES = 7;
 
       function coverURL(tile: HTMLElement): string | null {
         const img = tile.querySelector<HTMLImageElement>('.tile-media img');
@@ -435,21 +440,73 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         return img.currentSrc || img.getAttribute('src');
       }
 
-      function paint(g: SVGElement, lobes: Lobe[]) {
-        let m = '';
-        for (const l of lobes) {
-          if (l.rx < 0.4 || l.ry < 0.4) continue;
-          const x = l.x.toFixed(1);
-          const y = l.y.toFixed(1);
-          m += `<ellipse cx="${x}" cy="${y}" rx="${l.rx.toFixed(1)}" ry="${l.ry.toFixed(1)}" transform="rotate(${l.angle.toFixed(2)} ${x} ${y})"/>`;
+      /* The liquid has a fixed maximum number of lobes. Build those SVG nodes
+         once and update their geometry in place; replacing group.innerHTML on
+         every frame forced the browser to parse and rebuild about 700 nodes
+         sixty times per second. */
+      function makePaintLayer(capacity: number): PaintLayer {
+        const group = el('g', { filter: 'url(#fx-goo)', fill: '#fff' }) as SVGGElement;
+        const ellipses: SVGEllipseElement[] = [];
+        const rotations: SVGTransform[] = [];
+        const active: boolean[] = [];
+
+        for (let index = 0; index < capacity; index++) {
+          const ellipse = el('ellipse', {
+            display: 'none',
+            transform: 'rotate(0 0 0)',
+          }) as SVGEllipseElement;
+          group.appendChild(ellipse);
+          ellipses.push(ellipse);
+          rotations.push(ellipse.transform.baseVal.getItem(0));
+          active.push(false);
         }
-        g.innerHTML = m;
+
+        return { group, ellipses, rotations, active };
+      }
+
+      function paintLobe(
+        layer: PaintLayer,
+        index: number,
+        x: number,
+        y: number,
+        rx: number,
+        ry: number,
+        angle: number,
+      ) {
+        const ellipse = layer.ellipses[index];
+        const rotation = layer.rotations[index];
+        if (!ellipse || !rotation) return;
+
+        if (rx < 0.4 || ry < 0.4) {
+          if (layer.active[index]) {
+            ellipse.setAttribute('display', 'none');
+            layer.active[index] = false;
+          }
+          return;
+        }
+
+        if (!layer.active[index]) {
+          ellipse.removeAttribute('display');
+          layer.active[index] = true;
+        }
+
+        /* Match the old serializer's precision while avoiding attribute-string
+           parsing for the four animated lengths. */
+        const roundedX = Math.round(x * 10) / 10;
+        const roundedY = Math.round(y * 10) / 10;
+        ellipse.cx.baseVal.value = roundedX;
+        ellipse.cy.baseVal.value = roundedY;
+        ellipse.rx.baseVal.value = Math.round(rx * 10) / 10;
+        ellipse.ry.baseVal.value = Math.round(ry * 10) / 10;
+        rotation.setRotate(Math.round(angle * 100) / 100, roundedX, roundedY);
       }
 
       function teardown() {
         if (svg && svg.parentNode) svg.parentNode.removeChild(svg);
         svg = defs = layer = null;
         spots = [];
+        tileFocus = [];
+        lastBusy = null;
       }
 
       /* Full tile-local → grid-local matrix: layout position plus the CSS
@@ -472,6 +529,7 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
 
         tiles = Array.from(grid.querySelectorAll<HTMLElement>('.tile'));
         if (tiles.length < 2) return;
+        tileFocus = tiles.map(() => false);
 
         const W = grid.clientWidth;
         const H = grid.clientHeight;
@@ -658,17 +716,17 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         defs!.appendChild(zmask);
 
         const tmA = el('mask', { id: `fx-tA-${id}` });
-        const lobA = el('g', { filter: 'url(#fx-goo)', fill: '#fff' });
-        tmA.appendChild(lobA); defs!.appendChild(tmA);
+        const lobA = makePaintLayer(TONGUE_LOBES);
+        tmA.appendChild(lobA.group); defs!.appendChild(tmA);
         const tmB = el('mask', { id: `fx-tB-${id}` });
-        const lobB = el('g', { filter: 'url(#fx-goo)', fill: '#fff' });
-        tmB.appendChild(lobB); defs!.appendChild(tmB);
+        const lobB = makePaintLayer(TONGUE_LOBES);
+        tmB.appendChild(lobB.group); defs!.appendChild(tmB);
         const fmL = el('mask', { id: `fx-fL-${id}` });
-        const filmLow = el('g', { filter: 'url(#fx-goo)', fill: '#fff' });
-        fmL.appendChild(filmLow); defs!.appendChild(fmL);
+        const filmLow = makePaintLayer(FILM_LOBES);
+        fmL.appendChild(filmLow.group); defs!.appendChild(fmL);
         const fmH = el('mask', { id: `fx-fH-${id}` });
-        const filmHigh = el('g', { filter: 'url(#fx-goo)', fill: '#fff' });
-        fmH.appendChild(filmHigh); defs!.appendChild(fmH);
+        const filmHigh = makePaintLayer(FILM_LOBES);
+        fmH.appendChild(filmHigh.group); defs!.appendChild(fmH);
 
         const zoneG = el('g', { mask: `url(#fx-zm-${id})` });
         const warpG = el('g', { filter: `url(#fx-warp-${id})` });
@@ -717,11 +775,12 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         zoneG.appendChild(warpG);
         layer!.appendChild(zoneG);
 
+        const drift = 10 + Math.random() * 10;
         return {
           id, pair, lowIdx, highIdx,
           ax, ay, tx, ty, nx, ny, u0, uLo, uHi,
           zoneAngle: Math.atan2(ty, tx) * 180 / Math.PI,
-          drift: 10 + Math.random() * 10,
+          drift,
           /* Per-spot rhythms keep the fan from pulsing in sync — no readable
              global loop, no shared dead beat. */
           speedA: 0.78 + Math.random() * 0.4,
@@ -729,7 +788,7 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
           exchangeW: 0.62 + Math.random() * 0.38,
           seed: Math.random() * 10, phase: Math.random() * 100, retract: 0,
           disp, noiseShift, grad, warp, spillLow, spillHigh,
-          lobA, lobB, filmLow, filmHigh, zoneG,
+          lobA, lobB, filmLow, filmHigh, zoneG, opacity: '1',
         };
       }
 
@@ -738,16 +797,20 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
          surface, B grows out of the upper card and leaks past its own edge.
          Roots sit just inside the donor card so each tongue visibly emerges
          from it. */
-      function tongues(s: Spot, px: number, py: number, time: number) {
-        const A: Lobe[] = [];
-        const B: Lobe[] = [];
-        const strength = 1 - 0.92 * s.retract;
+      function tongues(
+        s: Spot,
+        px: number,
+        py: number,
+        time: number,
+        exchange: number,
+        strength: number,
+      ) {
         /* Reciprocal pressure makes the contact legible as an exchange: the
            lower card reaches farther, then the upper card answers. Neither
            side ever goes fully still, so the flux remains ambient. */
-        const exchange = Math.sin(time * s.exchangeW + s.phase);
         const driveA = 0.78 + 0.4 * exchange;
         const driveB = 0.78 - 0.4 * exchange;
+        let aIndex = 0;
         for (let i = 0; i < 3; i++) {
           const ph = s.seed + i * 1.57;
           const along = (i - 1) * 9 + 6 * Math.sin(time * 0.72 * s.speedA + ph);
@@ -759,22 +822,25 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
           const bx = px + s.tx * along + s.nx * 4;
           const by = py + s.ty * along + s.ny * 4;
           const root = 4.6 + reach * 2.9;
-          A.push({ x: bx, y: by, rx: root * 0.78, ry: root * 1.28, angle: s.zoneAngle });
+          paintLobe(s.lobA, aIndex++, bx, by, root * 0.78, root * 1.28, s.zoneAngle);
           for (let k = 1; k <= 5; k++) {
             const f = k / 5;
             const w =
               7 * Math.sin(time * 0.93 * s.speedA + ph + k * 0.86) +
               2.2 * Math.sin(time * 0.41 * s.speedB + ph * 1.7 + k);
             const r = root * (1 - 0.56 * f);
-            A.push({
-              x: bx - s.nx * len * f + s.tx * w * 0.58,
-              y: by - s.ny * len * f + s.ty * w * 0.58,
-              rx: r * (0.64 + 0.1 * Math.sin(ph + k)),
-              ry: r * (1.18 + 0.16 * Math.cos(ph + k * 1.3)),
-              angle: s.zoneAngle,
-            });
+            paintLobe(
+              s.lobA,
+              aIndex++,
+              bx - s.nx * len * f + s.tx * w * 0.58,
+              by - s.ny * len * f + s.ty * w * 0.58,
+              r * (0.64 + 0.1 * Math.sin(ph + k)),
+              r * (1.18 + 0.16 * Math.cos(ph + k * 1.3)),
+              s.zoneAngle,
+            );
           }
         }
+        let bIndex = 0;
         for (let i = 0; i < 3; i++) {
           const ph = s.seed + 4 + i * 1.47;
           const along = (i - 1) * 9 + 6 * Math.sin(time * 0.69 * s.speedB + ph);
@@ -786,23 +852,24 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
           const bx = px + s.tx * along - s.nx * 4;
           const by = py + s.ty * along - s.ny * 4;
           const root = 4.6 + reach * 2.9;
-          B.push({ x: bx, y: by, rx: root * 0.78, ry: root * 1.28, angle: s.zoneAngle });
+          paintLobe(s.lobB, bIndex++, bx, by, root * 0.78, root * 1.28, s.zoneAngle);
           for (let k = 1; k <= 5; k++) {
             const f = k / 5;
             const w =
               7 * Math.sin(time * 0.88 * s.speedB + ph + k * 0.9) +
               2.2 * Math.sin(time * 0.44 * s.speedA + ph * 1.6 + k);
             const r = root * (1 - 0.54 * f);
-            B.push({
-              x: bx + s.nx * len * f + s.tx * w * 0.58,
-              y: by + s.ny * len * f + s.ty * w * 0.58,
-              rx: r * (0.64 + 0.1 * Math.cos(ph + k)),
-              ry: r * (1.18 + 0.16 * Math.sin(ph + k * 1.2)),
-              angle: s.zoneAngle,
-            });
+            paintLobe(
+              s.lobB,
+              bIndex++,
+              bx + s.nx * len * f + s.tx * w * 0.58,
+              by + s.ny * len * f + s.ty * w * 0.58,
+              r * (0.64 + 0.1 * Math.cos(ph + k)),
+              r * (1.18 + 0.16 * Math.sin(ph + k * 1.2)),
+              s.zoneAngle,
+            );
           }
         }
-        return { A, B, exchange, strength };
       }
 
       /* Always-on molten film hugging the seam: the under-card perpetually
@@ -810,8 +877,6 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
          little past its own edge. This is what keeps the boundary visibly
          alive between tongue surges — there is no fully inactive frame. */
       function film(s: Spot, px: number, py: number, time: number, exchange: number, strength: number) {
-        const L: Lobe[] = [];
-        const H: Lobe[] = [];
         const driveL = (0.86 + 0.34 * exchange) * strength;
         const driveH = (0.86 - 0.34 * exchange) * strength;
         for (let k = -3; k <= 3; k++) {
@@ -821,29 +886,40 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
             (2.2 + 2 * (0.5 + 0.5 * Math.sin(time * 1.02 * s.speedA + k * 1.3 + s.seed))) * driveL;
           const rh =
             (2.2 + 2 * (0.5 + 0.5 * Math.sin(time * 1.08 * s.speedB + k * 1.5 + s.seed + 5))) * driveH;
-          L.push({
-            x: px + s.tx * off - s.nx * (2.8 + wob),
-            y: py + s.ty * off - s.ny * (2.8 + wob),
-            rx: Math.max(rl * 1.55, 0.1),
-            ry: Math.max(rl * 0.68, 0.1),
-            angle: s.zoneAngle,
-          });
-          H.push({
-            x: px + s.tx * off + s.nx * (2.8 - wob),
-            y: py + s.ty * off + s.ny * (2.8 - wob),
-            rx: Math.max(rh * 1.55, 0.1),
-            ry: Math.max(rh * 0.68, 0.1),
-            angle: s.zoneAngle,
-          });
+          const index = k + 3;
+          paintLobe(
+            s.filmLow,
+            index,
+            px + s.tx * off - s.nx * (2.8 + wob),
+            py + s.ty * off - s.ny * (2.8 + wob),
+            Math.max(rl * 1.55, 0.1),
+            Math.max(rl * 0.68, 0.1),
+            s.zoneAngle,
+          );
+          paintLobe(
+            s.filmHigh,
+            index,
+            px + s.tx * off + s.nx * (2.8 - wob),
+            py + s.ty * off + s.ny * (2.8 - wob),
+            Math.max(rh * 1.55, 0.1),
+            Math.max(rh * 0.68, 0.1),
+            s.zoneAngle,
+          );
         }
-        return { L, H };
       }
 
       function frame(now: number) {
         if (!running) return;
         const time = ((now - start) / 1000) * LIQUID_TIME_SCALE;
         const busy = grid.classList.contains('is-fan-pending') || grid.classList.contains('is-fan-entering');
-        if (svg) svg.style.opacity = busy ? '0' : '1';
+        if (svg && busy !== lastBusy) {
+          svg.style.opacity = busy ? '0' : '1';
+          lastBusy = busy;
+        }
+
+        for (let index = 0; index < tiles.length; index++) {
+          tileFocus[index] = tiles[index]?.classList.contains('is-fan-focus') ?? false;
+        }
 
         for (const s of spots) {
           /* The contact point wanders slowly along the seam, clamped to the
@@ -864,26 +940,29 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
             'gradientTransform',
             `translate(${px.toFixed(1)} ${py.toFixed(1)}) rotate(${s.zoneAngle.toFixed(2)}) scale(${ZONE_TANGENT_SCALE} ${ZONE_NORMAL_SCALE}) translate(${(-px).toFixed(1)} ${(-py).toFixed(1)})`,
           );
-          const filterExtent = R * ZONE_TANGENT_SCALE + 18;
-          s.warp.setAttribute('x', (px - filterExtent).toFixed(1));
-          s.warp.setAttribute('y', (py - filterExtent).toFixed(1));
-          s.warp.setAttribute('width', String(filterExtent * 2));
-          s.warp.setAttribute('height', String(filterExtent * 2));
+          s.warp.setAttribute('x', (px - FILTER_EXTENT).toFixed(1));
+          s.warp.setAttribute('y', (py - FILTER_EXTENT).toFixed(1));
+          s.warp.setAttribute('width', String(FILTER_EXTENT * 2));
+          s.warp.setAttribute('height', String(FILTER_EXTENT * 2));
 
           const focused =
-            tiles[s.pair[0]]?.classList.contains('is-fan-focus') ||
-            tiles[s.pair[1]]?.classList.contains('is-fan-focus');
+            tileFocus[s.pair[0]] ||
+            tileFocus[s.pair[1]];
           s.retract += ((focused ? 1 : 0) - s.retract) * 0.1;
 
-          const { A, B, exchange, strength } = tongues(s, px, py, time);
-          paint(s.lobA, A); paint(s.lobB, B);
-          const F = film(s, px, py, time, exchange, strength);
-          paint(s.filmLow, F.L); paint(s.filmHigh, F.H);
+          const strength = 1 - 0.92 * s.retract;
+          const exchange = Math.sin(time * s.exchangeW + s.phase);
+          tongues(s, px, py, time, exchange, strength);
+          film(s, px, py, time, exchange, strength);
 
           s.noiseShift.setAttribute('dx', (8 * Math.sin(time * 0.48 * s.speedB + s.phase)).toFixed(1));
           s.noiseShift.setAttribute('dy', (9 * Math.cos(time * 0.41 * s.speedB + s.phase)).toFixed(1));
           s.disp.setAttribute('scale', (19 + 7 * Math.sin(time * 0.52 * s.speedA + s.phase)).toFixed(1));
-          s.zoneG.setAttribute('opacity', (1 - s.retract).toFixed(2));
+          const opacity = (1 - s.retract).toFixed(2);
+          if (opacity !== s.opacity) {
+            s.zoneG.setAttribute('opacity', opacity);
+            s.opacity = opacity;
+          }
         }
         raf = requestAnimationFrame(frame);
       }
