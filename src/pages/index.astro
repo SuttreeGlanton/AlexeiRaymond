@@ -357,12 +357,14 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
 
   <script>
     /* Homepage cycle "flux": desktop-only decorative liquid where neighbouring
-       fan cards meet. Two randomised molten contact points per adjacent pair
-       locally warp the two covers into one another and flow perpetually. It is
-       an isolated, pointer-transparent, grayscale overlay gated behind the
-       [data-cycle-flux] flag on the grid — remove that attribute (or this
-       block) and nothing else changes. Colour stays reserved for card focus:
-       a contact point retracts the moment either of its cards is focused. */
+       fan cards meet. Each adjacent pair gets contact points anchored to the
+       upper card's real (slanted) edge: an always-on molten film straddles the
+       seam while gooey tongues push across it in both directions, everything
+       warped by drifting noise. It is an isolated, pointer-transparent,
+       grayscale overlay gated behind the [data-cycle-flux] flag on the grid —
+       remove that attribute (or this block) and nothing else changes. Colour
+       stays reserved for card focus: a contact point retracts the moment
+       either of its cards is focused. */
     (() => {
       const gridElement = document.querySelector<HTMLElement>('[data-cycle-flux]');
       if (!gridElement) return;
@@ -381,15 +383,22 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         return e as SVGElement;
       };
 
+      type Circle = { x: number; y: number; r: number };
+
       type Spot = {
-        id: number; lowIdx: number; highIdx: number;
-        pair: [number, number];
-        baseX: number; baseY: number; direction: number;
-        seed: number; phase: number;
-        retract: number;
-        disp: SVGElement; noiseShift: SVGElement;
-        grad: SVGElement; warp: SVGElement;
-        lobA: SVGElement; lobB: SVGElement; zoneG: SVGElement;
+        id: number; pair: [number, number];
+        lowIdx: number; highIdx: number;
+        /* Seam frame in grid coords: origin, unit tangent along the upper
+           card's facing edge, unit normal pointing at the lower card. */
+        ax: number; ay: number;
+        tx: number; ty: number;
+        nx: number; ny: number;
+        u0: number; uLo: number; uHi: number; drift: number;
+        speedA: number; speedB: number; exchangeW: number;
+        seed: number; phase: number; retract: number;
+        disp: SVGElement; noiseShift: SVGElement; grad: SVGElement; warp: SVGElement;
+        lobA: SVGElement; lobB: SVGElement; filmLow: SVGElement; filmHigh: SVGElement;
+        zoneG: SVGElement;
       };
 
       let svg: SVGElement | null = null;
@@ -401,9 +410,9 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
       let running = false;
       let start = 0;
 
-      /* Still local to the boundary, but broad enough for the eye to follow
-         one cover pushing into the other instead of only catching a flicker. */
-      const R = 42;
+      /* Local to the boundary, broad enough to follow one cover pushing into
+         the other instead of only catching a flicker. */
+      const R = 46;
 
       function coverURL(tile: HTMLElement): string | null {
         const img = tile.querySelector<HTMLImageElement>('.tile-media img');
@@ -411,7 +420,7 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         return img.currentSrc || img.getAttribute('src');
       }
 
-      function paint(g: SVGElement, circles: { x: number; y: number; r: number }[]) {
+      function paint(g: SVGElement, circles: Circle[]) {
         let m = '';
         for (const c of circles) {
           if (c.r < 0.4) continue;
@@ -424,6 +433,20 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         if (svg && svg.parentNode) svg.parentNode.removeChild(svg);
         svg = defs = layer = null;
         spots = [];
+      }
+
+      /* Full tile-local → grid-local matrix: layout position plus the CSS
+         transform around the 50% 100% origin, so cover clones and seam
+         geometry stay in perfect register with the real card. */
+      function tileMatrix(tile: HTMLElement): DOMMatrix {
+        const cs = getComputedStyle(tile);
+        const ox = tile.offsetWidth * 0.5;
+        const oy = tile.offsetHeight;
+        const m = new DOMMatrixReadOnly(cs.transform === 'none' ? '' : cs.transform);
+        return new DOMMatrix()
+          .translate(tile.offsetLeft + ox, tile.offsetTop + oy)
+          .multiply(m)
+          .translate(-ox, -oy);
       }
 
       function build() {
@@ -446,7 +469,7 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         defs = el('defs');
         svg.appendChild(defs);
 
-        // shared goo filter for the tongue masks
+        // shared goo filter for the tongue and film masks
         const goo = el('filter', { id: 'fx-goo', x: '-60%', y: '-60%', width: '220%', height: '220%', 'color-interpolation-filters': 'sRGB' });
         goo.appendChild(el('feGaussianBlur', { in: 'SourceGraphic', stdDeviation: '5.5', result: 'b' }));
         goo.appendChild(el('feColorMatrix', { in: 'b', type: 'matrix', values: '1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -11', result: 'g' }));
@@ -460,20 +483,13 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
           const media = tile.querySelector<HTMLElement>('.tile-media');
           if (!url || !media || !defs) return;
 
-          const L = tile.offsetLeft, T = tile.offsetTop;
-          const w = tile.offsetWidth, h = tile.offsetHeight;
-          const ox = w * 0.5, oy = h; // transform-origin: 50% 100%
-          const cs = getComputedStyle(tile);
-          const m = new DOMMatrixReadOnly(cs.transform === 'none' ? '' : cs.transform);
-          const tr =
-            `translate(${L} ${T}) translate(${ox} ${oy}) ` +
-            `matrix(${m.a} ${m.b} ${m.c} ${m.d} ${m.e} ${m.f}) translate(${-ox} ${-oy})`;
+          const M = tileMatrix(tile);
 
           const clip = el('clipPath', { id: `fx-clip-${i}`, clipPathUnits: 'userSpaceOnUse' });
           clip.appendChild(el('rect', { x: media.offsetLeft, y: media.offsetTop, width: media.offsetWidth, height: media.offsetHeight, rx: 6 }));
           defs.appendChild(clip);
 
-          const g = el('g', { id: `fx-cov-${i}`, transform: tr });
+          const g = el('g', { id: `fx-cov-${i}`, transform: `matrix(${M.a} ${M.b} ${M.c} ${M.d} ${M.e} ${M.f})` });
           const image = el('image', {
             x: media.offsetLeft, y: media.offsetTop, width: media.offsetWidth, height: media.offsetHeight,
             preserveAspectRatio: 'xMidYMid slice', 'clip-path': `url(#fx-clip-${i})`,
@@ -484,14 +500,14 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
 
           (tile as HTMLElement & { _fxOk?: boolean; _fxZ?: number })._fxOk = true;
           (tile as HTMLElement & { _fxOk?: boolean; _fxZ?: number })._fxZ =
-            parseFloat(cs.getPropertyValue('--fan-z')) || i + 1;
+            parseFloat(getComputedStyle(tile).getPropertyValue('--fan-z')) || i + 1;
         });
 
         layer = el('g');
         svg.appendChild(layer);
         grid.appendChild(svg);
 
-        // two contact points per adjacent pair
+        // two contact points per adjacent pair, anchored to the real seam
         const gridRect = grid.getBoundingClientRect();
         let sid = 0;
         for (let i = 0; i < tiles.length - 1; i++) {
@@ -500,30 +516,68 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
           if (!a._fxOk || !b._fxOk) continue;
 
           const bOnTop = (b._fxZ ?? 0) >= (a._fxZ ?? 0);
+          const upper = bOnTop ? b : a;
+          const lower = bOnTop ? a : b;
           const highIdx = bOnTop ? i + 1 : i;
           const lowIdx = bOnTop ? i : i + 1;
 
           const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
-          const upper = (highIdx === i ? ra : rb);
-          const lower = (lowIdx === i ? ra : rb);
-          const lowToHigh =
-            (upper.left + upper.width / 2) >= (lower.left + lower.width / 2)
-              ? 1
-              : -1;
-          // The visible boundary is the upper card's edge that faces the lower
-          // card (where the lower one peeks out); straddle it so the zone covers
-          // both surfaces instead of smudging one card's interior.
-          const lowerLeft = (lower.left + lower.width / 2) < (upper.left + upper.width / 2);
-          const seamX = (lowerLeft ? upper.left : upper.right) - gridRect.left;
           const top = Math.max(ra.top, rb.top) - gridRect.top;
           const bot = Math.min(ra.bottom, rb.bottom) - gridRect.top;
           if (bot - top < 60) continue;
 
+          /* The visible boundary is the upper card's edge that faces the lower
+             card. The cards are rotated, so the flow is computed in the edge's
+             own (tangent, normal) frame — never plain horizontal — or it
+             visibly detaches from the seam. */
+          const ru = upper.getBoundingClientRect(), rl = lower.getBoundingClientRect();
+          const lowerIsLeft = (rl.left + rl.width / 2) < (ru.left + ru.width / 2);
+          const M = tileMatrix(upper);
+          const edgeX = lowerIsLeft ? 0 : upper.offsetWidth;
+          const P0 = M.transformPoint({ x: edgeX, y: upper.offsetHeight * 0.1 });
+          const P1 = M.transformPoint({ x: edgeX, y: upper.offsetHeight * 0.9 });
+
+          let tx = P1.x - P0.x, ty = P1.y - P0.y;
+          const edgeLen = Math.hypot(tx, ty);
+          if (edgeLen < 40) continue;
+          tx /= edgeLen; ty /= edgeLen;
+
+          // unit normal from the upper card toward the lower card
+          const cL = tileMatrix(lower).transformPoint({
+            x: lower.offsetWidth / 2,
+            y: lower.offsetHeight / 2,
+          });
+          const mx = (P0.x + P1.x) / 2, my = (P0.y + P1.y) / 2;
+          let nx = -ty, ny = tx;
+          if (nx * (cL.x - mx) + ny * (cL.y - my) < 0) { nx = -nx; ny = -ny; }
+
+          /* Contact segment: the part of the edge that actually overlaps the
+             neighbour. Contact points live only inside it, and never below
+             the cover's bottom edge, so tongues can never smear the
+             neighbour's title. */
+          const dy = P1.y - P0.y;
+          let sLo = 0.18, sHi = 0.82;
+          if (Math.abs(dy) > 1) {
+            const s1 = (top - P0.y) / dy;
+            const s2 = (bot - P0.y) / dy;
+            sLo = clamp(Math.min(s1, s2) + 0.06, 0.08, 0.6);
+            sHi = clamp(Math.max(s1, s2) - 0.06, 0.4, 0.92);
+          }
+          const upperMedia = upper.querySelector<HTMLElement>('.tile-media');
+          if (upperMedia) {
+            const mb = M.transformPoint({
+              x: edgeX,
+              y: upperMedia.offsetTop + upperMedia.offsetHeight,
+            });
+            const sMedia = ((mb.x - P0.x) * tx + (mb.y - P0.y) * ty) / edgeLen;
+            sHi = Math.min(sHi, sMedia - 0.03);
+          }
+          if (sHi - sLo < 0.18) continue;
+
           for (let s = 0; s < 2; s++) {
-            const frac = 0.22 + Math.random() * 0.56;
+            const u = (sLo + Math.random() * (sHi - sLo)) * edgeLen;
             spots.push(makeSpot(sid++, lowIdx, highIdx, [i, i + 1],
-              seamX + (Math.random() * 16 - 8), top + (bot - top) * frac,
-              lowToHigh));
+              P0.x, P0.y, tx, ty, nx, ny, u, sLo * edgeLen, sHi * edgeLen));
           }
         }
       }
@@ -533,9 +587,10 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         lowIdx: number,
         highIdx: number,
         pair: [number, number],
-        cx: number,
-        cy: number,
-        direction: number,
+        ax: number, ay: number,
+        tx: number, ty: number,
+        nx: number, ny: number,
+        u0: number, uLo: number, uHi: number,
       ): Spot {
         const warp = el('filter', { id: `fx-warp-${id}`, filterUnits: 'userSpaceOnUse', 'color-interpolation-filters': 'sRGB' });
         warp.appendChild(el('feTurbulence', { type: 'fractalNoise', baseFrequency: '0.016 0.027', numOctaves: '2', seed: String(Math.floor(Math.random() * 90) + 1), result: 'n' }));
@@ -544,11 +599,14 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         const disp = el('feDisplacementMap', { in: 'SourceGraphic', in2: 'movingNoise', scale: '0', xChannelSelector: 'R', yChannelSelector: 'G', result: 'w' });
         warp.appendChild(disp);
         warp.appendChild(el('feColorMatrix', { in: 'w', type: 'saturate', values: '0', result: 'gs' }));
+        /* A touch brighter than the resting cards (which sit at brightness
+           0.62): the flux reads as a wet sheen rather than disappearing into
+           the card or glowing against it. */
         const ct = el('feComponentTransfer');
         (['R', 'G', 'B'] as const).forEach((ch) => ct.appendChild(el('feFunc' + ch, {
           type: 'linear',
-          slope: '0.68',
-          intercept: '-0.02',
+          slope: '0.8',
+          intercept: '0.008',
         })));
         warp.appendChild(ct);
         defs!.appendChild(warp);
@@ -569,78 +627,134 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         const tmB = el('mask', { id: `fx-tB-${id}` });
         const lobB = el('g', { filter: 'url(#fx-goo)', fill: '#fff' });
         tmB.appendChild(lobB); defs!.appendChild(tmB);
+        const fmL = el('mask', { id: `fx-fL-${id}` });
+        const filmLow = el('g', { filter: 'url(#fx-goo)', fill: '#fff' });
+        fmL.appendChild(filmLow); defs!.appendChild(fmL);
+        const fmH = el('mask', { id: `fx-fH-${id}` });
+        const filmHigh = el('g', { filter: 'url(#fx-goo)', fill: '#fff' });
+        fmH.appendChild(filmHigh); defs!.appendChild(fmH);
 
         const zoneG = el('g', { mask: `url(#fx-zm-${id})` });
         const warpG = el('g', { filter: `url(#fx-warp-${id})` });
         const useLow = el('use'); useLow.setAttribute('href', `#fx-cov-${lowIdx}`);
         const useHigh = el('use'); useHigh.setAttribute('href', `#fx-cov-${highIdx}`);
-        const tgA = el('g', { mask: `url(#fx-tA-${id})` });
-        const useLow2 = el('use'); useLow2.setAttribute('href', `#fx-cov-${lowIdx}`); tgA.appendChild(useLow2);
+        const fgH = el('g', { mask: `url(#fx-fH-${id})` });
+        const useHighF = el('use'); useHighF.setAttribute('href', `#fx-cov-${highIdx}`); fgH.appendChild(useHighF);
         const tgB = el('g', { mask: `url(#fx-tB-${id})` });
         const useHigh2 = el('use'); useHigh2.setAttribute('href', `#fx-cov-${highIdx}`); tgB.appendChild(useHigh2);
-        warpG.append(useLow, useHigh, tgA, tgB);
+        const fgL = el('g', { mask: `url(#fx-fL-${id})` });
+        const useLowF = el('use'); useLowF.setAttribute('href', `#fx-cov-${lowIdx}`); fgL.appendChild(useLowF);
+        const tgA = el('g', { mask: `url(#fx-tA-${id})` });
+        const useLow2 = el('use'); useLow2.setAttribute('href', `#fx-cov-${lowIdx}`); tgA.appendChild(useLow2);
+        /* Painter's order respects the real stacking: lower card, upper card,
+           then the upper card's own liquid leaking past its edge, and last the
+           lower card's liquid wetting the upper card's surface. */
+        warpG.append(useLow, useHigh, fgH, tgB, fgL, tgA);
         zoneG.appendChild(warpG);
         layer!.appendChild(zoneG);
 
         return {
-          id, lowIdx, highIdx, pair, baseX: cx, baseY: cy, direction,
+          id, pair, lowIdx, highIdx,
+          ax, ay, tx, ty, nx, ny, u0, uLo, uHi,
+          drift: 14 + Math.random() * 20,
+          /* Per-spot rhythms keep the fan from pulsing in sync — no readable
+             global loop, no shared dead beat. */
+          speedA: 0.55 + Math.random() * 0.35,
+          speedB: 0.55 + Math.random() * 0.35,
+          exchangeW: 0.42 + Math.random() * 0.3,
           seed: Math.random() * 10, phase: Math.random() * 100, retract: 0,
-          disp, noiseShift, grad, warp, lobA, lobB, zoneG,
+          disp, noiseShift, grad, warp, lobA, lobB, filmLow, filmHigh, zoneG,
         };
       }
 
-      function tongues(s: Spot, cx: number, cy: number, time: number) {
-        const A: { x: number; y: number; r: number }[] = [];
-        const B: { x: number; y: number; r: number }[] = [];
+      /* Gooey excursions across the seam, computed in the seam's own frame:
+         A grows out of the lower card and reaches onto the upper card's
+         surface, B grows out of the upper card and leaks past its own edge.
+         Roots sit just inside the donor card so each tongue visibly emerges
+         from it. */
+      function tongues(s: Spot, px: number, py: number, time: number) {
+        const A: Circle[] = [];
+        const B: Circle[] = [];
         const strength = 1 - 0.92 * s.retract;
         /* Reciprocal pressure makes the contact legible as an exchange: the
            lower card reaches farther, then the upper card answers. Neither
            side ever goes fully still, so the flux remains ambient. */
-        const exchange = Math.sin(time * 0.62 + s.phase);
-        const driveA = 0.76 + 0.24 * exchange;
-        const driveB = 0.76 - 0.24 * exchange;
-        const dir = s.direction;
+        const exchange = Math.sin(time * s.exchangeW + s.phase);
+        const driveA = 0.78 + 0.22 * exchange;
+        const driveB = 0.78 - 0.22 * exchange;
         for (let i = 0; i < 3; i++) {
           const ph = s.seed + i * 1.9;
-          const yb = cy + (i - 1) * 14 + 6 * Math.sin(time * 0.52 + ph);
+          const along = (i - 1) * 15 + 7 * Math.sin(time * 0.5 * s.speedA + ph);
           const reach =
-            clamp(0.62 + 0.38 * Math.sin(time * 0.56 + ph), 0.24, 1) *
+            clamp(0.66 + 0.34 * Math.sin(time * 0.53 * s.speedA + ph), 0.3, 1) *
             driveA *
             strength;
-          const len = 16 + reach * 30;
-          const xr = cx - dir * 9 + dir * 3 * Math.sin(time * 0.42 + ph);
-          A.push({ x: xr, y: yb, r: 8 + reach * 4 });
+          const len = 18 + reach * 46;
+          const bx = px + s.tx * along + s.nx * 7;
+          const by = py + s.ty * along + s.ny * 7;
+          A.push({ x: bx, y: by, r: 9 + reach * 5 });
           for (let k = 1; k <= 4; k++) {
             const f = k / 4;
-            const w = 8 * Math.sin(time * 0.64 + ph + k);
+            const w = 9 * Math.sin(time * 0.61 * s.speedA + ph + k);
             A.push({
-              x: xr + dir * len * f,
-              y: yb + w * 0.62,
-              r: (8 + reach * 5) * (1 - 0.4 * f),
+              x: bx - s.nx * len * f + s.tx * w * 0.6,
+              y: by - s.ny * len * f + s.ty * w * 0.6,
+              r: (9 + reach * 5) * (1 - 0.42 * f),
             });
           }
         }
         for (let i = 0; i < 3; i++) {
           const ph = s.seed + 4 + i * 1.7;
-          const yb = cy + (i - 1) * 14 + 6 * Math.sin(time * 0.48 + ph);
+          const along = (i - 1) * 15 + 7 * Math.sin(time * 0.47 * s.speedB + ph);
           const reach =
-            clamp(0.62 + 0.38 * Math.sin(time * 0.59 + ph), 0.24, 1) *
+            clamp(0.66 + 0.34 * Math.sin(time * 0.58 * s.speedB + ph), 0.3, 1) *
             driveB *
             strength;
-          const len = 16 + reach * 29;
-          const xr = cx + dir * 9 + dir * 3 * Math.sin(time * 0.46 + ph);
-          B.push({ x: xr, y: yb, r: 8 + reach * 4 });
+          const len = 18 + reach * 44;
+          const bx = px + s.tx * along - s.nx * 7;
+          const by = py + s.ty * along - s.ny * 7;
+          B.push({ x: bx, y: by, r: 9 + reach * 5 });
           for (let k = 1; k <= 4; k++) {
             const f = k / 4;
-            const w = 8 * Math.sin(time * 0.6 + ph + k);
+            const w = 9 * Math.sin(time * 0.57 * s.speedB + ph + k);
             B.push({
-              x: xr - dir * len * f,
-              y: yb + w * 0.62,
-              r: (8 + reach * 5) * (1 - 0.38 * f),
+              x: bx + s.nx * len * f + s.tx * w * 0.6,
+              y: by + s.ny * len * f + s.ty * w * 0.6,
+              r: (9 + reach * 5) * (1 - 0.4 * f),
             });
           }
         }
-        return { A, B };
+        return { A, B, exchange, strength };
+      }
+
+      /* Always-on molten film hugging the seam: the under-card perpetually
+         seeps onto the upper card's surface while the upper card leaks a
+         little past its own edge. This is what keeps the boundary visibly
+         alive between tongue surges — there is no fully inactive frame. */
+      function film(s: Spot, px: number, py: number, time: number, exchange: number, strength: number) {
+        const L: Circle[] = [];
+        const H: Circle[] = [];
+        const driveL = (0.82 + 0.3 * exchange) * strength;
+        const driveH = (0.82 - 0.3 * exchange) * strength;
+        for (let k = -2; k <= 2; k++) {
+          const off = k * 14 + 4 * Math.sin(time * 0.4 * s.speedB + s.seed + k);
+          const wob = 2.6 * Math.sin(time * 0.68 * s.speedA + k * 2.1 + s.phase);
+          const rl =
+            (3.4 + 2.6 * (0.5 + 0.5 * Math.sin(time * 0.66 * s.speedA + k * 1.3 + s.seed))) * driveL;
+          const rh =
+            (3.4 + 2.6 * (0.5 + 0.5 * Math.sin(time * 0.71 * s.speedB + k * 1.5 + s.seed + 5))) * driveH;
+          L.push({
+            x: px + s.tx * off - s.nx * (3.5 + wob),
+            y: py + s.ty * off - s.ny * (3.5 + wob),
+            r: Math.max(rl, 0.1),
+          });
+          H.push({
+            x: px + s.tx * off + s.nx * (3.5 - wob),
+            y: py + s.ty * off + s.ny * (3.5 - wob),
+            r: Math.max(rh, 0.1),
+          });
+        }
+        return { L, H };
       }
 
       function frame(now: number) {
@@ -650,25 +764,36 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         if (svg) svg.style.opacity = busy ? '0' : '1';
 
         for (const s of spots) {
-          const cx = s.baseX + 8 * Math.sin(time * 0.11 + s.phase);
-          const cy = s.baseY + 18 * Math.sin(time * 0.13 + s.phase * 1.3);
-          s.grad.setAttribute('cx', cx.toFixed(1));
-          s.grad.setAttribute('cy', cy.toFixed(1));
-          s.warp.setAttribute('x', (cx - R - 16).toFixed(1));
-          s.warp.setAttribute('y', (cy - R - 16).toFixed(1));
-          s.warp.setAttribute('width', String((R + 16) * 2));
-          s.warp.setAttribute('height', String((R + 16) * 2));
+          /* The contact point wanders slowly along the seam, clamped to the
+             contact zone, so the flow never sits still nor drifts off the
+             boundary. */
+          const u = clamp(
+            s.u0 + s.drift * Math.sin(time * 0.06 * s.speedA + s.phase * 1.7),
+            s.uLo, s.uHi,
+          );
+          const px = s.ax + s.tx * u;
+          const py = s.ay + s.ty * u;
+
+          s.grad.setAttribute('cx', px.toFixed(1));
+          s.grad.setAttribute('cy', py.toFixed(1));
+          s.warp.setAttribute('x', (px - R - 18).toFixed(1));
+          s.warp.setAttribute('y', (py - R - 18).toFixed(1));
+          s.warp.setAttribute('width', String((R + 18) * 2));
+          s.warp.setAttribute('height', String((R + 18) * 2));
 
           const focused =
             tiles[s.pair[0]]?.classList.contains('is-fan-focus') ||
             tiles[s.pair[1]]?.classList.contains('is-fan-focus');
-          s.retract += ((focused ? 1 : 0) - s.retract) * 0.08;
+          s.retract += ((focused ? 1 : 0) - s.retract) * 0.1;
 
-          const { A, B } = tongues(s, cx, cy, time);
+          const { A, B, exchange, strength } = tongues(s, px, py, time);
           paint(s.lobA, A); paint(s.lobB, B);
-          s.noiseShift.setAttribute('dx', (7 * Math.sin(time * 0.24 + s.phase)).toFixed(1));
-          s.noiseShift.setAttribute('dy', (9 * Math.cos(time * 0.2 + s.phase)).toFixed(1));
-          s.disp.setAttribute('scale', (16 + 4 * Math.sin(time * 0.34 + s.phase)).toFixed(1));
+          const F = film(s, px, py, time, exchange, strength);
+          paint(s.filmLow, F.L); paint(s.filmHigh, F.H);
+
+          s.noiseShift.setAttribute('dx', (8 * Math.sin(time * 0.23 * s.speedB + s.phase)).toFixed(1));
+          s.noiseShift.setAttribute('dy', (10 * Math.cos(time * 0.19 * s.speedB + s.phase)).toFixed(1));
+          s.disp.setAttribute('scale', (22 + 7 * Math.sin(time * 0.31 * s.speedA + s.phase)).toFixed(1));
           s.zoneG.setAttribute('opacity', (1 - s.retract).toFixed(2));
         }
         raf = requestAnimationFrame(frame);
