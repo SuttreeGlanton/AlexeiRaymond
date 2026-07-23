@@ -2553,7 +2553,8 @@ img {
       transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
       box-shadow 320ms ease,
       border-color 320ms ease,
-      background 320ms ease;
+      background 320ms ease,
+      z-index 180ms linear;
   }
 
   .home-cycle-grid > .tile:nth-child(1) {
@@ -2619,22 +2620,22 @@ img {
 
   .home-cycle-grid > .tile:nth-child(3),
   .home-cycle-grid > .tile:nth-child(6) {
-    --fan-delay: 50ms;
+    --fan-delay: 45ms;
   }
 
   .home-cycle-grid > .tile:nth-child(2),
   .home-cycle-grid > .tile:nth-child(7) {
-    --fan-delay: 100ms;
+    --fan-delay: 90ms;
   }
 
   .home-cycle-grid > .tile:nth-child(1),
   .home-cycle-grid > .tile:nth-child(8) {
-    --fan-delay: 150ms;
+    --fan-delay: 135ms;
   }
 
   .home-cycle-grid > .tile.is-fan-focus,
-  .home-cycle-grid > .tile:hover,
-  .home-cycle-grid > .tile:focus-visible {
+  .home-cycle-grid:not(.is-fan-pending):not(.is-fan-entering) > .tile:hover,
+  .home-cycle-grid:not(.is-fan-pending):not(.is-fan-entering) > .tile:focus-visible {
     z-index: 20;
     border-color: var(--border-strong);
     background: var(--panel-lift);
@@ -2646,6 +2647,12 @@ img {
       translateY(-30px)
       rotate(0deg)
       scale(1.075);
+    transition:
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 320ms ease,
+      border-color 320ms ease,
+      background 320ms ease,
+      z-index 180ms linear;
   }
 
   .home-cycle-grid > .tile.is-fan-focus img {
@@ -2673,7 +2680,7 @@ img {
   .home-cycle-grid.is-fan-entering > .tile {
     animation:
       home-cycle-fan-out
-      1050ms
+      950ms
       cubic-bezier(0.16, 1, 0.3, 1)
       var(--fan-delay, 0ms)
       both;

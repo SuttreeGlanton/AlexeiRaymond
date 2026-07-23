@@ -218,18 +218,24 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
           return;
         }
 
+        /* The card already under the reader's cursor wins, then keyboard
+           focus, then the default — so a cursor parked where a card lands
+           gets its lift the moment the fan settles. */
+        const hoverTile = tiles.find((tile) => tile.matches(':hover'));
         const keyboardTile = tiles.find((tile) => tile.matches(':focus-visible'));
-        setFanFocus(keyboardTile ?? defaultTile);
+        setFanFocus(hoverTile ?? keyboardTile ?? defaultTile);
       }
 
       function playFanEntrance() {
         fan.classList.remove('is-fan-pending');
         fan.classList.add('is-fan-entering');
 
+        /* 950ms animation + 135ms outermost delay: hand over right as the
+           last ring lands, with no dead beat before the focus lift. */
         window.setTimeout(() => {
           fan.classList.remove('is-fan-entering');
           restoreFanFocus();
-        }, 1320);
+        }, 1100);
       }
 
       function armFanEntrance() {
@@ -251,7 +257,7 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
             if (!entries.some((entry) => entry.isIntersecting)) return;
 
             observer.disconnect();
-            window.setTimeout(playFanEntrance, 180);
+            window.setTimeout(playFanEntrance, 240);
           },
           {
             rootMargin: '0px 0px -12% 0px',
