@@ -112,7 +112,7 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
       <h2 id="cycles-title">Cycles</h2>
       <p class="section-note">Story cycles flow in and out of one another; an interconnected whole emerges.</p>
     </div>
-    <div class="cycle-grid home-cycle-grid" data-home-cycle-focus data-home-cycle-fan>
+    <div class="cycle-grid home-cycle-grid" data-home-cycle-focus data-home-cycle-fan data-cycle-flux>
       {cycles.map((cycle) => (
         <CycleTile cycle={cycle} />
       ))}
@@ -352,6 +352,323 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
       }
 
       scheduleUpdate();
+    })();
+  </script>
+
+  <script>
+    /* Homepage cycle "flux": desktop-only decorative liquid where neighbouring
+       fan cards meet. Two randomised molten contact points per adjacent pair
+       locally warp the two covers into one another and flow perpetually. It is
+       an isolated, pointer-transparent, grayscale overlay gated behind the
+       [data-cycle-flux] flag on the grid — remove that attribute (or this
+       block) and nothing else changes. Colour stays reserved for card focus:
+       a contact point retracts the moment either of its cards is focused. */
+    (() => {
+      const grid = document.querySelector<HTMLElement>('[data-cycle-flux]');
+      if (!grid) return;
+
+      const desktop = window.matchMedia('(min-width: 861px) and (hover: hover) and (pointer: fine)');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (reduce.matches) return;
+
+      const NS = 'http://www.w3.org/2000/svg';
+      const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
+      const el = (name: string, attrs?: Record<string, string | number>) => {
+        const e = document.createElementNS(NS, name);
+        if (attrs) for (const k in attrs) e.setAttribute(k, String(attrs[k]));
+        return e as SVGElement;
+      };
+
+      type Spot = {
+        id: number; lowIdx: number; highIdx: number;
+        pair: [number, number];
+        baseX: number; baseY: number; seed: number; phase: number;
+        retract: number;
+        disp: SVGElement; grad: SVGElement; warp: SVGElement;
+        lobA: SVGElement; lobB: SVGElement; zoneG: SVGElement;
+      };
+
+      let svg: SVGElement | null = null;
+      let defs: SVGElement | null = null;
+      let layer: SVGElement | null = null;
+      let tiles: HTMLElement[] = [];
+      let spots: Spot[] = [];
+      let raf = 0;
+      let running = false;
+      let start = 0;
+
+      const R = 34; // contact-zone radius (matches the small scale we settled on)
+
+      function coverURL(tile: HTMLElement): string | null {
+        const img = tile.querySelector<HTMLImageElement>('.tile-media img');
+        if (!img) return null;
+        return img.currentSrc || img.getAttribute('src');
+      }
+
+      function paint(g: SVGElement, circles: { x: number; y: number; r: number }[]) {
+        let m = '';
+        for (const c of circles) {
+          if (c.r < 0.4) continue;
+          m += `<circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="${c.r.toFixed(1)}"/>`;
+        }
+        g.innerHTML = m;
+      }
+
+      function teardown() {
+        if (svg && svg.parentNode) svg.parentNode.removeChild(svg);
+        svg = defs = layer = null;
+        spots = [];
+      }
+
+      function build() {
+        teardown();
+        if (!desktop.matches) return;
+
+        tiles = Array.from(grid.querySelectorAll<HTMLElement>('.tile'));
+        if (tiles.length < 2) return;
+
+        const W = grid.clientWidth;
+        const H = grid.clientHeight;
+
+        svg = el('svg', { 'aria-hidden': 'true', viewBox: `0 0 ${W} ${H}`, preserveAspectRatio: 'none' });
+        Object.assign((svg as SVGElement & { style: CSSStyleDeclaration }).style, {
+          position: 'absolute', inset: '0', width: '100%', height: '100%',
+          pointerEvents: 'none', zIndex: '5', opacity: '0',
+          transition: 'opacity 600ms ease',
+        });
+
+        defs = el('defs');
+        svg.appendChild(defs);
+
+        // shared goo filter for the tongue masks
+        const goo = el('filter', { id: 'fx-goo', x: '-60%', y: '-60%', width: '220%', height: '220%', 'color-interpolation-filters': 'sRGB' });
+        goo.appendChild(el('feGaussianBlur', { in: 'SourceGraphic', stdDeviation: '7', result: 'b' }));
+        goo.appendChild(el('feColorMatrix', { in: 'b', type: 'matrix', values: '1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10', result: 'g' }));
+        goo.appendChild(el('feGaussianBlur', { in: 'g', stdDeviation: '1.2' }));
+        defs.appendChild(goo);
+
+        // register each tile's cover, replicating its CSS transform so the flux
+        // is drawn in perfect register with the real card.
+        tiles.forEach((tile, i) => {
+          const url = coverURL(tile);
+          const media = tile.querySelector<HTMLElement>('.tile-media');
+          if (!url || !media || !defs) return;
+
+          const L = tile.offsetLeft, T = tile.offsetTop;
+          const w = tile.offsetWidth, h = tile.offsetHeight;
+          const ox = w * 0.5, oy = h; // transform-origin: 50% 100%
+          const cs = getComputedStyle(tile);
+          const m = new DOMMatrixReadOnly(cs.transform === 'none' ? '' : cs.transform);
+          const tr =
+            `translate(${L} ${T}) translate(${ox} ${oy}) ` +
+            `matrix(${m.a} ${m.b} ${m.c} ${m.d} ${m.e} ${m.f}) translate(${-ox} ${-oy})`;
+
+          const clip = el('clipPath', { id: `fx-clip-${i}`, clipPathUnits: 'userSpaceOnUse' });
+          clip.appendChild(el('rect', { x: media.offsetLeft, y: media.offsetTop, width: media.offsetWidth, height: media.offsetHeight, rx: 6 }));
+          defs.appendChild(clip);
+
+          const g = el('g', { id: `fx-cov-${i}`, transform: tr });
+          const image = el('image', {
+            x: media.offsetLeft, y: media.offsetTop, width: media.offsetWidth, height: media.offsetHeight,
+            preserveAspectRatio: 'xMidYMid slice', 'clip-path': `url(#fx-clip-${i})`,
+          });
+          image.setAttribute('href', url);
+          g.appendChild(image);
+          defs.appendChild(g);
+
+          (tile as HTMLElement & { _fxOk?: boolean; _fxZ?: number })._fxOk = true;
+          (tile as HTMLElement & { _fxOk?: boolean; _fxZ?: number })._fxZ =
+            parseFloat(cs.getPropertyValue('--fan-z')) || i + 1;
+        });
+
+        layer = el('g');
+        svg.appendChild(layer);
+        grid.appendChild(svg);
+
+        // two contact points per adjacent pair
+        const gridRect = grid.getBoundingClientRect();
+        let sid = 0;
+        for (let i = 0; i < tiles.length - 1; i++) {
+          const a = tiles[i] as HTMLElement & { _fxOk?: boolean; _fxZ?: number };
+          const b = tiles[i + 1] as HTMLElement & { _fxOk?: boolean; _fxZ?: number };
+          if (!a._fxOk || !b._fxOk) continue;
+
+          const bOnTop = (b._fxZ ?? 0) >= (a._fxZ ?? 0);
+          const highIdx = bOnTop ? i + 1 : i;
+          const lowIdx = bOnTop ? i : i + 1;
+
+          const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+          const upper = (highIdx === i ? ra : rb);
+          const lower = (lowIdx === i ? ra : rb);
+          // The visible boundary is the upper card's edge that faces the lower
+          // card (where the lower one peeks out); straddle it so the zone covers
+          // both surfaces instead of smudging one card's interior.
+          const lowerLeft = (lower.left + lower.width / 2) < (upper.left + upper.width / 2);
+          const seamX = (lowerLeft ? upper.left : upper.right) - gridRect.left;
+          const top = Math.max(ra.top, rb.top) - gridRect.top;
+          const bot = Math.min(ra.bottom, rb.bottom) - gridRect.top;
+          if (bot - top < 60) continue;
+
+          for (let s = 0; s < 2; s++) {
+            const frac = 0.22 + Math.random() * 0.56;
+            spots.push(makeSpot(sid++, lowIdx, highIdx, [i, i + 1],
+              seamX + (Math.random() * 16 - 8), top + (bot - top) * frac));
+          }
+        }
+      }
+
+      function makeSpot(id: number, lowIdx: number, highIdx: number, pair: [number, number], cx: number, cy: number): Spot {
+        const warp = el('filter', { id: `fx-warp-${id}`, filterUnits: 'userSpaceOnUse', 'color-interpolation-filters': 'sRGB' });
+        warp.appendChild(el('feTurbulence', { type: 'fractalNoise', baseFrequency: '0.02 0.03', numOctaves: '2', seed: String(Math.floor(Math.random() * 90) + 1), result: 'n' }));
+        const disp = el('feDisplacementMap', { in: 'SourceGraphic', in2: 'n', scale: '0', xChannelSelector: 'R', yChannelSelector: 'G', result: 'w' });
+        warp.appendChild(disp);
+        warp.appendChild(el('feColorMatrix', { in: 'w', type: 'saturate', values: '0', result: 'gs' }));
+        const ct = el('feComponentTransfer');
+        (['R', 'G', 'B'] as const).forEach((ch) => ct.appendChild(el('feFunc' + ch, { type: 'linear', slope: '0.62' })));
+        warp.appendChild(ct);
+        defs!.appendChild(warp);
+
+        const grad = el('radialGradient', { id: `fx-zone-${id}`, gradientUnits: 'userSpaceOnUse', r: String(R) });
+        grad.appendChild(el('stop', { offset: '0', 'stop-color': '#fff' }));
+        grad.appendChild(el('stop', { offset: '0.42', 'stop-color': '#fff' }));
+        grad.appendChild(el('stop', { offset: '1', 'stop-color': '#000' }));
+        defs!.appendChild(grad);
+
+        const zmask = el('mask', { id: `fx-zm-${id}`, maskUnits: 'userSpaceOnUse', x: '0', y: '0', width: '100%', height: '100%' });
+        zmask.appendChild(el('rect', { x: '0', y: '0', width: grid.clientWidth, height: grid.clientHeight, fill: `url(#fx-zone-${id})` }));
+        defs!.appendChild(zmask);
+
+        const tmA = el('mask', { id: `fx-tA-${id}` });
+        const lobA = el('g', { filter: 'url(#fx-goo)', fill: '#fff' });
+        tmA.appendChild(lobA); defs!.appendChild(tmA);
+        const tmB = el('mask', { id: `fx-tB-${id}` });
+        const lobB = el('g', { filter: 'url(#fx-goo)', fill: '#fff' });
+        tmB.appendChild(lobB); defs!.appendChild(tmB);
+
+        const zoneG = el('g', { mask: `url(#fx-zm-${id})` });
+        const warpG = el('g', { filter: `url(#fx-warp-${id})` });
+        const useLow = el('use'); useLow.setAttribute('href', `#fx-cov-${lowIdx}`);
+        const useHigh = el('use'); useHigh.setAttribute('href', `#fx-cov-${highIdx}`);
+        const tgA = el('g', { mask: `url(#fx-tA-${id})` });
+        const useLow2 = el('use'); useLow2.setAttribute('href', `#fx-cov-${lowIdx}`); tgA.appendChild(useLow2);
+        const tgB = el('g', { mask: `url(#fx-tB-${id})` });
+        const useHigh2 = el('use'); useHigh2.setAttribute('href', `#fx-cov-${highIdx}`); tgB.appendChild(useHigh2);
+        warpG.append(useLow, useHigh, tgA, tgB);
+        zoneG.appendChild(warpG);
+        layer!.appendChild(zoneG);
+
+        return {
+          id, lowIdx, highIdx, pair, baseX: cx, baseY: cy,
+          seed: Math.random() * 10, phase: Math.random() * 100, retract: 0,
+          disp, grad, warp, lobA, lobB, zoneG,
+        };
+      }
+
+      function tongues(s: Spot, cx: number, cy: number, time: number) {
+        const A: { x: number; y: number; r: number }[] = [];
+        const B: { x: number; y: number; r: number }[] = [];
+        const strength = 1 - 0.92 * s.retract;
+        for (let i = 0; i < 3; i++) {
+          const ph = s.seed + i * 1.9;
+          const yb = cy + (i - 1) * 13 + 5 * Math.sin(time * 0.5 + ph);
+          const reach = clamp(0.45 + 0.5 * Math.sin(time * 0.5 + ph), 0.15, 1) * strength;
+          const len = 12 + reach * 24, xr = cx - 8 + 3 * Math.sin(time * 0.4 + ph);
+          A.push({ x: xr, y: yb, r: 7 + reach * 3 });
+          for (let k = 1; k <= 3; k++) { const f = k / 3, w = 6 * Math.sin(time * 0.6 + ph + k); A.push({ x: xr + len * f, y: yb + w * 0.6, r: (7 + reach * 4) * (1 - 0.45 * f) }); }
+        }
+        for (let i = 0; i < 3; i++) {
+          const ph = s.seed + 4 + i * 1.7;
+          const yb = cy + (i - 1) * 13 + 5 * Math.sin(time * 0.45 + ph);
+          const reach = clamp(0.45 + 0.5 * Math.sin(time * 0.55 + ph), 0.15, 1) * strength;
+          const len = 12 + reach * 22, xr = cx + 8 + 3 * Math.sin(time * 0.5 + ph);
+          B.push({ x: xr, y: yb, r: 7 + reach * 3 });
+          for (let k = 1; k <= 3; k++) { const f = k / 3, w = 6 * Math.sin(time * 0.55 + ph + k); B.push({ x: xr - len * f, y: yb + w * 0.6, r: (7 + reach * 4) * (1 - 0.4 * f) }); }
+        }
+        return { A, B };
+      }
+
+      function frame(now: number) {
+        if (!running) return;
+        const time = (now - start) / 1000;
+        const busy = grid.classList.contains('is-fan-pending') || grid.classList.contains('is-fan-entering');
+        if (svg) svg.style.opacity = busy ? '0' : '1';
+
+        for (const s of spots) {
+          const cx = s.baseX + 8 * Math.sin(time * 0.11 + s.phase);
+          const cy = s.baseY + 18 * Math.sin(time * 0.13 + s.phase * 1.3);
+          s.grad.setAttribute('cx', cx.toFixed(1));
+          s.grad.setAttribute('cy', cy.toFixed(1));
+          s.warp.setAttribute('x', (cx - R - 16).toFixed(1));
+          s.warp.setAttribute('y', (cy - R - 16).toFixed(1));
+          s.warp.setAttribute('width', String((R + 16) * 2));
+          s.warp.setAttribute('height', String((R + 16) * 2));
+
+          const focused =
+            tiles[s.pair[0]]?.classList.contains('is-fan-focus') ||
+            tiles[s.pair[1]]?.classList.contains('is-fan-focus');
+          s.retract += ((focused ? 1 : 0) - s.retract) * 0.08;
+
+          const { A, B } = tongues(s, cx, cy, time);
+          paint(s.lobA, A); paint(s.lobB, B);
+          s.disp.setAttribute('scale', (9 + 2 * Math.sin(time * 0.3 + s.phase)).toFixed(1));
+          s.zoneG.setAttribute('opacity', (1 - s.retract).toFixed(2));
+        }
+        raf = requestAnimationFrame(frame);
+      }
+
+      // The fan starts stacked at centre and only fans out once it scrolls into
+      // view; reading tile geometry before that collapses every seam onto one
+      // spot. Never build until the fan has settled into its final layout.
+      function settled() {
+        return !grid.classList.contains('is-fan-pending') && !grid.classList.contains('is-fan-entering');
+      }
+
+      let settleTimer = 0;
+      function play() {
+        if (!desktop.matches || !onScreen) return;
+        if (!settled()) {
+          window.clearTimeout(settleTimer);
+          settleTimer = window.setTimeout(play, 150);
+          return;
+        }
+        if (!svg) { build(); if (!spots.length) return; }
+        if (running) return;
+        running = true;
+        start = performance.now();
+        raf = requestAnimationFrame(frame);
+      }
+      function stop() {
+        running = false;
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+      }
+
+      let resizeTimer = 0;
+      function rebuild() {
+        stop();
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => { teardown(); play(); }, 200);
+      }
+
+      let onScreen = false;
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          onScreen = entries.some((e) => e.isIntersecting);
+          if (onScreen) play(); else stop();
+        }, { threshold: 0.05 });
+        io.observe(grid);
+      } else {
+        onScreen = true;
+      }
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop(); else play();
+      });
+      window.addEventListener('resize', rebuild);
+      if (desktop.addEventListener) desktop.addEventListener('change', rebuild);
+
+      if (document.readyState === 'complete') play();
+      else window.addEventListener('load', () => play(), { once: true });
     })();
   </script>
 
