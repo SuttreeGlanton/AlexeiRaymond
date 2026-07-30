@@ -1,0 +1,387 @@
+---
+import {
+  secedeEpigraphs,
+  secedeFinalChat,
+  secedeOpening,
+  secedeSections
+} from '../lib/secede-prototype-data';
+import msnSoundUrl from '../assets/prototype/msn.mp3';
+import {
+  evelineAvatarDataUri,
+  msnNudgeDataUri,
+  msnSmileDataUri,
+  msnFrameGreyDataUri,
+  msnFrameGreenDataUri,
+  msnWinkDataUri,
+  rayAvatarDataUri
+} from '../lib/secede-prototype-avatars';
+import '../styles/secede-prototype.css';
+
+const chatCount = secedeSections.length;
+---
+
+<article
+  class="secede"
+  data-secede-root
+  data-heat="0"
+  data-msn-sound={msnSoundUrl}
+  style={`--msn-frame: url("${msnFrameGreenDataUri}"); --msn-frame-grey: url("${msnFrameGreyDataUri}")`}
+>
+  <header class="secede-heading">
+    <h1 class="secede-title" data-corrupt-meta data-original="Secede">Secede</h1>
+    <div class="secede-epigraphs">
+      {secedeEpigraphs.map((epigraph, index) => (
+        <blockquote class="secede-epigraph">
+          <p
+            data-corrupt-meta
+            data-original={epigraph.text}
+            data-translation-key={`epigraph-${index}-text`}
+          >
+            {epigraph.text}
+          </p>
+          <footer>
+            <span
+              data-corrupt-meta
+              data-original={epigraph.attribution}
+              data-translation-key={`epigraph-${index}-attribution`}
+            >
+              {epigraph.attribution}
+            </span>
+            {epigraph.work && (
+              <>
+                {' '}
+                <cite data-corrupt-meta data-original={epigraph.work}>{epigraph.work}</cite>
+              </>
+            )}
+          </footer>
+        </blockquote>
+      ))}
+    </div>
+  </header>
+
+  <div class="secede-prose secede-opening" data-prose-group="opening">
+    {secedeOpening.map((paragraph, line) => (
+      <p
+        data-prose
+        data-unlocked="true"
+        data-original={paragraph}
+        data-translation-key={`opening-${line}`}
+        data-final-stop={line === secedeOpening.length - 1 ? 'true' : undefined}
+      >
+        {paragraph}
+      </p>
+    ))}
+  </div>
+
+  <div class="secede-sequence">
+    {secedeSections.map((section, index) => (
+      <section class:list={['secede-section', { 'is-chat-locked': index !== 0 }]} data-section-index={index}>
+        <h2
+          class="secede-date"
+          data-corrupt-date
+          data-original={section.chat.date}
+          data-translation-key={`section-${index}-date`}
+        >
+          {section.chat.date}
+        </h2>
+
+        <div
+          class="msn-window-wrap"
+          data-chat-wrap
+          data-chat-index={index}
+          data-chat-id={section.chat.id}
+          aria-label={`${section.chat.date} reconstructed conversation`}
+        >
+          <div class="msn-window">
+            <div class="msn-titlebar">
+              <span class="msn-mark" aria-hidden="true">◉</span>
+              <span class="msn-titlebar-label">Eveline - Conversation</span>
+              <span class="msn-window-controls" aria-hidden="true">
+                <span>—</span><span>□</span>
+              </span>
+              <button
+                class="msn-mobile-close"
+                type="button"
+                data-chat-close
+                aria-label="Close reconstruction"
+              >
+                ×
+              </button>
+            </div>
+
+            <nav class="msn-toolbar" aria-label="Messenger toolbar">
+              <span>Files</span>
+              <span>Video Call</span>
+              <span>Video Message</span>
+              <span>Voice Call</span>
+              <span>Games</span>
+              <span>Activities</span>
+              <div class="msn-finish-actions" data-finish-actions hidden>
+                <button class="msn-restart" type="button" data-restart hidden>Restart</button>
+                <button class="msn-continue" type="button" data-continue hidden>Continue</button>
+              </div>
+            </nav>
+
+            <div class="msn-contact">
+              <div class="msn-avatar-frame msn-avatar-frame--eveline">
+                <span class="msn-status-arrow" aria-hidden="true">▾</span>
+                <img
+                  class="msn-avatar-image"
+                  src={evelineAvatarDataUri}
+                  alt=""
+                  width="88"
+                  height="88"
+                />
+              </div>
+              <div class="msn-contact-copy">
+                <div><strong>Eveline</strong> <span>(Available)</span></div>
+              </div>
+            </div>
+
+            <div class="msn-log" data-chat-log aria-live="polite" aria-relevant="additions"></div>
+
+            <div class="msn-typing-row">
+              <div class="msn-typing" data-typing hidden>
+                <span aria-hidden="true">◯</span> Eveline is typing…
+              </div>
+            </div>
+
+            <div class="msn-compose">
+              <div class="msn-avatar-frame msn-avatar-frame--ray">
+                <span class="msn-status-arrow" aria-hidden="true">▾</span>
+                <img
+                  class="msn-avatar-image"
+                  src={rayAvatarDataUri}
+                  alt=""
+                  width="88"
+                  height="88"
+                />
+              </div>
+              <div class="msn-input-shell">
+                <div class="msn-options" data-options hidden></div>
+                <div class="msn-input" data-input aria-label="Message input preview"></div>
+                <div class="msn-input-tools" aria-hidden="true">
+                  <span class="msn-tool msn-tool--picker">
+                    <img class="msn-tool-icon" src={msnSmileDataUri} alt="" width="19" height="19" />
+                    <i class="msn-caret"></i>
+                  </span>
+                  <span class="msn-tool msn-tool--picker">
+                    <img class="msn-tool-icon" src={msnWinkDataUri} alt="" width="19" height="19" />
+                    <i class="msn-caret"></i>
+                  </span>
+                  <span class="msn-tool msn-tool--nudge" title="Nudge">
+                    <i class="msn-wave">((</i>
+                    <img class="msn-tool-icon" src={msnNudgeDataUri} alt="" width="19" height="19" />
+                    <i class="msn-wave">))</i>
+                  </span>
+                  <span class="msn-tool msn-tool--voice" title="Voice clip">
+                    <svg viewBox="0 0 20 18" width="20" height="18">
+                      <path d="M2.6 1.5h14.2a1.6 1.6 0 0 1 1.6 1.6v7.6a1.6 1.6 0 0 1-1.6 1.6H7.4l-4 3.4v-3.4H2.6A1.6 1.6 0 0 1 1 10.7V3.1a1.6 1.6 0 0 1 1.6-1.6z"
+                        fill="#fff" stroke="#8aa7b5" stroke-width="1.1" stroke-linejoin="round" />
+                      <path d="M8.4 5.2 6.3 6.8H4.9v2.2h1.4l2.1 1.7z" fill="#5b7f92" />
+                      <path d="M10.4 5.9a3.4 3.4 0 0 1 0 4.2" fill="none" stroke="#5b7f92" stroke-width="1.1" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span class="msn-rule"></span>
+                  <span class="msn-tool msn-tool--format" title="Font">
+                    <b>A</b><i class="msn-ibeam">I</i><b>B</b>
+                  </span>
+                  <span class="msn-tool msn-tool--scene" title="Backgrounds">
+                    <svg viewBox="0 0 20 18" width="20" height="18">
+                      <rect x="1" y="1" width="13" height="11" rx="1" fill="#eef3f7" stroke="#8aa7b5" stroke-width="1" />
+                      <rect x="6" y="5" width="13" height="12" rx="1" fill="#cfe6f4" stroke="#5b8a9e" stroke-width="1" />
+                      <path d="M6.6 15.4 10 10.6l2.3 3 1.7-2 3.4 3.8z" fill="#5aa64a" />
+                      <circle cx="15.6" cy="8.3" r="1.5" fill="#f4dd6a" />
+                    </svg>
+                    <i class="msn-caret"></i>
+                  </span>
+                  <span class="msn-tool msn-tool--pen" title="Handwriting">
+                    <svg viewBox="0 0 18 18" width="17" height="17">
+                      <path d="M2.6 15.4 3.4 12l8.1-8.1 2.6 2.6L6 14.6z" fill="#e8eff4" stroke="#5b7f92" stroke-width="1.1" stroke-linejoin="round" />
+                      <path d="M11.5 3.9 13.1 2.3a1.2 1.2 0 0 1 1.7 0l.9.9a1.2 1.2 0 0 1 0 1.7l-1.6 1.6z" fill="#9fb9c6" stroke="#5b7f92" stroke-width="1.1" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="secede-prose secede-after-chat" data-prose-group={index}>
+          {section.prose.map((paragraph, line) => (
+            <p
+              data-prose
+              data-unlocked="false"
+              data-culmination={
+                index === chatCount - 1 && line === section.prose.length - 1
+                  ? 'true'
+                  : undefined
+              }
+              data-original={paragraph}
+              data-translation-key={`section-${index}-prose-${line}`}
+              data-final-stop={line === section.prose.length - 1 ? 'true' : undefined}
+              data-reveal-word={
+                index === chatCount - 1 && line === section.prose.length - 1 ? 'Tal' : undefined
+              }
+            >
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <section class="secede-section secede-final is-chat-locked" data-section-index={chatCount}>
+      <h2
+        class="secede-date"
+        data-corrupt-date
+        data-final-lock-protected="true"
+        data-original={secedeFinalChat.date}
+        data-translation-key="final-date"
+      >
+        {secedeFinalChat.date}
+      </h2>
+
+      <div
+        class="msn-window-wrap"
+        data-chat-wrap
+        data-chat-index={chatCount}
+        data-chat-id={secedeFinalChat.id}
+        aria-label={`${secedeFinalChat.date} reconstructed conversation`}
+      >
+        <div class="msn-window">
+          <div class="msn-titlebar">
+            <span class="msn-mark" aria-hidden="true">◉</span>
+            <span class="msn-titlebar-label">Eveline - Conversation</span>
+            <span class="msn-window-controls" aria-hidden="true">
+              <span>—</span><span>□</span>
+            </span>
+            <button
+              class="msn-mobile-close"
+              type="button"
+              data-chat-close
+              aria-label="Close reconstruction"
+            >
+              ×
+            </button>
+          </div>
+
+          <nav class="msn-toolbar" aria-label="Messenger toolbar">
+            <span>Files</span>
+            <span>Video Call</span>
+            <span>Video Message</span>
+            <span>Voice Call</span>
+            <span>Games</span>
+            <span>Activities</span>
+            <div class="msn-finish-actions" data-finish-actions hidden>
+              <button class="msn-restart" type="button" data-restart hidden>Restart</button>
+              <button class="msn-continue" type="button" data-continue hidden>Continue</button>
+            </div>
+          </nav>
+
+          <div class="msn-contact">
+            <div class="msn-avatar-frame msn-avatar-frame--eveline">
+              <span class="msn-status-arrow" aria-hidden="true">▾</span>
+              <img
+                class="msn-avatar-image"
+                src={evelineAvatarDataUri}
+                alt=""
+                width="88"
+                height="88"
+              />
+            </div>
+            <div class="msn-contact-copy">
+              <div><strong>Eveline</strong> <span>(Available)</span></div>
+            </div>
+          </div>
+
+          <div class="msn-log" data-chat-log aria-live="polite" aria-relevant="additions"></div>
+
+          <div class="msn-typing-row">
+            <div class="msn-typing" data-typing hidden>
+              <span aria-hidden="true">◯</span> Eveline is typing…
+            </div>
+          </div>
+
+          <div class="msn-compose">
+            <div class="msn-avatar-frame msn-avatar-frame--ray">
+              <span class="msn-status-arrow" aria-hidden="true">▾</span>
+              <img
+                class="msn-avatar-image"
+                src={rayAvatarDataUri}
+                alt=""
+                width="88"
+                height="88"
+              />
+            </div>
+            <div class="msn-input-shell">
+              <div class="msn-options" data-options hidden></div>
+              <div class="msn-input" data-input aria-label="Message input preview"></div>
+              <div class="msn-input-tools" aria-hidden="true">
+                <span class="msn-tool msn-tool--picker">
+                  <img class="msn-tool-icon" src={msnSmileDataUri} alt="" width="19" height="19" />
+                  <i class="msn-caret"></i>
+                </span>
+                <span class="msn-tool msn-tool--picker">
+                  <img class="msn-tool-icon" src={msnWinkDataUri} alt="" width="19" height="19" />
+                  <i class="msn-caret"></i>
+                </span>
+                <span class="msn-tool msn-tool--nudge" title="Nudge">
+                  <i class="msn-wave">((</i>
+                  <img class="msn-tool-icon" src={msnNudgeDataUri} alt="" width="19" height="19" />
+                  <i class="msn-wave">))</i>
+                </span>
+                <span class="msn-tool msn-tool--voice" title="Voice clip">
+                  <svg viewBox="0 0 20 18" width="20" height="18">
+                    <path d="M2.6 1.5h14.2a1.6 1.6 0 0 1 1.6 1.6v7.6a1.6 1.6 0 0 1-1.6 1.6H7.4l-4 3.4v-3.4H2.6A1.6 1.6 0 0 1 1 10.7V3.1a1.6 1.6 0 0 1 1.6-1.6z"
+                      fill="#fff" stroke="#8aa7b5" stroke-width="1.1" stroke-linejoin="round" />
+                    <path d="M8.4 5.2 6.3 6.8H4.9v2.2h1.4l2.1 1.7z" fill="#5b7f92" />
+                    <path d="M10.4 5.9a3.4 3.4 0 0 1 0 4.2" fill="none" stroke="#5b7f92" stroke-width="1.1" stroke-linecap="round" />
+                  </svg>
+                </span>
+                <span class="msn-rule"></span>
+                <span class="msn-tool msn-tool--format" title="Font">
+                  <b>A</b><i class="msn-ibeam">I</i><b>B</b>
+                </span>
+                <span class="msn-tool msn-tool--scene" title="Backgrounds">
+                  <svg viewBox="0 0 20 18" width="20" height="18">
+                    <rect x="1" y="1" width="13" height="11" rx="1" fill="#eef3f7" stroke="#8aa7b5" stroke-width="1" />
+                    <rect x="6" y="5" width="13" height="12" rx="1" fill="#cfe6f4" stroke="#5b8a9e" stroke-width="1" />
+                    <path d="M6.6 15.4 10 10.6l2.3 3 1.7-2 3.4 3.8z" fill="#5aa64a" />
+                    <circle cx="15.6" cy="8.3" r="1.5" fill="#f4dd6a" />
+                  </svg>
+                  <i class="msn-caret"></i>
+                </span>
+                <span class="msn-tool msn-tool--pen" title="Handwriting">
+                  <svg viewBox="0 0 18 18" width="17" height="17">
+                    <path d="M2.6 15.4 3.4 12l8.1-8.1 2.6 2.6L6 14.6z" fill="#e8eff4" stroke="#5b7f92" stroke-width="1.1" stroke-linejoin="round" />
+                    <path d="M11.5 3.9 13.1 2.3a1.2 1.2 0 0 1 1.7 0l.9.9a1.2 1.2 0 0 1 0 1.7l-1.6 1.6z" fill="#9fb9c6" stroke="#5b7f92" stroke-width="1.1" stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="secede-lock-screen" data-lock-screen hidden>
+          <span>Corrupted</span>
+        </div>
+      </div>
+
+      <p class="secede-offline" data-offline aria-live="polite" hidden>
+        <span class="secede-offline-pulse" data-offline-pulse aria-label="Waiting" hidden>
+          <i></i><i></i><i></i>
+        </span>
+        <span class="secede-offline-label" data-offline-label hidden>(Offline)</span>
+      </p>
+      <div class="secede-reset" data-reset-wrap hidden>
+        <button type="button" data-reset>Remember again</button>
+      </div>
+    </section>
+  </div>
+</article>
+
+<script>
+  import '../scripts/secede-prototype';
+</script>

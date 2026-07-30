@@ -8,7 +8,9 @@ export default defineConfig({
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   integrations: [
     sitemap({
-      filter: (page) => !page.endsWith('/interview/')
+      filter: (page) =>
+        !page.endsWith('/interview/') &&
+        !page.includes('/prototype/')
     })
   ]
 });

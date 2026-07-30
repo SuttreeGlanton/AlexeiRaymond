@@ -1,0 +1,2144 @@
+.secede {
+  position: relative;
+  --secede-column: 760px;
+  width: min(var(--secede-column), calc(100% - 32px));
+  margin: 0 auto;
+  padding: clamp(66px, 10vw, 120px) 0 clamp(92px, 14vw, 160px);
+  color: var(--text-soft);
+  font-family: var(--serif);
+  font-size: clamp(1.08rem, 2vw, 1.24rem);
+  line-height: 1.68;
+}
+
+.secede-heading {
+  margin-bottom: clamp(58px, 9vw, 90px);
+}
+
+.secede-title {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(4rem, 12vw, 8rem);
+  font-weight: 400;
+  line-height: 0.92;
+  text-align: center;
+}
+
+/*
+ * The reward for reaching the authored ending. The title takes the palette of
+ * the Messenger window the whole account was conducted through — the titlebar
+ * and toolbar blues, with the status green. Set only once the ending is
+ * reached, and placed where the reader has to scroll back up to find it.
+ */
+.secede[data-ending='true'] .secede-title {
+  /* Shrink the box to the word so the whole palette lands across the letters
+     rather than mostly falling in the empty margins either side. Scoped to the
+     ending so the ordinary heading layout is untouched. */
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  color: #44c3ed;
+}
+
+/* The same shimmer the gilt carries in His Green Delight and Rabbit Lamp —
+   identical geometry, timing and easing — reading in Messenger's palette
+   instead of gold. The solid colour above is the fallback where the text clip
+   is unavailable. */
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .secede[data-ending='true'] .secede-title {
+    background: linear-gradient(
+      105deg,
+      #0879b8 10%,
+      #0a9cd5 38%,
+      #9beeff 50%,
+      #62df22 62%,
+      #0879b8 90%
+    );
+    background-size: 240% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: secede-msn-shimmer 8s ease-in-out infinite;
+  }
+}
+
+@keyframes secede-msn-shimmer {
+  0%,
+  65%,
+  100% {
+    background-position: 100% 50%;
+  }
+
+  32% {
+    background-position: 0 50%;
+  }
+}
+
+.secede-epigraphs {
+  display: grid;
+  gap: 42px;
+  width: min(68ch, 100%);
+  margin: clamp(48px, 7vw, 72px) auto 0;
+}
+
+.secede-epigraph {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: clamp(1.18rem, 2.1vw, 1.38rem);
+  line-height: 1.5;
+}
+
+/*
+ * No orphans anywhere in the story text. `text-wrap: pretty` pulls a word back
+ * off a line of its own rather than leaving it stranded — it fixes the two the
+ * author caught ("more" in the Proust epigraph, "volition" in the second
+ * paragraph) and every future one, without hard-coding non-breaking spaces
+ * into the manuscript, which would also have to survive the corruption engine's
+ * tokenisation. Browsers without it simply wrap as before.
+ */
+.secede-title,
+.secede-epigraph p,
+.secede-epigraph footer,
+.secede-prose p {
+  text-wrap: pretty;
+}
+
+.secede-epigraph p {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+.secede-epigraph footer {
+  margin-top: 1em;
+  color: var(--text-soft);
+  font-size: 0.92em;
+  font-style: normal;
+  text-align: left;
+}
+
+/* The title of the work, italicised. */
+.secede-epigraph footer cite {
+  font-style: italic;
+}
+
+.secede-prose {
+  position: relative;
+}
+
+.secede-prose p {
+  position: relative;
+  margin: 0 0 1.35em;
+  transition: filter 620ms ease, opacity 620ms ease;
+}
+
+.secede-prose p[data-unlocked='false'] {
+  filter: blur(10px);
+  opacity: 0.16;
+  pointer-events: none;
+  user-select: none;
+}
+
+/*
+ * The full stop that closes each run of prose before a conversation keeps
+ * blinking, the way a caret does in a document still being written. It never
+ * goes fully out — a period that disappears reads as a typo rather than a
+ * cursor.
+ */
+.secede-final-stop {
+  animation: secede-caret 1.15s steps(1) infinite;
+}
+
+@keyframes secede-caret {
+  0%,
+  52% {
+    opacity: 1;
+  }
+  53%,
+  100% {
+    opacity: 0.08;
+  }
+}
+
+/*
+ * His real name, the last word of the account. Ordinary prose until every
+ * conversation has been reconstructed, at which point it starts to pulse and
+ * becomes the way in to the final chat. Inert until then.
+ */
+.secede-reveal {
+  appearance: none;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  pointer-events: none;
+}
+
+.secede-reveal.is-armed {
+  color: #9beeff;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: secede-reveal-pulse 1.9s ease-in-out infinite;
+}
+
+.secede-reveal.is-armed:focus-visible {
+  outline: 1px solid #9beeff;
+  outline-offset: 3px;
+}
+
+@keyframes secede-reveal-pulse {
+  0%,
+  100% {
+    opacity: 0.66;
+    text-shadow: 0 0 0.35em rgba(155, 238, 255, 0.35);
+  }
+  50% {
+    opacity: 1;
+    text-shadow:
+      0 0 0.85em rgba(155, 238, 255, 0.85),
+      0 0 1.7em rgba(98, 223, 34, 0.35);
+  }
+}
+
+.secede-sequence {
+  margin-top: clamp(42px, 7vw, 72px);
+}
+
+.secede-section {
+  position: relative;
+  margin-top: clamp(58px, 10vw, 96px);
+}
+
+/* Centred and white: the month is how the reader tracks the year passing, and
+   set small and grey against the left margin it was being read straight past. */
+.secede-date {
+  margin: 0 0 18px;
+  color: #fff;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.19em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  transition: filter 520ms ease, opacity 520ms ease;
+}
+
+.secede-date [data-date-month],
+.secede-date [data-date-year] {
+  display: inline-block;
+}
+
+.secede-date [data-date-month] {
+  min-width: 9ch;
+}
+
+.secede-date [data-date-year] {
+  min-width: 4ch;
+}
+
+.secede-date .is-date-shift {
+  animation: secede-date-shift 260ms steps(1, end);
+}
+
+@keyframes secede-date-shift {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  42% {
+    opacity: 0.08;
+  }
+  58% {
+    opacity: 0.72;
+  }
+}
+
+.is-chat-locked .secede-date {
+  filter: blur(7px);
+  opacity: 0.22;
+}
+
+/*
+ * Every window is the authored square, whatever the conversation does inside
+ * it. It was previously a ceiling that short chats collapsed below, which meant
+ * the window grew a line at a time as the exchange went on — something a real
+ * Messenger window never did.
+ */
+.msn-window-wrap {
+  position: relative;
+  width: min(680px, 100%);
+  max-height: min(680px, 100vw);
+  margin: 0 auto clamp(38px, 7vw, 68px);
+}
+
+.msn-window {
+  /* The authored square. The log takes whatever the fixed rows leave. */
+  --msn-ceiling: min(680px, 100vw);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  /*
+   * One fixed size, never sized by its contents. A real Messenger window did
+   * not grow a line at a time as the conversation went on, and neither does
+   * this: the window is always the authored square, and the log — the `1fr`
+   * track — takes whatever is left and scrolls inside it.
+   */
+  grid-template-rows: 31px 30px 112px minmax(0, 1fr) 26px 128px;
+  height: var(--msn-ceiling);
+  max-height: var(--msn-ceiling);
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid #1169a1;
+  border-radius: 10px;
+  background: #eff9fc;   /* RT_4002/1826 */
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+  color: #1b242a;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.3;
+  transition: filter 520ms ease, opacity 520ms ease;
+}
+
+/*
+ * A choice is the current task, not another line of window chrome. One veil
+ * recedes the whole Messenger surface while the option panel remains above it.
+ * This is cheaper and cleaner than filtering every grid row independently,
+ * and it gives desktop and mobile exactly the same focus treatment.
+ */
+.msn-window::after {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  border-radius: inherit;
+  background: rgba(4, 15, 22, 0.5);
+  content: '';
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.msn-window-wrap.is-choosing .msn-window::after {
+  opacity: 1;
+}
+
+/*
+ * Nothing in the window is selectable. Dragging a cursor across the chrome and
+ * lighting up the toolbar, the contact name or a dialogue option breaks the
+ * illusion that this is a program rather than a page — a real Messenger window
+ * did not highlight its own furniture.
+ */
+.msn-window {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The exception: a message that has actually been sent is a transcript, and a
+   transcript can be copied. The `X says:` labels stay locked with the rest of
+   the chrome, so a selection returns the words and not the scaffolding. */
+.msn-message-copy {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.is-chat-locked .msn-window {
+  filter: blur(14px) saturate(0.25);
+  opacity: 0.2;
+}
+
+/*
+ * A chat the reader has not engaged, or has scrolled away from, sits dimmed
+ * and waits. The overlay covers the whole window, so while it is dormant the
+ * only thing a click can reach is the go-ahead itself.
+ */
+.msn-window-wrap.is-dormant {
+  cursor: pointer;
+}
+
+.msn-window-wrap.is-dormant .msn-window {
+  filter: grayscale(0.85) brightness(0.58);
+  opacity: 0.78;
+}
+
+.msn-window-wrap.is-dormant::after {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  border-radius: 10px;
+  place-items: center;
+  background: rgba(6, 15, 21, 0.24);
+  color: #f2fbff;
+  content: attr(data-dormant-label);
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.13em;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.8);
+  text-transform: uppercase;
+}
+
+.msn-titlebar {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 0 7px;
+  border-bottom: 1px solid #8fb2cb;
+  /* Sampled down the reference title bar: a pale blue-grey, not the saturated
+     blue this used to be, with dark text rather than white. */
+  background: linear-gradient(180deg, #b8cbda 0%, #b6d0e7 22%, #b6d1ec 70%, #bed7ed 100%);
+  color: #17384b;
+}
+
+.msn-titlebar::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(5, 15, 22, 0);
+  content: '';
+  pointer-events: none;
+  transition: background-color 320ms ease;
+}
+
+.msn-titlebar > * {
+  position: relative;
+  z-index: 1;
+}
+
+.msn-mark {
+  color: #2a6f96;
+  font-size: 0.78rem;
+}
+
+.msn-titlebar-label {
+  overflow: hidden;
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.msn-window-controls {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.msn-window-controls span {
+  display: grid;
+  width: 25px;
+  height: 18px;
+  place-items: center;
+  border: 1px solid #7e9db4;
+  border-radius: 2px;
+  background: linear-gradient(#f3f7fb, #d4dbe5);
+  color: #24445c;
+  font-size: 0.72rem;
+  line-height: 1;
+  text-shadow: none;
+}
+
+/* The close button is red in the reference, as it is in the OS caption. */
+.msn-mobile-close {
+  display: grid;
+  width: 25px;
+  height: 18px;
+  margin-left: 2px;
+  appearance: none;
+  border-color: #8c2f26;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  padding: 0;
+  background: linear-gradient(#e2685b, #b8382c);
+  color: #fff;
+  font: inherit;
+  font-size: 0.72rem;
+  line-height: 1;
+  place-items: center;
+  pointer-events: none;
+  text-shadow: none;
+}
+
+.msn-toolbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2.6vw, 22px);
+  min-width: 0;
+  padding: 0 16px;
+  overflow: hidden;
+  border-bottom: 1px solid #67b9dc;
+  background: linear-gradient(180deg, #44c3ed, #0a9cd5);
+  color: white;
+  font-size: clamp(0.68rem, 1.7vw, 0.82rem);
+  white-space: nowrap;
+}
+
+.msn-toolbar::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: rgba(2, 28, 41, 0.48);
+  content: '';
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 320ms ease;
+}
+
+.msn-finish-actions {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-left: auto;
+}
+
+.msn-finish-actions[hidden] {
+  display: none;
+}
+
+.msn-restart {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  animation: msn-restart-pulse 1.55s ease-in-out infinite;
+}
+
+.msn-restart[hidden] {
+  display: none;
+}
+
+.msn-continue {
+  display: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.msn-continue[hidden] {
+  display: none;
+}
+
+/*
+ * A concluded reconstruction recedes on both desktop and mobile while its red
+ * close control and available finish actions remain at full strength. The
+ * The toolbar now dims beneath one coherent dark-blue veil rather than
+ * filtering its white labels grey against the bright blue strip. Restart and
+ * Continue sit above that veil. Restart removes .is-completed before replay
+ * begins. The title-bar veil sits behind its children, allowing the caption
+ * chrome to recede without fading the close control.
+ */
+.msn-window-wrap .msn-titlebar > :not(.msn-mobile-close),
+.msn-window-wrap .msn-contact,
+.msn-window-wrap .msn-log,
+.msn-window-wrap .msn-typing-row,
+.msn-window-wrap .msn-compose {
+  transition: filter 320ms ease, opacity 320ms ease;
+}
+
+.msn-window-wrap.is-completed .msn-titlebar::after {
+  background: rgba(5, 15, 22, 0.28);
+}
+
+.msn-window-wrap.is-completed .msn-toolbar::after {
+  opacity: 1;
+}
+
+.msn-window-wrap.is-completed .msn-titlebar > :not(.msn-mobile-close),
+.msn-window-wrap.is-completed .msn-contact,
+.msn-window-wrap.is-completed .msn-log,
+.msn-window-wrap.is-completed .msn-typing-row,
+.msn-window-wrap.is-completed .msn-compose {
+  filter: brightness(0.68) saturate(0.72);
+  opacity: 0.78;
+}
+
+/*
+ * The desktop contact portrait intentionally overhangs its 112px grid row.
+ * Completion filtering makes the row a stacking context; without an explicit
+ * layer, the following log paints over that overhang as a grey horizontal
+ * strip. Keep the filtered contact above the log so the full frame remains
+ * intact, without changing its geometry or dimming.
+ */
+.msn-window-wrap.is-completed .msn-contact {
+  z-index: 1;
+}
+
+.msn-window-wrap.is-completed .msn-mobile-close {
+  filter: none;
+  opacity: 1;
+}
+
+@keyframes msn-restart-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+  48% {
+    opacity: 1;
+    text-shadow: 0 0 7px rgba(255, 255, 255, 0.75);
+  }
+}
+
+.msn-contact {
+  position: relative;
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+  /* Extra left inset so the status chevron has clear air beside the picture
+     instead of being tucked against the frame or clipped by the window. */
+  padding: 12px 28px 10px 38px;
+  /*
+   * The conversation "scene" — the tinted backdrop behind the contact header
+   * that Messenger let you choose. This is the default light-blue one, its ramp
+   * sampled row by row from the sky strip at the top of the WLM sprite atlas
+   * ramp sampled down the reference screenshot's own header (#9cd9f6 to
+   * #f9ffff). The 2011 sprite atlas carries the same scene a shade more
+   * saturated; the screenshot wins, being the build the author actually used.
+   * Reproduced as stops rather than the bitmap — a smooth ramp, so the stops
+   * are exact and it stays crisp at any size.
+   */
+  background:
+    radial-gradient(ellipse at 76% -34%, rgba(255, 255, 255, 0.9) 0 20%, transparent 55%),
+    linear-gradient(
+      180deg,
+      #9cd9f6 0%,
+      #a2dcf4 18%,
+      #b9e4f5 27%,
+      #dceef8 36%,
+      #e0eff6 53%,
+      #e8f3f9 72%,
+      #f2fafc 88%,
+      #f9ffff 100%
+    );
+}
+
+.msn-avatar-frame {
+  position: relative;
+  display: grid;
+  width: 118px;
+  height: 118px;
+  place-items: center;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/*
+ * Messenger's own square display-picture frame, recoloured from silver to the
+ * online green (see the assets module). Laid over the picture rather than
+ * around it, which is how the real client composites it — the bevel, gloss and
+ * drop shadow all live inside the sprite's own alpha.
+ */
+.msn-avatar-frame::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--msn-frame) center / 100% 100% no-repeat;
+  content: '';
+  pointer-events: none;
+}
+
+.msn-avatar-frame.is-offline::after {
+  background-image: var(--msn-frame-grey);
+}
+
+/* The status chevron stands off to the left of the picture with clear air
+   between it and the frame, as in the reference — it was sitting on the
+   frame's own border. */
+/*
+ * The status chevron. Sampled properly this time: the button face is a pale
+ * blue-white (#a1dff8 and lighter) and only the glyph inside it is dark. An
+ * earlier pass sampled a single pixel, hit the glyph, and painted the whole
+ * button that colour. It also stands well clear of the picture — the reference
+ * leaves a clear gap, it is not tucked against the frame.
+ */
+.msn-status-arrow {
+  position: absolute;
+  top: 6px;
+  left: -30px;
+  z-index: 3;
+  display: grid;
+  width: 17px;
+  height: 17px;
+  place-items: center;
+  border: 1px solid #7fb9d8;
+  border-radius: 50%;
+  background: linear-gradient(#f4fcff, #a9dcf4);
+  box-shadow: 0 1px 2px rgba(30, 76, 100, 0.28);
+  color: #15455c;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 10px;
+  line-height: 1;
+}
+
+/* Ray's supplied avatar, cropped square. It fills the green status frame
+   edge to edge — no inset ring of frame backing showing around the picture. */
+/*
+ * Seated in the frame sprite's own window, measured off its alpha: a 94x94
+ * opening inside the 119x119 sprite, offset up and left because the drop
+ * shadow lives on the other two sides. Percentages, so the smaller compose
+ * frame scales without a second rule.
+ */
+.msn-avatar-image {
+  position: absolute;
+  top: 7.6%;
+  left: 8.4%;
+  z-index: 1;
+  display: block;
+  width: 79%;
+  height: 79%;
+  border: 0;
+  border-radius: 2px;
+  object-fit: cover;
+}
+
+
+.msn-avatar-placeholder {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  align-content: center;
+  border: 1px dashed #6e9cac;
+  border-radius: 8px;
+  background:
+    linear-gradient(45deg, rgba(121, 177, 190, 0.14) 25%, transparent 25% 75%, rgba(121, 177, 190, 0.14) 75%),
+    linear-gradient(45deg, rgba(121, 177, 190, 0.14) 25%, transparent 25% 75%, rgba(121, 177, 190, 0.14) 75%);
+  background-position: 0 0, 6px 6px;
+  background-size: 12px 12px;
+  color: #41788a;
+  text-align: center;
+}
+
+.msn-avatar-placeholder > span {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.msn-avatar-placeholder small {
+  margin-top: 6px;
+  font-size: 0.56rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.msn-contact-copy {
+  align-self: stretch;
+  padding-top: 9px;
+}
+
+/* The reference sets the contact's name large, in a soft blue, at ordinary
+   weight — not small and bold. The status sits beside it, small and grey. */
+.msn-contact-copy > div {
+  /* Dark, not blue. The blue in the earlier pass came from sampling between
+     glyphs and picking up the sky behind the text. */
+  color: #1d2b33;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 1.62rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.msn-contact-copy > div strong {
+  font-weight: 400;
+}
+
+.msn-contact-copy > div span {
+  color: #7d8a90;
+  font-size: 0.82rem;
+}
+
+/*
+ * The rule that closes the contact header off from the conversation. Strongest
+ * across the middle and fading out to nothing at both ends — not a hard line
+ * ruled edge to edge. It starts clear of the display picture rather than
+ * running into its frame.
+ */
+.msn-contact::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0 27%,
+    rgba(122, 158, 178, 0.14) 34%,
+    rgba(108, 148, 170, 0.5) 52%,
+    rgba(108, 148, 170, 0.5) 66%,
+    rgba(122, 158, 178, 0.14) 89%,
+    transparent 100%
+  );
+  content: '';
+}
+
+.msn-log {
+  min-height: 0;
+  /*
+   * The log is the only part of the window allowed to scroll, and bounding its
+   * height here is what keeps the compose row and Ray's avatar inside the
+   * frame. Relying on the window's max-height alone did not work: an `auto`
+   * grid track sizes against an indefinite container height, so a long
+   * conversation grew the grid past the ceiling and `overflow: hidden` simply
+   * cut the bottom of the interface away — worst on March 2011 and the final
+   * July 2010 chat. A short conversation still collapses below the square.
+   */
+  /* --options-space is measured from the floating choice bubble while it is
+     open, so the transcript is never hidden behind it. */
+  padding: 13px 30px calc(20px + var(--options-space, 0px)) 166px;
+  overflow: auto;
+  background: white;
+  color: #000;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 10pt;
+  font-weight: 400;
+  scrollbar-color: #7ebdd8 #eef8fc;
+  scrollbar-width: thin;
+}
+
+.msn-message {
+  margin: 0 0 8px;
+}
+
+.msn-message-label {
+  color: #586067;
+}
+
+/* While the name is changing hands. */
+.msn-message-label.is-name-turning {
+  color: #1b242a;
+  animation: msn-name-turn 260ms steps(1) infinite;
+}
+
+@keyframes msn-name-turn {
+  0%,
+  100% {
+    opacity: 1;
+    text-shadow: none;
+  }
+  45% {
+    opacity: 0.42;
+    text-shadow: -1px 0 rgba(198, 28, 153, 0.85), 1px 0 rgba(76, 255, 255, 0.85);
+  }
+}
+
+.msn-message-copy {
+  position: relative;
+  margin: 2px 0 0 17px;
+  color: #000;
+  font-weight: 400;
+  white-space: pre-wrap;
+}
+
+/* The small square bullet before each message line. An earlier pass removed
+   this as invented; the author's reference screenshot shows it on every
+   message, so it is restored. */
+.msn-message-copy::before {
+  position: absolute;
+  top: 0.52em;
+  left: -13px;
+  width: 4px;
+  height: 4px;
+  background: #8a9299;
+  content: '';
+}
+
+.msn-message-copy--file {
+  color: #126792;
+  text-decoration: underline;
+}
+
+/* The song. A real link, styled the way Messenger styled one. */
+.msn-message-copy--link a {
+  /* RT_4002/20747 */
+  color: #0066cc;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.msn-message-copy--link a:hover,
+.msn-message-copy--link a:focus-visible {
+  /* RT_4002/20882 */
+  color: #3399ff;
+}
+
+.msn-typing-row {
+  padding: 4px 28px 3px 166px;
+  border-top: 1px solid #d3e5ed;
+  background: #f9fdff;
+  color: #53666e;
+  font-size: 0.75rem;
+}
+
+.msn-typing span {
+  color: #1893bd;
+}
+
+.msn-compose {
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+  padding: 8px 28px 8px 38px;
+  border-top: 1px solid #bed9e4;
+  background: linear-gradient(180deg, #f4fbfe, #dff2fa);
+}
+
+.msn-compose .msn-avatar-frame {
+  width: 106px;
+  height: 106px;
+}
+
+
+/* The input area fills the compose row and pins its formatting toolbar to the
+   bottom edge. Previously both sat at their natural heights inside a taller
+   stretched shell, leaving a band of empty white beneath the toolbar. */
+/* In the reference the input area is a speech bubble: it has a tail on its
+   left edge pointing back at the sender's own display picture. */
+.msn-input-shell::before,
+.msn-input-shell::after {
+  position: absolute;
+  top: 16px;
+  width: 0;
+  height: 0;
+  border-width: 8px 11px 8px 0;
+  border-style: solid;
+  content: '';
+}
+
+.msn-input-shell::before {
+  left: -12px;
+  border-color: transparent #dedede transparent transparent;
+}
+
+.msn-input-shell::after {
+  left: -11px;
+  border-color: transparent #ffffff transparent transparent;
+}
+
+.msn-input-shell {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-self: stretch;
+  min-width: 0;
+  /* RT_4002/675 #DEDEDE, with borderthickness and padding both rect(1,1,1,1)
+     and background COLOR_WINDOW — read directly from the input-area element. */
+  border: 1px solid #dedede;
+  background: white;
+}
+
+.msn-input {
+  min-height: 64px;
+  padding: 9px;
+  color: #1f2529;
+  font-size: 0.9rem;
+}
+
+.msn-input.is-sending::after {
+  content: '▌';
+  margin-left: 2px;
+  color: #2589b4;
+  animation: msn-caret 520ms steps(1) infinite;
+}
+
+@keyframes msn-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+/*
+ * The formatting row, rebuilt against the reference: emoticon and wink pickers
+ * each with a drop-down caret, the nudge bracketed by its two shockwaves, a
+ * white speech bubble holding a speaker for the voice clip, a separator, the
+ * blue A/B with a black I-beam between them, the stacked-photographs scene
+ * picker with its own caret, and the handwriting pen alone at the far right.
+ *
+ * The carets used to hang off `img::after` and so never rendered at all —
+ * pseudo-elements do not apply to replaced elements. They are real nodes now.
+ */
+.msn-tool {
+  display: inline-flex;
+  height: 19px;
+  gap: 2px;
+  align-items: center;
+  line-height: 1;
+}
+
+.msn-tool-icon {
+  display: block;
+  width: 19px;
+  height: 19px;
+  image-rendering: pixelated;
+}
+
+.msn-caret {
+  width: 0;
+  height: 0;
+  margin-top: 3px;
+  border-width: 4px 3px 0;
+  border-style: solid;
+  border-color: #2d6c8c transparent transparent;
+}
+
+.msn-tool--nudge {
+  gap: 0;
+}
+
+/* The two shockwaves either side of the nudge face. */
+.msn-wave {
+  color: #4b8fb5;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 0.9rem;
+  font-style: normal;
+  letter-spacing: -2px;
+}
+
+.msn-rule {
+  width: 1px;
+  height: 15px;
+  background: rgba(120, 166, 185, 0.5);
+}
+
+.msn-tool--format {
+  gap: 0;
+  color: #1f6ea0;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+/* The I-beam between the letters is black, and a serif form in the original. */
+.msn-tool--format .msn-ibeam {
+  margin: 0 1px;
+  color: #10191f;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.92rem;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.msn-tool--pen {
+  margin-left: auto;
+}
+
+.msn-input-tools {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 27px;
+  padding: 0 10px;
+  border-top: 1px solid #cbcbcb;   /* RT_4002/74 */
+  background: linear-gradient(#f8fcfe, #e1f1f7);
+  color: #2a75a0;
+  font-family: "Segoe UI Symbol", "Segoe UI Emoji", "Segoe UI", sans-serif;
+  font-size: 0.83rem;
+}
+
+.msn-statusbar {
+  padding: 3px 15px;
+  overflow: hidden;
+  border-top: 1px solid #93bdd0;
+  background: linear-gradient(#eff9fc, #d7ecf4);
+  color: #52666f;
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.msn-options {
+  position: absolute;
+  right: -1px;
+  bottom: calc(100% + 9px);
+  z-index: 8;
+  display: grid;
+  gap: 7px;
+  width: min(520px, calc(100vw - 72px));
+  max-height: 290px;
+  padding: 9px;
+  overflow: auto;
+  border: 1px solid rgba(78, 138, 162, 0.9);
+  border-radius: 8px;
+  background: rgba(237, 249, 253, 0.96);
+  box-shadow: 0 11px 28px rgba(21, 74, 93, 0.24);
+  backdrop-filter: blur(7px);
+}
+
+.msn-options[hidden] {
+  display: none;
+}
+
+.msn-option {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid #9ac6d7;
+  border-radius: 5px;
+  padding: 0;
+  background: linear-gradient(#ffffff, #e9f6fb);
+  color: #202a2e;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.msn-option:hover,
+.msn-option:focus-within {
+  border-color: #258cb7;
+  background: #fff;
+  transform: translateY(-1px);
+  outline: 2px solid rgba(37, 140, 183, 0.3);
+  outline-offset: 1px;
+}
+
+.msn-option-select {
+  display: flex;
+  gap: 0.55em;
+  align-items: flex-start;
+  min-width: 0;
+  width: 100%;
+  appearance: none;
+  border: 0;
+  padding: 8px 10px 9px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.msn-option-number {
+  flex: 0 0 auto;
+  min-width: 1.15em;
+  color: #126792;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.msn-option-select:focus-visible,
+.msn-option-enter:focus-visible {
+  outline: 2px solid rgba(37, 140, 183, 0.5);
+  outline-offset: -3px;
+}
+
+.msn-option-enter {
+  min-width: 62px;
+  appearance: none;
+  border: 0;
+  border-left: 1px solid #9ac6d7;
+  padding: 0 11px;
+  background: linear-gradient(180deg, #44c3ed, #0a9cd5);
+  color: #fff;
+  cursor: pointer;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.msn-option-enter[hidden] {
+  display: none;
+}
+
+.msn-option-copy {
+  position: relative;
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/*
+ * The copy now owns the full row width, so ordinary replacement glyphs cannot
+ * wrap merely because the clean text happened to be narrower. This one
+ * unusually long response can still use every available pixel, so keep both
+ * its stable copy and overlaid glitch on one line. Mobile retains ordinary
+ * wrapping at readable size.
+ */
+@media (min-width: 701px) {
+  .msn-option-copy.is-single-line,
+  .msn-option-copy.is-single-line::after {
+    white-space: nowrap;
+  }
+}
+
+.msn-option-copy::after {
+  position: absolute;
+  inset: 0;
+  color: #202a2e;
+  content: attr(data-altered);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.has-character-cue,
+.has-order-cue,
+.has-unicode-cue {
+  animation: msn-option-base 6.5s steps(1) infinite;
+}
+
+.has-order-cue {
+  animation-delay: -2.2s;
+}
+
+.has-unicode-cue {
+  animation-delay: -4.4s;
+}
+
+.has-character-cue::after,
+.has-order-cue::after,
+.has-unicode-cue::after {
+  animation: msn-option-altered 6.5s steps(1) infinite;
+}
+
+.has-order-cue::after {
+  animation-delay: -2.2s;
+}
+
+.has-unicode-cue::after {
+  animation-delay: -4.4s;
+}
+
+/*
+ * The altered text surfaces twice per cycle, and stays up long enough to be
+ * read. Three tight bursts made the glitch obvious but left the line
+ * unreadable while it was happening — the reader could see something was
+ * wrong without being able to see what. Two holds of roughly 700ms and 550ms,
+ * well separated, in a 6.5s cycle. The canonical option carries no cue at all
+ * and stays perfectly stable, still the only thing that marks it.
+ */
+@keyframes msn-option-base {
+  0%,
+  45%,
+  57%,
+  70%,
+  80%,
+  100% {
+    color: #202a2e;
+  }
+  46%,
+  56%,
+  71%,
+  79% {
+    color: transparent;
+  }
+}
+
+@keyframes msn-option-altered {
+  0%,
+  45%,
+  57%,
+  70%,
+  80%,
+  100% {
+    opacity: 0;
+  }
+  46%,
+  56%,
+  71%,
+  79% {
+    opacity: 1;
+  }
+}
+
+.secede-lock-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.64);
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+}
+
+.secede-lock-screen[hidden] {
+  display: none;
+}
+
+.secede-lock-screen span {
+  padding: 10px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(10, 10, 10, 0.48);
+  /* The verdict carries the corruption it is reporting: the heat-1 blink and a
+     touch of the heat-2 chromatic split, so the word is visibly afflicted by
+     the same thing that is keeping the chat shut. */
+  animation: secede-lock-blink 3.6s steps(1) infinite;
+}
+
+@keyframes secede-lock-blink {
+  0%,
+  38%,
+  44%,
+  67%,
+  72%,
+  100% {
+    opacity: 1;
+    text-shadow: none;
+  }
+  39%,
+  43% {
+    opacity: 0.24;
+    text-shadow: -2px 0 rgba(198, 28, 153, 0.8), 2px 0 rgba(76, 255, 255, 0.8);
+  }
+  68%,
+  71% {
+    opacity: 0.55;
+    text-shadow: 2px 0 rgba(198, 28, 153, 0.7), -2px 0 rgba(76, 255, 255, 0.7);
+  }
+}
+
+/* The ending holds one centered status at a time: first the waiting ellipsis,
+   then the permanent offline label. */
+.secede-offline {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 26px 0 0;
+  color: var(--dim);
+  text-align: center;
+}
+
+.secede-offline[hidden] {
+  display: none;
+}
+
+/* Three dots in a row, spaced well apart. */
+.secede-offline-pulse {
+  display: inline-flex;
+  flex-direction: row;
+  gap: 11px;
+  align-items: center;
+  justify-content: center;
+}
+
+.secede-offline-pulse[hidden],
+.secede-offline-label[hidden] {
+  display: none;
+}
+
+.secede-offline-pulse i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.22;
+}
+
+.secede-offline-pulse.is-running i {
+  animation: secede-offline-dot 2.4s ease-in-out 3;
+}
+
+.secede-offline-pulse.is-running i:nth-child(2) {
+  animation-delay: 0.38s;
+}
+
+.secede-offline-pulse.is-running i:nth-child(3) {
+  animation-delay: 0.76s;
+}
+
+@keyframes secede-offline-dot {
+  0%,
+  16%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.72);
+  }
+  8% {
+    opacity: 1;
+    transform: scale(1.45);
+  }
+}
+
+.secede-reset {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.secede-reset button {
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 12px 18px;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.secede-reset button:hover,
+.secede-reset button:focus-visible {
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* Corruption layers */
+.secede-word {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.is-blink-word {
+  animation: secede-word-blink 10.4s steps(1) infinite;
+  animation-delay: var(--blink-delay, 0s);
+}
+
+@keyframes secede-word-blink {
+  0%,
+  68%,
+  72%,
+  100% {
+    opacity: 1;
+  }
+  69%,
+  71% {
+    opacity: 0.22;
+  }
+}
+
+/*
+ * Heat 2. The word goes badly out of focus for a beat and swims back. Eased
+ * rather than snapped — a word that pops in and out of blur reads as a
+ * rendering fault, where a word that dissolves and re-forms reads as something
+ * refusing to be held in mind. Slightly slower coming back than going out.
+ */
+.secede-word {
+  transition: filter 260ms ease-out;
+}
+
+.secede-word.is-blurring {
+  filter: blur(3.4px);
+  transition: filter 130ms ease-in;
+}
+
+/*
+ * Heat 4's authored language flashes stay atomic even when an occurrence
+ * spans several English words. Isolating directionality keeps a Hebrew insert
+ * from pulling adjacent English punctuation across the phrase boundary.
+ */
+.secede-translation-flash {
+  display: inline-block;
+  white-space: nowrap;
+  font-style: italic;
+  font-weight: 700;
+  unicode-bidi: isolate;
+}
+
+/*
+ * Heat 3's momentary name flash. It burns brighter than the prose rather than
+ * darker — the name is surfacing out of the text, not dropping out of it. The
+ * previous value was a near-black carried over from the MSN log, where the
+ * background is white; against this page it read as the word going missing.
+ */
+.secede-word.is-flashing {
+  color: #ffffff;
+  filter: none;
+  font-weight: 700;
+  text-shadow:
+    0 0 0.35em rgba(255, 255, 255, 0.65),
+    0 0 1.1em rgba(155, 238, 255, 0.4);
+}
+
+/* Heat 5's substituted names are set in bold, so a replacement reads as an
+   intrusion rather than as part of the sentence. */
+.secede-word.is-name-replacement {
+  font-weight: 700;
+}
+
+/*
+ * Heat 8: a few words per paragraph lose their tether altogether and drift off
+ * in one direction, tumbling slowly out of view. The word is never removed
+ * from the document — it is only carried away — so dropping back below heat 8
+ * clears the class and the same transition carries it home again.
+ */
+.secede-word.is-adrift {
+  pointer-events: none;
+}
+
+.secede .secede-word.is-motion-active.is-adrift {
+  animation: secede-adrift 9.5s cubic-bezier(0.24, 0.52, 0.4, 1) forwards;
+}
+
+/*
+ * A word on its way out travels well past the reading column, and must not be
+ * able to widen the page while it does. `clip` rather than `hidden`: it creates
+ * no scroll container, so sticky positioning elsewhere on the page is
+ * unaffected. Scoped to the prototype so it cannot reach the rest of the site.
+ */
+body:has([data-secede-root]) {
+  overflow-x: clip;
+}
+
+@keyframes secede-adrift {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--adrift-x, 0), var(--adrift-y, 0))
+      rotate(var(--adrift-spin, 0deg));
+  }
+}
+
+.secede-data-patches {
+  position: absolute;
+  inset: -0.15em -0.3em;
+  z-index: 4;
+  display: block;
+  overflow: hidden;
+  contain: layout paint;
+  pointer-events: none;
+}
+
+/* The fragment itself is a lossless indexed texture generated in the script
+   from the author's reference image: horizontal scanline bands of per-pixel
+   noise. It is scaled up with pixelated rendering so the noise stays blocky
+   rather than resolving into a smooth gradient. */
+.secede-data-patch {
+  position: absolute;
+  display: block;
+  min-width: 42px;
+  border: 0;
+  overflow: hidden;
+  opacity: var(--patch-opacity, 0.94);
+  background-color: #0030e1;
+  background-image: var(--patch-image, none);
+  background-position: var(--patch-shift, 0) 0;
+  background-repeat: repeat;
+  background-size: var(--patch-scale-x, 160%) var(--patch-scale-y, 140%);
+  /* A one-pixel chromatic split at the vertical edges, as on the reference,
+     where the tear cuts across the channels unevenly. */
+  box-shadow:
+    2px 0 #25f4ec,
+    -2px 0 #c61c99;
+  image-rendering: pixelated;
+  clip-path: var(--patch-clip, inset(0));
+  filter: contrast(var(--patch-contrast, 1.15)) saturate(var(--patch-saturation, 1.1));
+  transform: translate(
+    calc((var(--patch-phase, 0.5) - 0.5) * 11px),
+    calc((var(--patch-phase, 0.5) - 0.5) * -8px)
+  );
+  transition:
+    left 820ms steps(6),
+    top 730ms steps(5),
+    width 520ms steps(4),
+    height 470ms steps(3),
+    clip-path 390ms steps(3);
+}
+
+/* At high heat the site chrome is affected, but it never advances beyond
+   the prototype's two mildest kinds of interference. */
+.site-header[data-secede-corruption='1'] .nav-link span,
+.site-header[data-secede-corruption='1'] .brand-initial,
+.site-header[data-secede-corruption='2'] .nav-link span,
+.site-header[data-secede-corruption='2'] .brand-initial {
+  animation: secede-header-blink 4.4s steps(1) infinite;
+}
+
+.site-header[data-secede-corruption='2'] .nav-link span:nth-child(odd),
+.site-header[data-secede-corruption='2'] .brand-initial:last-of-type {
+  animation:
+    secede-header-blink 4.4s steps(1) infinite,
+    secede-header-twitch 2.6s steps(1) infinite;
+}
+
+@keyframes secede-header-blink {
+  0%,
+  54%,
+  60%,
+  71%,
+  74%,
+  100% {
+    opacity: 1;
+  }
+  55%,
+  59% {
+    opacity: 0.12;
+  }
+  72%,
+  73% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes secede-header-twitch {
+  0%,
+  84%,
+  87%,
+  100% {
+    text-shadow: none;
+    transform: translate(0);
+  }
+  85% {
+    text-shadow: -2px 0 rgba(255, 35, 224, 0.72), 2px 0 rgba(32, 237, 236, 0.72);
+    transform: translate(-1px, 1px);
+  }
+  86% {
+    text-shadow: 2px 0 rgba(255, 35, 224, 0.72), -2px 0 rgba(32, 237, 236, 0.72);
+    transform: translate(1px, -1px);
+  }
+}
+
+.secede[data-heat='8'] .secede-word.is-motion-active {
+  display: inline-block;
+  pointer-events: auto;
+  transition: transform 1.65s cubic-bezier(0.22, 0.7, 0.22, 1);
+  will-change: transform;
+}
+
+.secede[data-heat='8'] .secede-word.is-motion-active.is-knocked {
+  transition-duration: 150ms;
+}
+
+.secede[data-heat='8'] [data-prose],
+.secede[data-heat='8'] [data-corrupt-date] {
+  user-select: none;
+}
+
+@media (max-width: 700px), (pointer: coarse) and (max-width: 960px) and (max-height: 520px) {
+  html {
+    overflow-x: clip;
+  }
+
+  html.secede-mobile-chat-open,
+  body.secede-mobile-chat-open {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  /*
+   * The story keeps its own header while a reconstruction is open. Pinning it
+   * above the letterbox preserves place and leaves the site menu available;
+   * the Messenger focus field begins immediately below it.
+   */
+  body.secede-mobile-chat-open .site-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 240;
+  }
+
+  .secede {
+    width: min(100% - 20px, var(--secede-column));
+    font-size: 1.05rem;
+  }
+
+  /*
+   * At rest the conversation is a compact, slightly unresolved object inside
+   * the essay. It only becomes an interface after the reader commits to it.
+   */
+  .msn-window-wrap {
+    width: min(88vw, 360px);
+    height: min(74vw, 300px);
+    min-height: 0;
+    max-height: none;
+    margin-bottom: clamp(34px, 10vw, 54px);
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-window {
+    --msn-ceiling: 100%;
+    grid-template-rows: 24px 18px 58px minmax(0, 1fr) 18px 67px;
+    height: 100%;
+    max-height: 100%;
+    filter: grayscale(0.72) brightness(0.63) blur(0.35px);
+    opacity: 0.76;
+    font-size: 7px;
+  }
+
+  .is-chat-locked .msn-window-wrap:not(.is-mobile-open) .msn-window {
+    filter: blur(8px) saturate(0.22);
+    opacity: 0.2;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-titlebar {
+    padding-inline: 5px;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-titlebar-label {
+    font-size: 0.56rem;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-window-controls span,
+  .msn-window-wrap:not(.is-mobile-open) .msn-mobile-close {
+    width: 17px;
+    height: 12px;
+    font-size: 0.48rem;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-toolbar {
+    gap: 7px;
+    padding-inline: 8px;
+    font-size: 0.39rem;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-contact,
+  .msn-window-wrap:not(.is-mobile-open) .msn-compose {
+    grid-template-columns: 50px minmax(0, 1fr);
+    gap: 7px;
+    padding: 4px 8px 4px 12px;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-avatar-frame,
+  .msn-window-wrap:not(.is-mobile-open) .msn-compose .msn-avatar-frame {
+    width: 48px;
+    height: 48px;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-status-arrow {
+    top: 2px;
+    left: -10px;
+    width: 8px;
+    height: 8px;
+    border-width: 0.5px;
+    font-size: 5px;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-contact-copy {
+    padding-top: 4px;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-contact-copy > div {
+    font-size: 0.74rem;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-contact-copy > div span {
+    font-size: 0.42rem;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-log {
+    padding: 6px 8px 7px 67px;
+    font-size: 5.8pt;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-message {
+    margin-bottom: 4px;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-typing-row {
+    padding: 2px 8px 2px 67px;
+    font-size: 0.42rem;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-input {
+    min-height: 28px;
+    padding: 4px;
+    font-size: 0.5rem;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-input-tools {
+    height: 18px;
+    gap: 3px;
+    padding-inline: 4px;
+    overflow: hidden;
+  }
+
+  .msn-window-wrap:not(.is-mobile-open) .msn-tool,
+  .msn-window-wrap:not(.is-mobile-open) .msn-tool-icon {
+    width: 11px;
+    height: 11px;
+  }
+
+  .msn-window-wrap.is-dormant::after {
+    border-radius: 10px;
+    background: rgba(6, 15, 21, 0.34);
+    font-size: 0.68rem;
+  }
+
+  /*
+   * Focused mobile state. The same DOM becomes a contained Messenger surface
+   * centred inside a dark letterbox below the persistent site header. The
+   * translucent field blurs the story in place without pretending the web
+   * page has become a separate full-screen app.
+   */
+  .msn-window-wrap.is-mobile-open {
+    position: fixed;
+    top: var(--secede-mobile-header-height, 68px);
+    right: 0;
+    bottom: auto;
+    left: 0;
+    z-index: 200;
+    isolation: isolate;
+    display: grid;
+    width: auto;
+    height: calc(
+      var(--secede-mobile-viewport-height, 100dvh) -
+      var(--secede-mobile-header-height, 68px)
+    );
+    max-height: none;
+    margin: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    background: transparent;
+    place-items: center;
+  }
+
+  /*
+   * Blur an oversized backing layer and clip it to the focus field. Extending
+   * the filter past both viewport edges prevents the bright vertical seam some
+   * mobile compositors draw at an exact 100vw backdrop-filter boundary.
+   */
+  .msn-window-wrap.is-mobile-open::before {
+    position: absolute;
+    inset: -24px;
+    z-index: 0;
+    background: rgba(0, 0, 0, 0.72);
+    -webkit-backdrop-filter: blur(11px);
+    backdrop-filter: blur(11px);
+    content: '';
+    pointer-events: none;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-window {
+    --msn-ceiling: 100%;
+    position: relative;
+    z-index: 1;
+    grid-template-rows:
+      31px
+      29px
+      clamp(88px, 13dvh, 108px)
+      minmax(0, 1fr)
+      25px
+      clamp(122px, 19dvh, 160px);
+    width: min(calc(100vw - 12px), 430px);
+    height: min(82%, 620px);
+    max-height: min(82%, 620px);
+    border: 1px solid #1169a1;
+    border-radius: 8px;
+    box-shadow: 0 18px 54px rgba(0, 0, 0, 0.62);
+    font-size: 13px;
+  }
+
+  .is-mobile-chat-open > .secede-date {
+    visibility: hidden;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-titlebar {
+    align-items: end;
+    padding: 0 7px 6px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-window-controls {
+    display: none;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-mobile-close {
+    width: 36px;
+    height: 24px;
+    margin-left: auto;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    pointer-events: auto;
+  }
+
+  /* The nonfunctional desktop menu disappears. Restart is the one authored
+     action that remains in this strip. */
+  .msn-window-wrap.is-mobile-open .msn-toolbar {
+    min-height: 29px;
+    gap: 0;
+    padding-inline: 12px;
+    font-size: 0.7rem;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-toolbar > span {
+    display: none;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-finish-actions {
+    width: 100%;
+    justify-content: center;
+    gap: clamp(24px, 10vw, 46px);
+    margin: 0;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-restart {
+    animation: none;
+    opacity: 1;
+    text-shadow: none;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-continue:not([hidden]) {
+    display: inline-block;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-continue.is-only-action {
+    animation: msn-continue-pulse 1.55s ease-in-out infinite;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-contact {
+    grid-template-columns: 78px minmax(0, 1fr);
+    gap: 12px;
+    padding: 7px 14px 6px 20px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-avatar-frame {
+    width: 76px;
+    height: 76px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-status-arrow {
+    top: 4px;
+    left: -15px;
+    width: 14px;
+    height: 14px;
+    font-size: 8px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-contact-copy {
+    padding-top: 7px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-contact-copy > div {
+    font-size: clamp(1.16rem, 5.3vw, 1.46rem);
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-contact-copy > div span {
+    font-size: 0.7rem;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-log {
+    padding: 11px 14px calc(14px + var(--options-space, 0px));
+    overscroll-behavior: contain;
+    font-size: 10pt;
+    scroll-behavior: auto;
+    touch-action: pan-y;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-typing-row {
+    padding: 4px 14px 3px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-compose {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 10px;
+    padding: 7px 10px 7px 20px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-compose .msn-avatar-frame {
+    width: 72px;
+    height: 72px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-input {
+    min-height: 56px;
+    padding: 7px;
+    font-size: 0.82rem;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-input-tools {
+    gap: clamp(3px, 1.7vw, 8px);
+    height: 27px;
+    padding-inline: 6px;
+    overflow: hidden;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-options {
+    right: auto;
+    bottom: calc(100% + 7px);
+    left: -96px;
+    width: calc(100vw - 16px);
+    max-height: min(45dvh, 360px);
+    padding: 8px;
+    overscroll-behavior: contain;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-option {
+    min-height: 44px;
+    transform: none;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-option:hover,
+  .msn-window-wrap.is-mobile-open .msn-option:focus-within {
+    transform: none;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-option.is-selected {
+    border-color: #258cb7;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px rgba(37, 140, 183, 0.22);
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-option-select {
+    min-height: 44px;
+    padding: 8px 10px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-option-enter {
+    min-width: 66px;
+  }
+
+  .secede-data-patch {
+    min-width: 28px;
+    box-shadow:
+      1px 0 #25f4ec,
+      -1px 0 #c61c99;
+  }
+
+  /* On mobile the full name, Menu label and hamburger take the mild header
+     interference. An opened menu carries it into its choices as well. */
+  .site-header[data-secede-corruption='1'] .brand > span,
+  .site-header[data-secede-corruption='1'] .mobile-menu-label,
+  .site-header[data-secede-corruption='1'] .mobile-menu-icon span,
+  .site-header[data-secede-corruption='2'] .brand > span,
+  .site-header[data-secede-corruption='2'] .mobile-menu-label,
+  .site-header[data-secede-corruption='2'] .mobile-menu-icon span,
+  .site-header.is-mobile-menu-open[data-secede-corruption] .mobile-menu-link-text,
+  .site-header.is-mobile-menu-open[data-secede-corruption] .mobile-cycle-link,
+  .site-header.is-mobile-menu-open[data-secede-corruption] .mobile-cycle-overview,
+  .site-header.is-mobile-menu-open[data-secede-corruption] .mobile-cycle-back span,
+  .site-header.is-mobile-menu-open[data-secede-corruption] .mobile-menu-kicker {
+    animation: secede-header-blink 4.4s steps(1) infinite;
+  }
+
+  .site-header[data-secede-corruption='2'] .brand-fold,
+  .site-header[data-secede-corruption='2'] .mobile-menu-label,
+  .site-header[data-secede-corruption='2'] .mobile-menu-icon span:nth-child(odd),
+  .site-header.is-mobile-menu-open[data-secede-corruption='2'] .mobile-menu-link-text:nth-child(odd),
+  .site-header.is-mobile-menu-open[data-secede-corruption='2'] .mobile-cycle-link:nth-child(odd) {
+    animation:
+      secede-header-blink 4.4s steps(1) infinite,
+      secede-header-twitch 2.6s steps(1) infinite;
+  }
+}
+
+@keyframes msn-continue-pulse {
+  0%,
+  100% {
+    opacity: 0.56;
+    text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 7px rgba(255, 255, 255, 0.78);
+  }
+}
+
+@media (pointer: coarse) and (max-width: 960px) and (max-height: 520px) {
+  .msn-window-wrap.is-mobile-open .msn-window {
+    grid-template-rows:
+      calc(28px + env(safe-area-inset-top, 0px))
+      24px
+      70px
+      minmax(0, 1fr)
+      21px
+      98px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-titlebar {
+    padding-bottom: 4px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-toolbar {
+    min-height: 24px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-contact {
+    grid-template-columns: 60px minmax(0, 1fr);
+    gap: 9px;
+    padding: 4px 12px 3px 18px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-avatar-frame {
+    width: 58px;
+    height: 58px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-contact-copy {
+    padding-top: 3px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-contact-copy > div {
+    font-size: 1.08rem;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-log {
+    padding-block: 7px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-compose {
+    grid-template-columns: 62px minmax(0, 1fr);
+    gap: 8px;
+    padding: 4px 10px 4px 18px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-compose .msn-avatar-frame {
+    width: 58px;
+    height: 58px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-input {
+    min-height: 40px;
+    padding: 5px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-input-tools {
+    height: 23px;
+  }
+
+  .msn-window-wrap.is-mobile-open .msn-options {
+    left: -84px;
+    max-height: 50dvh;
+  }
+}
+
+
+/*
+ * Heat 6 page field. The patches are not confined to the prose: they land
+ * anywhere over the reading column and its margins. Placement logic keeps them
+ * clear of the MSN windows and every critical control.
+ */
+/* The field spans the viewport, not the reading column, so the corruption
+   lands out in the margins either side of the text as well as over it. */
+.secede-page-patches {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: 6;
+  width: 100vw;
+  overflow: hidden;
+  contain: layout paint;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.secede-page-patches .secede-data-patch {
+  position: absolute;
+}

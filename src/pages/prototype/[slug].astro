@@ -1,0 +1,175 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SecedePrototype from '../../components/SecedePrototype.astro';
+import { secedeBetaAccessPhrase } from '../../lib/secede-beta-access';
+
+export function getStaticPaths() {
+  return [
+    {
+      params: { slug: 'secede' }
+    }
+  ];
+}
+
+if (secedeBetaAccessPhrase === '__SET_SECEDE_BETA_ACCESS_PHRASE__') {
+  throw new Error('Choose the Secede beta password before building.');
+}
+---
+
+<BaseLayout
+  title="Secede"
+  description="Private beta reading copy."
+  robots="noindex, nofollow, noarchive"
+  canonicalPath={false}
+>
+  <div class="secede-beta-experience" data-secede-beta-experience data-locked="true" inert aria-hidden="true">
+    <SecedePrototype />
+  </div>
+
+  <section class="secede-beta-gate" data-secede-beta-gate aria-labelledby="secede-beta-title">
+    <form class="secede-beta-gate__panel" data-secede-beta-form>
+      <h1 id="secede-beta-title">Secede</h1>
+      <p>Private beta reading copy.</p>
+
+      <label for="secede-beta-access">Password</label>
+      <input
+        id="secede-beta-access"
+        data-secede-beta-input
+        type="password"
+        autocomplete="current-password"
+        required
+        autofocus
+      />
+      <button type="submit">Enter</button>
+      <p class="secede-beta-gate__error" data-secede-beta-error role="status" aria-live="polite" hidden>
+        That password is incorrect.
+      </p>
+    </form>
+  </section>
+
+  <script is:inline define:vars={{ secedeBetaAccessPhrase }}>
+    const storageKey = 'secede-beta-access';
+    const gate = document.querySelector('[data-secede-beta-gate]');
+    const experience = document.querySelector('[data-secede-beta-experience]');
+    const form = document.querySelector('[data-secede-beta-form]');
+    const input = document.querySelector('[data-secede-beta-input]');
+    const error = document.querySelector('[data-secede-beta-error]');
+
+    const unlock = () => {
+      gate.hidden = true;
+      experience.dataset.locked = 'false';
+      experience.removeAttribute('inert');
+      experience.removeAttribute('aria-hidden');
+      document.documentElement.classList.remove('secede-beta-locked');
+    };
+
+    document.documentElement.classList.add('secede-beta-locked');
+
+    if (sessionStorage.getItem(storageKey) === secedeBetaAccessPhrase) {
+      unlock();
+    } else {
+      input.focus();
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      if (input.value === secedeBetaAccessPhrase) {
+        sessionStorage.setItem(storageKey, secedeBetaAccessPhrase);
+        error.hidden = true;
+        input.value = '';
+        unlock();
+        return;
+      }
+
+      error.hidden = false;
+      input.select();
+    });
+  </script>
+
+  <style>
+    :global(html.secede-beta-locked),
+    :global(html.secede-beta-locked body) {
+      overflow: hidden;
+    }
+
+    .secede-beta-experience[data-locked='true'] {
+      visibility: hidden;
+    }
+
+    .secede-beta-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: #0a0a0a;
+      color: #f4f1ea;
+    }
+
+    .secede-beta-gate[hidden] {
+      display: none;
+    }
+
+    .secede-beta-gate__panel {
+      width: min(100%, 360px);
+      display: grid;
+      gap: 14px;
+    }
+
+    .secede-beta-gate h1,
+    .secede-beta-gate p {
+      margin: 0;
+    }
+
+    .secede-beta-gate h1 {
+      font-family: 'Sorts Mill Goudy', Georgia, serif;
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .secede-beta-gate label {
+      margin-top: 16px;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .secede-beta-gate input,
+    .secede-beta-gate button {
+      min-height: 46px;
+      border: 1px solid #777;
+      border-radius: 0;
+      font: inherit;
+    }
+
+    .secede-beta-gate input {
+      padding: 10px 12px;
+      background: #151515;
+      color: #fff;
+    }
+
+    .secede-beta-gate input:focus {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+
+    .secede-beta-gate button {
+      cursor: pointer;
+      background: #f4f1ea;
+      color: #0a0a0a;
+    }
+
+    .secede-beta-gate button:hover,
+    .secede-beta-gate button:focus-visible {
+      background: #fff;
+    }
+
+    .secede-beta-gate__error {
+      color: #ffb4b4;
+      font-size: 0.9rem;
+    }
+  </style>
+</BaseLayout>
