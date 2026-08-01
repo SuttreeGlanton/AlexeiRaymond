@@ -388,13 +388,17 @@ const chatCount = secedeSections.length;
               >
                 <ol class="secede-lock-notches" aria-label="Chats in story order">
                   {secedeSections.map((section, index) => (
-                    <li
-                      class="secede-lock-notch"
-                      data-lock-notch-index={index}
-                    >
-                      <span class="sr-only" data-lock-notch-label>
-                        {`Chat ${index + 1}, ${section.chat.date}: unresolved`}
-                      </span>
+                    <li>
+                      <button
+                        class="secede-lock-notch"
+                        data-lock-notch-index={index}
+                        type="button"
+                        disabled
+                      >
+                        <span class="sr-only" data-lock-notch-label>
+                          {`Chat ${index + 1}, ${section.chat.date}: unresolved`}
+                        </span>
+                      </button>
                     </li>
                   ))}
                 </ol>

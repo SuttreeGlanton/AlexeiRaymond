@@ -225,7 +225,7 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
   const finalLockFlip = root.querySelector<HTMLButtonElement>('[data-lock-flip]');
   const finalLockReturn = root.querySelector<HTMLButtonElement>('[data-lock-return]');
   const finalLockNotches = Array.from(
-    root.querySelectorAll<HTMLElement>('[data-lock-notch-index]')
+    root.querySelectorAll<HTMLButtonElement>('[data-lock-notch-index]')
   );
   const finalChatWrap = elements[ordinaryChatCount]?.wrap ?? null;
   const finalChatWindow =
@@ -1193,6 +1193,7 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
       const noncanonical = state.heatWrong;
       notch.classList.toggle('is-canonical', canonical);
       notch.classList.toggle('is-noncanonical', noncanonical);
+      notch.disabled = !noncanonical;
 
       const status = canonical
         ? 'reconstructed canonically'
@@ -1201,8 +1202,11 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
           : 'unresolved';
       const label = notch.querySelector<HTMLElement>('[data-lock-notch-label]');
       if (label) {
-        label.textContent = `Chat ${index + 1}, ${specs[index].date}: ${status}`;
+        label.textContent = noncanonical
+          ? `Repair chat ${index + 1}, ${specs[index].date}: reconstructed noncanonically`
+          : `Chat ${index + 1}, ${specs[index].date}: ${status}`;
       }
+      notch.title = noncanonical ? `Repair ${specs[index].date} chat` : '';
     });
   }
 
@@ -1213,6 +1217,30 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
   finalLockReturn?.addEventListener('click', (event) => {
     event.stopPropagation();
     setFinalLockFace(false, true);
+  });
+  finalLockNotches.forEach((notch, index) => {
+    notch.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const state = states[index];
+      if (!state?.completed || !state.heatWrong) return;
+
+      /* Leaving the status map restores its ambient front face. On mobile the
+         failed reconstruction opens directly in the existing Messenger focus
+         view; desktop keeps the page model and centres its chat window. */
+      setFinalLockFace(false);
+      if (mobileLayout.matches) {
+        openMobileChat(index);
+        return;
+      }
+
+      elements[index].wrap.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          ? 'auto'
+          : 'smooth',
+        block: 'center'
+      });
+      elements[index].restart.focus({ preventScroll: true });
+    });
   });
 
   /*
