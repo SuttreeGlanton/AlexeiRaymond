@@ -218,6 +218,18 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
   let authoredHeat = 0;
   let previewHeat: number | null = null;
   let activeHeat = 0;
+  const finalLock = root.querySelector<HTMLElement>('[data-lock-screen]');
+  const finalLockCard = root.querySelector<HTMLElement>('[data-lock-card]');
+  const finalLockFront = root.querySelector<HTMLElement>('[data-lock-front]');
+  const finalLockBack = root.querySelector<HTMLElement>('[data-lock-back]');
+  const finalLockFlip = root.querySelector<HTMLButtonElement>('[data-lock-flip]');
+  const finalLockReturn = root.querySelector<HTMLButtonElement>('[data-lock-return]');
+  const finalLockNotches = Array.from(
+    root.querySelectorAll<HTMLElement>('[data-lock-notch-index]')
+  );
+  const finalChatWrap = elements[ordinaryChatCount]?.wrap ?? null;
+  const finalChatWindow =
+    finalChatWrap?.querySelector<HTMLElement>('.msn-window') ?? null;
   const siteHeader = document.querySelector<HTMLElement>('[data-site-header]');
   const mobileLayout = window.matchMedia(
     '(max-width: 700px), (pointer: coarse) and (max-width: 960px) and (max-height: 520px)'
@@ -1150,13 +1162,91 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
     }
   }
 
+  function setFinalLockFace(flipped: boolean, moveFocus = false) {
+    if (!finalLockCard || !finalLockFront || !finalLockBack) return;
+
+    finalLockCard.dataset.flipped = flipped ? 'true' : 'false';
+    finalLockFlip?.setAttribute('aria-expanded', flipped ? 'true' : 'false');
+
+    if (flipped) {
+      finalLockFront.setAttribute('inert', '');
+      finalLockBack.removeAttribute('inert');
+      finalLockBack.setAttribute('aria-hidden', 'false');
+      if (moveFocus) finalLockReturn?.focus({ preventScroll: true });
+      finalLockFront.setAttribute('aria-hidden', 'true');
+      return;
+    }
+
+    finalLockBack.setAttribute('inert', '');
+    finalLockFront.removeAttribute('inert');
+    finalLockFront.setAttribute('aria-hidden', 'false');
+    if (moveFocus) finalLockFlip?.focus({ preventScroll: true });
+    finalLockBack.setAttribute('aria-hidden', 'true');
+  }
+
+  function updateRepairIndicator() {
+    finalLockNotches.forEach((notch, index) => {
+      const state = states[index];
+      if (!state) return;
+
+      const canonical = state.completed && !state.heatWrong;
+      const noncanonical = state.heatWrong;
+      notch.classList.toggle('is-canonical', canonical);
+      notch.classList.toggle('is-noncanonical', noncanonical);
+
+      const status = canonical
+        ? 'reconstructed canonically'
+        : noncanonical
+          ? 'reconstructed noncanonically; repair required'
+          : 'unresolved';
+      const label = notch.querySelector<HTMLElement>('[data-lock-notch-label]');
+      if (label) {
+        label.textContent = `Chat ${index + 1}, ${specs[index].date}: ${status}`;
+      }
+    });
+  }
+
+  finalLockFlip?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    setFinalLockFace(true, true);
+  });
+  finalLockReturn?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    setFinalLockFace(false, true);
+  });
+
+  /*
+   * The lock card is a sibling of the Messenger window, but both live inside
+   * the same chat wrapper. Locked wrappers are normally inert. While the
+   * verdict is visible, move that inert boundary down to the blurred Messenger
+   * window so the status control can receive pointer and keyboard input without
+   * exposing any of the conversation underneath it.
+   */
+  function setFinalLockInteractive(interactive: boolean) {
+    if (!finalChatWrap || !finalChatWindow) return;
+
+    if (interactive) {
+      finalChatWrap.removeAttribute('inert');
+      finalChatWrap.tabIndex = -1;
+      finalChatWindow.setAttribute('inert', '');
+      return;
+    }
+
+    finalChatWindow.removeAttribute('inert');
+    if (finalChatWrap.closest('.is-chat-locked')) {
+      finalChatWrap.setAttribute('inert', '');
+      finalChatWrap.tabIndex = -1;
+    }
+  }
+
   /*
    * The final chat is blurred from the outset like any locked chat, but its
-   * "Corrupted" notice is a verdict on the reader's run, not a default state.
-   * It appears only once all eight chats are reconstructed and heat remains.
+   * verdict is a judgment on the reader's run, not a default state. Once all
+   * eight chats are reconstructed and heat remains, its front says that the
+   * reader cannot proceed; the reverse maps each chat's canonical state in
+   * story order so the remaining repairs are visible without explanatory copy.
    */
   function updateFinalLock() {
-    const lock = root.querySelector<HTMLElement>('[data-lock-screen]');
     const culmination = root.querySelector<HTMLElement>('[data-culmination]');
     const allCompleted = states
       .slice(0, ordinaryChatCount)
@@ -1173,8 +1263,12 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
       }
     }
 
-    if (!lock) return;
-    lock.hidden = !(allCompleted && authoredHeat > 0 && !states[ordinaryChatCount].completed);
+    updateRepairIndicator();
+    if (!finalLock) return;
+    const showLock = allCompleted && authoredHeat > 0 && !states[ordinaryChatCount].completed;
+    if (!showLock && !finalLock.hidden) setFinalLockFace(false);
+    setFinalLockInteractive(showLock);
+    finalLock.hidden = !showLock;
   }
 
   function updateAuthoredHeat() {
@@ -1851,7 +1945,7 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
     const hasTranslationFlashes = translationFlashes.length > 0;
 
     if (
-      isProtectedByFinalLock(element) ||
+      isProtectedByChatLock(element) ||
       !unlocked ||
       activeHeat === 0 ||
       (isMeta && activeHeat < 5 && !hasTranslationFlashes) ||
@@ -2159,11 +2253,11 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
     return bounds.bottom >= -margin && bounds.top <= window.innerHeight + margin;
   }
 
-  function isProtectedByFinalLock(element: HTMLElement) {
-    return (
-      element.dataset.finalLockProtected === 'true' &&
-      element.closest('.is-chat-locked') !== null
-    );
+  /* A blurred, unavailable section has not entered the reader's experience
+     yet. None of its copy, metadata, or date is eligible for heat corruption
+     until the section itself is unlocked. */
+  function isProtectedByChatLock(element: HTMLElement) {
+    return element.closest('.is-chat-locked') !== null;
   }
 
   function runTranslationFlash() {
@@ -2184,7 +2278,7 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
       const element = translationElements.get(key);
       if (
         !element?.isConnected ||
-        isProtectedByFinalLock(element) ||
+        isProtectedByChatLock(element) ||
         (element.matches('[data-prose]') && element.dataset.unlocked !== 'true')
       ) {
         return;
@@ -2337,7 +2431,7 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
     const now = performance.now();
 
     dateTargets.forEach((date) => {
-      if (isProtectedByFinalLock(date)) {
+      if (isProtectedByChatLock(date)) {
         dateYearStates.delete(date);
         return;
       }

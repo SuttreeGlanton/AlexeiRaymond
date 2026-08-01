@@ -236,7 +236,6 @@ const chatCount = secedeSections.length;
       <h2
         class="secede-date"
         data-corrupt-date
-        data-final-lock-protected="true"
         data-original={secedeFinalChat.date}
         data-translation-key="final-date"
       >
@@ -365,7 +364,53 @@ const chatCount = secedeSections.length;
 
         </div>
         <div class="secede-lock-screen" data-lock-screen hidden>
-          <span>Corrupted</span>
+          <div class="secede-lock-card" data-lock-card data-flipped="false">
+            <div class="secede-lock-card-inner">
+              <button
+                class="secede-lock-face secede-lock-face--front secede-lock-trigger"
+                data-lock-front
+                data-lock-flip
+                type="button"
+                aria-label="Corrupted - cannot proceed. Show reconstruction status"
+                aria-expanded="false"
+              >
+                <span class="secede-lock-action" aria-hidden="true">CORRUPTED</span>
+                <span aria-hidden="true">- CANNOT PROCEED</span>
+              </button>
+
+              <div
+                class="secede-lock-face secede-lock-face--back"
+                data-lock-back
+                role="group"
+                aria-label="Reconstruction status"
+                aria-hidden="true"
+                inert
+              >
+                <ol class="secede-lock-notches" aria-label="Chats in story order">
+                  {secedeSections.map((section, index) => (
+                    <li
+                      class="secede-lock-notch"
+                      data-lock-notch-index={index}
+                    >
+                      <span class="sr-only" data-lock-notch-label>
+                        {`Chat ${index + 1}, ${section.chat.date}: unresolved`}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+                <button
+                  class="secede-lock-return"
+                  type="button"
+                  data-lock-return
+                  aria-label="Back to corrupted status"
+                >
+                  <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true">
+                    <path d="M8 4 3 9l5 5M3.5 9H15" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
