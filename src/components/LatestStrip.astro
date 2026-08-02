@@ -17,7 +17,36 @@ const latest = publishedPieces()
   .filter((piece) => parseDate(piece.date))
   .sort((a, b) => (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0))[0];
 
-const forthcoming = upcomingPieces()[0];
+/* Upcoming work with a known future date takes precedence. Once no dated
+   release remains, choose one of the remaining Upcoming pieces at random. */
+const KNOWN_RELEASE_DATES = new Map<string, string>([
+  ['The Iron Crown', '10/08/2026'],
+  ['Glassdom', '11/08/2026'],
+]);
+
+const upcoming = upcomingPieces();
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const datedForthcoming = upcoming
+  .map((piece) => ({
+    piece,
+    releaseDate: parseDate(KNOWN_RELEASE_DATES.get(piece.title) ?? null),
+  }))
+  .filter(
+    ({ releaseDate }) =>
+      Boolean(releaseDate) && releaseDate!.getTime() >= today.getTime(),
+  )
+  .sort(
+    (a, b) =>
+      a.releaseDate!.getTime() - b.releaseDate!.getTime(),
+  )[0]?.piece;
+
+const randomForthcoming = upcoming.length
+  ? upcoming[Math.floor(Math.random() * upcoming.length)]
+  : undefined;
+
+const forthcoming = datedForthcoming ?? randomForthcoming;
 
 const latestHref = latest?.account
   ? withBase(`accounts/${latest.account.slug}/`)
