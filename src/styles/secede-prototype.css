@@ -1765,8 +1765,17 @@
 }
 
 .secede-reset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
   margin-top: 40px;
   text-align: center;
+}
+
+.secede-reset[hidden] {
+  display: none;
 }
 
 .secede-reset button {
@@ -1788,6 +1797,139 @@
 .secede-reset button:focus-visible {
   background: var(--text);
   color: var(--bg);
+}
+
+/* "File and forget" removes only the account. The surrounding site header
+   and footer remain ordinary site chrome throughout. Each vanished node is
+   replaced by an invisible box of the same measured size until the title is
+   gone, preventing layout collapse from fighting the authored upward scroll. */
+.secede-filing-placeholder {
+  display: block;
+  box-sizing: border-box;
+  flex: none;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+html.secede-filing-page,
+html.secede-filing-page body {
+  overflow-anchor: none;
+}
+
+html.secede-filing-page {
+  scroll-behavior: auto;
+}
+
+.secede[data-filing='true'],
+.secede[data-filed='true'] {
+  overflow-anchor: none;
+}
+
+.secede[data-filing='true'] {
+  user-select: none;
+}
+
+.secede[data-filing='true'] .secede-file-target--text {
+  overflow: hidden;
+  animation: secede-file-text-away var(--secede-file-duration, 360ms) steps(9, end)
+    forwards;
+  pointer-events: none;
+}
+
+@keyframes secede-file-text-away {
+  0%,
+  12% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+  24% {
+    opacity: 0.72;
+  }
+  100% {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+.secede[data-filing='true'] .secede-file-target--chat {
+  animation: secede-file-chat-away var(--secede-file-duration, 720ms) steps(1, end)
+    forwards;
+  pointer-events: none;
+}
+
+@keyframes secede-file-chat-away {
+  0%,
+  20%,
+  32%,
+  48%,
+  61% {
+    opacity: 1;
+    filter: none;
+  }
+  21%,
+  31%,
+  49%,
+  60% {
+    opacity: 0.06;
+    filter: brightness(1.8) grayscale(1);
+  }
+  62%,
+  100% {
+    opacity: 0;
+    filter: brightness(2) grayscale(1);
+  }
+}
+
+.secede.secede-filing-reduced {
+  animation: secede-file-reduced-away 420ms ease-in forwards;
+}
+
+@keyframes secede-file-reduced-away {
+  to {
+    opacity: 0;
+  }
+}
+
+.secede[data-filed='true'] {
+  box-sizing: border-box;
+  min-height: 100svh;
+}
+
+.secede-filed-caret {
+  display: flex;
+  height: 0.92em;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(4rem, 12vw, 8rem);
+  line-height: 0.92;
+  text-align: center;
+}
+
+.secede-filed-caret-mark {
+  display: block;
+  width: max(3px, 0.045em);
+  height: 0.82em;
+  background: currentColor;
+  animation: secede-filed-caret-blink 1.05s steps(1, end) infinite;
+}
+
+@keyframes secede-filed-caret-blink {
+  0%,
+  52% {
+    opacity: 1;
+  }
+  53%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .secede-filed-caret-mark {
+    animation: none;
+  }
 }
 
 /* Corruption layers */

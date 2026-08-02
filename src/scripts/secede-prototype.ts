@@ -1542,6 +1542,210 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
     window.location.reload();
   });
 
+  /*
+   * The second ending does not navigate away or reset the reconstruction. It
+   * files it: the account is removed in reverse reading order while the page
+   * carries the reader back towards its beginning. Invisible, height-matched
+   * stand-ins keep every remaining line in place during the journey; the
+   * manuscript only collapses after its title has gone.
+   */
+  type FilingKind = 'text' | 'chat';
+
+  interface FilingTarget {
+    element: HTMLElement;
+    centre: number;
+    kind: FilingKind;
+  }
+
+  let filingStarted = false;
+
+  function filingViewportHeight() {
+    return window.visualViewport?.height ?? window.innerHeight;
+  }
+
+  function isVisibleFilingTarget(element: HTMLElement) {
+    if (element.hidden) return false;
+    const style = window.getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
+    return style.display !== 'none' && style.visibility !== 'hidden' && rect.height > 0;
+  }
+
+  function makeFilingPlaceholder(element: HTMLElement) {
+    const rect = element.getBoundingClientRect();
+    const style = window.getComputedStyle(element);
+    const placeholder = document.createElement('div');
+    placeholder.className = 'secede-filing-placeholder';
+    placeholder.setAttribute('aria-hidden', 'true');
+    placeholder.style.width = `${rect.width}px`;
+    placeholder.style.height = `${rect.height}px`;
+    placeholder.style.marginTop = style.marginTop;
+    placeholder.style.marginRight = style.marginRight;
+    placeholder.style.marginBottom = style.marginBottom;
+    placeholder.style.marginLeft = style.marginLeft;
+    return placeholder;
+  }
+
+  function fileTarget(element: HTMLElement, kind: FilingKind) {
+    const duration = kind === 'chat' ? 720 : 360;
+    element.style.setProperty('--secede-file-duration', `${duration}ms`);
+    element.classList.add(
+      kind === 'chat' ? 'secede-file-target--chat' : 'secede-file-target--text'
+    );
+
+    return new Promise<void>((resolve) => {
+      window.setTimeout(() => {
+        if (element.isConnected) element.replaceWith(makeFilingPlaceholder(element));
+        resolve();
+      }, duration);
+    });
+  }
+
+  function runFilingScroll(
+    targets: FilingTarget[],
+    endScrollY: number,
+    duration: number
+  ) {
+    const startScrollY = window.scrollY;
+    const animations: Promise<void>[] = [];
+    let nextTarget = 0;
+    let elapsed = 0;
+    let previousFrame = performance.now();
+
+    return new Promise<{ remaining: FilingTarget[]; animations: Promise<void>[] }>((resolve) => {
+      const frame = (now: number) => {
+        if (document.hidden) {
+          previousFrame = now;
+          window.requestAnimationFrame(frame);
+          return;
+        }
+
+        elapsed += Math.min(64, Math.max(0, now - previousFrame));
+        previousFrame = now;
+        const progress = Math.min(1, elapsed / duration);
+        const nextScrollY = startScrollY + (endScrollY - startScrollY) * progress;
+        window.scrollTo(0, nextScrollY);
+
+        /* Elements disappear as they pass a little below the middle of the
+           viewport, keeping the deletion visible without making the reader
+           watch empty space travel past. */
+        const deletionLine = nextScrollY + filingViewportHeight() * 0.62;
+        while (
+          nextTarget < targets.length &&
+          targets[nextTarget].centre >= deletionLine
+        ) {
+          const target = targets[nextTarget];
+          animations.push(fileTarget(target.element, target.kind));
+          nextTarget += 1;
+        }
+
+        if (progress < 1) {
+          window.requestAnimationFrame(frame);
+          return;
+        }
+
+        resolve({ remaining: targets.slice(nextTarget), animations });
+      };
+
+      window.requestAnimationFrame(frame);
+    });
+  }
+
+  function finishFiling() {
+    const status = document.createElement('div');
+    status.className = 'secede-filed-caret';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-label', 'Filed and forgotten.');
+
+    const caret = document.createElement('span');
+    caret.className = 'secede-filed-caret-mark';
+    caret.setAttribute('aria-hidden', 'true');
+    status.append(caret);
+
+    root.replaceChildren(status);
+    delete root.dataset.filing;
+    root.dataset.filed = 'true';
+    root.removeAttribute('aria-busy');
+    root.removeAttribute('inert');
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    window.scrollTo(0, 0);
+    window.requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+      window.requestAnimationFrame(() => window.scrollTo(0, 0));
+    });
+  }
+
+  async function fileAndForget() {
+    if (filingStarted) return;
+    filingStarted = true;
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
+    if (mobileOpenIndex !== null) leaveMobilePresentation(mobileOpenIndex);
+    setRepairMapPinned(false);
+    clearTranslationFlashes(false);
+    previewHeat = null;
+    setHeat(0);
+
+    /* Once the clicked control disappears, browser scroll anchoring otherwise
+       tries to preserve its old screen position and fights the authored trip
+       to the top — most visibly on mobile, where it can strand the caret under
+       the sticky header. */
+    document.documentElement.classList.add('secede-filing-page');
+    root.dataset.filing = 'true';
+    root.setAttribute('aria-busy', 'true');
+    root.setAttribute('inert', '');
+
+    if (reducedMotion.matches) {
+      root.classList.add('secede-filing-reduced');
+      await delay(420);
+      root.classList.remove('secede-filing-reduced');
+      finishFiling();
+      return;
+    }
+
+    const filingTargets = Array.from(
+      root.querySelectorAll<HTMLElement>(
+        '[data-reset-wrap], [data-offline], [data-prose], [data-chat-wrap], .secede-date, .secede-epigraph'
+      )
+    )
+      .filter(isVisibleFilingTarget)
+      .map((element): FilingTarget => {
+        const rect = element.getBoundingClientRect();
+        return {
+          element,
+          centre: window.scrollY + rect.top + rect.height / 2,
+          kind: element.matches('[data-chat-wrap]') ? 'chat' : 'text'
+        };
+      })
+      .sort((first, second) => second.centre - first.centre);
+
+    const sequence = await runFilingScroll(filingTargets, 0, 17200);
+
+    /* The topmost epigraph can remain above the travelling deletion line once
+       the browser reaches its scroll limit. Finish any such nodes one at a
+       time in place, then erase the title itself. */
+    for (const target of sequence.remaining) {
+      await fileTarget(target.element, target.kind);
+    }
+    await Promise.all(sequence.animations);
+
+    const title = root.querySelector<HTMLElement>('.secede-title');
+    if (title) {
+      title.style.setProperty('--secede-file-duration', '820ms');
+      title.classList.add('secede-file-target--text');
+      await delay(820);
+    }
+
+    finishFiling();
+  }
+
+  root
+    .querySelector<HTMLButtonElement>('[data-file-and-forget]')
+    ?.addEventListener('click', () => void fileAndForget());
+
   function chooseRandomIndexes(count: number, maximum: number) {
     const indexes = Array.from({ length: maximum }, (_, index) => index);
     return new Set(shuffle(indexes).slice(0, Math.min(count, maximum)));
