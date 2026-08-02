@@ -1,0 +1,197 @@
+name: Publish Scheduled Work
+
+on:
+  schedule:
+    # Check hourly while Tal is away. GitHub cron uses UTC.
+    # The script itself enforces the exact 2026 release times.
+    - cron: '15 * 9-20 8 *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Sync main
+        run: git pull --ff-only origin main
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Promote released work
+        id: promote
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const outputPath = process.env.GITHUB_OUTPUT;
+          const now = new Date();
+
+          const releases = [
+            {
+              title: 'The Iron Crown',
+              releaseAt: '2026-08-09T22:00:00Z',
+              date: '10/08/2026',
+              link: 'https://somewords.boards.net/thread/91/alexei-raymond',
+              requireLivePage: false,
+            },
+            {
+              title: 'Glassdom',
+              releaseAt: '2026-08-10T22:00:00Z',
+              date: '11/08/2026',
+              link: 'https://bendinggenres.com/glassdom/',
+              requireLivePage: true,
+            },
+          ];
+
+          function setOutput(name, value) {
+            fs.appendFileSync(outputPath, `${name}=${value}\n`);
+          }
+
+          async function pageIsLive(url) {
+            try {
+              const response = await fetch(url, {
+                redirect: 'follow',
+                headers: {
+                  'user-agent': 'Mozilla/5.0 AlexeiRaymond release checker',
+                  accept: 'text/html,application/xhtml+xml',
+                },
+              });
+
+              response.body?.cancel();
+              console.log(`Checked ${url}: HTTP ${response.status}`);
+              return response.status >= 200 && response.status < 400;
+            } catch (error) {
+              console.log(`Could not verify ${url}: ${error.message}`);
+              return false;
+            }
+          }
+
+          if (now.getUTCFullYear() !== 2026) {
+            console.log('This one-time publication workflow is only active in 2026.');
+            setOutput('changed', 'false');
+            process.exit(0);
+          }
+
+          const dataPath = 'site-data.json';
+          const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+          const changedTitles = [];
+
+          for (const release of releases) {
+            if (now < new Date(release.releaseAt)) {
+              console.log(`${release.title}: release time has not arrived.`);
+              continue;
+            }
+
+            const piece = data.pieces.find(
+              (candidate) => candidate.title === release.title,
+            );
+
+            if (!piece) {
+              throw new Error(`Could not find "${release.title}" in site-data.json.`);
+            }
+
+            const currentTags = Array.isArray(piece.tags) ? piece.tags : [];
+            const alreadyPublished =
+              piece.date === release.date &&
+              piece.link === release.link &&
+              !currentTags.includes('Upcoming');
+
+            if (alreadyPublished) {
+              console.log(`${release.title}: already published in site-data.json.`);
+              continue;
+            }
+
+            if (
+              release.requireLivePage &&
+              !(await pageIsLive(release.link))
+            ) {
+              console.log(
+                `${release.title}: proposed page is not live yet; keeping it Upcoming.`,
+              );
+              continue;
+            }
+
+            const nextTags = currentTags.filter((tag) => tag !== 'Upcoming');
+
+            if (!nextTags.includes('Online')) {
+              nextTags.unshift('Online');
+            }
+
+            piece.date = release.date;
+            piece.link = release.link;
+            piece.tags = nextTags;
+            delete piece.scheduledRelease;
+            changedTitles.push(release.title);
+
+            console.log(`Promoted ${release.title} from Upcoming to published.`);
+          }
+
+          if (!changedTitles.length) {
+            setOutput('changed', 'false');
+            process.exit(0);
+          }
+
+          fs.writeFileSync(dataPath, `${JSON.stringify(data, null, 2)}\n`);
+          setOutput('changed', 'true');
+          setOutput('commit_message', `Publish ${changedTitles.join(' and ')}`);
+          NODE
+
+      - name: Install dependencies
+        if: steps.promote.outputs.changed == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Build site
+        if: steps.promote.outputs.changed == 'true'
+        run: npm run build
+
+      - name: Quality gates
+        if: steps.promote.outputs.changed == 'true'
+        run: |
+          npm run check
+          npm run check:assets
+          npm run check:metadata
+          npm run check:links:local
+          npm run audit:privacy
+
+      - name: Commit publication update
+        if: steps.promote.outputs.changed == 'true'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site-data.json
+          git commit -m "${{ steps.promote.outputs.commit_message }}"
+          git push origin HEAD:main
+
+      - name: Upload Pages artifact
+        if: steps.promote.outputs.changed == 'true'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        if: steps.promote.outputs.changed == 'true'
+        id: deployment
+        uses: actions/deploy-pages@v5
