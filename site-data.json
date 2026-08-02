@@ -1073,11 +1073,12 @@
       "title": "Speaking Terms",
       "cycle": "Portici",
       "publication": "Farewell Transmissions",
-      "date": "31/07/2026",
+      "date": null,
       "tags": [
-        "Online"
+        "Online",
+        "Upcoming"
       ],
-      "link": "https://farewelltransmission.net/2026/07/speaking-terms/",
+      "link": "",
       "cover": "covers/pieces/speaking-terms.jpg",
       "excerpt": "A whisper-quiet treatment.",
       "genre": "Poem"
