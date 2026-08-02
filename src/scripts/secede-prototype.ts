@@ -238,6 +238,9 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
     '(max-width: 700px), (pointer: coarse) and (max-width: 960px) and (max-height: 520px)'
   );
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  /* Completion makes the final mobile action available immediately, but the
+     window must remain at full strength until its last changing name settles. */
+  let finalNameRevealFinished = false;
   let mobileOpenIndex: number | null = null;
   let mobileViewportFrame = 0;
   let repairMapPinned = false;
@@ -407,8 +410,11 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
     const chatElements = elements[index];
     const showRestart = state.completed && state.heatWrong;
     const showContinue = mobileLayout.matches && state.completed;
+    const visuallyCompleted =
+      state.completed &&
+      (index !== ordinaryChatCount || finalNameRevealFinished);
 
-    chatElements.wrap.classList.toggle('is-completed', state.completed);
+    chatElements.wrap.classList.toggle('is-completed', visuallyCompleted);
     chatElements.restart.hidden = !showRestart;
     chatElements.continueAction.hidden = !showContinue;
     chatElements.continueAction.classList.toggle(
@@ -563,9 +569,9 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
   }
 
   /*
-   * The connection lingers only after the first visible name-correction wave
-   * has run its course. The inherited three-dot cadence plays exactly three
-   * times, then gives way to the permanent status and the replay control.
+   * The connection status begins with the name correction rather than waiting
+   * behind it. Its quicker two-cycle cadence gives way to the permanent status
+   * and ending choices while names are still changing in the transcript.
    */
   let endingStatusStarted = false;
 
@@ -619,18 +625,20 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
      * chosen — the reader only watches it happen.
      *
      * Once it has settled, the correction spreads backwards through every
-     * conversation on the page. The ending status waits for that first visible
-     * wave to finish before its three ellipsis cycles begin.
+     * conversation on the page. The ending status starts with the first flicker
+     * so its choices arrive before that visible correction wave has finished.
      */
     if (message.speaker === 'Tal') {
       label.textContent = `Ray ${verb}:`;
       window.setTimeout(() => {
         const finalLabelTurn = turnLabelToTal(label);
+        void playEndingStatusSequence();
         window.setTimeout(() => {
           const firstVisibleWave = turnEveryRayLabel(elements[index].wrap);
-          void Promise.all([finalLabelTurn, firstVisibleWave]).then(() =>
-            playEndingStatusSequence()
-          );
+          void Promise.all([finalLabelTurn, firstVisibleWave]).then(() => {
+            finalNameRevealFinished = true;
+            syncFinishActions(index);
+          });
         }, 1900);
       }, 1500);
     }
