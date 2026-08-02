@@ -18,6 +18,10 @@ import {
 import '../styles/secede-prototype.css';
 
 const chatCount = secedeSections.length;
+const pinIconDataUri =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEH0lEQVR4nNWaa6gVVRTHd1oZRqBe84WkkGVSRg8zsoI+JQoSohSBhI8uiZm9rDQQowj8lBhUSH4U/RBCIEU+QiOL1MxHdSuuRbdIpVLsqZn6i+X5T3c5nuM9M7PneM4fLpyz58xa6z9777X+e80NoQkAXAQ8AxwEfgaeDK0I4BXOxZLQSgDuU+B/AxOBGcBJjS0OrQBgMHBIQc934w84Ms+HZob2xTsK9j37Hs6+PhM4peuLQrMCeFpB2uYeUuM3sxyZZ0OzAbgBOAacBqb08NvZImO/fSw0C4DLgH16yq/Vec8cR+bR0AwA3hCJDqBvhvvaRcT+5pUbZc/BTFIgJ4Dbctzf7sjMLSfKbKl2YQE7j8uGkXkkbpTZUu0HQO+C9p6QLds3D8WLtNvBMGAscCtwPdCm8afk+DAwPJKvhbJphXNajOUyTwXtCNVhy+kffZ4eg0QC4DnZ/TbkATACWOkCTGBkPgO2Ap8AP7hrq3I5Ow+AO2W7K+uNvYAFwJ8uwA9t0wEja9wzELij6L5IQxLmqGJ4OWQsZG85AtuA8aHBoLKc33ZxrAEuyWIgyTonlDXOEnmNADAd+EVx2GzMzGPkIxn4BriylEhrABigJ59gE3BVyAMLHtgrQ1/VUqyxQeWw9aM7fFmm6lXUaH/g00aQAfoCK1TBDR8D18Z0YGR2OjJDoxkXgAlAp3wc0yxEzXqlkqGSGZe5w5Qt5Zti2D6f0zZgtxx+DgwqaG+IHkqSGZdmSqsRyFglN3xRhAww2UmaW+JGWl8A/YAdRZeZCp3hp/hR1h/ES3TDZmZwTjsHZWNA/CjrWxKnJKf3FyED7NL9o8uJtrbjq518XySBuEffv8xKhopiNowrL+pznV7uKv26RHulslkmMnR3V8aUGnzK6RrXDbmiijbqzEJGx+HfdU9jtJy1/eXwN+C6KmeWF1xRq4sMMEq/PVQ6ATm8B/hXGmhqlVS8XgGdVFHb52auJhlrYlPB+kaQGAocqHYqs5lRsIZfgXurCM2vrUFRw3YieeaUTaKPyyobvIgD7gf+0LVd6WOvslmSGDrSqhm428n0trKJvCln31tgGustkZdI7dW12qApofn/zGhPbdf4irJJtLsndrM7aL3vRN78Ouz41HxmZuytlDu6DiuTxHjguJyd6eqpAdelMZMVd+UUmt8pcRgeLpPEIHfMfFVj9o7vL43tzHN2TglNw9rSmhnAxcAW1/qxSv66c26fLy1g34rmZrWYctvpEcByt3TGuS7K8VKXQUwAD7pNvNjVDltmt4dWAHCja4l2iAzKUA3tZ+WGcn0i9jxWNuz8XBQqTElbFFc34r9IKRPAiykSNjNjQysBmJKS3e/aMgutBOAa957htLRTsd7qhQDdgu1oT/+F0NQANopMvAbxBcB/7L1vx1Y0IK4AAAAASUVORK5CYII=';
+const unpinIconDataUri =
+  'data:image/png;base64,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';
 ---
 
 <article
@@ -402,16 +406,27 @@ const chatCount = secedeSections.length;
                     </li>
                   ))}
                 </ol>
-                <button
-                  class="secede-lock-return"
-                  type="button"
-                  data-lock-return
-                  aria-label="Back to corrupted status"
-                >
-                  <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true">
-                    <path d="M8 4 3 9l5 5M3.5 9H15" />
-                  </svg>
-                </button>
+                <span class="secede-lock-controls">
+                  <button
+                    class="secede-map-control secede-lock-pin"
+                    type="button"
+                    data-lock-pin
+                    aria-label="Pin reconstruction status"
+                    aria-pressed="false"
+                  >
+                    <img src={pinIconDataUri} alt="" aria-hidden="true" />
+                  </button>
+                  <button
+                    class="secede-map-control secede-lock-return"
+                    type="button"
+                    data-lock-return
+                    aria-label="Back to corrupted status"
+                  >
+                    <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true">
+                      <path d="M8 4 3 9l5 5M3.5 9H15" />
+                    </svg>
+                  </button>
+                </span>
               </div>
             </div>
           </div>
@@ -429,6 +444,40 @@ const chatCount = secedeSections.length;
       </div>
     </section>
   </div>
+
+  <aside
+    class="secede-pinned-map"
+    data-pinned-map
+    aria-label="Pinned reconstruction status"
+    aria-hidden="true"
+    inert
+    hidden
+  >
+    <ol class="secede-lock-notches secede-pinned-notches" aria-label="Chats in story order">
+      {secedeSections.map((section, index) => (
+        <li>
+          <button
+            class="secede-lock-notch"
+            data-lock-notch-index={index}
+            type="button"
+            disabled
+          >
+            <span class="sr-only" data-lock-notch-label>
+              {`Chat ${index + 1}, ${section.chat.date}: unresolved`}
+            </span>
+          </button>
+        </li>
+      ))}
+    </ol>
+    <button
+      class="secede-map-control secede-map-unpin"
+      type="button"
+      data-map-unpin
+      aria-label="Unpin reconstruction status"
+    >
+      <img src={unpinIconDataUri} alt="" aria-hidden="true" />
+    </button>
+  </aside>
 </article>
 
 <script>

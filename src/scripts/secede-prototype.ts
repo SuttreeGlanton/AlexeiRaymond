@@ -224,6 +224,9 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
   const finalLockBack = root.querySelector<HTMLElement>('[data-lock-back]');
   const finalLockFlip = root.querySelector<HTMLButtonElement>('[data-lock-flip]');
   const finalLockReturn = root.querySelector<HTMLButtonElement>('[data-lock-return]');
+  const finalLockPin = root.querySelector<HTMLButtonElement>('[data-lock-pin]');
+  const pinnedMap = root.querySelector<HTMLElement>('[data-pinned-map]');
+  const pinnedMapUnpin = root.querySelector<HTMLButtonElement>('[data-map-unpin]');
   const finalLockNotches = Array.from(
     root.querySelectorAll<HTMLButtonElement>('[data-lock-notch-index]')
   );
@@ -234,8 +237,11 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
   const mobileLayout = window.matchMedia(
     '(max-width: 700px), (pointer: coarse) and (max-width: 960px) and (max-height: 520px)'
   );
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let mobileOpenIndex: number | null = null;
   let mobileViewportFrame = 0;
+  let repairMapPinned = false;
+  let repairMapCompletionTimer: number | null = null;
   /*
    * The cue runs through Web Audio rather than an <audio> element. Two things
    * were pulling it out of sync with Eveline's line. HTMLAudioElement.play()
@@ -1184,10 +1190,68 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
     finalLockBack.setAttribute('aria-hidden', 'true');
   }
 
+  /*
+   * Pinning detaches the status map from the verdict instead of making the
+   * verdict itself sticky. The detached map is one responsive object: a slim
+   * right-edge rail on desktop and the brand-slot replacement on mobile.
+   */
+  function setRepairMapPinned(pinned: boolean, moveFocus = false) {
+    if (!pinnedMap) return;
+
+    if (!pinned && repairMapCompletionTimer !== null) {
+      window.clearTimeout(repairMapCompletionTimer);
+      repairMapCompletionTimer = null;
+    }
+
+    repairMapPinned = pinned;
+    pinnedMap.hidden = !pinned;
+    pinnedMap.toggleAttribute('inert', !pinned);
+    pinnedMap.setAttribute('aria-hidden', pinned ? 'false' : 'true');
+    if (!pinned) {
+      pinnedMap.classList.remove('is-completing');
+      pinnedMap.removeAttribute('aria-busy');
+    }
+    finalLockPin?.setAttribute('aria-pressed', pinned ? 'true' : 'false');
+
+    if (siteHeader) {
+      if (pinned) siteHeader.dataset.secedeMapPinned = 'true';
+      else delete siteHeader.dataset.secedeMapPinned;
+    }
+
+    if (pinned) {
+      setFinalLockFace(false);
+      if (moveFocus) pinnedMapUnpin?.focus({ preventScroll: true });
+      return;
+    }
+
+    if (moveFocus) finalLockFlip?.focus({ preventScroll: true });
+  }
+
+  /* When the last failed reconstruction turns canonical, let the detached map
+     acknowledge every repaired chat in story order before putting itself
+     away. The same DOM order reads top-to-bottom on desktop and left-to-right
+     in the mobile header. */
+  function completePinnedRepairMap() {
+    if (!pinnedMap || !repairMapPinned || pinnedMap.classList.contains('is-completing')) {
+      return;
+    }
+
+    pinnedMap.classList.add('is-completing');
+    pinnedMap.setAttribute('aria-busy', 'true');
+    pinnedMap.setAttribute('inert', '');
+
+    const completionDuration = reducedMotion.matches ? 240 : 1320;
+    repairMapCompletionTimer = window.setTimeout(() => {
+      repairMapCompletionTimer = null;
+      setRepairMapPinned(false);
+    }, completionDuration);
+  }
+
   function updateRepairIndicator() {
-    finalLockNotches.forEach((notch, index) => {
+    finalLockNotches.forEach((notch) => {
+      const index = Number(notch.dataset.lockNotchIndex);
       const state = states[index];
-      if (!state) return;
+      if (!Number.isInteger(index) || index < 0 || index >= ordinaryChatCount || !state) return;
 
       const canonical = state.completed && !state.heatWrong;
       const noncanonical = state.heatWrong;
@@ -1198,15 +1262,13 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
       const status = canonical
         ? 'reconstructed canonically'
         : noncanonical
-          ? 'reconstructed noncanonically; repair required'
+          ? 'reconstructed noncanonically'
           : 'unresolved';
       const label = notch.querySelector<HTMLElement>('[data-lock-notch-label]');
       if (label) {
-        label.textContent = noncanonical
-          ? `Repair chat ${index + 1}, ${specs[index].date}: reconstructed noncanonically`
-          : `Chat ${index + 1}, ${specs[index].date}: ${status}`;
+        label.textContent = `Chat ${index + 1}, ${specs[index].date}: ${status}`;
       }
-      notch.title = noncanonical ? `Repair ${specs[index].date} chat` : '';
+      notch.removeAttribute('title');
     });
   }
 
@@ -1218,25 +1280,40 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
     event.stopPropagation();
     setFinalLockFace(false, true);
   });
-  finalLockNotches.forEach((notch, index) => {
+  finalLockPin?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    setRepairMapPinned(true, true);
+  });
+  pinnedMapUnpin?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    setRepairMapPinned(false, true);
+  });
+  finalLockNotches.forEach((notch) => {
     notch.addEventListener('click', (event) => {
       event.stopPropagation();
+      const index = Number(notch.dataset.lockNotchIndex);
+      if (!Number.isInteger(index) || index < 0 || index >= ordinaryChatCount) return;
       const state = states[index];
       if (!state?.completed || !state.heatWrong) return;
 
-      /* Leaving the status map restores its ambient front face. On mobile the
-         failed reconstruction opens directly in the existing Messenger focus
-         view; desktop keeps the page model and centres its chat window. */
+      /* The original card returns to its ambient face after a jump. A pinned
+         map stays with the reader, preserving the route to every other failed
+         reconstruction. Mobile returns to the document-level entrance rather
+         than opening the selected Messenger window on the reader's behalf. */
       setFinalLockFace(false);
       if (mobileLayout.matches) {
-        openMobileChat(index);
+        if (mobileOpenIndex !== null) closeMobileChat(mobileOpenIndex);
+        window.requestAnimationFrame(() => {
+          elements[index].wrap.scrollIntoView({
+            behavior: reducedMotion.matches ? 'auto' : 'smooth',
+            block: 'center'
+          });
+        });
         return;
       }
 
       elements[index].wrap.scrollIntoView({
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-          ? 'auto'
-          : 'smooth',
+        behavior: reducedMotion.matches ? 'auto' : 'smooth',
         block: 'center'
       });
       elements[index].restart.focus({ preventScroll: true });
@@ -1293,6 +1370,7 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
 
     updateRepairIndicator();
     if (!finalLock) return;
+    if (allCanonical && repairMapPinned) completePinnedRepairMap();
     const showLock = allCompleted && authoredHeat > 0 && !states[ordinaryChatCount].completed;
     if (!showLock && !finalLock.hidden) setFinalLockFace(false);
     setFinalLockInteractive(showLock);

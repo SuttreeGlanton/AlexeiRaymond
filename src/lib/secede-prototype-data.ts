@@ -521,7 +521,7 @@ export const secedeSections: SecedeStorySection[] = [
       }
     },
     prose: [
-      'Dear Eveline, what remains is arguably the biggest question: do I grotesquely let you see how I excavated and puppeteered us, or do I force myself to perform the noble file-and-forget? In this battle of I against I, I can only hope I overcome myself and do what is right for you. I do not yet know which I is losing—which will secede control.',
+      'Dear Eveline, what remains is arguably the biggest question: do I grotesquely let you see how I excavated and puppeteered us, or do I force myself to perform the noble file-and-forget? In this battle of I against I, I can only hope I overcome myself and do what is right for you. I do not yet know which I is losing—which will secede.',
       'So, having taken a deep breath, allow me to express this one last time: I had known, liked, then loved you, Eveline. I keep your memory as much as distance allows, through fragmented years and ebbing recollections, no matter where you are, as ‘Ray’, or, rather belatedly, as Tal.'
     ]
   }

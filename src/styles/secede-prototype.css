@@ -1283,7 +1283,7 @@
 }
 
 .secede-lock-card {
-  width: min(278px, calc(100vw - 56px));
+  width: min(304px, calc(100vw - 56px));
   height: 42px;
   perspective: 720px;
 }
@@ -1329,7 +1329,7 @@
   opacity: 1;
 }
 
-.secede-lock-return {
+.secede-map-control {
   appearance: none;
   margin: 0;
   border: 0;
@@ -1373,7 +1373,7 @@
   outline-offset: 3px;
 }
 
-.secede-lock-return:focus-visible {
+.secede-map-control:focus-visible {
   outline: 1px solid rgba(135, 219, 255, 0.9);
   outline-offset: 3px;
 }
@@ -1413,8 +1413,8 @@
 }
 
 .secede-lock-face--back {
-  gap: 12px;
-  padding: 0 11px 0 16px;
+  gap: 10px;
+  padding: 0 9px 0 14px;
   transform: rotateY(180deg);
 }
 
@@ -1543,7 +1543,14 @@
   }
 }
 
-.secede-lock-return {
+.secede-lock-controls {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 2px;
+  align-items: center;
+}
+
+.secede-map-control {
   display: grid;
   flex: 0 0 27px;
   width: 27px;
@@ -1554,18 +1561,127 @@
   color: rgba(183, 220, 235, 0.76);
 }
 
-.secede-lock-return:hover,
-.secede-lock-return:focus-visible {
+.secede-map-control:hover,
+.secede-map-control:focus-visible {
   color: #bfeeff;
   background: rgba(62, 149, 190, 0.16);
 }
 
-.secede-lock-return svg {
+.secede-map-control svg {
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 1.45;
+}
+
+.secede-map-control img {
+  display: block;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  opacity: 0.78;
+  transition:
+    filter 160ms ease,
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.secede-map-control:hover img,
+.secede-map-control:focus-visible img {
+  filter: drop-shadow(0 0 4px rgba(135, 219, 255, 0.46));
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+/* The reader can detach the map from the corrupted verdict. On desktop it
+   becomes a narrow right-edge rail, preserving the manuscript's centre and
+   feeling like the card's reverse has been carried away rather than a HUD. */
+.secede-pinned-map {
+  position: fixed;
+  top: 50%;
+  right: clamp(12px, 2vw, 28px);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  align-items: center;
+  padding: 13px 10px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: #151515;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.36),
+    0 0 18px rgba(28, 112, 154, 0.08);
+  transform: translateY(-50%);
+}
+
+.secede-pinned-map[hidden] {
+  display: none;
+}
+
+.secede-pinned-map .secede-lock-notches {
+  flex-direction: column;
+}
+
+.secede-map-unpin {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0 0 999px 999px;
+}
+
+.secede-map-unpin:hover,
+.secede-map-unpin:focus-visible {
+  border-top-color: rgba(135, 219, 255, 0.22);
+}
+
+/* A wholly repaired pinned map confirms the eight chats once, in document
+   order, before the script removes it. Vertical desktop layout makes this a
+   top-to-bottom sweep; the mobile row naturally reads left-to-right. */
+.secede-pinned-map.is-completing .secede-lock-notch.is-canonical {
+  animation: secede-pinned-notch-complete 360ms ease-in-out both;
+}
+
+.secede-pinned-map.is-completing .secede-lock-notches > li:nth-child(2) .secede-lock-notch {
+  animation-delay: 120ms;
+}
+
+.secede-pinned-map.is-completing .secede-lock-notches > li:nth-child(3) .secede-lock-notch {
+  animation-delay: 240ms;
+}
+
+.secede-pinned-map.is-completing .secede-lock-notches > li:nth-child(4) .secede-lock-notch {
+  animation-delay: 360ms;
+}
+
+.secede-pinned-map.is-completing .secede-lock-notches > li:nth-child(5) .secede-lock-notch {
+  animation-delay: 480ms;
+}
+
+.secede-pinned-map.is-completing .secede-lock-notches > li:nth-child(6) .secede-lock-notch {
+  animation-delay: 600ms;
+}
+
+.secede-pinned-map.is-completing .secede-lock-notches > li:nth-child(7) .secede-lock-notch {
+  animation-delay: 720ms;
+}
+
+.secede-pinned-map.is-completing .secede-lock-notches > li:nth-child(8) .secede-lock-notch {
+  animation-delay: 840ms;
+}
+
+@keyframes secede-pinned-notch-complete {
+  0%,
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+    transform: scale(1);
+  }
+
+  48% {
+    opacity: 0.18;
+    filter: brightness(1.55);
+    transform: scale(0.88);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1575,6 +1691,10 @@
 
   .secede-lock-face--front,
   .secede-lock-notch.is-noncanonical {
+    animation: none;
+  }
+
+  .secede-pinned-map.is-completing .secede-lock-notch.is-canonical {
     animation: none;
   }
 }
@@ -1917,6 +2037,42 @@ body:has([data-secede-root]) {
     right: 0;
     left: 0;
     z-index: 240;
+  }
+
+  /* On mobile the pinned map occupies the author's existing header slot. The
+     menu remains untouched, while the name returns as soon as the map is put
+     back or the reconstruction becomes wholly canonical. */
+  .site-header[data-secede-map-pinned='true'] .brand {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .secede-pinned-map {
+    top: 16px;
+    right: auto;
+    left: 16px;
+    z-index: 250;
+    flex-direction: row;
+    gap: 8px;
+    min-height: 36px;
+    padding: 7px 8px 7px 10px;
+    box-sizing: border-box;
+    transform: none;
+  }
+
+  .secede-pinned-map .secede-lock-notches {
+    flex-direction: row;
+    gap: 7px;
+  }
+
+  .secede-pinned-map .secede-map-unpin {
+    flex-basis: 24px;
+    width: 24px;
+    height: 24px;
+    border-top: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0 999px 999px 0;
   }
 
   .secede {
