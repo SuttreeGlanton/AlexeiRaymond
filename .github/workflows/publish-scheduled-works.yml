@@ -63,6 +63,13 @@ jobs:
               link: 'https://bendinggenres.com/glassdom/',
               requireLivePage: true,
             },
+            {
+              title: 'Speaking Terms',
+              releaseAt: '2026-08-17T22:00:00Z',
+              date: '18/08/2026',
+              link: 'https://farewelltransmission.net/2026/07/speaking-terms/',
+              requireLivePage: true,
+            },
           ];
 
           function setOutput(name, value) {
