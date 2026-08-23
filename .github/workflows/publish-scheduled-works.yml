@@ -1,10 +1,6 @@
 name: Publish Scheduled Work
 
 on:
-  schedule:
-    # Check hourly while Tal is away. GitHub cron uses UTC.
-    # The script itself enforces the exact 2026 release times.
-    - cron: '15 * 9-20 8 *'
   workflow_dispatch:
 
 permissions:
