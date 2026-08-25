@@ -2,7 +2,7 @@
 import OptimizedImage from './OptimizedImage.astro';
 import { cycleTeaser, type Cycle } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
-import { imageAsset } from '../lib/image-assets';
+import { CARD_IMAGE_WIDTHS, imageAsset } from '../lib/image-assets';
 
 interface Props {
   cycle: Cycle;
@@ -14,7 +14,6 @@ const cover = cycle.cover ? assetPath(cycle.cover) : '';
 const coverImage = imageAsset(cycle.cover);
 const disabled = Boolean(cycle.disabled);
 const href = disabled ? '' : withBase(`cycles/${cycle.id}/`);
-const cycleCoverWidths = [240, 400, 480, 520, 560, 600, 640, 760];
 // Mobile covers are intentionally capped near 1.5x their rendered width. The
 // extra density is visually redundant here and previously made Lighthouse
 // choose a 760px source for a roughly 583px rendered image.
@@ -32,8 +31,7 @@ const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295p
             alt={`${cycle.name} cover`}
             loading="lazy"
             sizes={cycleCoverSizes}
-            widths={cycleCoverWidths}
-            quality={72}
+            widths={CARD_IMAGE_WIDTHS}
           />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
@@ -59,8 +57,7 @@ const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295p
             alt={`${cycle.name} cover`}
             loading="lazy"
             sizes={cycleCoverSizes}
-            widths={cycleCoverWidths}
-            quality={72}
+            widths={CARD_IMAGE_WIDTHS}
           />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>

@@ -109,11 +109,13 @@ function routePathForHtmlFile(file) {
 function readAstroConfig() {
   const config = readText('astro.config.mjs');
   const site = config.match(/\bsite\s*:\s*['"`]([^'"`]+)['"`]/)?.[1] || '';
-  const base = config.match(/\bbase\s*:\s*['"`]([^'"`]+)['"`]/)?.[1] || '';
+  const baseMatch = config.match(/\bbase\s*:\s*['"`]([^'"`]+)['"`]/);
+  const base = baseMatch?.[1] || '';
 
   return {
     site: site.replace(/\/+$/, ''),
-    base: base.replace(/^\/+|\/+$/g, '')
+    base: base.replace(/^\/+|\/+$/g, ''),
+    hasBase: Boolean(baseMatch)
   };
 }
 
@@ -143,13 +145,13 @@ if (!fs.existsSync(distDir)) {
   addError('dist/ does not exist. Run npm run build before npm run check:metadata.');
 }
 
-const { site, base } = readAstroConfig();
+const { site, base, hasBase } = readAstroConfig();
 
 if (!site) {
   addError('astro.config.mjs: missing site value.');
 }
 
-if (!base) {
+if (!hasBase) {
   addWarning('astro.config.mjs: missing base value. This may be fine outside GitHub Pages.');
 }
 

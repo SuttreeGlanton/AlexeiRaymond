@@ -69,11 +69,7 @@ const coverImage = imageAsset(interview.cover);
       window.addEventListener('scroll', scheduleUpdate, { passive: true });
       window.addEventListener('resize', scheduleUpdate);
 
-      if (media.addEventListener) {
-        media.addEventListener('change', scheduleUpdate);
-      } else if (media.addListener) {
-        media.addListener(scheduleUpdate);
-      }
+      media.addEventListener('change', scheduleUpdate);
 
       scheduleUpdate();
     })();

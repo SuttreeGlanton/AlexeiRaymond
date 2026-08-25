@@ -4,7 +4,7 @@ import OptimizedImage from './OptimizedImage.astro';
 import type { Piece } from '../lib/data';
 import { canLinkToPiece, formatShortDate, isDefunct, isUpcoming, parseDate, publicationLabel } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
-import { imageAsset } from '../lib/image-assets';
+import { CARD_IMAGE_WIDTHS, imageAsset } from '../lib/image-assets';
 
 interface Props {
   piece: Piece;
@@ -24,7 +24,7 @@ const {
   sourceOrder,
   priority = false,
   imageSizes = '(max-width: 640px) 69vw, (max-width: 860px) 45vw, 360px',
-  imageWidths = [240, 400, 480, 520, 560, 640, 760],
+  imageWidths = CARD_IMAGE_WIDTHS,
   titleLines
 } = Astro.props;
 const upcoming = isUpcoming(piece);
@@ -81,7 +81,7 @@ const metaParts = [
     <a class="card-cover-link" href={piece.link} target="_blank" rel="noopener noreferrer" tabindex="-1" aria-label={coverLinkLabel}>
       <div class="card-media">
         {cover ? (
-          <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} quality={72} />
+          <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
         )}
@@ -97,7 +97,7 @@ const metaParts = [
   ) : (
     <div class="card-media">
       {cover ? (
-        <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} quality={72} />
+        <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} />
       ) : (
         <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
       )}

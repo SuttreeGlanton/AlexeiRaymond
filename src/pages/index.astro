@@ -287,11 +287,7 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         }
       });
 
-      if (desktop.addEventListener) {
-        desktop.addEventListener('change', restoreFanFocus);
-      } else if (desktop.addListener) {
-        desktop.addListener(restoreFanFocus);
-      }
+      desktop.addEventListener('change', restoreFanFocus);
 
       armFanEntrance();
     })();
@@ -345,11 +341,7 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
       window.addEventListener('scroll', scheduleUpdate, { passive: true });
       window.addEventListener('resize', scheduleUpdate);
 
-      if (media.addEventListener) {
-        media.addEventListener('change', scheduleUpdate);
-      } else if (media.addListener) {
-        media.addListener(scheduleUpdate);
-      }
+      media.addEventListener('change', scheduleUpdate);
 
       scheduleUpdate();
     })();
