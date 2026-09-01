@@ -10,7 +10,9 @@ import { imageAsset } from '../lib/image-assets';
 
 const headerImage = imageAsset(site.headerCover);
 const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
-const heroWidths = [640, 960, 1280, 1440, 1600, 1800];
+// 768px prevents high-density mobile screens from jumping from the 640px
+// source straight to 960px for a roughly 412px-wide viewport.
+const heroWidths = [640, 768, 960, 1280, 1440, 1600, 1800];
 const homeDescription = 'Alexei Raymond is a writer and editor of short fiction, flash, poems, and interconnected story cycles, pursuing visions of unspeakable loveliness.';
 ---
 
@@ -304,9 +306,16 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
       const tiles = Array.from(grid.querySelectorAll('.tile'));
       if (!tiles.length) return;
 
+      let gridVisible = false;
+      let frame = 0;
+
+      function clearFocus() {
+        tiles.forEach((tile) => tile.classList.remove('is-mobile-focus'));
+      }
+
       function updateFocus() {
-        if (!media.matches) {
-          tiles.forEach((tile) => tile.classList.remove('is-mobile-focus'));
+        if (!media.matches || !gridVisible) {
+          clearFocus();
           return;
         }
 
@@ -331,19 +340,51 @@ const homeDescription = 'Alexei Raymond is a writer and editor of short fiction,
         });
       }
 
-      let frame = 0;
-
       function scheduleUpdate() {
+        // Reading every card's bounding box forces a full layout. Do not do
+        // that during the homepage's critical first render while the grid is
+        // still below the viewport.
+        if (!media.matches || !gridVisible) return;
+
         cancelAnimationFrame(frame);
         frame = requestAnimationFrame(updateFocus);
+      }
+
+      function setGridVisible(visible: boolean) {
+        if (gridVisible === visible) return;
+        gridVisible = visible;
+
+        if (gridVisible) {
+          scheduleUpdate();
+          return;
+        }
+
+        cancelAnimationFrame(frame);
+        frame = 0;
+        clearFocus();
       }
 
       window.addEventListener('scroll', scheduleUpdate, { passive: true });
       window.addEventListener('resize', scheduleUpdate);
 
-      media.addEventListener('change', scheduleUpdate);
+      media.addEventListener('change', () => {
+        if (!media.matches) clearFocus();
+        else scheduleUpdate();
+      });
 
-      scheduleUpdate();
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            setGridVisible(entries.some((entry) => entry.isIntersecting));
+          },
+          { threshold: 0 },
+        );
+
+        observer.observe(grid);
+      } else {
+        // Old-browser fallback preserves the existing behavior.
+        setGridVisible(true);
+      }
     })();
   </script>
 

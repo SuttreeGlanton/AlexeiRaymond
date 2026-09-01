@@ -7,6 +7,7 @@ import '@fontsource/sorts-mill-goudy';
 import '@fontsource/sorts-mill-goudy/400-italic.css';
 import '@fontsource/eb-garamond/400.css';
 import '@fontsource/eb-garamond/400-italic.css';
+import interLatinFont from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import { site, socialHref } from '../lib/data';
 import { absoluteSiteUrl, withBase } from '../lib/paths';
 
@@ -96,6 +97,13 @@ const pageSchemas = (Array.isArray(structuredData) ? structuredData : [structure
     <script is:inline type="application/ld+json" set:html={personSchema}></script>
     {pageSchemas.map((schema) => <script is:inline type="application/ld+json" set:html={schema}></script>)}
     <title>{resolvedTitle}</title>
+    <link
+      rel="preload"
+      href={interLatinFont}
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
   </head>
   <body>
     <SiteHeader headerCoda={headerCoda} />
