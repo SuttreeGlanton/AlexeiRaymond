@@ -207,6 +207,7 @@ const breadcrumbSchema = piece ? {
                 image={archiveCoverImage}
                 alt={archiveCoverAlt}
                 loading="eager"
+                fetchpriority="high"
                 sizes="(max-width: 640px) 76vw, (max-width: 860px) 42vw, 280px"
               />
               {archiveGenreLabel && <span class="genre-mark" data-genre={archiveGenreSlug}>{archiveGenreLabel}</span>}

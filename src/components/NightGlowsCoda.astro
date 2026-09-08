@@ -6,21 +6,24 @@
    remains, and only then does the city bloom into colour. All glass effects
    are pixel art, in keeping with the site's other codas. Same on all
    viewports; it lives at the end of the story, a classic bottom coda. */
-import tokyoGif from '../assets/codas/tokyo-night.gif?url';
+import { Image } from 'astro:assets';
+import tokyoGif from '../assets/codas/tokyo-night.gif';
 import { assetPath } from '../lib/paths';
 ---
 
 <figure class="night-glows-coda" data-night-glows data-state="intact">
   <div class="ng-window">
-    <img
+    <Image
       class="ng-city"
       src={tokyoGif}
       alt="Rainy nighttime view over Shinjuku, Tokyo — squares of orange and white light out of the dark."
-      loading="eager"
-      fetchpriority="high"
+      format="webp"
+      quality={72}
+      loading="lazy"
+      decoding="async"
     />
     <div class="ng-sheen" aria-hidden="true"></div>
-    <img class="ng-city-clear" src={tokyoGif} alt="" aria-hidden="true" loading="lazy" />
+    <Image class="ng-city-clear" src={tokyoGif} format="webp" quality={72} alt="" aria-hidden="true" loading="lazy" decoding="async" />
 
     <svg class="ng-cracks ng-cracks--1" viewBox="0 0 200 200" shape-rendering="crispEdges" aria-hidden="true">
       <path fill="rgba(228,239,245,0.8)" d="M96 82h1v1h-1zM95 83h2v1h-2zM95 84h1v1h-1zM94 85h2v1h-2zM94 86h1v1h-1zM95 87h2v1h-2zM96 88h2v1h-2zM98 89h1v1h-1zM98 90h1v1h-1zM97 91h2v1h-2zM111 91h1v1h-1zM97 92h1v1h-1zM109 92h2v1h-2zM97 93h1v1h-1zM108 93h1v1h-1zM98 94h1v1h-1zM107 94h1v1h-1zM98 95h1v1h-1zM106 95h1v1h-1zM99 96h1v1h-1zM104 96h2v1h-2zM99 97h1v1h-1zM103 97h1v1h-1zM90 98h2v1h-2zM100 98h1v1h-1zM102 98h1v1h-1zM91 99h5v1h-5zM100 99h2v1h-2zM96 100h7v1h-7zM99 101h2v1h-2zM102 101h3v1h-3zM99 102h1v1h-1zM101 102h1v1h-1zM104 102h3v1h-3zM98 103h1v1h-1zM101 103h1v1h-1zM107 103h3v1h-3zM98 104h1v1h-1zM101 104h1v1h-1zM109 104h3v1h-3zM96 105h2v1h-2zM101 105h1v1h-1zM111 105h2v1h-2zM95 106h1v1h-1zM101 106h2v1h-2zM94 107h1v1h-1zM102 107h1v1h-1zM93 108h1v1h-1zM102 108h1v1h-1zM93 109h1v1h-1zM92 110h2v1h-2zM92 111h1v1h-1zM92 112h1v1h-1z" />
@@ -49,7 +52,7 @@ import { assetPath } from '../lib/paths';
       <span class="ng-shard ng-shard--b6" style="--bx:60px; --by:120px; --br:-240deg; animation-delay:0.12s;"><svg viewBox="0 0 7 7" shape-rendering="crispEdges"><path d="M4 0h2v1h-2zM3 1h3v1h-3zM2 2h4v1h-4zM2 3h5v1h-5zM1 4h5v1h-5zM3 5h3v1h-3zM4 6h1v1h-1z" /></svg></span>
     </span>
 
-    <audio src={assetPath('audio/night-city.ogg')} preload="auto" data-ng-ambient></audio>
+    <audio src={assetPath('audio/night-city.ogg')} preload="none" data-ng-ambient></audio>
     <button class="ng-hit" type="button" data-ng-hit aria-label="Strike the window"></button>
   </div>
 </figure>
@@ -60,6 +63,7 @@ import { assetPath } from '../lib/paths';
   if (ngCoda) {
     const ngHit = ngCoda.querySelector<HTMLButtonElement>('[data-ng-hit]');
     const ngWindow = ngCoda.querySelector<HTMLElement>('.ng-window');
+    const ngAmbient = ngCoda.querySelector<HTMLAudioElement>('[data-ng-ambient]');
     const ngStates = ['intact', 'marked', 'cracked', 'smashed'];
     const ngLabels: Record<string, string> = {
       intact: 'Strike the window',
@@ -72,6 +76,13 @@ import { assetPath } from '../lib/paths';
       const current = ngCoda.getAttribute('data-state') || 'intact';
       const next = ngStates[Math.min(ngStates.indexOf(current) + 1, ngStates.length - 1)];
       if (next === current) return;
+
+      // Prepare the sound on the first strike, ahead of playback on the third.
+      // It should not compete with the cover while the reader opens the story.
+      if (current === 'intact' && ngAmbient) {
+        ngAmbient.preload = 'auto';
+        ngAmbient.load();
+      }
 
       /* The first strike sets the point of impact; everything that follows
          radiates from it. Keyboard activation lands center-pane. */
@@ -93,7 +104,6 @@ import { assetPath } from '../lib/paths';
         /* The city keeps sounding after the glass is gone. The strike that
            triggers this is a user gesture, so playback is permitted; if the
            file is absent or autoplay is refused, fail silent. */
-        const ngAmbient = ngCoda.querySelector<HTMLAudioElement>('[data-ng-ambient]');
         if (ngAmbient) {
           ngAmbient.volume = 0;
           const ngFade = window.setInterval(() => {
@@ -341,4 +351,3 @@ import { assetPath } from '../lib/paths';
     }
   }
 </style>
-

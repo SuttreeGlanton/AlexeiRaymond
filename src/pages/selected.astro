@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PieceCard from '../components/PieceCard.astro';
 import { featuredPieces, site } from '../lib/data';
@@ -11,26 +11,30 @@ const selectedHeroWidths = [640, 768, 960, 1280, 1440, 1600, 1920, 2048];
 
 <BaseLayout title={`Selected Works — ${site.author}`} description="A selected variety from across the cycles — flash fiction and short stories by Alexei Raymond, from Mythbreaking to Fool's Gold.">
   <section class="selected-hero" aria-labelledby="selected-title" data-color-reveal>
-    <Image
+    <Picture
+      pictureAttributes={{ style: 'display: contents' }}
       class="selected-hero-backdrop selected-hero-backdrop--mono"
       src={selectedHeader}
       alt=""
       widths={selectedHeroWidths}
       width={2048}
       sizes="100vw"
-      format="webp"
-      quality={74}
+      formats={['avif']}
+      fallbackFormat="webp"
+      quality={55}
       priority
     />
-    <Image
+    <Picture
+      pictureAttributes={{ style: 'display: contents' }}
       class="selected-hero-backdrop selected-hero-color-reveal"
       src={selectedHeader}
       alt=""
       widths={selectedHeroWidths}
       width={2048}
       sizes="100vw"
-      format="webp"
-      quality={74}
+      formats={['avif']}
+      fallbackFormat="webp"
+      quality={55}
       loading="eager"
       decoding="async"
       aria-hidden="true"

@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TagList from '../components/TagList.astro';
 import chronologyVisual from '../assets/page-visuals/chronology-records.jpg';
@@ -8,8 +8,21 @@ import { withBase } from '../lib/paths';
 
 const upcoming = upcomingPieces();
 const published = publishedNewestFirst();
-const chronologyWidths = [720, 960, 1080, 1200, 1400];
-const chronologySizes = '(max-width: 1080px) 1px, (max-width: 1687px) 64vw, 1080px';
+const chronologyWidths = [640, 768, 960, 1080, 1200, 1400];
+const chronologySizes = '(max-width: 1687px) 64vw, 1080px';
+// Share the transforms between both layouts and both flashlight layers.
+const chronologySources = await Promise.all(
+  (['avif', 'webp'] as const).map((format) => getImage({
+    src: chronologyVisual,
+    widths: chronologyWidths,
+    width: 1400,
+    format,
+    quality: 55,
+  })),
+);
+// CSS hiding and sizes="1px" still allow an eager image to download its
+// smallest candidate. Let <source media> choose a photo only for its layout.
+const emptyImage = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 function dateTimestamp(date: string | null) {
   return parseDate(date)?.getTime() ?? 0;
@@ -26,18 +39,22 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
   <div class="page-shell page-with-visual chronology-with-visual">
     <div class="page-copy">
       <section class="page-hero chronology-hero" aria-labelledby="chronology-title">
-        <Image
-          class="chronology-hero-backdrop"
-          src={chronologyVisual}
-          alt=""
-          widths={chronologyWidths}
-          sizes="(max-width: 1080px) 100vw, 1px"
-          format="webp"
-          quality={80}
-          loading="eager"
-          decoding="async"
-          aria-hidden="true"
-        />
+        <picture style="display: contents">
+          {chronologySources.map((image) => (
+            <source media="(max-width: 1080px)" type={`image/${image.options.format}`} srcset={image.srcSet.attribute} sizes="100vw" />
+          ))}
+          <img
+            class="chronology-hero-backdrop"
+            src={emptyImage}
+            width={chronologyVisual.width}
+            height={chronologyVisual.height}
+            alt=""
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            aria-hidden="true"
+          />
+        </picture>
         <div class="chronology-hero-scrim" aria-hidden="true"></div>
         <h1 class="page-title" id="chronology-title">Chronology</h1>
         <p class="page-intro cycle-intro">A chronological bibliography of published and forthcoming work.</p>
@@ -148,28 +165,23 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
     </div>
 
     <aside class="page-visual chronology-visual" aria-hidden="true" data-chronology-visual>
-      <Image
-        src={chronologyVisual}
-        alt=""
-        widths={chronologyWidths}
-        sizes={chronologySizes}
-        format="webp"
-        quality={82}
-        loading="lazy"
-        decoding="async"
-      />
-      <Image
-        class="chronology-color"
-        src={chronologyVisual}
-        alt=""
-        widths={chronologyWidths}
-        sizes={chronologySizes}
-        format="webp"
-        quality={82}
-        loading="lazy"
-        decoding="async"
-        aria-hidden="true"
-      />
+      {['', 'chronology-color'].map((className) => (
+        <picture style="display: contents">
+          {chronologySources.map((image) => (
+            <source media="(width > 1080px)" type={`image/${image.options.format}`} srcset={image.srcSet.attribute} sizes={chronologySizes} />
+          ))}
+          <img
+            class={className || undefined}
+            src={emptyImage}
+            width={chronologyVisual.width}
+            height={chronologyVisual.height}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            aria-hidden="true"
+          />
+        </picture>
+      ))}
     </aside>
   </div>
 
@@ -255,7 +267,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
       }
     }
 
-    renderSeparators('newest');
+    // The initial year separators are already rendered in the static HTML.
 
     for (const button of buttons) {
       button.addEventListener('click', () => {
