@@ -5,7 +5,7 @@ import CycleTile from '../components/CycleTile.astro';
 import LatestStrip from '../components/LatestStrip.astro';
 import TeaserAccordion from '../components/TeaserAccordion.astro';
 import { cycles, site } from '../lib/data';
-import { assetPath, withBase } from '../lib/paths';
+import { absoluteSiteUrl, assetPath, withBase } from '../lib/paths';
 import { imageAsset } from '../lib/image-assets';
 
 const headerImage = imageAsset(site.headerCover);
@@ -13,12 +13,24 @@ const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
 // 768px prevents high-density mobile screens from jumping from the 640px
 // source straight to 960px for a roughly 412px-wide viewport.
 const heroWidths = [640, 768, 960, 1280, 1440, 1600, 1800];
-const homeDescription = 'Alexei Raymond is a writer and editor of short fiction, flash, poems, and interconnected story cycles, pursuing visions of unspeakable loveliness.';
+const homeDescription = 'Short stories, flash fiction and poems by Alexei Raymond. Read full texts, explore interconnected story cycles, and find work published in literary journals.';
+const homeUrl = absoluteSiteUrl('', Astro.site);
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${homeUrl}#website`,
+  name: site.author,
+  url: homeUrl,
+  description: homeDescription,
+  inLanguage: 'en',
+  publisher: { '@id': `${homeUrl}#person` }
+};
 ---
 
 <BaseLayout
-  title={`${site.author} | Writer & Editor`}
+  title={`${site.author} | Short Fiction, Flash Fiction & Poetry`}
   description={homeDescription}
+  structuredData={websiteSchema}
 >
   <section class="hero" aria-labelledby="home-title" data-color-reveal>
     {headerImage ? (

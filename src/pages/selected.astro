@@ -3,13 +3,14 @@ import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PieceCard from '../components/PieceCard.astro';
 import { featuredPieces, site } from '../lib/data';
+import { withBase } from '../lib/paths';
 import selectedHeader from '../assets/selected-header-trees.jpg';
 
 const selected = featuredPieces();
 const selectedHeroWidths = [640, 768, 960, 1280, 1440, 1600, 1920, 2048];
 ---
 
-<BaseLayout title={`Selected Works — ${site.author}`} description="A selected variety from across the cycles — flash fiction and short stories by Alexei Raymond, from Mythbreaking to Fool's Gold.">
+<BaseLayout title={`Selected Stories & Poems — ${site.author}`} description="Read a selection of short stories, flash fiction and poems by Alexei Raymond, with original publication credits and links to the full texts.">
   <section class="selected-hero" aria-labelledby="selected-title" data-color-reveal>
     <Picture
       pictureAttributes={{ style: 'display: contents' }}
@@ -43,7 +44,7 @@ const selectedHeroWidths = [640, 768, 960, 1280, 1440, 1600, 1920, 2048];
 
     <div class="page-shell selected-hero-content">
       <h1 class="page-title" id="selected-title">Selected Works</h1>
-      <p class="page-intro cycle-intro">A selected variety from across the cycles.</p>
+      <p class="page-intro cycle-intro">A selected variety from across the cycles. <a href={withBase('short-fiction/')}>Browse all short fiction available to read here.</a></p>
     </div>
   </section>
 

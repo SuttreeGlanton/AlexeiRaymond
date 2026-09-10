@@ -1,0 +1,189 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { canLinkToPiece, cycleByName, formatIsoDate, formatMonthYear, publicationLabel, publishedNewestFirst, site } from '../lib/data';
+import { absoluteSiteUrl, withBase } from '../lib/paths';
+
+// An account may be commentary rather than the work itself. Only promise a
+// full story when its content entry explicitly marks it as full text.
+const fullTextSlugs = new Set(
+  (await getCollection('accounts'))
+    .filter((entry) => entry.data.fullText === true)
+    .map((entry) => entry.id)
+);
+const fiction = publishedNewestFirst().flatMap((piece) => {
+  const slug = piece.account?.slug;
+  if (!slug || !fullTextSlugs.has(slug)) return [];
+  if (piece.genre !== 'Short fiction' && piece.genre !== 'Flash fiction') return [];
+  return [{ piece, slug }];
+});
+const groups = [
+  { id: 'short-stories', title: 'Short stories', genre: 'Short fiction' },
+  { id: 'flash-fiction', title: 'Flash fiction', genre: 'Flash fiction' }
+].map((group) => ({
+  ...group,
+  items: fiction.filter(({ piece }) => piece.genre === group.genre)
+})).filter((group) => group.items.length > 0);
+const orderedFiction = groups.flatMap((group) => group.items);
+const pageUrl = absoluteSiteUrl('short-fiction/', Astro.site);
+const homeUrl = absoluteSiteUrl('', Astro.site);
+const description = 'Read short stories and flash fiction by Alexei Raymond online, in full. Explore work first published in literary journals and anthologies.';
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${pageUrl}#page`,
+  name: 'Short stories and flash fiction',
+  url: pageUrl,
+  description,
+  inLanguage: 'en',
+  isPartOf: { '@id': `${homeUrl}#website` },
+  author: { '@id': `${homeUrl}#person` },
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: orderedFiction.length,
+    itemListElement: orderedFiction.map(({ piece, slug }, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: piece.title,
+      url: absoluteSiteUrl(`accounts/${slug}/`, Astro.site)
+    }))
+  }
+};
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: site.author, item: homeUrl },
+    { '@type': 'ListItem', position: 2, name: 'Short fiction', item: pageUrl }
+  ]
+};
+---
+
+<BaseLayout
+  title={`Read Short Stories & Flash Fiction — ${site.author}`}
+  description={description}
+  structuredData={[collectionSchema, breadcrumbSchema]}
+>
+  <div class="page-shell fiction-index">
+    <section class="page-hero" aria-labelledby="fiction-title">
+      <h1 class="page-title" id="fiction-title">Short fiction</h1>
+      <p class="page-intro cycle-intro fiction-intro">
+        Short stories and flash fiction by {site.author}, first published in literary journals and anthologies.
+        Every piece below is available to read in full on this site.
+      </p>
+      <nav class="fiction-sections" aria-label="Fiction genres">
+        {groups.map((group) => <a href={`#${group.id}`}>{group.title} ({group.items.length})</a>)}
+      </nav>
+    </section>
+
+    {groups.map((group) => (
+      <section class="fiction-group" aria-labelledby={group.id}>
+        <h2 id={group.id}>{group.title}</h2>
+        <ul class="fiction-list">
+          {group.items.map(({ piece, slug }) => {
+            const cycle = cycleByName.get(piece.cycle);
+            const date = formatMonthYear(piece.date);
+            return (
+              <li>
+                <h3><a href={withBase(`accounts/${slug}/`)}>{piece.title}</a></h3>
+                <p class="fiction-publication">
+                  First published in{' '}
+                  {canLinkToPiece(piece) ? (
+                    <a href={piece.link} target="_blank" rel="noopener noreferrer">{publicationLabel(piece)}<span class="sr-only"> (opens in a new tab)</span></a>
+                  ) : publicationLabel(piece)}
+                  {date && <> &middot; <time datetime={formatIsoDate(piece.date)}>{date}</time></>}
+                </p>
+                {piece.excerpt && <p class="fiction-excerpt">{piece.excerpt}</p>}
+                {cycle && <p class="fiction-cycle">From <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a></p>}
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    ))}
+
+    <p class="fiction-more">
+      For poetry and a selection from across the cycles, visit <a href={withBase('selected/')}>Selected Works</a>.
+      The <a href={withBase('chronology/')}>complete bibliography</a> also includes work available through its original publishers and forthcoming publications.
+    </p>
+  </div>
+
+  <style>
+    .fiction-index {
+      max-width: 960px;
+      padding-bottom: clamp(48px, 7vw, 88px);
+    }
+
+    .fiction-intro {
+      max-width: 44rem;
+    }
+
+    .fiction-sections {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 28px;
+      margin-top: 24px;
+      font-family: var(--serif);
+      font-size: 1.15rem;
+    }
+
+    .fiction-sections a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
+    .fiction-group {
+      margin-top: 40px;
+    }
+
+    .fiction-group h2 {
+      scroll-margin-top: 110px;
+      margin-bottom: 24px;
+    }
+
+    .fiction-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .fiction-list li {
+      padding: 26px 0 30px;
+      border-top: 1px solid var(--border);
+    }
+
+    .fiction-list h3 {
+      margin: 0 0 9px;
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3.5vw, 2rem);
+      font-weight: 400;
+      line-height: 1.25;
+    }
+
+    .fiction-publication,
+    .fiction-cycle {
+      margin: 0;
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .fiction-excerpt {
+      max-width: 44rem;
+      margin: 16px 0 12px;
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      line-height: 1.55;
+    }
+
+    .fiction-more {
+      margin: 32px 0 0;
+      border-top: 1px solid var(--border);
+      padding-top: 26px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+  </style>
+</BaseLayout>
