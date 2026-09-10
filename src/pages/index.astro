@@ -433,6 +433,7 @@ const websiteSchema = {
         ellipses: SVGEllipseElement[];
         rotations: SVGTransform[];
         active: boolean[];
+        values: Float64Array;
       };
 
       type Spot = {
@@ -447,9 +448,11 @@ const websiteSchema = {
         speedA: number; speedB: number; exchangeW: number;
         seed: number; phase: number; retract: number;
         disp: SVGElement; noiseShift: SVGElement; grad: SVGElement; warp: SVGElement;
+        travelLow: SVGTransform; travelHigh: SVGTransform;
         spillLow: SVGElement; spillHigh: SVGElement; zoneAngle: number;
         lobA: PaintLayer; lobB: PaintLayer; filmLow: PaintLayer; filmHigh: PaintLayer;
         zoneG: SVGElement; opacity: string;
+        cx: string; cy: string;
       };
 
       let svg: SVGElement | null = null;
@@ -460,6 +463,8 @@ const websiteSchema = {
       let raf = 0;
       let running = false;
       let start = 0;
+      let elapsed = 0;
+      let previousFrame = 0;
       let lastBusy: boolean | null = null;
       let tileFocus: boolean[] = [];
 
@@ -478,6 +483,21 @@ const websiteSchema = {
       const FILTER_EXTENT = R * ZONE_TANGENT_SCALE + 18;
       const TONGUE_LOBES = 18;
       const FILM_LOBES = 7;
+
+      /* Fractions of each pair's usable overlap, keyed by the actual covers.
+         Keep the first pair near the lunar ground, leave the central faces
+         and dome readable, and favour background texture beside the figures.
+         Small local variation keeps the contacts alive without relocating
+         them to an unrelated part of the photograph on every rebuild. */
+      const CONTACT_PLACEMENT: Record<string, readonly [number, number]> = {
+        'mythbreaking:mythmaking': [0.55, 0.88],
+        'mythmaking:fools-gold': [0.24, 0.76],
+        'fools-gold:dreams': [0.32, 0.82],
+        'dreams:portici': [0.20, 0.75],
+        'portici:valentines-star': [0.22, 0.78],
+        'valentines-star:conscription': [0.18, 0.80],
+        'conscription:the-real': [0.30, 0.78],
+      };
 
       function coverURL(tile: HTMLElement): string | null {
         const img = tile.querySelector<HTMLImageElement>('.tile-media img');
@@ -506,7 +526,7 @@ const websiteSchema = {
           active.push(false);
         }
 
-        return { group, ellipses, rotations, active };
+        return { group, ellipses, rotations, active, values: new Float64Array(capacity * 5).fill(NaN) };
       }
 
       function paintLobe(
@@ -539,11 +559,22 @@ const websiteSchema = {
            parsing for the four animated lengths. */
         const roundedX = Math.round(x * 10) / 10;
         const roundedY = Math.round(y * 10) / 10;
-        ellipse.cx.baseVal.value = roundedX;
-        ellipse.cy.baseVal.value = roundedY;
-        ellipse.rx.baseVal.value = Math.round(rx * 10) / 10;
-        ellipse.ry.baseVal.value = Math.round(ry * 10) / 10;
-        rotation.setRotate(Math.round(angle * 100) / 100, roundedX, roundedY);
+        const roundedRX = Math.round(rx * 10) / 10;
+        const roundedRY = Math.round(ry * 10) / 10;
+        const roundedAngle = Math.round(angle * 100) / 100;
+        const values = layer.values;
+        const offset = index * 5;
+        const moved = values[offset] !== roundedX || values[offset + 1] !== roundedY;
+        // At display refresh rates many rounded lengths have not changed.
+        // Keep identical geometry without invalidating those SVG attributes.
+        if (values[offset] !== roundedX) ellipse.cx.baseVal.value = values[offset] = roundedX;
+        if (values[offset + 1] !== roundedY) ellipse.cy.baseVal.value = values[offset + 1] = roundedY;
+        if (values[offset + 2] !== roundedRX) ellipse.rx.baseVal.value = values[offset + 2] = roundedRX;
+        if (values[offset + 3] !== roundedRY) ellipse.ry.baseVal.value = values[offset + 3] = roundedRY;
+        if (moved || values[offset + 4] !== roundedAngle) {
+          rotation.setRotate(roundedAngle, roundedX, roundedY);
+          values[offset + 4] = roundedAngle;
+        }
       }
 
       function teardown() {
@@ -627,8 +658,8 @@ const websiteSchema = {
         svg.appendChild(layer);
         grid.appendChild(svg);
 
-        // exactly two random contact points per adjacent pair, anchored to the
-        // real seam; a minimum gap stops chance from merging them into one
+        // Two composed contact points per pair, still anchored to its real
+        // slanted overlap. Unknown or reordered pairs use a balanced fallback.
         const gridRect = grid.getBoundingClientRect();
         let sid = 0;
         for (let i = 0; i < tiles.length - 1; i++) {
@@ -700,19 +731,15 @@ const websiteSchema = {
           const padding = Math.min(12, contactSpan * 0.12);
           const randomLo = contactStart + padding;
           const randomHi = contactStart + contactSpan - padding;
-          const contactPoints = [
-            randomLo + Math.random() * (randomHi - randomLo),
-          ];
+          const placement = CONTACT_PLACEMENT[`${a.dataset.cycleId}:${b.dataset.cycleId}`] ?? [0.24, 0.76];
+          const contactPoints = placement.map((fraction) =>
+            randomLo + clamp(fraction + (Math.random() - 0.5) * 0.04, 0, 1) * (randomHi - randomLo),
+          );
           const minGap = Math.min(48, (randomHi - randomLo) * 0.3);
-          let next = randomLo + Math.random() * (randomHi - randomLo);
-          for (let attempt = 0; attempt < 12 && Math.abs(next - contactPoints[0]) < minGap; attempt++) {
-            next = randomLo + Math.random() * (randomHi - randomLo);
+          if (contactPoints[1] - contactPoints[0] < minGap) {
+            contactPoints[1] = Math.min(randomHi, contactPoints[0] + minGap);
+            contactPoints[0] = Math.min(contactPoints[0], contactPoints[1] - minGap);
           }
-          if (Math.abs(next - contactPoints[0]) < minGap) {
-            next = contactPoints[0] < (randomLo + randomHi) / 2 ? randomHi : randomLo;
-          }
-          contactPoints.push(next);
-          contactPoints.sort((a, b) => a - b);
 
           for (const u of contactPoints.slice(0, CONTACTS_PER_SEAM)) {
             spots.push(makeSpot(sid++, lowIdx, highIdx, [i, i + 1],
@@ -731,7 +758,10 @@ const websiteSchema = {
         nx: number, ny: number,
         u0: number, uLo: number, uHi: number,
       ): Spot {
-        const warp = el('filter', { id: `fx-warp-${id}`, filterUnits: 'userSpaceOnUse', 'color-interpolation-filters': 'sRGB' });
+        const warp = el('filter', {
+          id: `fx-warp-${id}`, filterUnits: 'userSpaceOnUse', 'color-interpolation-filters': 'sRGB',
+          width: FILTER_EXTENT * 2, height: FILTER_EXTENT * 2,
+        });
         warp.appendChild(el('feTurbulence', { type: 'fractalNoise', baseFrequency: '0.028 0.05', numOctaves: '2', seed: String(Math.floor(Math.random() * 90) + 1), result: 'n' }));
         const noiseShift = el('feOffset', { in: 'n', dx: '0', dy: '0', result: 'movingNoise' });
         warp.appendChild(noiseShift);
@@ -798,15 +828,16 @@ const websiteSchema = {
         useHigh2.setAttribute('transform', translate(25));
         useLowF.setAttribute('transform', translate(-9));
         useLow2.setAttribute('transform', translate(-25));
+        const travelHigh = (useHigh2 as SVGUseElement).transform.baseVal.getItem(0);
+        const travelLow = (useLow2 as SVGUseElement).transform.baseVal.getItem(0);
 
         fgH.appendChild(useHighF);
         tgB.appendChild(useHigh2);
         fgL.appendChild(useLowF);
         tgA.appendChild(useLow2);
 
-        /* Keep the two directions in separate, fully opaque paint layers.
-           Their painter order—not transparency—will trade places during the
-           exchange, so the card below never shows through the liquid. */
+        /* Keep the two directions in separate, fully opaque paint layers, so
+           the card below never shows through the travelling image. */
         const spillHigh = el('g', { opacity: '1' });
         const spillLow = el('g', { opacity: '1' });
         spillHigh.append(fgH, tgB);
@@ -820,7 +851,7 @@ const websiteSchema = {
         zoneG.appendChild(warpG);
         layer!.appendChild(zoneG);
 
-        const drift = 10 + Math.random() * 10;
+        const drift = 4 + Math.random() * 4;
         return {
           id, pair, lowIdx, highIdx,
           ax, ay, tx, ty, nx, ny, u0, uLo, uHi,
@@ -832,8 +863,8 @@ const websiteSchema = {
           speedB: 0.75 + Math.random() * 0.42,
           exchangeW: 0.62 + Math.random() * 0.38,
           seed: Math.random() * 10, phase: Math.random() * 100, retract: 0,
-          disp, noiseShift, grad, warp, spillLow, spillHigh,
-          lobA, lobB, filmLow, filmHigh, zoneG, opacity: '1',
+          disp, noiseShift, grad, warp, travelLow, travelHigh, spillLow, spillHigh,
+          lobA, lobB, filmLow, filmHigh, zoneG, opacity: '1', cx: '', cy: '',
         };
       }
 
@@ -956,6 +987,10 @@ const websiteSchema = {
       function frame(now: number) {
         if (!running) return;
         const time = ((now - start) / 1000) * LIQUID_TIME_SCALE;
+        // Preserve the existing 60 Hz fade duration on faster/slower displays.
+        const delta = previousFrame ? Math.max(now - previousFrame, 0) : 1000 / 60;
+        previousFrame = now;
+        const retractEase = 1 - Math.pow(0.9, delta / (1000 / 60));
         const busy = grid.classList.contains('is-fan-pending') || grid.classList.contains('is-fan-entering');
         if (svg && busy !== lastBusy) {
           svg.style.opacity = busy ? '0' : '1';
@@ -977,32 +1012,42 @@ const websiteSchema = {
           const px = s.ax + s.tx * u;
           const py = s.ay + s.ty * u;
 
-          s.grad.setAttribute('cx', px.toFixed(1));
-          s.grad.setAttribute('cy', py.toFixed(1));
-          /* Rotate the reveal ellipse into the seam's own frame. Its long axis
-             runs along the contact edge; its narrow axis crosses the edge. */
-          s.grad.setAttribute(
-            'gradientTransform',
-            `translate(${px.toFixed(1)} ${py.toFixed(1)}) rotate(${s.zoneAngle.toFixed(2)}) scale(${ZONE_TANGENT_SCALE} ${ZONE_NORMAL_SCALE}) translate(${(-px).toFixed(1)} ${(-py).toFixed(1)})`,
-          );
-          s.warp.setAttribute('x', (px - FILTER_EXTENT).toFixed(1));
-          s.warp.setAttribute('y', (py - FILTER_EXTENT).toFixed(1));
-          s.warp.setAttribute('width', String(FILTER_EXTENT * 2));
-          s.warp.setAttribute('height', String(FILTER_EXTENT * 2));
-
+          const cx = px.toFixed(1), cy = py.toFixed(1);
+          if (cx !== s.cx || cy !== s.cy) {
+            s.cx = cx; s.cy = cy;
+            s.grad.setAttribute('cx', cx);
+            s.grad.setAttribute('cy', cy);
+            /* The reveal ellipse follows the seam. Its slow drift usually
+               leaves its rounded position unchanged between display frames. */
+            s.grad.setAttribute(
+              'gradientTransform',
+              `translate(${cx} ${cy}) rotate(${s.zoneAngle.toFixed(2)}) scale(${ZONE_TANGENT_SCALE} ${ZONE_NORMAL_SCALE}) translate(${(-px).toFixed(1)} ${(-py).toFixed(1)})`,
+            );
+            s.warp.setAttribute('x', (px - FILTER_EXTENT).toFixed(1));
+            s.warp.setAttribute('y', (py - FILTER_EXTENT).toFixed(1));
+          }
           const focused =
             tileFocus[s.pair[0]] ||
             tileFocus[s.pair[1]];
-          s.retract += ((focused ? 1 : 0) - s.retract) * 0.1;
+          s.retract += ((focused ? 1 : 0) - s.retract) * retractEase;
 
           const strength = 1 - 0.92 * s.retract;
           const exchange = Math.sin(time * s.exchangeW + s.phase);
+          /* Advect the existing image samples with the reciprocal pressure.
+             The seam film stays rooted; the travelling detail moves only four
+             pixels either way instead of looking like a fixed cutout beneath
+             a moving mask. Reuse two SVGTransform objects, with no new layers. */
+          const lowTravel = 25 + 4 * exchange;
+          const highTravel = 25 - 4 * exchange;
+          s.travelLow.setTranslate(-s.nx * lowTravel, -s.ny * lowTravel);
+          s.travelHigh.setTranslate(s.nx * highTravel, s.ny * highTravel);
           tongues(s, px, py, time, exchange, strength);
           film(s, px, py, time, exchange, strength);
 
           s.noiseShift.setAttribute('dx', (8 * Math.sin(time * 0.48 * s.speedB + s.phase)).toFixed(1));
           s.noiseShift.setAttribute('dy', (9 * Math.cos(time * 0.41 * s.speedB + s.phase)).toFixed(1));
-          s.disp.setAttribute('scale', (19 + 7 * Math.sin(time * 0.52 * s.speedA + s.phase)).toFixed(1));
+          // Keep fine photographic detail coherent through the moving edge.
+          s.disp.setAttribute('scale', (14 + 4 * Math.sin(time * 0.52 * s.speedA + s.phase)).toFixed(1));
           const opacity = (1 - s.retract).toFixed(2);
           if (opacity !== s.opacity) {
             s.zoneG.setAttribute('opacity', opacity);
@@ -1021,8 +1066,15 @@ const websiteSchema = {
 
       let settleTimer = 0;
       function play() {
-        if (!desktop.matches || !onScreen) return;
-        if (!settled()) {
+        if (!desktop.matches || !onScreen || document.hidden) return;
+        /* A focused or returning card is not its resting geometry. On first
+           construction or resize, wait for the lift to finish before copying
+           cover transforms; otherwise those copies remain visibly displaced. */
+        const cardsMoving = !svg && Array.from(grid.querySelectorAll<HTMLElement>('.tile')).some(
+          (tile) => tile.classList.contains('is-fan-focus') ||
+            tile.getAnimations().some((animation) => animation.playState === 'running'),
+        );
+        if (!settled() || cardsMoving) {
           window.clearTimeout(settleTimer);
           settleTimer = window.setTimeout(play, 150);
           return;
@@ -1030,10 +1082,14 @@ const websiteSchema = {
         if (!svg) { build(); if (!spots.length) return; }
         if (running) return;
         running = true;
-        start = performance.now();
+        // Continue the same motion after scrolling back or returning to a tab.
+        start = performance.now() - elapsed;
+        previousFrame = 0;
         raf = requestAnimationFrame(frame);
       }
       function stop() {
+        window.clearTimeout(settleTimer);
+        if (running) elapsed = performance.now() - start;
         running = false;
         if (raf) cancelAnimationFrame(raf);
         raf = 0;
