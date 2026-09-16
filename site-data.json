@@ -97,6 +97,7 @@
         "The Pale and the Green",
         "Witnesses",
         "The Iron Crown",
+        "Death Of",
         "Now"
       ]
     },
@@ -810,6 +811,20 @@
       "cover": "covers/pieces/the-iron-crown.jpg",
       "excerpt": "Something is dead, or someone.",
       "genre": "Short fiction"
+    },
+    {
+      "title": "Death Of",
+      "cycle": "Fool's Gold",
+      "publication": "The Yesterday Review",
+      "date": null,
+      "tags": [
+        "Online",
+        "Upcoming"
+      ],
+      "link": "",
+      "cover": "covers/pieces/death-of.jpg",
+      "excerpt": "...perhaps what Mother says in times of need really is true—it does mend and right, this morning light.",
+      "genre": "Flash fiction"
     },
     {
       "title": "(6,080)",
