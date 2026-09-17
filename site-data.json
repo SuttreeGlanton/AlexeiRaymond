@@ -149,6 +149,7 @@
         "Minors' Militia",
         "Whether Yossarian",
         "Nazi",
+        "Fond Memories",
         "The Trail",
         "Of Lips and War",
         "193 Lines of Sight",
@@ -1167,6 +1168,20 @@
       "excerpt": "I can actually imagine going along with it. Giving in to it.",
       "genre": "Short fiction",
       "issue": "#163"
+    },
+    {
+      "title": "Fond Memories",
+      "cycle": "Conscription",
+      "publication": "Sūdō Journal",
+      "date": null,
+      "tags": [
+        "Online",
+        "Upcoming"
+      ],
+      "link": "",
+      "cover": "covers/pieces/fond-memories.jpg",
+      "excerpt": "It welcomes me, this earth—Remarque’s Earth.",
+      "genre": "Short fiction"
     },
     {
       "title": "The Trail",
