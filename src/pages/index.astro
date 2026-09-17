@@ -31,6 +31,7 @@ const websiteSchema = {
   title={`${site.author} | Short Fiction, Flash Fiction & Poetry`}
   description={homeDescription}
   structuredData={websiteSchema}
+  bodyClass="home-page"
 >
   <section class="hero" aria-labelledby="home-title" data-color-reveal>
     {headerImage ? (
@@ -70,39 +71,47 @@ const websiteSchema = {
         <div class="hero-scrim" aria-hidden="true"></div>
       </>
     ) : null}
-    <div class="page-shell hero-content">
-      <p class="hero-kicker">Short fiction, flash, poems, and the pursuit of unspeakable&nbsp;loveliness.</p>
-      <h1 id="home-title">{site.author}</h1>
-      <a class="hero-start" href={withBase('selected/')}>New here? Start with Selected Works &rarr;</a>
-    </div>
-
-    <div class="hero-teaser-feed">
-      <TeaserAccordion />
+    <div class="page-shell hero-layout">
+      <div class="hero-content">
+        <h1 id="home-title">{site.author}</h1>
+        <p class="hero-kicker">Short fiction, flash, poems, and the pursuit of unspeakable&nbsp;loveliness.</p>
+        <a class="hero-start" href={withBase('selected/')}>Selected Works <span aria-hidden="true">&rarr;</span></a>
+      </div>
+      <div class="hero-teaser-feed">
+        <TeaserAccordion />
+      </div>
     </div>
 
     <style>
+      .hero-layout {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.85fr);
+        align-items: end;
+        gap: clamp(36px, 5vw, 72px);
+      }
+
       .hero-teaser-feed {
-        position: absolute;
-        right: clamp(116px, calc(4vw + 94px), 152px);
-        bottom: clamp(18px, 4vw, 44px);
+        position: relative;
         z-index: 3;
-        width: min(26rem, calc(100% - 210px));
+        width: min(100%, 26rem);
+        justify-self: end;
       }
 
       @media (max-width: 860px) {
+        .hero-layout {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 32px;
+        }
+
         .hero-teaser-feed {
-          position: relative;
-          right: auto;
-          bottom: auto;
-          width: min(calc(100% - 32px), 28rem);
-          margin: clamp(26px, 5vw, 36px) 16px 0 auto;
+          width: min(100%, 28rem);
         }
       }
 
       @media (max-width: 640px) {
         .hero-teaser-feed {
-          width: calc(100% - 22px);
-          margin: 30px auto 0;
+          justify-self: start;
         }
       }
     </style>
@@ -121,7 +130,7 @@ const websiteSchema = {
 
   <LatestStrip />
 
-  <section class="page-shell" aria-labelledby="cycles-title">
+  <section class="page-shell home-cycles" aria-labelledby="cycles-title">
     <div class="section-head">
       <h2 id="cycles-title">Cycles</h2>
       <p class="section-note">Story cycles flow in and out of one another; an interconnected whole&nbsp;emerges.</p>
@@ -131,6 +140,11 @@ const websiteSchema = {
         <CycleTile cycle={cycle} />
       ))}
     </div>
+    <nav class="home-cycle-index" aria-label="Story cycle index">
+      {cycles.filter((cycle) => !cycle.disabled).map((cycle) => (
+        <a href={withBase(`cycles/${cycle.id}/`)} data-home-cycle-link={cycle.id}>{cycle.name}</a>
+      ))}
+    </nav>
   </section>
 
   <script>
@@ -216,6 +230,12 @@ const websiteSchema = {
       const tiles = Array.from(fan.querySelectorAll<HTMLElement>('.tile'));
       if (!tiles.length) return;
 
+      // Index links share the existing focus state. Keep them outside the fan
+      // so the liquid renderer still measures exactly the same eight cards.
+      const indexLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-home-cycle-link]'));
+      const tileForLink = (link?: HTMLAnchorElement) =>
+        link ? tiles.find((tile) => tile.dataset.cycleId === link.dataset.homeCycleLink) : undefined;
+
       function setFanFocus(focusedTile?: HTMLElement) {
         tiles.forEach((tile) => {
           tile.classList.toggle('is-fan-focus', tile === focusedTile);
@@ -231,7 +251,9 @@ const websiteSchema = {
         /* Only genuine pointer or keyboard focus should lift a card. */
         const hoverTile = tiles.find((tile) => tile.matches(':hover'));
         const keyboardTile = tiles.find((tile) => tile.matches(':focus-visible'));
-        setFanFocus(hoverTile ?? keyboardTile);
+        const hoverLink = indexLinks.find((link) => link.matches(':hover'));
+        const keyboardLink = indexLinks.find((link) => link.matches(':focus-visible'));
+        setFanFocus(hoverTile ?? tileForLink(hoverLink) ?? keyboardTile ?? tileForLink(keyboardLink));
       }
 
       function playFanEntrance() {
@@ -299,6 +321,19 @@ const websiteSchema = {
         if (!(nextTarget instanceof Node) || !fan.contains(nextTarget)) {
           restoreFanFocus();
         }
+      });
+
+      indexLinks.forEach((link) => {
+        link.addEventListener('pointerenter', () => {
+          if (desktop.matches && !fan.classList.contains('is-fan-pending') && !fan.classList.contains('is-fan-entering')) {
+            setFanFocus(tileForLink(link));
+          }
+        });
+        link.addEventListener('focusin', () => {
+          if (desktop.matches) setFanFocus(tileForLink(link));
+        });
+        link.addEventListener('pointerleave', restoreFanFocus);
+        link.addEventListener('focusout', () => requestAnimationFrame(restoreFanFocus));
       });
 
       desktop.addEventListener('change', restoreFanFocus);

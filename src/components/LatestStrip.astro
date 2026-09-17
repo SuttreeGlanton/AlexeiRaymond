@@ -72,13 +72,13 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
           ) : (
             <span class="latest-strip-title">{latest.title}</span>
           )}
-          <span class="latest-strip-meta"> · <i>{publicationLabel(latest)}</i>{formatMonthYear(latest.date) ? `, ${formatMonthYear(latest.date)}` : ''}</span>
+          <span class="latest-strip-meta"><i>{publicationLabel(latest)}</i>{formatMonthYear(latest.date) ? `, ${formatMonthYear(latest.date)}` : ''}</span>
         </p>
         {forthcoming && (
           <p class="latest-strip-item">
             <span class="latest-strip-overline">Forthcoming</span>
             <span class="latest-strip-title latest-strip-title--static">{forthcoming.title}</span>
-            <span class="latest-strip-meta"> · <i>{publicationLabel(forthcoming)}</i></span>
+            <span class="latest-strip-meta"><i>{publicationLabel(forthcoming)}</i></span>
           </p>
         )}
         <p class="latest-strip-item latest-strip-item--chronology">
@@ -100,37 +100,41 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
   /* No bottom border: the Cycles section-head below draws its own rule. */
   .latest-strip-band {
     border-top: 1px solid var(--border);
-    padding: 1.3rem 0 1.2rem;
+    padding: 1.5rem 0;
     margin: 0 0 0.75rem;
   }
 
   .latest-strip-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.85rem 3rem;
-    align-items: baseline;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    gap: 1.5rem 3rem;
+    align-items: start;
   }
 
   .latest-strip-item {
+    display: grid;
+    justify-items: start;
+    gap: 0.35rem;
+    min-width: 0;
     margin: 0;
     font-family: var(--sans);
-    font-size: 0.8rem;
-    letter-spacing: 0.02em;
-    color: var(--muted);
+    font-size: 0.82rem;
+    letter-spacing: 0.01em;
+    color: var(--text-soft);
   }
 
   .latest-strip-overline {
     text-transform: uppercase;
-    font-size: 0.62rem;
-    letter-spacing: 0.22em;
-    color: var(--dim);
-    margin-right: 0.8em;
+    font-size: 0.69rem;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    margin-bottom: 0.15rem;
   }
 
   .latest-strip-title {
     font-family: var(--serif);
-    font-size: 1.02rem;
+    font-size: 1.55rem;
+    line-height: 1.25;
     letter-spacing: 0.01em;
     color: var(--text);
     text-decoration: none;
@@ -148,8 +152,11 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
   }
 
   .latest-strip-chronology {
-    font-size: 0.72rem;
-    color: var(--dim);
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.81rem;
+    color: var(--text-soft);
     text-decoration: none;
     transition: color 200ms ease;
   }
@@ -160,17 +167,31 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
   }
 
   .latest-strip-credit {
-    margin: 0.95rem 0 0;
+    margin: 1.35rem 0 0;
     font-family: var(--sans);
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
-    color: var(--dim);
+    font-size: 0.78rem;
+    letter-spacing: 0.01em;
+    color: var(--muted);
+  }
+
+  .latest-strip-item--chronology {
+    align-self: center;
   }
 
   @media (max-width: 860px) {
     .latest-strip-row {
-      flex-direction: column;
-      gap: 0.7rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem 2rem;
+    }
+
+    .latest-strip-item--chronology {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .latest-strip-row {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 </style>

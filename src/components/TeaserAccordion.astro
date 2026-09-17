@@ -1,15 +1,26 @@
 ---
-import { pieces } from '../lib/data';
+import { pieces, canLinkToPiece, cycleByName } from '../lib/data';
+import { withBase } from '../lib/paths';
 
 const keepLastTwoWordsTogether = (text: string) =>
   text.trim().replace(/\s+(\S+)$/u, '\u00a0$1');
 
 const teasers = pieces
   .filter((piece) => Boolean(piece.excerpt?.trim()))
-  .map((piece) => ({
-    excerpt: keepLastTwoWordsTogether(piece.excerpt!),
-    title: piece.title
-  }));
+  .map((piece) => {
+    const cycle = cycleByName.get(piece.cycle);
+    const external = !piece.account && canLinkToPiece(piece);
+    return {
+      excerpt: keepLastTwoWordsTogether(piece.excerpt!),
+      title: piece.title,
+      href: piece.account
+        ? withBase(`accounts/${piece.account.slug}/`)
+        : external
+          ? piece.link
+          : withBase(cycle ? `cycles/${cycle.id}/` : 'chronology/'),
+      external,
+    };
+  });
 
 const firstTeaser = teasers[0];
 ---
@@ -20,15 +31,21 @@ const firstTeaser = teasers[0];
     data-teaser-accordion
     data-teasers={JSON.stringify(teasers)}
     role="group"
-    aria-label="Excerpts from the archive"
-    tabindex="0"
+    aria-label="Excerpts from the work"
   >
     <p class="teaser-accordion-line" aria-live="off">
       <span class="teaser-accordion-anchor" aria-hidden="true">“</span><span class="teaser-accordion-fold" data-teaser-fold>
         <span class="teaser-accordion-copy" data-teaser-copy>{firstTeaser.excerpt}”</span>
       </span>
     </p>
-    <p class="teaser-accordion-source" data-teaser-source>— {firstTeaser.title}</p>
+    <p class="teaser-accordion-source">
+      <a
+        data-teaser-source
+        href={firstTeaser.href}
+        aria-label={firstTeaser.external ? `${firstTeaser.title} (opens in a new tab)` : undefined}
+        {...(firstTeaser.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      >{firstTeaser.title}</a>
+    </p>
   </div>
 )}
 
@@ -41,12 +58,13 @@ const firstTeaser = teasers[0];
     document.querySelectorAll<HTMLElement>('[data-teaser-accordion]').forEach((root) => {
       const fold = root.querySelector<HTMLElement>('[data-teaser-fold]');
       const copy = root.querySelector<HTMLElement>('[data-teaser-copy]');
-      const source = root.querySelector<HTMLElement>('[data-teaser-source]');
+      const source = root.querySelector<HTMLAnchorElement>('[data-teaser-source]');
       const rawTeasers = root.dataset.teasers;
 
       if (!fold || !copy || !source || !rawTeasers) return;
 
-      let teasers: Array<{ excerpt: string; title: string }> = [];
+      type Teaser = { excerpt: string; title: string; href: string; external: boolean };
+      let teasers: Teaser[] = [];
 
       try {
         teasers = JSON.parse(rawTeasers);
@@ -58,9 +76,7 @@ const firstTeaser = teasers[0];
 
       let index = 0;
       let timer = 0;
-      let paused = false;
-
-      function shuffleTeasers(items: Array<{ excerpt: string; title: string }>) {
+      function shuffleTeasers(items: Teaser[]) {
         for (let currentIndex = items.length - 1; currentIndex > 0; currentIndex -= 1) {
           const randomIndex = Math.floor(Math.random() * (currentIndex + 1));
           [items[currentIndex], items[randomIndex]] = [items[randomIndex], items[currentIndex]];
@@ -76,7 +92,17 @@ const firstTeaser = teasers[0];
         if (!copy || !source) return;
         const teaser = teasers[nextIndex];
         copy.textContent = `${teaser.excerpt}”`;
-        source.textContent = `— ${teaser.title}`;
+        source.textContent = teaser.title;
+        source.href = teaser.href;
+        if (teaser.external) {
+          source.target = '_blank';
+          source.rel = 'noopener noreferrer';
+          source.setAttribute('aria-label', `${teaser.title} (opens in a new tab)`);
+        } else {
+          source.removeAttribute('target');
+          source.removeAttribute('rel');
+          source.removeAttribute('aria-label');
+        }
         measureFold();
       }
 
@@ -99,16 +125,17 @@ const firstTeaser = teasers[0];
       shuffleTeasers(teasers);
       showTeaser(index);
 
-      if (teasers.length < 2 || reducedMotion.matches) return;
+      const shouldPause = () =>
+        document.hidden || reducedMotion.matches || root.matches(':hover, :focus-within');
 
       function scheduleFold() {
         window.clearTimeout(timer);
-        if (paused) return;
+        if (teasers.length < 2 || shouldPause()) return;
         timer = window.setTimeout(foldToNext, HOLD_MS);
       }
 
       function foldToNext() {
-        if (paused) return;
+        if (shouldPause()) return;
         root.classList.add('is-folded');
 
         timer = window.setTimeout(() => {
@@ -125,20 +152,18 @@ const firstTeaser = teasers[0];
       }
 
       function pause() {
-        paused = true;
         window.clearTimeout(timer);
         root.classList.remove('is-folded');
       }
 
       function resume() {
-        paused = false;
         scheduleFold();
       }
 
       root.addEventListener('pointerenter', pause);
       root.addEventListener('pointerleave', resume);
       root.addEventListener('focusin', pause);
-      root.addEventListener('focusout', resume);
+      root.addEventListener('focusout', () => requestAnimationFrame(resume));
 
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) pause();
@@ -160,18 +185,16 @@ const firstTeaser = teasers[0];
 
 <style>
   .teaser-accordion {
-    --teaser-limit: min(28vw, 23.5rem);
+    container-type: inline-size;
+    --teaser-limit: calc(100cqw - 0.6em);
     width: 100%;
-    min-height: 6.2rem;
+    min-height: 10.5rem;
     max-width: 26rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
-    padding: 1rem 1.1rem 0.95rem;
-    background: rgba(17, 17, 17, 0.55);
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
-    color: var(--muted);
+    border-top: 1px solid rgba(200, 197, 190, 0.3);
+    padding-top: 1rem;
+    color: var(--text-soft);
     outline-offset: 6px;
-    backdrop-filter: blur(18px);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
     text-align: left;
   }
 
@@ -183,9 +206,9 @@ const firstTeaser = teasers[0];
     margin: 0;
     color: var(--text-soft);
     font-family: var(--serif);
-    font-size: clamp(0.96rem, 1.25vw, 1.08rem);
+    font-size: clamp(1.12rem, 1.4vw, 1.25rem);
     font-style: italic;
-    line-height: 1.38;
+    line-height: 1.45;
     text-align: left;
   }
 
@@ -196,6 +219,7 @@ const firstTeaser = teasers[0];
 
   .teaser-accordion-fold {
     display: inline-block;
+    min-width: 0;
     max-width: var(--teaser-width, var(--teaser-limit));
     overflow: hidden;
     opacity: 1;
@@ -217,14 +241,28 @@ const firstTeaser = teasers[0];
   }
 
   .teaser-accordion-source {
-    margin: 0.08rem 0 0;
-    color: var(--dim);
+    margin: 0.55rem 0 0;
+    color: var(--text-soft);
     font-family: var(--sans);
-    font-size: 0.62rem;
-    letter-spacing: 0.04em;
+    font-size: 0.81rem;
+    letter-spacing: 0.01em;
     opacity: 1;
     text-align: left;
     transition: opacity 220ms ease;
+  }
+
+  .teaser-accordion-source a {
+    display: inline-block;
+    padding: 6px 0;
+    text-decoration: underline;
+    text-decoration-color: var(--muted);
+    text-underline-offset: 5px;
+  }
+
+  .teaser-accordion-source a:hover,
+  .teaser-accordion-source a:focus-visible {
+    color: var(--text);
+    text-decoration-color: currentColor;
   }
 
   .teaser-accordion.is-folded .teaser-accordion-fold {
@@ -234,20 +272,6 @@ const firstTeaser = teasers[0];
 
   .teaser-accordion.is-folded .teaser-accordion-source {
     opacity: 0;
-  }
-
-  @media (max-width: 860px) {
-    .teaser-accordion {
-      --teaser-limit: calc(100vw - 58px);
-      min-height: 7rem;
-      max-width: none;
-      border-radius: 12px;
-    }
-
-    .teaser-accordion-line {
-      min-height: 0;
-      font-size: 1rem;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
