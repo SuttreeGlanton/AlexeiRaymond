@@ -1097,7 +1097,8 @@
       "link": "https://farewelltransmission.net/2026/08/speaking-terms/",
       "cover": "covers/pieces/speaking-terms.jpg",
       "excerpt": "A whisper-quiet treatment.",
-      "genre": "Poem"
+      "genre": "Poem",
+      "issue": "Pets Issue"
     },
     {
       "title": "Life to Dragons",
@@ -1204,7 +1205,8 @@
         "slug": "the-trail",
         "label": "Read on site",
         "title": "The Trail"
-      }
+      },
+      "issue": "Volume 6, Issue 4"
     },
     {
       "title": "Whether Yossarian",
