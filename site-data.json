@@ -207,7 +207,7 @@
       "cover": "covers/pieces/193-thoughts-of-you.jpg",
       "excerpt": "Hello, Ms. Tom Latin.",
       "genre": "Short fiction",
-      "issue": "#8",
+      "issue": "Issue 8",
       "account": {
         "slug": "193-thoughts-of-you",
         "label": "Read story",
@@ -248,7 +248,7 @@
       "cover": "covers/pieces/another-year-of-love.jpg",
       "excerpt": "Maudlin mother, do you not drown?",
       "genre": "Short fiction",
-      "issue": "(Summer 2025 Anthology)"
+      "issue": "Summer 2025 Anthology"
     },
     {
       "title": "Betrayal",
@@ -262,7 +262,7 @@
       "cover": "covers/pieces/betrayal.jpg",
       "excerpt": "Tonight he is a nameless consciousness.",
       "genre": "Flash fiction",
-      "issue": "#180"
+      "issue": "Issue 180"
     },
     {
       "title": "Deathwish",
@@ -277,7 +277,7 @@
       "cover": "covers/pieces/deathwish.jpg",
       "excerpt": "Never imagined strangling or killing her.",
       "genre": "Short fiction",
-      "issue": "II anthology",
+      "issue": "Anthology II",
       "account": {
         "slug": "deathwish",
         "label": "Read story",
@@ -300,7 +300,7 @@
       "cover": "covers/pieces/from-home.jpg",
       "excerpt": "The room hung with stagnant air, and seemed final, somehow.",
       "genre": "Flash fiction",
-      "issue": "#24"
+      "issue": "Issue 24"
     },
     {
       "title": "Now",
@@ -367,7 +367,7 @@
       "cover": "covers/pieces/the-boxer.jpg",
       "excerpt": "I broke my image in her eyes and became unlovable.",
       "genre": "Short fiction",
-      "issue": "#14"
+      "issue": "Issue 14"
     },
     {
       "title": "Flagellant",
@@ -412,7 +412,7 @@
       "cover": "covers/pieces/the-hunt.jpg",
       "excerpt": "I wake up at dawn, which means, I realize, that the hunt is on.",
       "genre": "Non-fiction",
-      "issue": "(Special Issue: Homeland)",
+      "issue": "Special Issue: Homeland",
       "account": {
         "slug": "the-hunt",
         "label": "Read story",
@@ -431,7 +431,7 @@
       "cover": "covers/pieces/the-mourning-hounds.jpg",
       "excerpt": "The hounds are his wards and tethers.",
       "genre": "Short fiction",
-      "issue": "#11"
+      "issue": "Issue 11"
     },
     {
       "title": "Last Sight of Her",
@@ -475,7 +475,7 @@
       "cover": "covers/pieces/arboreal-queen.jpg",
       "excerpt": "Cat‑killer, pig‑faced hound, Arboreal Queen—Monroe.",
       "genre": "Short fiction",
-      "issue": "#21.1"
+      "issue": "Issue 21.1"
     },
     {
       "title": "Blackbird",
@@ -543,7 +543,7 @@
         "label": "Read story",
         "title": "God Underground"
       },
-      "issue": "#2",
+      "issue": "Issue 2",
       "cycles": [
         "Mythmaking",
         "Conscription"
@@ -578,7 +578,7 @@
       "cover": "covers/pieces/at-the-window.jpg",
       "excerpt": "Why does the room tilt so?",
       "genre": "Flash fiction",
-      "issue": "#4"
+      "issue": "Issue 4"
     },
     {
       "title": "The Duet",
@@ -605,7 +605,7 @@
       "cover": "covers/pieces/the-flower-and-the-beetle.jpg",
       "excerpt": "In the passenger seat, Valentin felt the grandeur of movement.",
       "genre": "Short fiction",
-      "issue": "#21.1"
+      "issue": "Issue 21.1"
     },
     {
       "title": "The Nutcracker's Charge",
@@ -619,7 +619,7 @@
       "cover": "covers/pieces/the-nutcrackers-charge.jpg",
       "excerpt": "The scene terrifies her but it’s how the story goes—she knows, she knows.",
       "genre": "Flash fiction",
-      "issue": "#10",
+      "issue": "Issue 10",
       "account": {
         "slug": "the-nutcrackers-charge",
         "label": "Read story",
@@ -638,7 +638,7 @@
       "cover": "covers/pieces/truth-or-its-evidence.jpg",
       "excerpt": "Somewhere in his besieged mind rattled an unassailable, choking truth.",
       "genre": "Short fiction",
-      "issue": "#3",
+      "issue": "Issue 3",
       "account": {
         "slug": "truth-or-its-evidence",
         "label": "Read story",
@@ -705,7 +705,7 @@
       "cover": "covers/pieces/his-green-delight.jpg",
       "excerpt": "Silence settles between the scarabeous man and the gilt woman.",
       "genre": "Flash fiction",
-      "issue": "#4",
+      "issue": "Issue 4",
       "account": {
         "slug": "his-green-delight",
         "label": "Read story",
@@ -725,7 +725,7 @@
       "cover": "covers/pieces/how-the-night-glows.jpg",
       "excerpt": "The trip would be over in less than a week. And then. Home?",
       "genre": "Short fiction",
-      "issue": "#176",
+      "issue": "Issue 176",
       "account": {
         "slug": "how-the-night-glows",
         "label": "Read story",
@@ -762,7 +762,7 @@
       "cover": "covers/pieces/the-pale-and-the-green.jpg",
       "excerpt": "Why were you up so late last night?",
       "genre": "Short fiction",
-      "issue": "#10",
+      "issue": "Issue 10",
       "cycles": [
         "Fool's Gold",
         "Mythbreaking"
@@ -780,7 +780,7 @@
       "cover": "covers/pieces/witnesses.jpg",
       "excerpt": "This Friday we can get tipsy; I’ll cry, you’ll tell me I’m beautiful, read to me…",
       "genre": "Flash fiction",
-      "issue": "#6",
+      "issue": "Issue 6",
       "account": {
         "slug": "witnesses",
         "label": "Read story",
@@ -798,7 +798,8 @@
       "link": "https://forpageandscreenmagazine.wordpress.com/wp-content/uploads/2026/08/paradigm-of-the-tyrant_fiction.pdf",
       "cover": "covers/pieces/paradigm-of-the-tyrant.jpg",
       "excerpt": "Her golden earth to his sea.",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "issue": "Issue 10"
     },
     {
       "title": "The Iron Crown",
@@ -825,7 +826,8 @@
       "link": "",
       "cover": "covers/pieces/death-of.jpg",
       "excerpt": "...perhaps what Mother says in times of need really is true—it does mend and right, this morning light.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "issue": "Issue 3"
     },
     {
       "title": "(6,080)",
@@ -923,7 +925,7 @@
       "cover": "covers/pieces/on-the-nature-of-sleep.jpg",
       "excerpt": "Sincerely, futilely, wretchedly yours. In beating sorrow and purest grief.",
       "genre": "Short fiction",
-      "issue": "#5",
+      "issue": "Issue 5",
       "account": {
         "slug": "on-the-nature-of-sleep",
         "label": "Read story",
@@ -965,7 +967,7 @@
       "cover": "covers/pieces/remediation.jpg",
       "excerpt": "Question queued: whose fault is this?",
       "genre": "Short fiction",
-      "issue": "II anthology",
+      "issue": "Anthology II",
       "account": {
         "slug": "remediation",
         "label": "Read story",
@@ -997,7 +999,8 @@
       "link": "",
       "cover": "covers/pieces/zagagulyn.jpg",
       "excerpt": "His rough black hair stands on end, giving him a mean, underworldly look.",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "issue": "Issue 1: Silt"
     },
     {
       "title": "Смерть моя",
@@ -1067,7 +1070,8 @@
       "link": "https://bendinggenres.com/glassdom/",
       "cover": "covers/pieces/glassdom.jpg",
       "excerpt": "It’s glassfall—a rain that chimes and glitters the street come first rays of brilliant-cut sun, heralding glasnost.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "issue": "Issue 52"
     },
     {
       "title": "La Luna",
@@ -1107,7 +1111,7 @@
       "cover": "covers/pieces/life-to-dragons.jpg",
       "excerpt": "He sees that the dragon’s tan appearance was the sun’s insistence; greenish scales declare its true color.",
       "genre": "Short fiction",
-      "issue": "#21.1",
+      "issue": "Issue 21.1",
       "account": {
         "slug": "life-to-dragons",
         "label": "Read story",
@@ -1126,7 +1130,7 @@
       "cover": "covers/pieces/star-crossed.jpg",
       "excerpt": "Another crazy couple disrupting the quiet night.",
       "genre": "Flash fiction",
-      "issue": "#3"
+      "issue": "Issue 3"
     },
     {
       "title": "Under Street Sign and Star",
@@ -1140,7 +1144,7 @@
       "cover": "covers/pieces/under-street-sign-and-star.jpg",
       "excerpt": "And her lips met his—and bliss, bliss, bliss.",
       "genre": "Flash fiction",
-      "issue": "#5"
+      "issue": "Issue 5"
     },
     {
       "title": "Waiting for Beloved",
@@ -1167,7 +1171,7 @@
       "cover": "covers/pieces/nazi.jpg",
       "excerpt": "I can actually imagine going along with it. Giving in to it.",
       "genre": "Short fiction",
-      "issue": "#163"
+      "issue": "Issue 163"
     },
     {
       "title": "Fond Memories",
@@ -1181,7 +1185,8 @@
       "link": "",
       "cover": "covers/pieces/fond-memories.jpg",
       "excerpt": "It welcomes me, this earth—Remarque’s Earth.",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "issue": "Volume 7: Borderline"
     },
     {
       "title": "The Trail",
@@ -1213,7 +1218,7 @@
       "cover": "covers/pieces/whether-yossarian.jpg",
       "excerpt": "The lone soldier—whether Yossarian, or any other name—plunges into great bewilderment the moment war begins.",
       "genre": "Short fiction",
-      "issue": "#41.1"
+      "issue": "Issue 41.1"
     }
   ],
   "interview": {
