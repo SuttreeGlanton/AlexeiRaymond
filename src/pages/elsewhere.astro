@@ -8,7 +8,10 @@ const cover = interview.cover || '';
 const coverImage = imageAsset(interview.cover);
 ---
 
-<BaseLayout title={`Elsewhere — ${site.author}`} description="Interviews, conversations, and other traces outside the bibliography.">
+<BaseLayout
+  title={`Elsewhere: Interviews — ${site.author}`}
+  description={`Read an excerpt from ${site.author}'s interview with ${interview.publication} and follow the link to the full conversation.`}
+>
   <section class="page-shell page-hero text-page" aria-labelledby="elsewhere-title">
     <h1 class="page-title" id="elsewhere-title">Elsewhere</h1>
     <p class="page-intro cycle-intro">Interviews, conversations, and other traces outside the bibliography.</p>

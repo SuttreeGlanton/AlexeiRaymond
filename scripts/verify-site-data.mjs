@@ -223,6 +223,9 @@ if (Array.isArray(data.cycles)) {
     requireString(cycle.id, `${label}.id`);
     requireString(cycle.name, `${label}.name`);
     requireString(cycle.blurb, `${label}.blurb`);
+    if (cycle.description !== undefined) {
+      requireString(cycle.description, `${label}.description`);
+    }
     checkAsset(label, cycle.cover, ['src/assets']);
     checkAsset(`${label} banner`, cycle.banner, ['src/assets']);
 

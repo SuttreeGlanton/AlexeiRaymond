@@ -55,7 +55,11 @@ const breadcrumbSchema = {
 };
 ---
 
-<BaseLayout title={`${cycle.name} — ${site.author}`} description={cycle.blurb || site.bio} structuredData={breadcrumbSchema}>
+<BaseLayout
+  title={`${cycle.name} — A Literary Cycle by ${site.author}`}
+  description={cycle.description || cycle.blurb || site.bio}
+  structuredData={breadcrumbSchema}
+>
   <div
     class="cycle-shell"
     data-cycle-id={cycle.id}

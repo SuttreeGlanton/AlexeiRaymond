@@ -36,6 +36,8 @@ export interface Cycle {
   id: string;
   name: string;
   blurb: string;
+  /** Search and sharing summary, separate from the visible literary blurb. */
+  description?: string;
   cover: string;
   /** Wide, pre-composed photograph used by the cycle page hero. */
   banner: string;

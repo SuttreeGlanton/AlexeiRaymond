@@ -37,6 +37,7 @@
       "id": "mythbreaking",
       "name": "Mythbreaking",
       "blurb": "The Anton persona; the shedding and breaking of old worlds as a new world struggles to be born.",
+      "description": "Short stories and flash fiction by Alexei Raymond in the \"Mythbreaking\", the Anton persona cycle; tales of decay, rupture, and the shedding of old worlds.",
       "cover": "covers/cycles/mythbreaking.jpg",
       "banner": "cycle-banners/mythbreaking.jpg",
       "storyOrder": [
@@ -62,6 +63,7 @@
       "id": "mythmaking",
       "name": "Mythmaking",
       "blurb": "A psyche’s architecture; foundations, early cataclysms, and experience prior to words.",
+      "description": "Short stories and flash fiction by Alexei Raymond in the \"Mythmaking\" cycle; childhood, early upheavals, and the molding of a self.",
       "cover": "covers/cycles/mythmaking.jpg",
       "banner": "cycle-banners/mythmaking.jpg",
       "storyOrder": [
@@ -85,6 +87,7 @@
       "id": "fools-gold",
       "name": "Fool's Gold",
       "blurb": "The Adam persona; its partitions and the gold in the center.",
+      "description": "Short stories and flash fiction by Alexei Raymond in the \"Fool's Gold\", the Adam persona cycle; early adulthood, gnarled way forward, with excerpts and publication links.",
       "cover": "covers/cycles/fools-gold.jpg",
       "banner": "cycle-banners/fools-gold.jpg",
       "storyOrder": [
@@ -105,6 +108,7 @@
       "id": "dreams",
       "name": "Dreams",
       "blurb": "Figments and fragments; dreams bubbling up. Flash-fiction pieces from the cycle, featuring (6,080): ‘Batter my heart, five-eye’d God.’",
+      "description": "Literary works by Alexei Raymond; stories, poems, and fragments, including \"(6,080)\", \"Father Frost\", and \"Red, They Are Cherry Red\".",
       "cover": "covers/cycles/dreams.jpg",
       "banner": "cycle-banners/dreams.jpg"
     },
@@ -112,6 +116,7 @@
       "id": "portici",
       "name": "Portici",
       "blurb": "The Turin cycle; time of moths. Stories from the cycle, featuring Glassdom: ‘It’s glassfall—a rain that chimes and glitters the street.’",
+      "description": "Stories and poems by Alexei Raymond from \"Portici\", the Turin cycle, including \"Mothhead\", \"Glassdom\", and \"La Luna\". Excerpts and publication details.",
       "cover": "covers/cycles/portici.jpg",
       "banner": "cycle-banners/portici.jpg",
       "storyOrder": [
@@ -127,6 +132,7 @@
       "id": "valentines-star",
       "name": "Valentine's Star",
       "blurb": "The Valentin persona; tribulations of early love. Stories from the cycle — ‘And her lips met his—and bliss, bliss, bliss.’",
+      "description": "Short stories and flash fiction by Alexei Raymond from \"Valentine's Star\", the Valentin persona cycle of early love and its tribulations.",
       "cover": "covers/cycles/valentines-star.jpg",
       "banner": "cycle-banners/valentines-star.jpg",
       "storyOrder": [
@@ -141,6 +147,7 @@
       "id": "conscription",
       "name": "Conscription",
       "blurb": "Hauntings of white and blue; olive-drab and refusal.",
+      "description": "Explore \"Conscription\" by Alexei Raymond: short stories and flash fiction about military service in the IDF, refusal, and its echoes, with excerpts and publication details.",
       "cover": "covers/cycles/conscription.jpg",
       "banner": "cycle-banners/conscription.jpg",
       "storyOrder": [
@@ -160,6 +167,7 @@
       "id": "the-real",
       "name": "The Real",
       "blurb": "De liefde maeckte van den smidt eenen schilder. Stories from the cycle, featuring Zagagulyn: ‘His rough black hair stands on end.’",
+      "description": "Short stories by Alexei Raymond from \"The Real\", the cult of two cycle; tales of disunion, authenticity, and a relentless pursuit of the real.",
       "cover": "covers/cycles/the-real.jpg",
       "banner": "cycle-banners/the-real.jpg",
       "storyOrder": [
