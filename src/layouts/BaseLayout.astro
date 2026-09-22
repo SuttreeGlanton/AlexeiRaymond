@@ -106,6 +106,15 @@ const pageSchemas = (Array.isArray(structuredData) ? structuredData : [structure
       type="font/woff2"
       crossorigin="anonymous"
     />
+    {import.meta.env.PROD && (
+      <script
+        is:inline
+        defer
+        src="https://cloud.umami.is/script.js"
+        data-website-id="67770007-0038-47eb-bbbc-d2bbc78aa2f7"
+        data-domains="alexeiraymond.com,www.alexeiraymond.com"
+      ></script>
+    )}
   </head>
   <body class={bodyClass}>
     <SiteHeader headerCoda={headerCoda} />
