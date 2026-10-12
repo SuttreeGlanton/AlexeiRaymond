@@ -97,7 +97,7 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
 )}
 
 <style>
-  /* No bottom border: the Cycles section-head below draws its own rule. */
+  /* Desktop uses a rule; mobile separates sections with space. */
   .latest-strip-band {
     border-top: 1px solid var(--border);
     padding: 1.5rem 0;
@@ -190,8 +190,38 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
   }
 
   @media (max-width: 640px) {
+    .latest-strip-band {
+      border-top: 0;
+      padding: 1rem 0 2.5rem;
+      margin-bottom: 0;
+    }
+
     .latest-strip-row {
       grid-template-columns: minmax(0, 1fr);
+      row-gap: 1.75rem;
+    }
+
+    .latest-strip-title {
+      border-bottom: 0;
+    }
+
+    a.latest-strip-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 44px;
+    }
+
+    a.latest-strip-title::after {
+      content: '→' / '';
+      flex-shrink: 0;
+      color: var(--text-soft);
+      font-family: var(--sans);
+      font-size: 0.875rem;
+    }
+
+    a.latest-strip-title[target='_blank']::after {
+      content: '↗' / '';
     }
   }
 </style>

@@ -359,6 +359,15 @@ img {
     width: calc(100% - 40px);
   }
 
+  .home-page .site-header {
+    border-bottom: 0;
+  }
+
+  .home-cycles .section-head {
+    border-top: 0;
+    padding-top: 0;
+  }
+
   .hero h1 {
     font-size: clamp(3.8rem, 18.8vw, 5rem);
   }
@@ -1672,15 +1681,6 @@ img {
   border: 0;
 }
 
-@media (max-width: 640px) {
-  .hero-sound-toggle {
-    right: 16px;
-    bottom: 14px;
-    font-size: 0.56rem;
-    padding: 7px 10px 6px;
-  }
-}
-
 /* --- Softened edges: cards, covers, tags --- */
 :root {
   --radius-card: 10px;
@@ -2022,19 +2022,34 @@ img {
 
 }
 
-/* --- Footer glyph and mobile sound tightening --- */
+/* --- Mobile ambient sound control --- */
 @media (max-width: 640px) {
   .hero-sound-toggle {
-    gap: 5px;
-    padding: 6px 7px 6px 7px;
-    font-size: 0.5rem;
-    letter-spacing: 0.1em;
+    right: 20px;
+    bottom: 20px;
+    min-width: 80px;
+    min-height: 44px;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-color: rgba(241, 239, 233, 0.22);
+    background: rgba(38, 37, 33, 0.94);
+    color: var(--text-soft);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+  }
+
+  .hero-sound-toggle:hover,
+  .hero-sound-toggle:focus-visible,
+  .hero-sound-toggle[aria-pressed='true'] {
+    background: #34322c;
+    color: var(--text);
   }
 
   .hero-sound-icon,
   .hero-sound-icon svg {
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
   }
 
   .hero-sound-state {
@@ -2316,6 +2331,12 @@ img {
     border-color: rgba(255, 255, 255, 0.34);
     background: rgba(255, 255, 255, 0.045);
     color: var(--text);
+  }
+
+  .home-page .mobile-menu-toggle {
+    min-height: 44px;
+    padding-inline: 14px;
+    font-size: 0.625rem;
   }
 
   .mobile-menu-icon {
@@ -3153,6 +3174,12 @@ img {
 .hero-start:focus-visible {
   color: #fff;
   border-bottom-color: var(--text);
+}
+
+@media (max-width: 640px) {
+  .hero-start {
+    border-bottom: 0;
+  }
 }
 
 

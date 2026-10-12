@@ -274,6 +274,30 @@ const firstTeaser = teasers[0];
     opacity: 0;
   }
 
+  @media (max-width: 640px) {
+    .teaser-accordion {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .teaser-accordion-source a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 44px;
+      text-decoration: none;
+    }
+
+    .teaser-accordion-source a::after {
+      content: '→' / '';
+      flex-shrink: 0;
+    }
+
+    .teaser-accordion-source a[target='_blank']::after {
+      content: '↗' / '';
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .teaser-accordion-fold,
     .teaser-accordion-source {
