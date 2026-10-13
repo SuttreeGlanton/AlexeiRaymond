@@ -7,6 +7,7 @@ import TeaserAccordion from '../components/TeaserAccordion.astro';
 import { cycles, site } from '../lib/data';
 import { absoluteSiteUrl, assetPath, withBase } from '../lib/paths';
 import { imageAsset } from '../lib/image-assets';
+import '../styles/home-desktop.css';
 
 const headerImage = imageAsset(site.headerCover);
 const headerCover = site.headerCover ? assetPath(site.headerCover) : '';

@@ -8,12 +8,10 @@ import {
   canLinkToPiece,
 } from '../lib/data';
 import { withBase } from '../lib/paths';
+import { selectPublicationCredits, publicationCreditLines } from '../lib/publication-credits';
 
-/* The venues named in the credit line, chosen for recognisability and
-   aesthetic fit rather than sheer count. Edit freely; five is the ceiling. */
-const CREDIT_VENUES = ['BULL', 'Expat Press', 'The MacGuffin', 'Bending Genres'];
-
-const latest = publishedPieces()
+const published = publishedPieces();
+const latest = published
   .filter((piece) => parseDate(piece.date))
   .sort((a, b) => (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0))[0];
 
@@ -26,6 +24,10 @@ const KNOWN_RELEASE_DATES = new Map<string, string>([
 ]);
 
 const upcoming = upcomingPieces();
+const creditLines = publicationCreditLines(selectPublicationCredits(
+  published.map((piece) => piece.publication),
+  upcoming.map((piece) => piece.publication),
+));
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 
@@ -60,6 +62,13 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
 {latest && (
   <section class="page-shell latest-strip" aria-label="Latest and forthcoming work">
     <div class="latest-strip-band">
+      <div class="latest-strip-head">
+        <h2>Publications</h2>
+        <a class="latest-strip-chronology" href={withBase('chronology/')}>Full chronology &rarr;</a>
+      </div>
+      <p class="latest-strip-credit">
+        {creditLines.map((line) => <span class="latest-strip-credit-line">{line}</span>)}
+      </p>
       <div class="latest-strip-row">
         <p class="latest-strip-item">
           <span class="latest-strip-overline">Latest</span>
@@ -85,13 +94,6 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
           <a class="latest-strip-chronology" href={withBase('chronology/')}>Full chronology &rarr;</a>
         </p>
       </div>
-      <p class="latest-strip-credit">
-        Work published and forthcoming in {CREDIT_VENUES.map((venue, index) => (
-          <>
-            <i>{venue}</i>{index < CREDIT_VENUES.length - 1 ? ', ' : ''}
-          </>
-        ))}, and elsewhere.
-      </p>
     </div>
   </section>
 )}
@@ -99,12 +101,21 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
 <style>
   /* Desktop uses a rule; mobile separates sections with space. */
   .latest-strip-band {
+    display: flex;
+    flex-direction: column;
     border-top: 1px solid var(--border);
     padding: 1.5rem 0;
     margin: 0 0 0.75rem;
   }
 
+  /* The desktop heading has its own chronology link. Only one link is visible
+     at each breakpoint; the mobile link retains its existing reading order. */
+  .latest-strip-head {
+    display: none;
+  }
+
   .latest-strip-row {
+    order: 1;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
     gap: 1.5rem 3rem;
@@ -167,11 +178,16 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
   }
 
   .latest-strip-credit {
+    order: 2;
     margin: 1.35rem 0 0;
     font-family: var(--sans);
     font-size: 0.78rem;
     letter-spacing: 0.01em;
     color: var(--muted);
+  }
+
+  .latest-strip-credit-line {
+    display: block;
   }
 
   .latest-strip-item--chronology {
