@@ -83,9 +83,18 @@ const firstTeaser = teasers[0];
         }
       }
 
-      function measureFold() {
-        if (!copy || !fold) return;
-        fold.style.setProperty('--teaser-width', `${Math.ceil(copy.getBoundingClientRect().width)}px`);
+      // Use the browser's completed layout instead of forcing one immediately
+      // after changing the excerpt. This also covers font loads and resizing.
+      // The copy's width is independent of the animated fold's max-width.
+      if ('ResizeObserver' in window) {
+        let measuredWidth = 0;
+        const observer = new ResizeObserver(([entry]) => {
+          const width = Math.ceil(entry.contentRect.width);
+          if (width <= 0 || width === measuredWidth) return;
+          measuredWidth = width;
+          fold.style.setProperty('--teaser-width', `${width}px`);
+        });
+        observer.observe(copy);
       }
 
       function showTeaser(nextIndex: number) {
@@ -103,7 +112,6 @@ const firstTeaser = teasers[0];
           source.removeAttribute('rel');
           source.removeAttribute('aria-label');
         }
-        measureFold();
       }
 
       function advanceToNextTeaser() {
@@ -175,9 +183,6 @@ const firstTeaser = teasers[0];
         else resume();
       });
 
-      measureFold();
-      document.fonts?.ready.then(measureFold);
-      window.addEventListener('resize', measureFold, { passive: true });
       scheduleFold();
     });
   })();
