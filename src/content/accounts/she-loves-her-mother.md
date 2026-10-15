@@ -1,5 +1,6 @@
 ---
 title: She Loves Her Mother
+fullText: true
 ---
 See the mother, age sixty-four. See her daughter, age thirty. They live on the fourth floor in the center of Antwerp, five minutes from the monotowered Cathedral of Our Lady. The fallen father is imprisoned and unforgiven. He is visited by the mother only.
 

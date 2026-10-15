@@ -1,5 +1,6 @@
 ---
 title: God Underground
+fullText: true
 epigraph: true
 ---
 *God is underground.*

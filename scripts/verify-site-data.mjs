@@ -113,8 +113,25 @@ function checkAsset(label, assetPath, roots) {
   }
 }
 
+function accountMarkdownPath(slug) {
+  const candidates = [
+    `src/content/accounts/${slug}.md`,
+    `src/content/accounts/${slug}.mdx`
+  ];
+  return candidates.find(fileExists) || '';
+}
+
 function accountMarkdownExists(slug) {
-  return fileExists(`src/content/accounts/${slug}.md`) || fileExists(`src/content/accounts/${slug}.mdx`);
+  return Boolean(accountMarkdownPath(slug));
+}
+
+function accountMarkdownHasFullText(slug) {
+  const relativePath = accountMarkdownPath(slug);
+  if (!relativePath) return false;
+
+  const source = fs.readFileSync(path.join(repoRoot, relativePath), 'utf8').replace(/^\uFEFF/, '');
+  const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+  return Boolean(frontmatter && /^fullText:\s*true\s*$/m.test(frontmatter[1]));
 }
 
 function isHttpUrl(value) {
@@ -394,6 +411,15 @@ if (Array.isArray(data.pieces)) {
 
       if ('title' in piece.account && typeof piece.account.title !== 'string') {
         addError(`${label}.account.title: must be a string when present.`);
+      }
+
+      if (
+        piece.account.slug &&
+        piece.account.label === 'Read story' &&
+        accountMarkdownExists(piece.account.slug) &&
+        !accountMarkdownHasFullText(piece.account.slug)
+      ) {
+        addError(`${label}: "Read story" account markdown must declare fullText: true in frontmatter.`);
       }
     }
   });
