@@ -467,7 +467,7 @@ const websiteSchema = {
       type PaintLayer = {
         group: SVGGElement;
         ellipses: SVGEllipseElement[];
-        rotations: SVGTransform[];
+        positions: SVGTransform[];
         active: boolean[];
         values: Float64Array;
       };
@@ -561,24 +561,30 @@ const websiteSchema = {
          once and update their geometry in place; replacing group.innerHTML on
          every frame forced the browser to parse and rebuild about 700 nodes
          sixty times per second. */
-      function makePaintLayer(capacity: number): PaintLayer {
+      function makePaintLayer(capacity: number, angle: number): PaintLayer {
         const group = el('g', { filter: 'url(#fx-goo)', fill: '#fff' }) as SVGGElement;
         const ellipses: SVGEllipseElement[] = [];
-        const rotations: SVGTransform[] = [];
+        const positions: SVGTransform[] = [];
         const active: boolean[] = [];
+        // Every lobe keeps its seam angle for the lifetime of this layer.
+        // Retain the float precision previously used by SVGTransform.setRotate.
+        const roundedAngle = Math.fround(Math.round(angle * 100) / 100);
 
         for (let index = 0; index < capacity; index++) {
           const ellipse = el('ellipse', {
             display: 'none',
-            transform: 'rotate(0 0 0)',
+            transform: `translate(0 0) rotate(${roundedAngle})`,
           }) as SVGEllipseElement;
           group.appendChild(ellipse);
           ellipses.push(ellipse);
-          rotations.push(ellipse.transform.baseVal.getItem(0));
+          positions.push(ellipse.transform.baseVal.getItem(0));
           active.push(false);
         }
 
-        return { group, ellipses, rotations, active, values: new Float64Array(capacity * 5).fill(NaN) };
+        return {
+          group, ellipses, positions,
+          active, values: new Float64Array(capacity * 4).fill(NaN),
+        };
       }
 
       function paintLobe(
@@ -588,11 +594,10 @@ const websiteSchema = {
         y: number,
         rx: number,
         ry: number,
-        angle: number,
       ) {
         const ellipse = layer.ellipses[index];
-        const rotation = layer.rotations[index];
-        if (!ellipse || !rotation) return;
+        const position = layer.positions[index];
+        if (!ellipse || !position) return;
 
         if (rx < 0.4 || ry < 0.4) {
           if (layer.active[index]) {
@@ -607,26 +612,24 @@ const websiteSchema = {
           layer.active[index] = true;
         }
 
-        /* Match the old serializer's precision while avoiding attribute-string
-           parsing for the four animated lengths. */
+        /* Keep the original grid-position and radius precision. Each ellipse
+           stays centred at its local origin, so translating the rotated shape
+           replaces two centre writes and a moving rotation-pivot update. */
         const roundedX = Math.round(x * 10) / 10;
         const roundedY = Math.round(y * 10) / 10;
         const roundedRX = Math.round(rx * 10) / 10;
         const roundedRY = Math.round(ry * 10) / 10;
-        const roundedAngle = Math.round(angle * 100) / 100;
         const values = layer.values;
-        const offset = index * 5;
+        const offset = index * 4;
         const moved = values[offset] !== roundedX || values[offset + 1] !== roundedY;
-        // At display refresh rates many rounded lengths have not changed.
-        // Keep identical geometry without invalidating those SVG attributes.
-        if (values[offset] !== roundedX) ellipse.cx.baseVal.value = values[offset] = roundedX;
-        if (values[offset + 1] !== roundedY) ellipse.cy.baseVal.value = values[offset + 1] = roundedY;
+        if (moved) {
+          position.setTranslate(roundedX, roundedY);
+          values[offset] = roundedX;
+          values[offset + 1] = roundedY;
+        }
+        // Keep the existing precision and skip unchanged radii.
         if (values[offset + 2] !== roundedRX) ellipse.rx.baseVal.value = values[offset + 2] = roundedRX;
         if (values[offset + 3] !== roundedRY) ellipse.ry.baseVal.value = values[offset + 3] = roundedRY;
-        if (moved || values[offset + 4] !== roundedAngle) {
-          rotation.setRotate(roundedAngle, roundedX, roundedY);
-          values[offset + 4] = roundedAngle;
-        }
       }
 
       function teardown() {
@@ -875,16 +878,16 @@ const websiteSchema = {
         // deliberately keeps its luminance mask.
         const paintMask = { maskUnits: 'userSpaceOnUse', 'mask-type': 'alpha', ...maskBounds };
         const tmA = el('mask', { id: `fx-tA-${id}`, ...paintMask });
-        const lobA = makePaintLayer(TONGUE_LOBES);
+        const lobA = makePaintLayer(TONGUE_LOBES, zoneAngle);
         tmA.appendChild(lobA.group); defs!.appendChild(tmA);
         const tmB = el('mask', { id: `fx-tB-${id}`, ...paintMask });
-        const lobB = makePaintLayer(TONGUE_LOBES);
+        const lobB = makePaintLayer(TONGUE_LOBES, zoneAngle);
         tmB.appendChild(lobB.group); defs!.appendChild(tmB);
         const fmL = el('mask', { id: `fx-fL-${id}`, ...paintMask });
-        const filmLow = makePaintLayer(FILM_LOBES);
+        const filmLow = makePaintLayer(FILM_LOBES, zoneAngle);
         fmL.appendChild(filmLow.group); defs!.appendChild(fmL);
         const fmH = el('mask', { id: `fx-fH-${id}`, ...paintMask });
-        const filmHigh = makePaintLayer(FILM_LOBES);
+        const filmHigh = makePaintLayer(FILM_LOBES, zoneAngle);
         fmH.appendChild(filmHigh.group); defs!.appendChild(fmH);
 
         const zoneG = el('g', { mask: `url(#fx-zm-${id})` });
@@ -1004,7 +1007,7 @@ const websiteSchema = {
           const bx = px + s.tx * along + s.nx * 4;
           const by = py + s.ty * along + s.ny * 4;
           const root = 4.6 + reach * 2.9;
-          paintLobe(s.lobA, aIndex++, bx, by, root * 0.78, root * 1.28, s.zoneAngle);
+          paintLobe(s.lobA, aIndex++, bx, by, root * 0.78, root * 1.28);
           for (let k = 1; k <= 5; k++) {
             const f = k / 5;
             const w =
@@ -1018,7 +1021,6 @@ const websiteSchema = {
               by - s.ny * len * f + s.ty * w * 0.58,
               r * profile.radii[k - 1].rx,
               r * profile.radii[k - 1].ry,
-              s.zoneAngle,
             );
           }
         }
@@ -1035,7 +1037,7 @@ const websiteSchema = {
           const bx = px + s.tx * along - s.nx * 4;
           const by = py + s.ty * along - s.ny * 4;
           const root = 4.6 + reach * 2.9;
-          paintLobe(s.lobB, bIndex++, bx, by, root * 0.78, root * 1.28, s.zoneAngle);
+          paintLobe(s.lobB, bIndex++, bx, by, root * 0.78, root * 1.28);
           for (let k = 1; k <= 5; k++) {
             const f = k / 5;
             const w =
@@ -1049,7 +1051,6 @@ const websiteSchema = {
               by + s.ny * len * f + s.ty * w * 0.58,
               r * profile.radii[k - 1].rx,
               r * profile.radii[k - 1].ry,
-              s.zoneAngle,
             );
           }
         }
@@ -1077,7 +1078,6 @@ const websiteSchema = {
             py + s.ty * off - s.ny * (2.8 + wob),
             Math.max(rl * 1.55, 0.1),
             Math.max(rl * 0.68, 0.1),
-            s.zoneAngle,
           );
           paintLobe(
             s.filmHigh,
@@ -1086,7 +1086,6 @@ const websiteSchema = {
             py + s.ty * off + s.ny * (2.8 - wob),
             Math.max(rh * 1.55, 0.1),
             Math.max(rh * 0.68, 0.1),
-            s.zoneAngle,
           );
         }
       }
