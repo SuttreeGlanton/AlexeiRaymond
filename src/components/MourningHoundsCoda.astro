@@ -1,0 +1,220 @@
+---
+import { getImage } from 'astro:assets';
+import paw1 from '../assets/codas/mourning-hounds/paw-01.png';
+import paw2 from '../assets/codas/mourning-hounds/paw-02.png';
+import paw3 from '../assets/codas/mourning-hounds/paw-03.png';
+import paw4 from '../assets/codas/mourning-hounds/paw-04.png';
+import paw5 from '../assets/codas/mourning-hounds/paw-05.png';
+import paw6 from '../assets/codas/mourning-hounds/paw-06.png';
+import controllerUrl from '../scripts/mourning-hounds-coda.js?url';
+
+interface Props {
+  variant: 'desktop' | 'header' | 'tablet';
+}
+const { variant } = Astro.props;
+const paws = await Promise.all([paw1, paw2, paw3, paw4, paw5, paw6].map(async (src) =>
+  (await getImage({ src, width: 128, height: 128, format: 'webp', quality: 85 })).src
+));
+const artwork = 'realistic';
+---
+
+<span class={`mh-coda mh-coda--${variant}`} data-mh-coda={variant} data-mh-art={artwork}>
+  {paws.map((src, index) => index === paws.length - 1 ? (
+    <button class="mh-step mh-return" type="button" data-mh-step style={`--mh-step: ${index}`} disabled
+      aria-label="Return to the opening of The Mourning Hounds" title="Return to the opening">
+      <img src={src} width="44" height="44" alt="" decoding="async" draggable="false" />
+    </button>
+  ) : (
+    <span class="mh-step" data-mh-step style={`--mh-step: ${index}`} aria-hidden="true">
+      <img src={src} width="44" height="44" alt="" decoding="async" draggable="false" />
+    </span>
+  ))}
+</span>
+
+<!-- Only the story's cover instance emits the controller. Importing the
+     header component on other pages must not download or run this script. -->
+{variant === 'desktop' && <script is:inline type="module" src={controllerUrl}></script>}
+
+<style>
+  .mh-coda {
+    display: none;
+    text-indent: 0;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .mh-step {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 32px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: none;
+    opacity: 0;
+    transition: opacity 400ms ease;
+  }
+
+  .mh-step img {
+    display: block;
+    width: 32px;
+    height: 32px;
+    max-width: none;
+    object-fit: contain;
+    transform: rotate(180deg);
+    user-select: none;
+  }
+
+  .mh-step.is-laid { opacity: 0.6; }
+  .mh-step.is-latest img { animation: mh-breath 2.8s ease-in-out infinite; }
+  .mh-return { height: 44px; border-radius: 50%; touch-action: manipulation; }
+  .mh-return:enabled { cursor: pointer; pointer-events: auto; }
+  .mh-return:enabled:hover, .mh-return:focus-visible { opacity: 1; }
+  .mh-return:focus-visible { outline: 1px solid var(--text-soft); outline-offset: 3px; }
+  .mh-coda:not(.is-complete) .mh-return:hover img,
+  .mh-coda:not(.is-complete) .mh-return:focus-visible img { animation-play-state: paused; }
+
+  @keyframes mh-breath {
+    0%, 100% { opacity: 0.65; }
+    50% { opacity: 1; }
+  }
+
+  /* Once complete, a soft brightening passes from the first paw to the
+     sixth every 900 ms. CSS owns the loop; no repeating script is needed. */
+  .mh-coda.is-complete .mh-step img {
+    opacity: 0.65;
+    animation: mh-procession 5.4s ease-in-out infinite;
+    animation-delay: calc(var(--mh-step) * 900ms);
+  }
+  @keyframes mh-procession {
+    0%, 28%, 100% { opacity: 0.65; }
+    12% { opacity: 1; }
+  }
+
+  @media (min-width: 861px) {
+    .mh-coda--desktop[data-mh-ready] {
+      /* Keep the trail out of the cover's sticky sizing. Tighten the
+         alternating tracks before reducing the artwork on short windows. */
+      --mh-paw-size: min(64px, calc(var(--mh-trail-height, 424px) / 3.5));
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(5, minmax(0, 1fr)) var(--mh-paw-size);
+      column-gap: 8px;
+      height: var(--mh-trail-height, 424px);
+      margin-top: 20px;
+    }
+    .mh-coda--desktop .mh-step {
+      grid-row: calc(var(--mh-step) + 1);
+      width: var(--mh-paw-size);
+      height: var(--mh-paw-size);
+    }
+    .mh-coda--desktop .mh-step img { width: var(--mh-paw-size); height: var(--mh-paw-size); }
+    .mh-coda--desktop .mh-step:nth-child(odd) { grid-column: 1; justify-self: end; }
+    .mh-coda--desktop .mh-step:nth-child(even) { grid-column: 2; justify-self: start; }
+    .mh-coda--desktop .mh-return {
+      min-width: 44px;
+      min-height: 44px;
+      margin-top: min(0px, calc((var(--mh-paw-size) - 44px) / 2));
+      margin-left: min(0px, calc((var(--mh-paw-size) - 44px) / 2));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .mh-coda--header[data-mh-ready] {
+      display: flex;
+      align-items: center;
+      width: min(238px, calc(100vw - 120px));
+      justify-content: space-between;
+    }
+    .mh-coda--header .mh-step { width: 24px; height: 44px; }
+    .mh-coda--header .mh-return { width: 44px; }
+    .mh-coda--header .mh-step img { width: 27px; height: 27px; transform: rotate(90deg); }
+    .mh-coda--header .mh-step:nth-child(odd) img { translate: 0 -5px; }
+    .mh-coda--header .mh-step:nth-child(even) img { translate: 0 5px; }
+  }
+
+  /* Between the site's header and cover-column breakpoints, keep the
+     return control at the ending rather than collide with desktop nav. */
+  @media (min-width: 641px) and (max-width: 860px) {
+    .mh-coda--tablet[data-mh-ready] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 36px;
+    }
+    .mh-coda--tablet .mh-step { height: 44px; }
+    .mh-coda--tablet .mh-step img { transform: rotate(90deg); }
+    .mh-coda--tablet .mh-step:nth-child(odd) img { translate: 0 -5px; }
+    .mh-coda--tablet .mh-step:nth-child(even) img { translate: 0 5px; }
+  }
+
+  :global(.mh-coda-paused) .mh-step img { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) {
+    .mh-step { transition: none; }
+    .mh-step.is-latest img,
+    .mh-coda.is-complete .mh-step img { animation: none; opacity: 1; }
+  }
+</style>
+
+<style is:global>
+  /* Preserve the site's normal sticky cover and its story boundary. The
+     absolutely positioned trail cannot push the cover above the header. */
+  @media (min-width: 861px) {
+    .archived-piece-page .mourning-hounds-cover-slot {
+      display: block;
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: 96px;
+      align-self: start;
+      justify-self: end;
+      width: 100%;
+    }
+    .archived-piece-page .archive-body-shell.has-archive-cover .mourning-hounds-cover-slot .archive-cover-card {
+      position: static;
+      top: auto;
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  [data-mh-story] .mh-word {
+    display: inline-grid;
+    position: relative;
+    vertical-align: baseline;
+    text-indent: 0;
+    white-space: nowrap;
+  }
+  [data-mh-story] .mh-original,
+  [data-mh-story] .mh-echo { grid-area: 1 / 1; }
+  [data-mh-story] .mh-echo {
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+  [data-mh-story] .mh-echo::after { content: attr(data-mh-echo); }
+  [data-mh-story] .mh-word.is-echo .mh-original { opacity: 0; }
+  [data-mh-story] .mh-word.is-echo .mh-echo { opacity: 1; }
+  [data-mh-story] .mh-word-toggle {
+    position: absolute;
+    inset: -4px -2px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 2px;
+    background: none;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  [data-mh-story] .mh-word-toggle:focus-visible {
+    outline: 1px solid var(--text-soft);
+    outline-offset: 2px;
+  }
+</style>
