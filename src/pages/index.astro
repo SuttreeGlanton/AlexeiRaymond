@@ -472,6 +472,11 @@ const websiteSchema = {
         values: Float64Array;
       };
 
+      type TongueProfile = {
+        phase: number;
+        radii: { rx: number; ry: number }[];
+      };
+
       type Spot = {
         id: number; pair: [number, number];
         lowIdx: number; highIdx: number;
@@ -483,12 +488,14 @@ const websiteSchema = {
         u0: number; uLo: number; uHi: number; drift: number;
         speedA: number; speedB: number; exchangeW: number;
         seed: number; phase: number; retract: number;
+        tongueA: TongueProfile[]; tongueB: TongueProfile[];
         disp: SVGElement; noiseShift: SVGElement; grad: SVGElement; warp: SVGElement;
         travelLow: SVGTransform; travelHigh: SVGTransform;
         spillLow: SVGElement; spillHigh: SVGElement; zoneAngle: number;
         lobA: PaintLayer; lobB: PaintLayer; filmLow: PaintLayer; filmHigh: PaintLayer;
         zoneG: SVGElement; opacity: string;
         cx: string; cy: string;
+        noiseX: string; noiseY: string; displacement: string;
       };
 
       let svg: SVGElement | null = null;
@@ -517,6 +524,14 @@ const websiteSchema = {
       const ZONE_TANGENT_SCALE = 1.65;
       const ZONE_NORMAL_SCALE = 0.46;
       const FILTER_EXTENT = R * ZONE_TANGENT_SCALE + 18;
+      const MAX_CONTACT_DRIFT = 8;
+      const WARP_BASE = 14;
+      const WARP_VARIATION = 4;
+      // Cover the entire moving filter, including the pixels displacement can
+      // sample outside it. The extra 2px protects rounding and antialiasing.
+      // Fixed bounds avoid resizing mask surfaces as the contact point drifts.
+      const MASK_EXTENT = FILTER_EXTENT + MAX_CONTACT_DRIFT +
+        (WARP_BASE + WARP_VARIATION) / 2 + 2;
       const TONGUE_LOBES = 18;
       const FILM_LOBES = 7;
 
@@ -779,7 +794,7 @@ const websiteSchema = {
 
           for (const u of contactPoints.slice(0, CONTACTS_PER_SEAM)) {
             spots.push(makeSpot(sid++, lowIdx, highIdx, [i, i + 1],
-              P0.x, P0.y, tx, ty, nx, ny, u, sLo * edgeLen, sHi * edgeLen));
+              P0.x, P0.y, tx, ty, nx, ny, u, sLo * edgeLen, sHi * edgeLen, W, H));
           }
         }
       }
@@ -793,6 +808,7 @@ const websiteSchema = {
         tx: number, ty: number,
         nx: number, ny: number,
         u0: number, uLo: number, uHi: number,
+        gridWidth: number, gridHeight: number,
       ): Spot {
         const warp = el('filter', {
           id: `fx-warp-${id}`, filterUnits: 'userSpaceOnUse', 'color-interpolation-filters': 'sRGB',
@@ -822,20 +838,36 @@ const websiteSchema = {
         grad.appendChild(el('stop', { offset: '1', 'stop-color': '#000' }));
         defs!.appendChild(grad);
 
-        const zmask = el('mask', { id: `fx-zm-${id}`, maskUnits: 'userSpaceOnUse', x: '0', y: '0', width: '100%', height: '100%' });
-        zmask.appendChild(el('rect', { x: '0', y: '0', width: grid.clientWidth, height: grid.clientHeight, fill: `url(#fx-zone-${id})` }));
+        // Only this contact's neighbourhood contributes to the result. Bound
+        // all five masks there instead of allocating a grid-sized reveal mask
+        // and cover-sized tongue/film masks. Keep the original grid clipping
+        // on the final reveal; the source masks retain their sampling margin.
+        const left = Math.floor(ax + tx * u0 - MASK_EXTENT);
+        const top = Math.floor(ay + ty * u0 - MASK_EXTENT);
+        const right = Math.ceil(ax + tx * u0 + MASK_EXTENT);
+        const bottom = Math.ceil(ay + ty * u0 + MASK_EXTENT);
+        const maskBounds = { x: left, y: top, width: right - left, height: bottom - top };
+        const zoneX = Math.max(0, left);
+        const zoneY = Math.max(0, top);
+        const zoneBounds = {
+          x: zoneX, y: zoneY,
+          width: Math.max(0, Math.min(gridWidth, right) - zoneX),
+          height: Math.max(0, Math.min(gridHeight, bottom) - zoneY),
+        };
+        const zmask = el('mask', { id: `fx-zm-${id}`, maskUnits: 'userSpaceOnUse', ...zoneBounds });
+        zmask.appendChild(el('rect', { ...zoneBounds, fill: `url(#fx-zone-${id})` }));
         defs!.appendChild(zmask);
 
-        const tmA = el('mask', { id: `fx-tA-${id}` });
+        const tmA = el('mask', { id: `fx-tA-${id}`, maskUnits: 'userSpaceOnUse', ...maskBounds });
         const lobA = makePaintLayer(TONGUE_LOBES);
         tmA.appendChild(lobA.group); defs!.appendChild(tmA);
-        const tmB = el('mask', { id: `fx-tB-${id}` });
+        const tmB = el('mask', { id: `fx-tB-${id}`, maskUnits: 'userSpaceOnUse', ...maskBounds });
         const lobB = makePaintLayer(TONGUE_LOBES);
         tmB.appendChild(lobB.group); defs!.appendChild(tmB);
-        const fmL = el('mask', { id: `fx-fL-${id}` });
+        const fmL = el('mask', { id: `fx-fL-${id}`, maskUnits: 'userSpaceOnUse', ...maskBounds });
         const filmLow = makePaintLayer(FILM_LOBES);
         fmL.appendChild(filmLow.group); defs!.appendChild(fmL);
-        const fmH = el('mask', { id: `fx-fH-${id}` });
+        const fmH = el('mask', { id: `fx-fH-${id}`, maskUnits: 'userSpaceOnUse', ...maskBounds });
         const filmHigh = makePaintLayer(FILM_LOBES);
         fmH.appendChild(filmHigh.group); defs!.appendChild(fmH);
 
@@ -887,7 +919,12 @@ const websiteSchema = {
         zoneG.appendChild(warpG);
         layer!.appendChild(zoneG);
 
-        const drift = 4 + Math.random() * 4;
+        const drift = 4 + Math.random() * (MAX_CONTACT_DRIFT - 4);
+        const speedA = 0.78 + Math.random() * 0.4;
+        const speedB = 0.75 + Math.random() * 0.42;
+        const exchangeW = 0.62 + Math.random() * 0.38;
+        const seed = Math.random() * 10;
+        const phase = Math.random() * 100;
         return {
           id, pair, lowIdx, highIdx,
           ax, ay, tx, ty, nx, ny, u0, uLo, uHi,
@@ -895,13 +932,29 @@ const websiteSchema = {
           drift,
           /* Per-spot rhythms keep the fan from pulsing in sync — no readable
              global loop, no shared dead beat. */
-          speedA: 0.78 + Math.random() * 0.4,
-          speedB: 0.75 + Math.random() * 0.42,
-          exchangeW: 0.62 + Math.random() * 0.38,
-          seed: Math.random() * 10, phase: Math.random() * 100, retract: 0,
+          speedA, speedB, exchangeW, seed, phase, retract: 0,
+          tongueA: makeTongueProfiles(seed, false),
+          tongueB: makeTongueProfiles(seed, true),
           disp, noiseShift, grad, warp, travelLow, travelHigh, spillLow, spillHigh,
           lobA, lobB, filmLow, filmHigh, zoneG, opacity: '1', cx: '', cy: '',
+          noiseX: '', noiseY: '', displacement: '',
         };
+      }
+
+      // These radii depend on the spot's seed, not the animation clock. Keep
+      // the original formulas, but calculate them once rather than every frame.
+      function makeTongueProfiles(seed: number, reverse: boolean): TongueProfile[] {
+        return Array.from({ length: 3 }, (_, index) => {
+          const phase = reverse ? seed + 4 + index * 1.47 : seed + index * 1.57;
+          const radii = Array.from({ length: 5 }, (_, lobe) => {
+            const k = lobe + 1;
+            return {
+              rx: 0.64 + 0.1 * (reverse ? Math.cos(phase + k) : Math.sin(phase + k)),
+              ry: 1.18 + 0.16 * (reverse ? Math.sin(phase + k * 1.2) : Math.cos(phase + k * 1.3)),
+            };
+          });
+          return { phase, radii };
+        });
       }
 
       /* Gooey excursions across the seam, computed in the seam's own frame:
@@ -924,7 +977,8 @@ const websiteSchema = {
         const driveB = 0.78 - 0.4 * exchange;
         let aIndex = 0;
         for (let i = 0; i < 3; i++) {
-          const ph = s.seed + i * 1.57;
+          const profile = s.tongueA[i];
+          const ph = profile.phase;
           const along = (i - 1) * 9 + 6 * Math.sin(time * 0.72 * s.speedA + ph);
           const reach =
             clamp(0.62 + 0.38 * Math.sin(time * 0.78 * s.speedA + ph), 0.18, 1) *
@@ -946,15 +1000,16 @@ const websiteSchema = {
               aIndex++,
               bx - s.nx * len * f + s.tx * w * 0.58,
               by - s.ny * len * f + s.ty * w * 0.58,
-              r * (0.64 + 0.1 * Math.sin(ph + k)),
-              r * (1.18 + 0.16 * Math.cos(ph + k * 1.3)),
+              r * profile.radii[k - 1].rx,
+              r * profile.radii[k - 1].ry,
               s.zoneAngle,
             );
           }
         }
         let bIndex = 0;
         for (let i = 0; i < 3; i++) {
-          const ph = s.seed + 4 + i * 1.47;
+          const profile = s.tongueB[i];
+          const ph = profile.phase;
           const along = (i - 1) * 9 + 6 * Math.sin(time * 0.69 * s.speedB + ph);
           const reach =
             clamp(0.62 + 0.38 * Math.sin(time * 0.84 * s.speedB + ph), 0.18, 1) *
@@ -976,8 +1031,8 @@ const websiteSchema = {
               bIndex++,
               bx + s.nx * len * f + s.tx * w * 0.58,
               by + s.ny * len * f + s.ty * w * 0.58,
-              r * (0.64 + 0.1 * Math.cos(ph + k)),
-              r * (1.18 + 0.16 * Math.sin(ph + k * 1.2)),
+              r * profile.radii[k - 1].rx,
+              r * profile.radii[k - 1].ry,
               s.zoneAngle,
             );
           }
@@ -1038,6 +1093,18 @@ const websiteSchema = {
         }
 
         for (const s of spots) {
+          const focused = tileFocus[s.pair[0]] || tileFocus[s.pair[1]];
+          s.retract += ((focused ? 1 : 0) - s.retract) * retractEase;
+          const opacity = (1 - s.retract).toFixed(2);
+          if (opacity !== s.opacity) {
+            s.zoneG.setAttribute('opacity', opacity);
+            s.opacity = opacity;
+          }
+          // Preserve the complete fade, then stop touching invisible geometry
+          // and filters. Retraction still advances each frame, and the shared
+          // clock supplies the correct live shape as soon as the zone returns.
+          if (opacity === '0.00') continue;
+
           /* The contact point wanders slowly along the seam, clamped to the
              contact zone, so the flow never sits still nor drifts off the
              boundary. */
@@ -1062,11 +1129,6 @@ const websiteSchema = {
             s.warp.setAttribute('x', (px - FILTER_EXTENT).toFixed(1));
             s.warp.setAttribute('y', (py - FILTER_EXTENT).toFixed(1));
           }
-          const focused =
-            tileFocus[s.pair[0]] ||
-            tileFocus[s.pair[1]];
-          s.retract += ((focused ? 1 : 0) - s.retract) * retractEase;
-
           const strength = 1 - 0.92 * s.retract;
           const exchange = Math.sin(time * s.exchangeW + s.phase);
           /* Advect the existing image samples with the reciprocal pressure.
@@ -1080,14 +1142,21 @@ const websiteSchema = {
           tongues(s, px, py, time, exchange, strength);
           film(s, px, py, time, exchange, strength);
 
-          s.noiseShift.setAttribute('dx', (8 * Math.sin(time * 0.48 * s.speedB + s.phase)).toFixed(1));
-          s.noiseShift.setAttribute('dy', (9 * Math.cos(time * 0.41 * s.speedB + s.phase)).toFixed(1));
+          const noiseX = (8 * Math.sin(time * 0.48 * s.speedB + s.phase)).toFixed(1);
+          const noiseY = (9 * Math.cos(time * 0.41 * s.speedB + s.phase)).toFixed(1);
+          if (noiseX !== s.noiseX) {
+            s.noiseShift.setAttribute('dx', noiseX);
+            s.noiseX = noiseX;
+          }
+          if (noiseY !== s.noiseY) {
+            s.noiseShift.setAttribute('dy', noiseY);
+            s.noiseY = noiseY;
+          }
           // Keep fine photographic detail coherent through the moving edge.
-          s.disp.setAttribute('scale', (14 + 4 * Math.sin(time * 0.52 * s.speedA + s.phase)).toFixed(1));
-          const opacity = (1 - s.retract).toFixed(2);
-          if (opacity !== s.opacity) {
-            s.zoneG.setAttribute('opacity', opacity);
-            s.opacity = opacity;
+          const displacement = (WARP_BASE + WARP_VARIATION * Math.sin(time * 0.52 * s.speedA + s.phase)).toFixed(1);
+          if (displacement !== s.displacement) {
+            s.disp.setAttribute('scale', displacement);
+            s.displacement = displacement;
           }
         }
         raf = requestAnimationFrame(frame);
