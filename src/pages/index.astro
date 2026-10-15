@@ -489,7 +489,7 @@ const websiteSchema = {
         speedA: number; speedB: number; exchangeW: number;
         seed: number; phase: number; retract: number;
         tongueA: TongueProfile[]; tongueB: TongueProfile[];
-        disp: SVGElement; noiseShift: SVGElement; grad: SVGElement; warp: SVGElement;
+        disp: SVGElement; noiseShift: SVGElement; grad: SVGElement;
         travelLow: SVGTransform; travelHigh: SVGTransform;
         spillLow: SVGElement; spillHigh: SVGElement; zoneAngle: number;
         lobA: PaintLayer; lobB: PaintLayer; filmLow: PaintLayer; filmHigh: PaintLayer;
@@ -523,15 +523,16 @@ const websiteSchema = {
       const R = 34;
       const ZONE_TANGENT_SCALE = 1.65;
       const ZONE_NORMAL_SCALE = 0.46;
-      const FILTER_EXTENT = R * ZONE_TANGENT_SCALE + 18;
       const MAX_CONTACT_DRIFT = 8;
       const WARP_BASE = 14;
       const WARP_VARIATION = 4;
-      // Cover the entire moving filter, including the pixels displacement can
-      // sample outside it. The extra 2px protects rounding and antialiasing.
-      // Fixed bounds avoid resizing mask surfaces as the contact point drifts.
-      const MASK_EXTENT = FILTER_EXTENT + MAX_CONTACT_DRIFT +
-        (WARP_BASE + WARP_VARIATION) / 2 + 2;
+      const NOISE_TRAVEL_X = 8;
+      const NOISE_TRAVEL_Y = 9;
+      // Displacement samples up to half its scale away; the noise input also
+      // needs room for its offset. Add 2px for rounding and antialiasing.
+      const FILTER_PADDING = Math.max(
+        (WARP_BASE + WARP_VARIATION) / 2, NOISE_TRAVEL_X, NOISE_TRAVEL_Y,
+      ) + 2;
       const TONGUE_LOBES = 18;
       const FILM_LOBES = 7;
 
@@ -810,9 +811,27 @@ const websiteSchema = {
         u0: number, uLo: number, uHi: number,
         gridWidth: number, gridHeight: number,
       ): Spot {
+        /* Bound the rotated reveal ellipse, including its full drift along
+           the seam and both filter inputs' sampling margins. A fixed region
+           avoids moving the filter surface every time the contact drifts.
+           Keep grid coordinates so the noise and cover samples stay aligned. */
+        const zoneAngle = Math.atan2(ty, tx) * 180 / Math.PI;
+        // Use the same rotation precision as the reveal gradient below.
+        const angle = Number(zoneAngle.toFixed(2)) * Math.PI / 180;
+        const cos = Math.cos(angle), sin = Math.sin(angle);
+        const extentX = R * Math.hypot(ZONE_TANGENT_SCALE * cos, ZONE_NORMAL_SCALE * sin) +
+          MAX_CONTACT_DRIFT * Math.abs(tx) + FILTER_PADDING;
+        const extentY = R * Math.hypot(ZONE_TANGENT_SCALE * sin, ZONE_NORMAL_SCALE * cos) +
+          MAX_CONTACT_DRIFT * Math.abs(ty) + FILTER_PADDING;
+        const left = Math.floor(ax + tx * u0 - extentX);
+        const top = Math.floor(ay + ty * u0 - extentY);
+        const right = Math.ceil(ax + tx * u0 + extentX);
+        const bottom = Math.ceil(ay + ty * u0 + extentY);
+        const maskBounds = { x: left, y: top, width: right - left, height: bottom - top };
+
         const warp = el('filter', {
           id: `fx-warp-${id}`, filterUnits: 'userSpaceOnUse', 'color-interpolation-filters': 'sRGB',
-          width: FILTER_EXTENT * 2, height: FILTER_EXTENT * 2,
+          ...maskBounds,
         });
         warp.appendChild(el('feTurbulence', { type: 'fractalNoise', baseFrequency: '0.028 0.05', numOctaves: '2', seed: String(Math.floor(Math.random() * 90) + 1), result: 'n' }));
         const noiseShift = el('feOffset', { in: 'n', dx: '0', dy: '0', result: 'movingNoise' });
@@ -838,15 +857,8 @@ const websiteSchema = {
         grad.appendChild(el('stop', { offset: '1', 'stop-color': '#000' }));
         defs!.appendChild(grad);
 
-        // Only this contact's neighbourhood contributes to the result. Bound
-        // all five masks there instead of allocating a grid-sized reveal mask
-        // and cover-sized tongue/film masks. Keep the original grid clipping
-        // on the final reveal; the source masks retain their sampling margin.
-        const left = Math.floor(ax + tx * u0 - MASK_EXTENT);
-        const top = Math.floor(ay + ty * u0 - MASK_EXTENT);
-        const right = Math.ceil(ax + tx * u0 + MASK_EXTENT);
-        const bottom = Math.ceil(ay + ty * u0 + MASK_EXTENT);
-        const maskBounds = { x: left, y: top, width: right - left, height: bottom - top };
+        // Keep the original grid clipping on the final reveal. The source
+        // masks share the filter's padded region, including displaced samples.
         const zoneX = Math.max(0, left);
         const zoneY = Math.max(0, top);
         const zoneBounds = {
@@ -858,16 +870,20 @@ const websiteSchema = {
         zmask.appendChild(el('rect', { ...zoneBounds, fill: `url(#fx-zone-${id})` }));
         defs!.appendChild(zmask);
 
-        const tmA = el('mask', { id: `fx-tA-${id}`, maskUnits: 'userSpaceOnUse', ...maskBounds });
+        // These four masks contain only white goo. Alpha gives the same
+        // coverage without a luminance conversion; the shaded reveal above
+        // deliberately keeps its luminance mask.
+        const paintMask = { maskUnits: 'userSpaceOnUse', 'mask-type': 'alpha', ...maskBounds };
+        const tmA = el('mask', { id: `fx-tA-${id}`, ...paintMask });
         const lobA = makePaintLayer(TONGUE_LOBES);
         tmA.appendChild(lobA.group); defs!.appendChild(tmA);
-        const tmB = el('mask', { id: `fx-tB-${id}`, maskUnits: 'userSpaceOnUse', ...maskBounds });
+        const tmB = el('mask', { id: `fx-tB-${id}`, ...paintMask });
         const lobB = makePaintLayer(TONGUE_LOBES);
         tmB.appendChild(lobB.group); defs!.appendChild(tmB);
-        const fmL = el('mask', { id: `fx-fL-${id}`, maskUnits: 'userSpaceOnUse', ...maskBounds });
+        const fmL = el('mask', { id: `fx-fL-${id}`, ...paintMask });
         const filmLow = makePaintLayer(FILM_LOBES);
         fmL.appendChild(filmLow.group); defs!.appendChild(fmL);
-        const fmH = el('mask', { id: `fx-fH-${id}`, maskUnits: 'userSpaceOnUse', ...maskBounds });
+        const fmH = el('mask', { id: `fx-fH-${id}`, ...paintMask });
         const filmHigh = makePaintLayer(FILM_LOBES);
         fmH.appendChild(filmHigh.group); defs!.appendChild(fmH);
 
@@ -928,14 +944,14 @@ const websiteSchema = {
         return {
           id, pair, lowIdx, highIdx,
           ax, ay, tx, ty, nx, ny, u0, uLo, uHi,
-          zoneAngle: Math.atan2(ty, tx) * 180 / Math.PI,
+          zoneAngle,
           drift,
           /* Per-spot rhythms keep the fan from pulsing in sync — no readable
              global loop, no shared dead beat. */
           speedA, speedB, exchangeW, seed, phase, retract: 0,
           tongueA: makeTongueProfiles(seed, false),
           tongueB: makeTongueProfiles(seed, true),
-          disp, noiseShift, grad, warp, travelLow, travelHigh, spillLow, spillHigh,
+          disp, noiseShift, grad, travelLow, travelHigh, spillLow, spillHigh,
           lobA, lobB, filmLow, filmHigh, zoneG, opacity: '1', cx: '', cy: '',
           noiseX: '', noiseY: '', displacement: '',
         };
@@ -1126,8 +1142,6 @@ const websiteSchema = {
               'gradientTransform',
               `translate(${cx} ${cy}) rotate(${s.zoneAngle.toFixed(2)}) scale(${ZONE_TANGENT_SCALE} ${ZONE_NORMAL_SCALE}) translate(${(-px).toFixed(1)} ${(-py).toFixed(1)})`,
             );
-            s.warp.setAttribute('x', (px - FILTER_EXTENT).toFixed(1));
-            s.warp.setAttribute('y', (py - FILTER_EXTENT).toFixed(1));
           }
           const strength = 1 - 0.92 * s.retract;
           const exchange = Math.sin(time * s.exchangeW + s.phase);
@@ -1142,8 +1156,8 @@ const websiteSchema = {
           tongues(s, px, py, time, exchange, strength);
           film(s, px, py, time, exchange, strength);
 
-          const noiseX = (8 * Math.sin(time * 0.48 * s.speedB + s.phase)).toFixed(1);
-          const noiseY = (9 * Math.cos(time * 0.41 * s.speedB + s.phase)).toFixed(1);
+          const noiseX = (NOISE_TRAVEL_X * Math.sin(time * 0.48 * s.speedB + s.phase)).toFixed(1);
+          const noiseY = (NOISE_TRAVEL_Y * Math.cos(time * 0.41 * s.speedB + s.phase)).toFixed(1);
           if (noiseX !== s.noiseX) {
             s.noiseShift.setAttribute('dx', noiseX);
             s.noiseX = noiseX;
