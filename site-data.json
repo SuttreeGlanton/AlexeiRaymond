@@ -440,7 +440,12 @@
       "cover": "covers/pieces/the-mourning-hounds.jpg",
       "excerpt": "The hounds are his wards and tethers.",
       "genre": "Short fiction",
-      "issue": "Issue 11"
+      "issue": "Issue 11",
+      "account": {
+        "slug": "the-mourning-hounds",
+        "label": "Read story",
+        "title": "The Mourning Hounds"
+      }
     },
     {
       "title": "Last Sight of Her",
