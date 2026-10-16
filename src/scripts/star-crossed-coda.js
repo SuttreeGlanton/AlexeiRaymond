@@ -1,19 +1,19 @@
 // Star-Crossed: the page stays complete prose if this enhancement cannot load.
 const story = document.querySelector('[data-sc-story] .archive-prose');
 const data = document.querySelector('[data-sc-variants]');
-const tools = document.querySelector('[data-sc-tools]');
+const status = document.querySelector('[data-sc-status]');
 
-if (story && data && tools) {
+if (story && data && status) {
   let variants;
   try { variants = JSON.parse(data.textContent || '{}'); } catch { variants = {}; }
 
-  const BEAT = 2600;
+  // One wording change across the visible prose per beat, not one timer per
+  // word. Hue-only changes can continue without shifting a line of text.
+  const BEAT = 8000;
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const control = tools.querySelector('[data-sc-motion]');
-  const controlLabel = tools.querySelector('[data-sc-motion-label]');
-  const status = tools.querySelector('[data-sc-status]');
   const ambient = new Map();
   let paused = motion.matches;
+  let nextTextAt = performance.now() + BEAT;
   let timer = 0;
   let suspended = false;
   let selecting = false;
@@ -35,10 +35,11 @@ if (story && data && tools) {
 
   function show(state) {
     const option = state.options[state.index];
-    renderText(state.ink, option);
+    // In the hue-only fragment, keep the same text nodes and accessible name.
+    if (state.ink.textContent !== option.text) renderText(state.ink, option);
     if (option.color) state.ink.style.setProperty('--sc-color', option.color);
     else state.ink.style.removeProperty('--sc-color');
-    state.button.setAttribute('aria-label', option.text);
+    if (state.button.getAttribute('aria-label') !== option.text) state.button.setAttribute('aria-label', option.text);
     state.label.dataset.scIndex = String(state.index);
   }
 
@@ -61,9 +62,9 @@ if (story && data && tools) {
       state.index = (state.index + 1) % state.options.length;
       show(state);
     };
-    if (automatic && !motion.matches) {
+    if (automatic && !state.colorOnly && !motion.matches) {
       state.label.classList.add('is-changing');
-      state.swapTimer = window.setTimeout(commit, 160);
+      state.swapTimer = window.setTimeout(commit, 200);
     } else commit();
   }
 
@@ -76,31 +77,34 @@ if (story && data && tools) {
     }
     let due = Infinity;
     for (const state of ambient.values()) {
-      if (eligible(state)) due = Math.min(due, state.due);
+      if (eligible(state)) due = Math.min(due, state.colorOnly ? state.due : Math.max(nextTextAt, state.due));
     }
     if (Number.isFinite(due)) timer = window.setTimeout(tick, Math.max(0, due - performance.now()));
   }
 
   function tick() {
     const now = performance.now();
+    let candidate = null;
     for (const state of ambient.values()) {
       if (!eligible(state) || state.due > now + 8) continue;
-      state.due = now + BEAT;
-      advance(state, true);
+      if (state.colorOnly) {
+        state.due = now + BEAT;
+        advance(state, true);
+      } else if (!candidate || state.due < candidate.due) candidate = state;
+    }
+    if (candidate && now + 8 >= nextTextAt) {
+      candidate.due = now + BEAT;
+      nextTextAt = now + BEAT;
+      advance(candidate, true);
     }
     schedule();
   }
 
   function resetTiming() {
     const now = performance.now();
+    nextTextAt = now + BEAT;
     for (const state of ambient.values()) state.due = now + BEAT + state.phase;
     schedule();
-  }
-
-  function updateControl() {
-    control.toggleAttribute('data-paused', paused);
-    control.setAttribute('aria-label', paused ? 'Resume automatic text changes' : 'Pause automatic text changes');
-    controlLabel.textContent = paused ? 'Resume' : 'Pause';
   }
 
   // No live announcements for ambient changes. The status speaks only when
@@ -126,7 +130,8 @@ if (story && data && tools) {
     button.setAttribute('aria-describedby', 'sc-help');
     const state = {
       label, ink, button, options, index: 0, visible: false, hovered: false,
-      phase: (ambient.size % 7) * 140, due: 0, swapTimer: 0
+      colorOnly: mode === 'color' && options.every(option => option.text === options[0].text),
+      phase: (ambient.size % 7) * 140, due: 0, swapTimer: 0, feedbackTimer: 0
     };
 
     if (mode !== 'click') {
@@ -153,9 +158,15 @@ if (story && data && tools) {
       const selection = window.getSelection();
       if (event.detail > 0 && selection && !selection.isCollapsed) return;
       advance(state);
+      if (mode === 'click') {
+        window.clearTimeout(state.feedbackTimer);
+        label.classList.add('is-clicked');
+        state.feedbackTimer = window.setTimeout(() => label.classList.remove('is-clicked'), 140);
+      }
       status.textContent = options[state.index].text;
       if (event.detail > 0) button.blur();
       state.due = performance.now() + BEAT * 2;
+      if (!state.colorOnly) nextTextAt = performance.now() + BEAT;
       schedule();
     });
     label.append(ink, button);
@@ -165,7 +176,6 @@ if (story && data && tools) {
   }
 
   if (count) {
-    tools.hidden = false;
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver(entries => {
         const now = performance.now();
@@ -180,16 +190,9 @@ if (story && data && tools) {
     } else {
       // Retain every manual switch in browsers without visibility observers.
       paused = true;
-      control.hidden = true;
     }
-    control.addEventListener('click', () => {
-      paused = !paused;
-      updateControl();
-      resetTiming();
-    });
     motion.addEventListener('change', event => {
-      if (event.matches) paused = true;
-      updateControl();
+      paused = event.matches || !('IntersectionObserver' in window);
       resetTiming();
     });
     document.addEventListener('visibilitychange', resetTiming);
@@ -207,6 +210,5 @@ if (story && data && tools) {
       suspended = false;
       resetTiming();
     });
-    updateControl();
   }
 }

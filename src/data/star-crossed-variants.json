@@ -113,11 +113,11 @@
     "options": [
       {
         "text": "white",
-        "color": "#f2eee6"
+        "color": "#ffffff"
       },
       {
         "text": "pink",
-        "color": "#edb2ce"
+        "color": "#ff72b2"
       }
     ]
   },
@@ -126,11 +126,11 @@
     "options": [
       {
         "text": "pink",
-        "color": "#edb2ce"
+        "color": "#ff72b2"
       },
       {
         "text": "white",
-        "color": "#f2eee6"
+        "color": "#ffffff"
       }
     ]
   },
@@ -139,11 +139,11 @@
     "options": [
       {
         "text": "black",
-        "color": "#9397a0"
+        "color": "#989eaa"
       },
       {
         "text": "blue",
-        "color": "#95b9ef"
+        "color": "#5ea5ff"
       }
     ]
   },
@@ -341,11 +341,11 @@
     "options": [
       {
         "text": "white",
-        "color": "#f2eee6"
+        "color": "#ffffff"
       },
       {
         "text": "green",
-        "color": "#97c99d"
+        "color": "#5bdf7c"
       }
     ]
   },
@@ -354,11 +354,11 @@
     "options": [
       {
         "text": "black",
-        "color": "#9397a0"
+        "color": "#989eaa"
       },
       {
         "text": "blue",
-        "color": "#95b9ef"
+        "color": "#5ea5ff"
       }
     ]
   },
@@ -367,11 +367,11 @@
     "options": [
       {
         "text": "white",
-        "color": "#f2eee6"
+        "color": "#ffffff"
       },
       {
         "text": "yellow",
-        "color": "#e9d587"
+        "color": "#ffe04f"
       }
     ]
   },
@@ -408,11 +408,11 @@
     "options": [
       {
         "text": "red",
-        "color": "#ef9295"
+        "color": "#ff5268"
       },
       {
         "text": "purple",
-        "color": "#c4a0e5"
+        "color": "#b77aff"
       }
     ]
   },
@@ -423,196 +423,196 @@
         "text": "her color"
       },
       {
-        "text": "red",
-        "color": "#ef9295"
+        "text": "her color",
+        "color": "#ff5268"
       },
       {
-        "text": "purple",
-        "color": "#c4a0e5"
+        "text": "her color",
+        "color": "#b77aff"
       },
       {
-        "text": "green",
-        "color": "#97c99d"
+        "text": "her color",
+        "color": "#5bdf7c"
       },
       {
-        "text": "black",
-        "color": "#9397a0"
+        "text": "her color",
+        "color": "#989eaa"
       },
       {
-        "text": "white",
-        "color": "#f2eee6"
+        "text": "her color",
+        "color": "#ffffff"
       },
       {
-        "text": "pink",
-        "color": "#edb2ce"
+        "text": "her color",
+        "color": "#ff72b2"
       },
       {
-        "text": "blue",
-        "color": "#95b9ef"
+        "text": "her color",
+        "color": "#5ea5ff"
       },
       {
-        "text": "yellow",
-        "color": "#e9d587"
+        "text": "her color",
+        "color": "#ffe04f"
       },
       {
-        "text": "orange",
-        "color": "#edb17d"
+        "text": "her color",
+        "color": "#ff9c45"
       },
       {
-        "text": "teal",
-        "color": "#82c7c0"
+        "text": "her color",
+        "color": "#28caba"
       },
       {
-        "text": "violet",
-        "color": "#b4a0ec"
+        "text": "her color",
+        "color": "#987cff"
       },
       {
-        "text": "gold",
-        "color": "#dec080"
+        "text": "her color",
+        "color": "#ffd04f"
       },
       {
-        "text": "coral",
-        "color": "#edaa98"
+        "text": "her color",
+        "color": "#ff826a"
       },
       {
-        "text": "indigo",
-        "color": "#a1a6e2"
+        "text": "her color",
+        "color": "#8a8dff"
       },
       {
-        "text": "silver",
-        "color": "#d0d3db"
+        "text": "her color",
+        "color": "#d1d8e5"
       },
       {
-        "text": "crimson",
-        "color": "#e493a6"
+        "text": "her color",
+        "color": "#f95a82"
       },
       {
-        "text": "turquoise",
-        "color": "#8bd4cd"
+        "text": "her color",
+        "color": "#34dfca"
       },
       {
-        "text": "lavender",
-        "color": "#d3bce7"
+        "text": "her color",
+        "color": "#bd8dff"
       },
       {
-        "text": "amber",
-        "color": "#dfbb81"
+        "text": "her color",
+        "color": "#ffbd35"
       },
       {
-        "text": "emerald",
-        "color": "#82c9a5"
+        "text": "her color",
+        "color": "#3bdc97"
       },
       {
-        "text": "scarlet",
-        "color": "#ec9a8c"
+        "text": "her color",
+        "color": "#ff6557"
       },
       {
-        "text": "lilac",
-        "color": "#d1aedc"
+        "text": "her color",
+        "color": "#d28cff"
       },
       {
-        "text": "ochre",
-        "color": "#cbb080"
+        "text": "her color",
+        "color": "#d6a441"
       },
       {
-        "text": "azure",
-        "color": "#8ebde8"
+        "text": "her color",
+        "color": "#39b7ff"
       },
       {
-        "text": "rose",
-        "color": "#e6a8b9"
+        "text": "her color",
+        "color": "#ff7d9f"
       },
       {
-        "text": "jade",
-        "color": "#98c7ad"
+        "text": "her color",
+        "color": "#40ce92"
       },
       {
-        "text": "pearl",
-        "color": "#e5dbd3"
+        "text": "her color",
+        "color": "#f7e9d8"
       },
       {
-        "text": "copper",
-        "color": "#d4a080"
+        "text": "her color",
+        "color": "#e69055"
       },
       {
-        "text": "cobalt",
-        "color": "#99aff0"
+        "text": "her color",
+        "color": "#6b98ff"
       },
       {
-        "text": "magenta",
-        "color": "#df99cd"
+        "text": "her color",
+        "color": "#f76bd5"
       },
       {
-        "text": "olive",
-        "color": "#b4be89"
+        "text": "her color",
+        "color": "#b0c243"
       },
       {
-        "text": "peach",
-        "color": "#edc3a1"
+        "text": "her color",
+        "color": "#ffb67d"
       },
       {
-        "text": "plum",
-        "color": "#c0a0c8"
+        "text": "her color",
+        "color": "#cf7adf"
       },
       {
-        "text": "mint",
-        "color": "#b1dbc0"
+        "text": "her color",
+        "color": "#6cf4af"
       },
       {
-        "text": "ruby",
-        "color": "#db92a8"
+        "text": "her color",
+        "color": "#f85b8c"
       },
       {
-        "text": "ivory",
-        "color": "#eee4c9"
+        "text": "her color",
+        "color": "#fff5cf"
       },
       {
-        "text": "salmon",
-        "color": "#e7ada1"
+        "text": "her color",
+        "color": "#ff927e"
       },
       {
-        "text": "bronze",
-        "color": "#bfab88"
+        "text": "her color",
+        "color": "#cfa05e"
       },
       {
-        "text": "navy",
-        "color": "#97a7cc"
+        "text": "her color",
+        "color": "#7195e7"
       },
       {
-        "text": "apricot",
-        "color": "#e9bf8f"
+        "text": "her color",
+        "color": "#ffb263"
       },
       {
-        "text": "burgundy",
-        "color": "#c794a9"
+        "text": "her color",
+        "color": "#d96b92"
       },
       {
-        "text": "aqua",
-        "color": "#a0d5df"
+        "text": "her color",
+        "color": "#4dddf0"
       },
       {
-        "text": "mauve",
-        "color": "#c8a8bf"
+        "text": "her color",
+        "color": "#ca88bc"
       },
       {
-        "text": "chartreuse",
-        "color": "#c9d790"
+        "text": "her color",
+        "color": "#cbef4f"
       },
       {
-        "text": "saffron",
-        "color": "#e7c877"
+        "text": "her color",
+        "color": "#ffd138"
       },
       {
-        "text": "cerulean",
-        "color": "#94c3db"
+        "text": "her color",
+        "color": "#39bce7"
       },
       {
-        "text": "fuchsia",
-        "color": "#de9add"
+        "text": "her color",
+        "color": "#f473f1"
       },
       {
-        "text": "grey",
-        "color": "#b9b9be"
+        "text": "her color",
+        "color": "#b4bac6"
       }
     ]
   },
@@ -942,11 +942,11 @@
     "options": [
       {
         "text": "new, grey sneakers",
-        "color": "#b9b9be"
+        "color": "#b4bac6"
       },
       {
         "text": "old, white sneakers",
-        "color": "#f2eee6"
+        "color": "#ffffff"
       }
     ]
   },
