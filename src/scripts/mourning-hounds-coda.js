@@ -64,7 +64,7 @@ if (story && prose && opening && ending && trails.length) {
       let laid = 0;
       let endPlayed = false;
       let endingVisible = false;
-      let heartbeatTimer = 0;
+      let invitationTimer = 0;
       let echoTimer = 0;
       let echoEndTimer = 0;
       let activeWord = null;
@@ -85,31 +85,49 @@ if (story && prose && opening && ending && trails.length) {
         const echo = word.querySelector('.mh-echo').dataset.mhEcho;
         const changed = word.classList.contains('is-echo');
         const button = word.querySelector('.mh-word-toggle');
+        if (word === lastWord && !endPlayed && !reducedMotion.matches) {
+          button.setAttribute('aria-label', `${original}. Start word sequence.`);
+          button.title = 'Explore this word';
+          return;
+        }
         button.setAttribute('aria-label', `${changed ? echo : original}. Change to ${changed ? original : echo}.`);
         button.title = `Show ${changed ? original : echo}`;
       };
-      const unlockWords = () => {
-        for (const word of [firstWord, lastWord]) {
-          updateWordControl(word);
-          word.querySelector('.mh-word-toggle').hidden = false;
-        }
+      const unlockWord = (word) => {
+        updateWordControl(word);
+        word.querySelector('.mh-word-toggle').hidden = false;
+      };
+      const clearInvitation = () => {
+        window.clearTimeout(invitationTimer);
+        invitationTimer = 0;
+        lastWord.classList.remove('is-inviting');
+      };
+      const scheduleInvitation = () => {
+        clearInvitation();
+        if (!endingVisible || endPlayed || returning || document.hidden) return;
+        // Let the reader rest with the ending in view for a few heartbeats.
+        // This reveals only a cue. The words never alternate without a click.
+        invitationTimer = window.setTimeout(() => {
+          invitationTimer = 0;
+          if (!endingVisible || endPlayed || returning || document.hidden) return;
+          unlockWord(lastWord);
+          lastWord.classList.add('is-inviting');
+        }, 2400);
       };
 
       const clearEcho = () => {
-        window.clearTimeout(heartbeatTimer);
         window.clearTimeout(echoTimer);
         window.clearTimeout(echoEndTimer);
-        heartbeatTimer = 0;
         if (activeWord) {
           activeWord.classList.remove('is-echo');
+          unlockWord(activeWord);
           activeWord = null;
-          unlockWords();
         }
       };
 
       const playEcho = (word) => {
         clearEcho();
-        if (reducedMotion.matches) { unlockWords(); return; }
+        if (reducedMotion.matches) { unlockWord(word); return; }
         if (document.hidden) return;
         activeWord = word;
         const toggle = () => {
@@ -121,11 +139,17 @@ if (story && prose && opening && ending && trails.length) {
         echoEndTimer = window.setTimeout(clearEcho, 10000);
       };
 
-      // Once discovered, each real button changes only its own word and
-      // leaves that reading in place until the reader chooses again.
+      // The first ending click starts its sequence. Later clicks choose a
+      // reading directly. The opening sequence still starts on paw return.
       for (const word of [firstWord, lastWord]) {
         updateWordControl(word);
         word.querySelector('.mh-word-toggle').addEventListener('click', () => {
+          if (word === lastWord && !endPlayed) {
+            endPlayed = true;
+            clearInvitation();
+            if (!reducedMotion.matches) { playEcho(word); return; }
+            // Reduced motion keeps the same manual choice without cycling.
+          }
           const showEcho = !word.classList.contains('is-echo');
           clearEcho();
           word.classList.toggle('is-echo', showEcho);
@@ -159,6 +183,7 @@ if (story && prose && opening && ending && trails.length) {
           footerTop = footer ? window.scrollY + footer.getBoundingClientRect().top : Infinity;
         }
         scheduleProgress();
+        scheduleInvitation();
       };
 
       const updateProgress = () => {
@@ -191,27 +216,17 @@ if (story && prose && opening && ending && trails.length) {
 
       const endObserver = new IntersectionObserver((entries) => {
         endingVisible = entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 1);
-        if (!endingVisible) {
-          window.clearTimeout(heartbeatTimer);
-          heartbeatTimer = 0;
-          return;
-        }
-        reveal(6);
-        if (endPlayed || returning || document.hidden) return;
-        window.clearTimeout(heartbeatTimer);
-        heartbeatTimer = window.setTimeout(() => {
-          heartbeatTimer = 0;
-          if (!endingVisible || document.hidden || returning) return;
-          endPlayed = true;
-          playEcho(lastWord);
-        }, 700);
+        if (endingVisible) reveal(6);
+        scheduleInvitation();
       }, { threshold: 1, rootMargin: '-90px 0px -24px 0px' });
       endObserver.observe(lastWord);
 
       const cancelReturn = () => {
+        const wasReturning = returning;
         returning = false;
         cancelAnimationFrame(returnFrame);
         returnFrame = 0;
+        if (wasReturning) scheduleInvitation();
       };
       const returnToOpening = () => {
         if (returning || laid < 6) return;
@@ -222,6 +237,7 @@ if (story && prose && opening && ending && trails.length) {
           document.documentElement.scrollHeight - window.innerHeight
         ));
         returning = true;
+        clearInvitation();
         const deadline = performance.now() + 4000;
         window.scrollTo({ top: target, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
         const arrive = () => {
@@ -241,17 +257,21 @@ if (story && prose && opening && ending && trails.length) {
       };
 
       returnButtons.forEach((button) => button.addEventListener('click', returnToOpening));
-      window.addEventListener('scroll', scheduleProgress, { passive: true });
+      window.addEventListener('scroll', () => {
+        scheduleProgress();
+        if (endingVisible && !endPlayed) scheduleInvitation();
+      }, { passive: true });
       window.addEventListener('resize', measure);
       window.addEventListener('wheel', cancelReturn, { passive: true });
       window.addEventListener('touchstart', cancelReturn, { passive: true });
       window.addEventListener('keydown', (event) => {
         if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ', 'Escape'].includes(event.key)) cancelReturn();
-        if (event.key === 'Escape') clearEcho();
+        if (event.key === 'Escape') { clearEcho(); clearInvitation(); }
       });
       const pause = () => {
         clearEcho();
         cancelReturn();
+        clearInvitation();
         cancelAnimationFrame(progressFrame);
         progressFrame = 0;
       };
@@ -260,7 +280,10 @@ if (story && prose && opening && ending && trails.length) {
         if (document.hidden) pause();
         else measure();
       });
-      reducedMotion.addEventListener('change', clearEcho);
+      reducedMotion.addEventListener('change', () => {
+        clearEcho();
+        [firstWord, lastWord].forEach(updateWordControl);
+      });
       window.addEventListener('pagehide', pause);
       window.addEventListener('pageshow', measure);
       if ('ResizeObserver' in window) {

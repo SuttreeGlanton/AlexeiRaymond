@@ -217,4 +217,19 @@ const artwork = 'realistic';
     outline: 1px solid var(--text-soft);
     outline-offset: 2px;
   }
+  /* Invite a click without revealing the alternate word while reading. */
+  [data-mh-story] .mh-word.is-inviting .mh-original {
+    animation: mh-word-invitation 2.8s ease-in-out infinite;
+  }
+  @keyframes mh-word-invitation {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.78; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-mh-story] .mh-word.is-inviting .mh-original {
+      animation: none;
+      text-decoration: underline dotted;
+      text-underline-offset: 0.16em;
+    }
+  }
 </style>
