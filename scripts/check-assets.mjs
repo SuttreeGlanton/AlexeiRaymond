@@ -39,7 +39,10 @@ const referencedCovers = new Set([
   siteData.site?.headerCover,
   siteData.interview?.cover,
   ...(siteData.cycles || []).map((cycle) => cycle.cover),
-  ...(siteData.pieces || []).map((piece) => piece.cover)
+  ...(siteData.pieces || []).flatMap((piece) => [
+    piece.cover,
+    ...(Array.isArray(piece.coverVariants) ? piece.coverVariants : [])
+  ])
 ].filter(Boolean).map(normalizeSlash));
 
 const imageFiles = walk(assetsRoot).filter((file) =>

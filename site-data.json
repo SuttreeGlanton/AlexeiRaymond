@@ -1158,6 +1158,14 @@
       ],
       "link": "https://zinniajournal.wixsite.com/the-zinnia-journal",
       "cover": "covers/pieces/star-crossed_3.png",
+      "coverVariants": [
+        "covers/pieces/star-crossed_1.png",
+        "covers/pieces/star-crossed_2.png",
+        "covers/pieces/star-crossed_3.png",
+        "covers/pieces/star-crossed_4.png",
+        "covers/pieces/star-crossed_5.png",
+        "covers/pieces/star-crossed_6.png"
+      ],
       "excerpt": "Another crazy couple disrupting the quiet night.",
       "genre": "Flash fiction",
       "issue": "Issue 3",

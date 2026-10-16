@@ -1,9 +1,9 @@
 // Star-Crossed: the page stays complete prose if this enhancement cannot load.
 const story = document.querySelector('[data-sc-story] .archive-prose');
 const data = document.querySelector('[data-sc-variants]');
-const status = document.querySelector('[data-sc-status]');
+const announcement = document.querySelector('[data-sc-status]');
 
-if (story && data && status) {
+if (story && data && announcement) {
   let variants;
   try { variants = JSON.parse(data.textContent || '{}'); } catch { variants = {}; }
 
@@ -176,7 +176,7 @@ if (story && data && status) {
         label.classList.add('is-clicked');
         state.feedbackTimer = window.setTimeout(() => label.classList.remove('is-clicked'), 140);
       }
-      status.textContent = options[state.index].text;
+      announcement.textContent = options[state.index].text;
       if (event.detail > 0) button.blur();
       state.due = performance.now() + (mode === 'color' ? state.period : BEAT * 2);
       if (mode !== 'color') nextTextAt = performance.now() + BEAT;

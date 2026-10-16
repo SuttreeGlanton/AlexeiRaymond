@@ -56,6 +56,8 @@ export interface Piece {
   tags: Tag[];
   link: string;
   cover: string;
+  /** Ordered cover variations used by a piece's presentation. Includes cover. */
+  coverVariants?: string[];
   issue?: string;
   note?: string;
   excerpt?: string;

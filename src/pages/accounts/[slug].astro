@@ -208,7 +208,7 @@ const breadcrumbSchema = piece ? {
         <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}${isWitnesses ? ' witnesses-cover-slot' : ''}${isNow ? ' now-cover-slot' : ''}${isTruth ? ' truth-cover-slot' : ''}${isLothariOnline ? ' lothario-cover-slot' : ''}${isMourningHounds ? ' mourning-hounds-cover-slot' : ''}`}>
           <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
             <div class="archive-cover-media">
-              {isStarCrossed ? <StarCrossedCover alt={archiveCoverAlt} /> : <OptimizedImage
+              {isStarCrossed ? <StarCrossedCover alt={archiveCoverAlt} cover={piece.cover} variants={piece.coverVariants ?? [piece.cover]} /> : <OptimizedImage
                 path={piece.cover}
                 image={archiveCoverImage}
                 alt={archiveCoverAlt}

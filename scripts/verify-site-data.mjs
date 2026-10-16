@@ -279,6 +279,22 @@ if (Array.isArray(data.pieces)) {
     requireString(piece.link, `${label}.link`, { allowEmpty: true });
     checkAsset(label, piece.cover, ['src/assets']);
 
+    if ('coverVariants' in piece && requireArray(piece.coverVariants, `${label}.coverVariants`)) {
+      const variants = piece.coverVariants.map(normalizePath);
+      if (variants.length < 2) {
+        addError(`${label}.coverVariants: must list at least two images.`);
+      }
+      if (new Set(variants).size !== variants.length) {
+        addError(`${label}.coverVariants: must not contain duplicate images.`);
+      }
+      if (!variants.includes(normalizePath(piece.cover))) {
+        addError(`${label}.coverVariants: must include the primary cover.`);
+      }
+      piece.coverVariants.forEach((cover, variantIndex) => {
+        checkAsset(`${label}.coverVariants[${variantIndex}]`, cover, ['src/assets']);
+      });
+    }
+
     if (piece.title) {
       if (pieceTitles.has(piece.title)) {
         addError(`${label}: duplicate piece title.`);
