@@ -7,8 +7,7 @@ if (story && data && status) {
   let variants;
   try { variants = JSON.parse(data.textContent || '{}'); } catch { variants = {}; }
 
-  // One wording change across the visible prose per beat, not one timer per
-  // word. Hue-only changes can continue without shifting a line of text.
+  // Descriptive words share a slow beat. Colours each have their own cadence.
   const BEAT = 8000;
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const ambient = new Map();
@@ -16,8 +15,8 @@ if (story && data && status) {
   let nextTextAt = performance.now() + BEAT;
   let timer = 0;
   let suspended = false;
-  let selecting = false;
   let count = 0;
+  let colorCount = 0;
 
   function renderText(target, option) {
     const nodes = [];
@@ -36,7 +35,7 @@ if (story && data && status) {
   function show(state) {
     const option = state.options[state.index];
     // In the hue-only fragment, keep the same text nodes and accessible name.
-    if (state.ink.textContent !== option.text) renderText(state.ink, option);
+    if (state.text.textContent !== option.text) renderText(state.text, option);
     if (option.color) state.ink.style.setProperty('--sc-color', option.color);
     else state.ink.style.removeProperty('--sc-color');
     if (state.button.getAttribute('aria-label') !== option.text) state.button.setAttribute('aria-label', option.text);
@@ -44,7 +43,8 @@ if (story && data && status) {
   }
 
   function eligible(state) {
-    return state.visible && !state.hovered && !state.label.contains(document.activeElement);
+    return state.visible && (state.mode === 'color' || !state.hovered) &&
+      !state.label.contains(document.activeElement);
   }
 
   function cancelChange(state) {
@@ -58,11 +58,11 @@ if (story && data && status) {
     const commit = () => {
       state.swapTimer = 0;
       state.label.classList.remove('is-changing');
-      if (automatic && (paused || suspended || selecting || document.hidden || !eligible(state))) return;
+      if (automatic && (paused || suspended || document.hidden || !eligible(state))) return;
       state.index = (state.index + 1) % state.options.length;
       show(state);
     };
-    if (automatic && !state.colorOnly && !motion.matches) {
+    if (automatic && state.mode !== 'color' && !motion.matches) {
       state.label.classList.add('is-changing');
       state.swapTimer = window.setTimeout(commit, 200);
     } else commit();
@@ -71,13 +71,13 @@ if (story && data && status) {
   function schedule() {
     window.clearTimeout(timer);
     timer = 0;
-    if (paused || suspended || selecting || document.hidden) {
+    if (paused || suspended || document.hidden) {
       for (const state of ambient.values()) cancelChange(state);
       return;
     }
     let due = Infinity;
     for (const state of ambient.values()) {
-      if (eligible(state)) due = Math.min(due, state.colorOnly ? state.due : Math.max(nextTextAt, state.due));
+      if (eligible(state)) due = Math.min(due, state.mode === 'color' ? state.due : Math.max(nextTextAt, state.due));
     }
     if (Number.isFinite(due)) timer = window.setTimeout(tick, Math.max(0, due - performance.now()));
   }
@@ -87,8 +87,8 @@ if (story && data && status) {
     let candidate = null;
     for (const state of ambient.values()) {
       if (!eligible(state) || state.due > now + 8) continue;
-      if (state.colorOnly) {
-        state.due = now + BEAT;
+      if (state.mode === 'color') {
+        state.due = now + state.period;
         advance(state, true);
       } else if (!candidate || state.due < candidate.due) candidate = state;
     }
@@ -103,7 +103,7 @@ if (story && data && status) {
   function resetTiming() {
     const now = performance.now();
     nextTextAt = now + BEAT;
-    for (const state of ambient.values()) state.due = now + BEAT + state.phase;
+    for (const state of ambient.values()) state.due = now + state.delay;
     schedule();
   }
 
@@ -124,15 +124,31 @@ if (story && data && status) {
     const ink = document.createElement('span');
     ink.className = 'sc-ink';
     ink.setAttribute('aria-hidden', 'true');
+    let text = ink;
+    if (mode === 'color') {
+      // These short item phrases reserve the largest alternative's width.
+      // Faster colour changes therefore cannot repeatedly reflow a paragraph.
+      text = document.createElement('span');
+      text.className = 'sc-choice';
+      ink.append(text);
+      for (const wording of new Set(options.map(option => option.text))) {
+        const measure = document.createElement('span');
+        measure.className = 'sc-measure';
+        measure.textContent = wording;
+        ink.append(measure);
+      }
+    }
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'sc-trigger';
     button.setAttribute('aria-describedby', 'sc-help');
     const state = {
-      label, ink, button, options, index: 0, visible: false, hovered: false,
-      colorOnly: mode === 'color' && options.every(option => option.text === options[0].text),
-      phase: (ambient.size % 7) * 140, due: 0, swapTimer: 0, feedbackTimer: 0
+      label, ink, text, button, options, mode, index: 0, visible: false, hovered: false,
+      period: mode === 'color' ? 3400 + (colorCount * 730) % 1900 : BEAT,
+      delay: mode === 'color' ? 900 + colorCount * 290 : BEAT + (ambient.size % 7) * 140,
+      due: 0, swapTimer: 0, feedbackTimer: 0
     };
+    if (mode === 'color') colorCount++;
 
     if (mode !== 'click') {
       ambient.set(label, state);
@@ -143,20 +159,17 @@ if (story && data && status) {
       });
       label.addEventListener('pointerleave', () => {
         state.hovered = false;
-        state.due = performance.now() + BEAT;
+        if (mode !== 'color') state.due = performance.now() + BEAT;
         schedule();
       });
       button.addEventListener('focus', schedule);
       button.addEventListener('blur', () => {
-        state.due = performance.now() + BEAT * 2;
+        state.due = performance.now() + state.period;
         schedule();
       });
     }
 
     button.addEventListener('click', event => {
-      // Selecting/copying a sentence should not also replace it.
-      const selection = window.getSelection();
-      if (event.detail > 0 && selection && !selection.isCollapsed) return;
       advance(state);
       if (mode === 'click') {
         window.clearTimeout(state.feedbackTimer);
@@ -165,8 +178,8 @@ if (story && data && status) {
       }
       status.textContent = options[state.index].text;
       if (event.detail > 0) button.blur();
-      state.due = performance.now() + BEAT * 2;
-      if (!state.colorOnly) nextTextAt = performance.now() + BEAT;
+      state.due = performance.now() + (mode === 'color' ? state.period : BEAT * 2);
+      if (mode !== 'color') nextTextAt = performance.now() + BEAT;
       schedule();
     });
     label.append(ink, button);
@@ -182,7 +195,7 @@ if (story && data && status) {
         for (const entry of entries) {
           const state = ambient.get(entry.target);
           state.visible = entry.isIntersecting;
-          state.due = now + BEAT + state.phase;
+          state.due = now + state.delay;
         }
         schedule();
       }, { rootMargin: '-96px 0px -32px 0px', threshold: 0 });
@@ -196,12 +209,8 @@ if (story && data && status) {
       resetTiming();
     });
     document.addEventListener('visibilitychange', resetTiming);
-    document.addEventListener('selectionchange', () => {
-      const selection = window.getSelection();
-      selecting = !!selection && !selection.isCollapsed &&
-        (story.contains(selection.anchorNode) || story.contains(selection.focusNode));
-      resetTiming();
-    });
+    // Rapid repeat clicks should only cycle a fragment, never select prose.
+    story.addEventListener('selectstart', event => event.preventDefault());
     window.addEventListener('pagehide', () => {
       suspended = true;
       schedule();

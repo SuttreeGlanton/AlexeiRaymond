@@ -112,11 +112,11 @@
     "mode": "color",
     "options": [
       {
-        "text": "white",
+        "text": "white sneakers",
         "color": "#ffffff"
       },
       {
-        "text": "pink",
+        "text": "pink sneakers",
         "color": "#ff72b2"
       }
     ]
@@ -125,11 +125,11 @@
     "mode": "color",
     "options": [
       {
-        "text": "pink",
+        "text": "pink ones",
         "color": "#ff72b2"
       },
       {
-        "text": "white",
+        "text": "white ones",
         "color": "#ffffff"
       }
     ]
@@ -138,11 +138,11 @@
     "mode": "color",
     "options": [
       {
-        "text": "black",
+        "text": "black pair",
         "color": "#989eaa"
       },
       {
-        "text": "blue",
+        "text": "blue pair",
         "color": "#5ea5ff"
       }
     ]
@@ -340,11 +340,11 @@
     "mode": "color",
     "options": [
       {
-        "text": "white",
+        "text": "white graphic tee",
         "color": "#ffffff"
       },
       {
-        "text": "green",
+        "text": "green graphic tee",
         "color": "#5bdf7c"
       }
     ]
@@ -353,11 +353,11 @@
     "mode": "color",
     "options": [
       {
-        "text": "black",
+        "text": "black leggings",
         "color": "#989eaa"
       },
       {
-        "text": "blue",
+        "text": "blue leggings",
         "color": "#5ea5ff"
       }
     ]
@@ -366,11 +366,11 @@
     "mode": "color",
     "options": [
       {
-        "text": "white",
+        "text": "white shirt",
         "color": "#ffffff"
       },
       {
-        "text": "yellow",
+        "text": "yellow shirt",
         "color": "#ffe04f"
       }
     ]
@@ -407,11 +407,11 @@
     "mode": "color",
     "options": [
       {
-        "text": "red",
+        "text": "red shirt",
         "color": "#ff5268"
       },
       {
-        "text": "purple",
+        "text": "purple shirt",
         "color": "#b77aff"
       }
     ]

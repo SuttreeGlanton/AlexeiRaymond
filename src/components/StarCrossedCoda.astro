@@ -10,6 +10,11 @@ import controllerUrl from '../scripts/star-crossed-coda.js?url';
 <script is:inline type="module" src={controllerUrl}></script>
 
 <style is:global>
+  [data-sc-story] .archive-prose {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
   /* Labels wrap naturally across lines. Each contains a real native button,
      so pointer, touch, Enter and Space all reach the same accessible action. */
   [data-sc-story] .sc-fragment {
@@ -29,8 +34,10 @@ import controllerUrl from '../scripts/star-crossed-coda.js?url';
     transition: opacity 200ms ease, color 900ms ease, text-shadow 240ms ease, background-color 240ms ease;
   }
   [data-sc-story] .sc-fragment:hover .sc-ink {
-    background-color: rgb(235 216 177 / 0.045);
     text-shadow: 0 0 0.55em rgb(235 216 177 / 0.55);
+  }
+  [data-sc-story] [data-sc-mode="click"]:hover .sc-ink {
+    background-color: rgb(235 216 177 / 0.045);
   }
   [data-sc-story] .sc-fragment:has(.sc-trigger:focus-visible) .sc-ink {
     outline: 1px solid var(--focus);
@@ -47,13 +54,23 @@ import controllerUrl from '../scripts/star-crossed-coda.js?url';
     border-color: rgb(255 255 255 / 0.95);
     transition-duration: 70ms, 240ms, 240ms;
   }
-  /* Keep natural word spacing and punctuation. A shallow fade softens the
-     replacement without making the text disappear or reserving empty gaps. */
+  /* A shallow fade softens changes to the descriptive words. */
   [data-sc-story] .sc-fragment.is-changing .sc-ink { opacity: 0.84; }
   [data-sc-story] .sc-color .sc-ink {
+    display: inline-grid;
+    vertical-align: baseline;
     color: var(--sc-color, #fff4df);
     text-shadow: 0 0 0.36em color-mix(in srgb, currentColor 52%, transparent);
   }
+  [data-sc-story] .sc-color:hover .sc-ink {
+    text-shadow: 0 0 0.48em color-mix(in srgb, currentColor 75%, transparent);
+  }
+  [data-sc-story] .sc-choice,
+  [data-sc-story] .sc-measure {
+    grid-area: 1 / 1;
+    white-space: nowrap;
+  }
+  [data-sc-story] .sc-measure { visibility: hidden; pointer-events: none; }
   .sc-sr-only,
   [data-sc-story] .sc-trigger {
     position: absolute;
@@ -78,6 +95,8 @@ import controllerUrl from '../scripts/star-crossed-coda.js?url';
     }
   }
   @media print {
+    [data-sc-story] .sc-color .sc-ink { display: inline; }
+    [data-sc-story] .sc-measure { display: none; }
     [data-sc-story] .sc-ink {
       color: inherit;
       text-shadow: none;
