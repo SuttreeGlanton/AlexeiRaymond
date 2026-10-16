@@ -87,11 +87,9 @@ if (story && prose && opening && ending && trails.length) {
         const button = word.querySelector('.mh-word-toggle');
         if (word === lastWord && !endPlayed && !reducedMotion.matches) {
           button.setAttribute('aria-label', `${original}. Start word sequence.`);
-          button.title = 'Explore this word';
           return;
         }
         button.setAttribute('aria-label', `${changed ? echo : original}. Change to ${changed ? original : echo}.`);
-        button.title = `Show ${changed ? original : echo}`;
       };
       const unlockWord = (word) => {
         updateWordControl(word);
@@ -166,8 +164,8 @@ if (story && prose && opening && ending && trails.length) {
             step.classList.toggle('is-latest', index === laid - 1);
           });
         }
-        for (const button of returnButtons) button.disabled = laid < 6;
-        if (laid === 6) trails.forEach((trail) => trail.classList.add('is-complete'));
+        for (const button of returnButtons) button.disabled = laid < 5;
+        if (laid === 5) trails.forEach((trail) => trail.classList.add('is-complete'));
       };
 
       // Layout is measured on load/resize/font changes, not every scroll.
@@ -196,7 +194,7 @@ if (story && prose && opening && ending && trails.length) {
             coverEnd - window.scrollY
           );
           const bottom = Math.min(window.innerHeight, footerTop - window.scrollY) - 20;
-          const available = Math.max(0, Math.min(424, Math.floor(bottom - coverBottom - 20)));
+          const available = Math.max(0, Math.min(352, Math.floor(bottom - coverBottom - 20)));
           if (available !== trailHeight) {
             trailHeight = available;
             desktopTrail.style.setProperty('--mh-trail-height', `${available}px`);
@@ -207,7 +205,7 @@ if (story && prose && opening && ending && trails.length) {
         const progress = (window.scrollY + window.innerHeight * 0.82 - openingTop) /
           Math.max(1, endingBottom - openingTop);
         if (window.scrollY > 24) {
-          reveal([0.05, 0.23, 0.41, 0.59, 0.77].filter((threshold) => progress >= threshold).length);
+          reveal([0.05, 0.29, 0.53, 0.77].filter((threshold) => progress >= threshold).length);
         }
       };
       function scheduleProgress() {
@@ -216,7 +214,7 @@ if (story && prose && opening && ending && trails.length) {
 
       const endObserver = new IntersectionObserver((entries) => {
         endingVisible = entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 1);
-        if (endingVisible) reveal(6);
+        if (endingVisible) reveal(5);
         scheduleInvitation();
       }, { threshold: 1, rootMargin: '-90px 0px -24px 0px' });
       endObserver.observe(lastWord);
@@ -229,7 +227,7 @@ if (story && prose && opening && ending && trails.length) {
         if (wasReturning) scheduleInvitation();
       };
       const returnToOpening = () => {
-        if (returning || laid < 6) return;
+        if (returning || laid < 5) return;
         clearEcho();
         measure();
         const target = Math.max(0, Math.min(

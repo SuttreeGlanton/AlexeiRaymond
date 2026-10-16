@@ -5,14 +5,13 @@ import paw2 from '../assets/codas/mourning-hounds/paw-02.png';
 import paw3 from '../assets/codas/mourning-hounds/paw-03.png';
 import paw4 from '../assets/codas/mourning-hounds/paw-04.png';
 import paw5 from '../assets/codas/mourning-hounds/paw-05.png';
-import paw6 from '../assets/codas/mourning-hounds/paw-06.png';
 import controllerUrl from '../scripts/mourning-hounds-coda.js?url';
 
 interface Props {
   variant: 'desktop' | 'header' | 'tablet';
 }
 const { variant } = Astro.props;
-const paws = await Promise.all([paw1, paw2, paw3, paw4, paw5, paw6].map(async (src) =>
+const paws = await Promise.all([paw1, paw2, paw3, paw4, paw5].map(async (src) =>
   (await getImage({ src, width: 128, height: 128, format: 'webp', quality: 85 })).src
 ));
 const artwork = 'realistic';
@@ -21,7 +20,7 @@ const artwork = 'realistic';
 <span class={`mh-coda mh-coda--${variant}`} data-mh-coda={variant} data-mh-art={artwork}>
   {paws.map((src, index) => index === paws.length - 1 ? (
     <button class="mh-step mh-return" type="button" data-mh-step style={`--mh-step: ${index}`} disabled
-      aria-label="Return to the opening of The Mourning Hounds" title="Return to the opening">
+      aria-label="Return to the opening of The Mourning Hounds">
       <img src={src} width="44" height="44" alt="" decoding="async" draggable="false" />
     </button>
   ) : (
@@ -82,10 +81,10 @@ const artwork = 'realistic';
   }
 
   /* Once complete, a soft brightening passes from the first paw to the
-     sixth every 900 ms. CSS owns the loop; no repeating script is needed. */
+     fifth every 900 ms. CSS owns the loop; no repeating script is needed. */
   .mh-coda.is-complete .mh-step img {
     opacity: 0.65;
-    animation: mh-procession 5.4s ease-in-out infinite;
+    animation: mh-procession 4.5s ease-in-out infinite;
     animation-delay: calc(var(--mh-step) * 900ms);
   }
   @keyframes mh-procession {
@@ -97,16 +96,16 @@ const artwork = 'realistic';
     .mh-coda--desktop[data-mh-ready] {
       /* Keep the trail out of the cover's sticky sizing. Tighten the
          alternating tracks before reducing the artwork on short windows. */
-      --mh-paw-size: min(64px, calc(var(--mh-trail-height, 424px) / 3.5));
+      --mh-paw-size: min(64px, calc(var(--mh-trail-height, 352px) / 3));
       position: absolute;
       top: 100%;
       left: 0;
       right: 0;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: repeat(5, minmax(0, 1fr)) var(--mh-paw-size);
+      grid-template-rows: repeat(4, minmax(0, 1fr)) var(--mh-paw-size);
       column-gap: 8px;
-      height: var(--mh-trail-height, 424px);
+      height: var(--mh-trail-height, 352px);
       margin-top: 20px;
     }
     .mh-coda--desktop .mh-step {
@@ -121,7 +120,7 @@ const artwork = 'realistic';
       min-width: 44px;
       min-height: 44px;
       margin-top: min(0px, calc((var(--mh-paw-size) - 44px) / 2));
-      margin-left: min(0px, calc((var(--mh-paw-size) - 44px) / 2));
+      margin-inline: min(0px, calc((var(--mh-paw-size) - 44px) / 2));
     }
   }
 
