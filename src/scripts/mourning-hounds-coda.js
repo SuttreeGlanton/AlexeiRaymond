@@ -16,8 +16,6 @@ if (story && prose && opening && ending && trails.length) {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const header = document.querySelector('[data-site-header]');
     const coverSlot = story.querySelector('.mourning-hounds-cover-slot');
-    const desktopTrail = trails.find((trail) => trail.dataset.mhCoda === 'desktop');
-    const footer = document.querySelector('.site-footer');
     const steps = trails.map((trail) => Array.from(trail.querySelectorAll('[data-mh-step]')));
     const returnButtons = trails.flatMap((trail) => Array.from(trail.querySelectorAll('.mh-return')));
 
@@ -74,11 +72,6 @@ if (story && prose && opening && ending && trails.length) {
       let openingTop = 0;
       let endingBottom = 1;
       let headerHeight = 72;
-      let coverHeight = 0;
-      let coverStart = 0;
-      let coverEnd = 0;
-      let footerTop = Infinity;
-      let trailHeight = -1;
 
       const updateWordControl = (word) => {
         const original = word.querySelector('.mh-original').textContent;
@@ -173,33 +166,12 @@ if (story && prose && opening && ending && trails.length) {
         openingTop = window.scrollY + opening.getBoundingClientRect().top;
         endingBottom = window.scrollY + lastWord.getBoundingClientRect().bottom;
         headerHeight = header?.getBoundingClientRect().height || 72;
-        if (coverSlot && desktopTrail && window.innerWidth > 860) {
-          const body = prose.parentElement.getBoundingClientRect();
-          coverHeight = coverSlot.getBoundingClientRect().height;
-          coverStart = window.scrollY + body.top;
-          coverEnd = window.scrollY + body.bottom;
-          footerTop = footer ? window.scrollY + footer.getBoundingClientRect().top : Infinity;
-        }
         scheduleProgress();
         scheduleInvitation();
       };
 
       const updateProgress = () => {
         progressFrame = 0;
-        if (desktopTrail && coverHeight && window.innerWidth > 860) {
-          // Follow CSS sticky positioning using cached geometry. The cover
-          // keeps its normal 96px inset; only the space below it adapts.
-          const coverBottom = Math.min(
-            Math.max(coverStart - window.scrollY, 96) + coverHeight,
-            coverEnd - window.scrollY
-          );
-          const bottom = Math.min(window.innerHeight, footerTop - window.scrollY) - 20;
-          const available = Math.max(0, Math.min(352, Math.floor(bottom - coverBottom - 20)));
-          if (available !== trailHeight) {
-            trailHeight = available;
-            desktopTrail.style.setProperty('--mh-trail-height', `${available}px`);
-          }
-        }
         // Read against a line near the bottom of the viewport. The final
         // print is reserved for the actual ending entering view.
         const progress = (window.scrollY + window.innerHeight * 0.82 - openingTop) /

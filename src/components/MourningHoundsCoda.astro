@@ -94,18 +94,15 @@ const artwork = 'realistic';
 
   @media (min-width: 861px) {
     .mh-coda--desktop[data-mh-ready] {
-      /* Keep the trail out of the cover's sticky sizing. Tighten the
-         alternating tracks before reducing the artwork on short windows. */
-      --mh-paw-size: min(64px, calc(var(--mh-trail-height, 352px) / 3));
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
+      /* Like the Witnesses moon, keep the artwork's size as it moves
+         below the viewport. The trail stays in flow beneath the cover. */
+      --mh-paw-size: 64px;
+      position: relative;
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: repeat(4, minmax(0, 1fr)) var(--mh-paw-size);
       column-gap: 8px;
-      height: var(--mh-trail-height, 352px);
+      height: 352px;
       margin-top: 20px;
     }
     .mh-coda--desktop .mh-step {
@@ -119,8 +116,6 @@ const artwork = 'realistic';
     .mh-coda--desktop .mh-return {
       min-width: 44px;
       min-height: 44px;
-      margin-top: min(0px, calc((var(--mh-paw-size) - 44px) / 2));
-      margin-inline: min(0px, calc((var(--mh-paw-size) - 44px) / 2));
     }
   }
 
@@ -163,8 +158,8 @@ const artwork = 'realistic';
 </style>
 
 <style is:global>
-  /* Preserve the site's normal sticky cover and its story boundary. The
-     absolutely positioned trail cannot push the cover above the header. */
+  /* Use the Witnesses cover-slot pattern: the cover and its coda share
+     the normal 96px sticky inset and leave at the story boundary. */
   @media (min-width: 861px) {
     .archived-piece-page .mourning-hounds-cover-slot {
       display: block;
