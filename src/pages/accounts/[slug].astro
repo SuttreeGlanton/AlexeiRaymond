@@ -22,6 +22,7 @@ import RabbitLampCoda from '../../components/RabbitLampCoda.astro';
 import MothheadCoda from '../../components/MothheadCoda.astro';
 import AlphaSoundCoda from '../../components/AlphaSoundCoda.astro';
 import MourningHoundsCoda from '../../components/MourningHoundsCoda.astro';
+import StarCrossedCoda from '../../components/StarCrossedCoda.astro';
 import RedCherrySlack from '../../components/RedCherrySlack.astro';
 import SheLovesHerMotherPortrait from '../../components/SheLovesHerMotherPortrait.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
@@ -61,6 +62,7 @@ const isHowTheNightGlows = entry.id === 'how-the-night-glows';
 const isMothhead = entry.id === 'mothhead';
 const isAlpha = entry.id === 'alpha';
 const isMourningHounds = entry.id === 'the-mourning-hounds';
+const isStarCrossed = entry.id === 'star-crossed';
 const isNow = entry.id === 'now';
 const isTruth = entry.id === 'truth-or-its-evidence';
 const isSheLovesHerMother = entry.id === 'she-loves-her-mother';
@@ -175,7 +177,7 @@ const breadcrumbSchema = piece ? {
   publishedTime={publishedIso || undefined}
   structuredData={[workSchema, breadcrumbSchema]}
 >
-  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${isTheTrail ? ' archived-piece-page--trail' : ''}${isRedCherry ? ' archived-piece-page--red-cherry' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title" data-mh-story={isMourningHounds || undefined}>
+  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${isTheTrail ? ' archived-piece-page--trail' : ''}${isRedCherry ? ' archived-piece-page--red-cherry' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title" data-mh-story={isMourningHounds || undefined} data-sc-story={isStarCrossed || undefined}>
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
     {overlineLabel && <div class="overline">{overlineLabel}</div>}
     <h1
@@ -199,6 +201,7 @@ const breadcrumbSchema = piece ? {
         {formatLongDate(piece.date) && <> &middot; {formatLongDate(piece.date)}</>}
       </p>
     )}
+    {isStarCrossed && <StarCrossedCoda />}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
         <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}${isWitnesses ? ' witnesses-cover-slot' : ''}${isNow ? ' now-cover-slot' : ''}${isTruth ? ' truth-cover-slot' : ''}${isLothariOnline ? ' lothario-cover-slot' : ''}${isMourningHounds ? ' mourning-hounds-cover-slot' : ''}`}>

@@ -1,0 +1,1047 @@
+{
+  "0": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "she was late"
+      },
+      {
+        "text": "I was early"
+      }
+    ]
+  },
+  "1": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "late"
+      },
+      {
+        "text": "early"
+      }
+    ]
+  },
+  "2": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "She never understands me"
+      },
+      {
+        "text": "I don’t get her"
+      }
+    ]
+  },
+  "3": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "she’s the one who was late",
+        "emphasis": [
+          [
+            0,
+            5
+          ]
+        ]
+      },
+      {
+        "text": "I’m the one who was early",
+        "emphasis": [
+          [
+            0,
+            3
+          ]
+        ]
+      }
+    ]
+  },
+  "4": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I had to mill about in the street while she kept texting me"
+      },
+      {
+        "text": "She had to mill about in the street while I kept texting her"
+      }
+    ]
+  },
+  "5": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "she just knows how to fight"
+      },
+      {
+        "text": "she just knows how to cry"
+      }
+    ]
+  },
+  "6": {
+    "mode": "ambient",
+    "options": [
+      {
+        "text": "sour"
+      },
+      {
+        "text": "ruined"
+      },
+      {
+        "text": "gone to shit"
+      },
+      {
+        "text": "depressing"
+      }
+    ]
+  },
+  "7": {
+    "mode": "ambient",
+    "options": [
+      {
+        "text": "briskly"
+      },
+      {
+        "text": "slowly"
+      },
+      {
+        "text": "aimlessly"
+      }
+    ]
+  },
+  "8": {
+    "mode": "color",
+    "options": [
+      {
+        "text": "white",
+        "color": "#f2eee6"
+      },
+      {
+        "text": "pink",
+        "color": "#edb2ce"
+      }
+    ]
+  },
+  "9": {
+    "mode": "color",
+    "options": [
+      {
+        "text": "pink",
+        "color": "#edb2ce"
+      },
+      {
+        "text": "white",
+        "color": "#f2eee6"
+      }
+    ]
+  },
+  "10": {
+    "mode": "color",
+    "options": [
+      {
+        "text": "black",
+        "color": "#9397a0"
+      },
+      {
+        "text": "blue",
+        "color": "#95b9ef"
+      }
+    ]
+  },
+  "11": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "She stays ahead of me, probably out of spite"
+      },
+      {
+        "text": "I stay behind her, but not out of spite"
+      }
+    ]
+  },
+  "12": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "Wait, or is she lagging behind?"
+      },
+      {
+        "text": "Wait, or is it me who’s rushing ahead?"
+      }
+    ]
+  },
+  "13": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I don’t have the patience for this; I catch up"
+      },
+      {
+        "text": "She’s never patient with me; she rushes ahead"
+      }
+    ]
+  },
+  "14": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I try to keep my voice down when I beg her"
+      },
+      {
+        "text": "She doesn’t keep her voice down when she nags me"
+      }
+    ]
+  },
+  "15": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "just please cooperate",
+        "emphasis": [
+          [
+            0,
+            21
+          ]
+        ]
+      },
+      {
+        "text": "hurry up",
+        "emphasis": [
+          [
+            0,
+            8
+          ]
+        ]
+      }
+    ]
+  },
+  "16": {
+    "mode": "ambient",
+    "options": [
+      {
+        "text": "petulant"
+      },
+      {
+        "text": "childish"
+      },
+      {
+        "text": "annoying"
+      },
+      {
+        "text": "embarrassing"
+      }
+    ]
+  },
+  "17": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "Why does she always do this?"
+      },
+      {
+        "text": "Why am I always like this?"
+      }
+    ]
+  },
+  "18": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I walk ahead and suddenly realize she’s drifting behind"
+      },
+      {
+        "text": "She walks ahead and doesn’t realize I’m still behind"
+      }
+    ]
+  },
+  "19": {
+    "mode": "ambient",
+    "options": [
+      {
+        "text": "Great"
+      },
+      {
+        "text": "Wonderful"
+      },
+      {
+        "text": "Fantastic"
+      },
+      {
+        "text": "Lovely"
+      }
+    ]
+  },
+  "20": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "She’s still bristling because I took longer to get ready"
+      },
+      {
+        "text": "I’m still pissed because she didn’t bother to be ready on time"
+      }
+    ]
+  },
+  "21": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I bugged her about her delay"
+      },
+      {
+        "text": "she doesn’t get that I wasn’t late on purpose"
+      }
+    ]
+  },
+  "22": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I remembered our plan"
+      },
+      {
+        "text": "She forgot about our plans"
+      }
+    ]
+  },
+  "23": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "it’s just that things pop up and I can’t always control them"
+      },
+      {
+        "text": "she apparently has more important things going on"
+      }
+    ]
+  },
+  "24": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "And now she huffs ahead of me as if it’s me who messed up our night"
+      },
+      {
+        "text": "And now she lags behind, unable to entertain any blame"
+      }
+    ]
+  },
+  "25": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "Yeah, because I just do that"
+      },
+      {
+        "text": "Yeah, that’s who I’m dealing with"
+      }
+    ]
+  },
+  "26": {
+    "mode": "color",
+    "options": [
+      {
+        "text": "white",
+        "color": "#f2eee6"
+      },
+      {
+        "text": "green",
+        "color": "#97c99d"
+      }
+    ]
+  },
+  "27": {
+    "mode": "color",
+    "options": [
+      {
+        "text": "black",
+        "color": "#9397a0"
+      },
+      {
+        "text": "blue",
+        "color": "#95b9ef"
+      }
+    ]
+  },
+  "28": {
+    "mode": "color",
+    "options": [
+      {
+        "text": "white",
+        "color": "#f2eee6"
+      },
+      {
+        "text": "yellow",
+        "color": "#e9d587"
+      }
+    ]
+  },
+  "29": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "her tantrum"
+      },
+      {
+        "text": "my terrible mood"
+      }
+    ]
+  },
+  "30": {
+    "mode": "ambient",
+    "options": [
+      {
+        "text": "good"
+      },
+      {
+        "text": "beautiful"
+      },
+      {
+        "text": "hot"
+      },
+      {
+        "text": "cute"
+      }
+    ]
+  },
+  "31": {
+    "mode": "color",
+    "options": [
+      {
+        "text": "red",
+        "color": "#ef9295"
+      },
+      {
+        "text": "purple",
+        "color": "#c4a0e5"
+      }
+    ]
+  },
+  "32": {
+    "mode": "color",
+    "options": [
+      {
+        "text": "her color"
+      },
+      {
+        "text": "red",
+        "color": "#ef9295"
+      },
+      {
+        "text": "purple",
+        "color": "#c4a0e5"
+      },
+      {
+        "text": "green",
+        "color": "#97c99d"
+      },
+      {
+        "text": "black",
+        "color": "#9397a0"
+      },
+      {
+        "text": "white",
+        "color": "#f2eee6"
+      },
+      {
+        "text": "pink",
+        "color": "#edb2ce"
+      },
+      {
+        "text": "blue",
+        "color": "#95b9ef"
+      },
+      {
+        "text": "yellow",
+        "color": "#e9d587"
+      },
+      {
+        "text": "orange",
+        "color": "#edb17d"
+      },
+      {
+        "text": "teal",
+        "color": "#82c7c0"
+      },
+      {
+        "text": "violet",
+        "color": "#b4a0ec"
+      },
+      {
+        "text": "gold",
+        "color": "#dec080"
+      },
+      {
+        "text": "coral",
+        "color": "#edaa98"
+      },
+      {
+        "text": "indigo",
+        "color": "#a1a6e2"
+      },
+      {
+        "text": "silver",
+        "color": "#d0d3db"
+      },
+      {
+        "text": "crimson",
+        "color": "#e493a6"
+      },
+      {
+        "text": "turquoise",
+        "color": "#8bd4cd"
+      },
+      {
+        "text": "lavender",
+        "color": "#d3bce7"
+      },
+      {
+        "text": "amber",
+        "color": "#dfbb81"
+      },
+      {
+        "text": "emerald",
+        "color": "#82c9a5"
+      },
+      {
+        "text": "scarlet",
+        "color": "#ec9a8c"
+      },
+      {
+        "text": "lilac",
+        "color": "#d1aedc"
+      },
+      {
+        "text": "ochre",
+        "color": "#cbb080"
+      },
+      {
+        "text": "azure",
+        "color": "#8ebde8"
+      },
+      {
+        "text": "rose",
+        "color": "#e6a8b9"
+      },
+      {
+        "text": "jade",
+        "color": "#98c7ad"
+      },
+      {
+        "text": "pearl",
+        "color": "#e5dbd3"
+      },
+      {
+        "text": "copper",
+        "color": "#d4a080"
+      },
+      {
+        "text": "cobalt",
+        "color": "#99aff0"
+      },
+      {
+        "text": "magenta",
+        "color": "#df99cd"
+      },
+      {
+        "text": "olive",
+        "color": "#b4be89"
+      },
+      {
+        "text": "peach",
+        "color": "#edc3a1"
+      },
+      {
+        "text": "plum",
+        "color": "#c0a0c8"
+      },
+      {
+        "text": "mint",
+        "color": "#b1dbc0"
+      },
+      {
+        "text": "ruby",
+        "color": "#db92a8"
+      },
+      {
+        "text": "ivory",
+        "color": "#eee4c9"
+      },
+      {
+        "text": "salmon",
+        "color": "#e7ada1"
+      },
+      {
+        "text": "bronze",
+        "color": "#bfab88"
+      },
+      {
+        "text": "navy",
+        "color": "#97a7cc"
+      },
+      {
+        "text": "apricot",
+        "color": "#e9bf8f"
+      },
+      {
+        "text": "burgundy",
+        "color": "#c794a9"
+      },
+      {
+        "text": "aqua",
+        "color": "#a0d5df"
+      },
+      {
+        "text": "mauve",
+        "color": "#c8a8bf"
+      },
+      {
+        "text": "chartreuse",
+        "color": "#c9d790"
+      },
+      {
+        "text": "saffron",
+        "color": "#e7c877"
+      },
+      {
+        "text": "cerulean",
+        "color": "#94c3db"
+      },
+      {
+        "text": "fuchsia",
+        "color": "#de9add"
+      },
+      {
+        "text": "grey",
+        "color": "#b9b9be"
+      }
+    ]
+  },
+  "33": {
+    "mode": "ambient",
+    "options": [
+      {
+        "text": "Perfect",
+        "emphasis": [
+          [
+            0,
+            7
+          ]
+        ]
+      },
+      {
+        "text": "Unforgettable",
+        "emphasis": [
+          [
+            0,
+            13
+          ]
+        ]
+      },
+      {
+        "text": "Romantic",
+        "emphasis": [
+          [
+            0,
+            8
+          ]
+        ]
+      },
+      {
+        "text": "Lovely",
+        "emphasis": [
+          [
+            0,
+            6
+          ]
+        ]
+      }
+    ]
+  },
+  "34": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I doubt my mood will recover"
+      },
+      {
+        "text": "I doubt her mood will recover"
+      }
+    ]
+  },
+  "35": {
+    "mode": "ambient",
+    "options": [
+      {
+        "text": "stubborn"
+      },
+      {
+        "text": "confident"
+      },
+      {
+        "text": "unfair"
+      },
+      {
+        "text": "headstrong"
+      }
+    ]
+  },
+  "36": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "She grows louder and I go deeper into silence"
+      },
+      {
+        "text": "I speak softer and she goes higher up the octaves"
+      }
+    ]
+  },
+  "37": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I can never pull her out of her insistent silence when she’s like this—she just won’t budge"
+      },
+      {
+        "text": "I can never stop her uncaring shouts when she’s like this—she just won’t budge"
+      }
+    ]
+  },
+  "38": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I try to keep my voice down because I don’t want to cause a scene and have people gawk at us, but she’s so frustrating that I just can’t help myself."
+      },
+      {
+        "text": "I don’t bother to keep my voice down because at this point who cares if people gawk at us, she should stop mumbling and speak up!"
+      }
+    ]
+  },
+  "39": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "shouting"
+      },
+      {
+        "text": "crying"
+      }
+    ]
+  },
+  "40": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "harshly whisper"
+      },
+      {
+        "text": "desperately plead"
+      }
+    ]
+  },
+  "41": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "keep her voice down"
+      },
+      {
+        "text": "forgive me"
+      }
+    ]
+  },
+  "42": {
+    "mode": "ambient",
+    "options": [
+      {
+        "text": "crazy"
+      },
+      {
+        "text": "insane"
+      },
+      {
+        "text": "perfect"
+      },
+      {
+        "text": "chaotic"
+      }
+    ]
+  },
+  "43": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "But she doesn’t care, she’s just openly furious now and there’s no way to salvage anything"
+      },
+      {
+        "text": "But I don’t care, I’m just openly furious now and there’s no way to salvage anything"
+      }
+    ]
+  },
+  "44": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "north"
+      },
+      {
+        "text": "west"
+      }
+    ]
+  },
+  "45": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "train station"
+      },
+      {
+        "text": "beach"
+      }
+    ]
+  },
+  "46": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "west"
+      },
+      {
+        "text": "north"
+      }
+    ]
+  },
+  "47": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "beach"
+      },
+      {
+        "text": "train station"
+      }
+    ]
+  },
+  "48": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "It wasn’t meant to be this way"
+      },
+      {
+        "text": "It would always end up this way"
+      }
+    ]
+  },
+  "49": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I catch myself, take a deep breath"
+      },
+      {
+        "text": "She catches herself, takes a deep breath"
+      }
+    ]
+  },
+  "50": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "She insists I’m shouting at her, that it’s scaring her"
+      },
+      {
+        "text": "I insist she’s being hysteric, that it’s embarrassing me"
+      }
+    ]
+  },
+  "51": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I resent her for making it seem like I’m shouting"
+      },
+      {
+        "text": "I resent her for screaming at me"
+      }
+    ]
+  },
+  "52": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "But—I do want to be more in control of myself, so I breathe and speak softer.",
+        "emphasis": [
+          [
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "text": "But—I do want to man up, so I get serious and speak louder.",
+        "emphasis": [
+          [
+            6,
+            8
+          ]
+        ]
+      }
+    ]
+  },
+  "53": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "She’s a bit more responsive now that I’m quieter"
+      },
+      {
+        "text": "She’s a bit more quiet now that I’m louder"
+      }
+    ]
+  },
+  "54": {
+    "mode": "ambient",
+    "options": [
+      {
+        "text": "yelp of a distant cat"
+      },
+      {
+        "text": "bark of a nearby dog"
+      },
+      {
+        "text": "shout from a balcony"
+      }
+    ]
+  },
+  "55": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "she’s run out of things to yell at me"
+      },
+      {
+        "text": "I made enough strong points to shut her up"
+      }
+    ]
+  },
+  "56": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I avoid her eyes and look at my"
+      },
+      {
+        "text": "She avoids my eyes and looks at her"
+      }
+    ]
+  },
+  "57": {
+    "mode": "color",
+    "options": [
+      {
+        "text": "new, grey sneakers",
+        "color": "#b9b9be"
+      },
+      {
+        "text": "old, white sneakers",
+        "color": "#f2eee6"
+      }
+    ]
+  },
+  "58": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I can’t bear her acidic glare"
+      },
+      {
+        "text": "She can’t bear my vindicated stare"
+      }
+    ]
+  },
+  "59": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I try to catch her eyes but she’s doing everything she can to avoid me"
+      },
+      {
+        "text": "She tries to make eye contact but I’m doing everything I can to avoid her"
+      }
+    ]
+  },
+  "60": {
+    "mode": "ambient",
+    "options": [
+      {
+        "text": "pretty"
+      },
+      {
+        "text": "stunning"
+      },
+      {
+        "text": "cute"
+      },
+      {
+        "text": "gorgeous"
+      }
+    ]
+  },
+  "61": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I—or is it her?—end the lull and approach"
+      },
+      {
+        "text": "She—or is it me?—ends the lull and approaches"
+      }
+    ]
+  },
+  "62": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I feel myself slipping into a kind of silence she won’t be able to pull me out of."
+      },
+      {
+        "text": "I feel myself worked up into a kind of rage she won’t be able to calm me down from."
+      }
+    ]
+  },
+  "63": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "No matter what I say, I just can’t break through to her,"
+      },
+      {
+        "text": "No matter what she says, I just won’t let her provoke me,"
+      }
+    ]
+  },
+  "64": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "she’s still insisting on my fault, her innocence."
+      },
+      {
+        "text": "I still insist it’s her fault, I’m innocent."
+      }
+    ]
+  },
+  "65": {
+    "mode": "click",
+    "options": [
+      {
+        "text": "I want to go home."
+      },
+      {
+        "text": "she wants to go home."
+      }
+    ]
+  }
+}

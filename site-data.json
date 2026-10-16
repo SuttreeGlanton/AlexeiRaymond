@@ -1160,7 +1160,12 @@
       "cover": "covers/pieces/star-crossed.jpg",
       "excerpt": "Another crazy couple disrupting the quiet night.",
       "genre": "Flash fiction",
-      "issue": "Issue 3"
+      "issue": "Issue 3",
+      "account": {
+        "slug": "star-crossed",
+        "label": "Read story",
+        "title": "Star-Crossed"
+      }
     },
     {
       "title": "Under Street Sign and Star",

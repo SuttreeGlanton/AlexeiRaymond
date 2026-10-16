@@ -1,0 +1,111 @@
+---
+import variants from '../data/star-crossed-variants.json';
+import controllerUrl from '../scripts/star-crossed-coda.js?url';
+---
+
+<div class="sc-tools" data-sc-tools hidden>
+  <button type="button" class="sc-motion" data-sc-motion aria-label="Pause automatic text changes">
+    <svg width="11" height="12" viewBox="0 0 11 12" aria-hidden="true">
+      <path class="sc-pause-mark" d="M3 2v8M8 2v8" fill="none" stroke="currentColor" stroke-width="1.5" />
+      <path class="sc-play-mark" d="m3 1 7 5-7 5Z" fill="currentColor" />
+    </svg>
+    <span data-sc-motion-label>Pause</span>
+  </button>
+  <span class="sc-sr-only" id="sc-help">Activate this passage to change its wording.</span>
+  <span class="sc-sr-only" data-sc-status role="status" aria-live="polite" aria-atomic="true"></span>
+</div>
+
+<script is:inline type="application/json" data-sc-variants set:html={JSON.stringify(variants).replace(/</g, '\\u003c')} />
+<script is:inline type="module" src={controllerUrl}></script>
+
+<style is:global>
+  .sc-tools[hidden] { display: none; }
+  .sc-tools { margin-top: 14px; }
+  .sc-motion {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 32px;
+    margin: 0;
+    padding: 3px 5px;
+    border: 0;
+    border-radius: 3px;
+    background: none;
+    color: var(--muted);
+    font: 0.72rem var(--sans);
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .sc-motion:hover { color: var(--text-soft); }
+  .sc-motion:focus-visible { outline: 1px solid var(--focus); outline-offset: 3px; }
+  .sc-motion .sc-play-mark,
+  .sc-motion[data-paused] .sc-pause-mark { display: none; }
+  .sc-motion[data-paused] .sc-play-mark { display: inline; }
+
+  /* Labels wrap naturally across lines. Each contains a real native button,
+     so pointer, touch, Enter and Space all reach the same accessible action. */
+  [data-sc-story] .sc-fragment {
+    position: relative;
+    display: inline;
+    text-indent: 0;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  [data-sc-story] .sc-ink {
+    color: #dedbd3;
+    border-radius: 2px;
+    text-shadow: 0 0 0.48em rgb(235 216 177 / 0.34);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    transition: opacity 160ms ease, color 320ms ease, text-shadow 240ms ease, background-color 240ms ease;
+  }
+  [data-sc-story] .sc-fragment:hover .sc-ink {
+    background-color: rgb(235 216 177 / 0.045);
+    text-shadow: 0 0 0.55em rgb(235 216 177 / 0.55);
+  }
+  [data-sc-story] .sc-fragment:has(.sc-trigger:focus-visible) .sc-ink {
+    outline: 1px solid var(--focus);
+    outline-offset: 3px;
+  }
+  /* Keep natural word spacing and punctuation. A shallow fade softens the
+     replacement without making the text disappear or reserving empty gaps. */
+  [data-sc-story] .sc-fragment.is-changing .sc-ink { opacity: 0.84; }
+  [data-sc-story] .sc-color .sc-ink {
+    color: var(--sc-color, #dedbd3);
+    text-shadow: 0 0 0.42em color-mix(in srgb, currentColor 32%, transparent);
+  }
+  .sc-sr-only,
+  [data-sc-story] .sc-trigger {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  [data-sc-story] .sc-trigger { top: 0; left: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    [data-sc-story] .sc-ink { transition: none; }
+  }
+  @media (forced-colors: active) {
+    [data-sc-story] .sc-ink {
+      text-decoration: underline dotted;
+      text-underline-offset: 0.2em;
+      text-shadow: none;
+    }
+  }
+  @media print {
+    .sc-tools { display: none; }
+    [data-sc-story] .sc-ink {
+      color: inherit;
+      text-shadow: none;
+      outline: none;
+      background: none;
+      transition: none;
+    }
+  }
+</style>
