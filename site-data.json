@@ -101,6 +101,7 @@
         "Witnesses",
         "The Iron Crown",
         "Death Of",
+        "Leaves",
         "Now"
       ]
     },
@@ -177,7 +178,8 @@
         "Remediation",
         "Deathwish",
         "On the Nature of Sleep",
-        "She Loves Her Mother"
+        "She Loves Her Mother",
+        "Marry Me?"
       ]
     }
   ],
@@ -312,6 +314,20 @@
       "issue": "Issue 24"
     },
     {
+      "title": "Leaves",
+      "cycle": "Fool's Gold",
+      "publication": "Loser",
+      "date": "17/10/2026",
+      "tags": [
+        "In print"
+      ],
+      "link": "https://www.lulu.com/shop/mai-bell-and-conor-hultman/loser-ix/paperback/product-q677m4p.html?page=1&pageSize=4",
+      "cover": "covers/pieces/leaves.jpg",
+      "excerpt": "He turns to her delicate, lovely ear, offering unbelievable, desecrated gospel.",
+      "genre": "Flash fiction",
+      "issue": "Anthology IX"
+    },
+    {
       "title": "Now",
       "cycle": "Fool's Gold",
       "publication": "Eulogy Press",
@@ -363,6 +379,20 @@
         "label": "Read story",
         "title": "She Loves Her Mother"
       }
+    },
+    {
+      "title": "Marry Me?",
+      "cycle": "The Real",
+      "publication": "Loser",
+      "date": "17/10/2026",
+      "tags": [
+        "In print"
+      ],
+      "link": "https://www.lulu.com/shop/mai-bell-and-conor-hultman/loser-ix/paperback/product-q677m4p.html?page=1&pageSize=4",
+      "cover": "covers/pieces/marry-me.jpg",
+      "excerpt": "The cathedral before you sprawled upward, carved from night in streaks of golden light.",
+      "genre": "Flash fiction",
+      "issue": "Anthology IX"
     },
     {
       "title": "Boxer",
