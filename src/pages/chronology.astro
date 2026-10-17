@@ -70,22 +70,22 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
               return (
                 <li class="chronology-item">
                   <h3 class="chronology-piece-title">
-                    <span aria-hidden="true">&ldquo;</span>{piece.title}<span aria-hidden="true">&rdquo;</span>
+                    {piece.title}
                   </h3>
                   <p class="chronology-publication-line">
                     Forthcoming in <span class="pub">{publicationLabel(piece)}</span>
                   </p>
-                  <div class="chronology-tags">
+                  <div class="chronology-meta">
                     <TagList tags={piece.tags.filter((tag) => tag !== 'Upcoming')} genre={piece.genre} />
-                  </div>
-                  <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
-                    <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
-                    {pieceCycles.map((cycle, index) => (
-                      <>
-                        {index > 0 && <span aria-hidden="true">·</span>}
-                        <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
-                      </>
-                    ))}
+                    <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
+                      <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
+                      {pieceCycles.map((cycle, index) => (
+                        <>
+                          {index > 0 && <span aria-hidden="true">·</span>}
+                          <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
+                        </>
+                      ))}
+                    </div>
                   </div>
                 </li>
               );
@@ -123,11 +123,11 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                 >
                   <div class="chronology-title-row">
                     <h3 class="chronology-piece-title">
-                      <span aria-hidden="true">&ldquo;</span>{canLinkToPiece(piece) ? (
+                      {canLinkToPiece(piece) ? (
                         <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>{piece.title}</a>
                       ) : (
                         piece.title
-                      )}<span aria-hidden="true">&rdquo;</span>
+                      )}
                     </h3>
                     {piece.account && (
                       <a class="chronology-read-link" href={withBase(`accounts/${piece.account.slug}/`)} aria-label={`Read story: ${piece.title} on this site`}>
@@ -144,17 +144,17 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                       </>
                     )}
                   </p>
-                  <div class="chronology-tags">
+                  <div class="chronology-meta">
                     <TagList tags={piece.tags} genre={piece.genre} />
-                  </div>
-                  <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
-                    <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
-                    {pieceCycles.map((cycle, index) => (
-                      <>
-                        {index > 0 && <span aria-hidden="true">·</span>}
-                        <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
-                      </>
-                    ))}
+                    <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
+                      <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
+                      {pieceCycles.map((cycle, index) => (
+                        <>
+                          {index > 0 && <span aria-hidden="true">·</span>}
+                          <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
+                        </>
+                      ))}
+                    </div>
                   </div>
                 </li>
               </>
