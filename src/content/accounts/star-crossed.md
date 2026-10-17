@@ -27,7 +27,7 @@ fullText: true
 
 <p>“What? What is it?”</p>
 
-<p>He scans the night sky, stelliferous but still. He is doubtful, but she genuinely glowing. His furrowed brow relaxes despite his will.</p>
+<p>He scans the night sky, stelliferous but still. He is doubtful, but she is genuinely glowing. His furrowed brow relaxes despite his will.</p>
 
 <p>“It was a shooting star!”</p>
 
