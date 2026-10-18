@@ -191,7 +191,8 @@ const waterImage = await getImage({ src: water, width: 2172, format: 'webp', qua
     flex-shrink: 0;
   }
   .mm-header-water { display: none; }
-  .mm-ring[data-mm-gone] { visibility: hidden; pointer-events: none; }
+  .mm-ring[data-mm-gone],
+  .mm-pouch[data-mm-gone] { visibility: hidden; pointer-events: none; }
   .mm-ring:enabled img { animation: mm-ring-invitation 2.6s ease-in-out infinite; }
   [data-mm-story] .mm-action:enabled { animation: mm-word-invitation 2.6s ease-in-out infinite; }
   @keyframes mm-ring-invitation {

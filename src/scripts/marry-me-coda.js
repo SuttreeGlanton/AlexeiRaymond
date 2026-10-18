@@ -154,6 +154,9 @@
 
   const finishDrop = (keyboard) => {
     for (const ring of rings) ring.dataset.mmGone = '';
+    // The pouch has served its purpose. Hide it before the return to the
+    // title, preserving its geometry so the column and river stay in place.
+    pouch.dataset.mmGone = '';
     headerWater.hidden = false;
     header?.setAttribute('data-mm-water', '');
     syncWater();
