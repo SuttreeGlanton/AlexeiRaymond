@@ -1,0 +1,364 @@
+---
+import { getImage } from 'astro:assets';
+import pouch from '../assets/codas/marry-me/pouch.png';
+import water from '../assets/codas/marry-me/water.png';
+import ring00 from '../assets/codas/marry-me/native_114px/ring_00.png';
+import ring01 from '../assets/codas/marry-me/native_114px/ring_01.png';
+import ring02 from '../assets/codas/marry-me/native_114px/ring_02.png';
+import ring03 from '../assets/codas/marry-me/native_114px/ring_03.png';
+import ring04 from '../assets/codas/marry-me/native_114px/ring_04.png';
+import ring05 from '../assets/codas/marry-me/native_114px/ring_05.png';
+import ring06 from '../assets/codas/marry-me/native_114px/ring_06.png';
+import ring07 from '../assets/codas/marry-me/native_114px/ring_07.png';
+import ring08 from '../assets/codas/marry-me/native_114px/ring_08.png';
+import ring09 from '../assets/codas/marry-me/native_114px/ring_09.png';
+import ring10 from '../assets/codas/marry-me/native_114px/ring_10.png';
+import ring11 from '../assets/codas/marry-me/native_114px/ring_11.png';
+import ring12 from '../assets/codas/marry-me/native_114px/ring_12.png';
+import controllerUrl from '../scripts/marry-me-coda.js?url';
+
+interface Props { variant: 'desktop' | 'header'; }
+const { variant } = Astro.props;
+const frames = [ring00, ring01, ring02, ring03, ring04, ring05, ring06,
+  ring07, ring08, ring09, ring10, ring11, ring12].map((frame) => frame.src);
+const pouchImage = variant === 'desktop'
+  ? await getImage({ src: pouch, width: 456, format: 'webp', quality: 95 })
+  : undefined;
+// Both sizes reuse one optimized sprite strip and its three-frame cadence.
+const waterImage = await getImage({ src: water, width: 2172, format: 'webp', quality: 95 });
+---
+
+{variant === 'desktop' ? (
+  <div class="mm-coda" data-mm-desktop data-mm-frames={JSON.stringify(frames)}>
+    <div class="mm-ring-track">
+      <button class="mm-ring mm-ring--desktop" type="button" data-mm-drop
+        aria-label="Drop the ring into the river" disabled>
+        <img src={frames[0]} width="114" height="114" alt="" draggable="false" data-mm-frame />
+      </button>
+    </div>
+    <img class="mm-pouch" src={pouchImage?.src} width="228" height="228"
+      alt="" decoding="async" draggable="false" data-mm-pouch />
+    <div class="mm-water" aria-hidden="true" data-mm-water>
+      <span class="mm-water__surface" style={{ backgroundImage: 'url(' + waterImage?.src + ')' }}></span>
+    </div>
+  </div>
+) : (
+  <span class="mm-header-scene">
+    <button class="mm-ring mm-ring--header" type="button" data-mm-drop data-mm-header
+      aria-label="Drop the ring" disabled>
+      <img src={frames[0]} width="114" height="114" alt="" draggable="false" data-mm-frame />
+    </button>
+    <span class="mm-header-water" data-mm-header-water aria-hidden="true" hidden>
+      <span class="mm-water__surface" style={{ backgroundImage: 'url(' + waterImage.src + ')' }}></span>
+    </span>
+  </span>
+)}
+
+<!-- Emit only on this account page, even though HeaderCoda is imported site-wide. -->
+{variant === 'desktop' && <script is:inline type="module" src={controllerUrl}></script>}
+
+<style is:global>
+  /* Two passing gold highlights on the existing white title. The effect
+     starts only after the return arrives and leaves no persistent tint. */
+  @supports ((background-clip: text) or (-webkit-background-clip: text)) {
+    @media (prefers-reduced-motion: no-preference) {
+      [data-mm-story] #account-title.mm-title-gold {
+        background-image: linear-gradient(
+          105deg,
+          currentColor 0%,
+          currentColor 44%,
+          #c99426 48%,
+          #f3e477 50%,
+          #d4ad32 52%,
+          currentColor 56%,
+          currentColor 100%
+        );
+        background-size: 240% 100%;
+        background-repeat: no-repeat;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: mm-title-gold 1.5s ease-in-out 2 both;
+      }
+    }
+  }
+  @keyframes mm-title-gold {
+    0% { background-position: 100% 50%; }
+    75%, 100% { background-position: 0% 50%; }
+  }
+
+  /* Fiction paragraphs use an indent instead of a second blank line.
+     Only the opening and the manuscript's scene break are flush left. */
+  [data-mm-story].archived-piece-page .archive-prose > p {
+    margin: 0;
+    text-indent: 1.4em;
+    text-wrap: pretty;
+  }
+  [data-mm-story].archived-piece-page .archive-prose > [data-mm-opening] {
+    margin-bottom: 0.75em;
+    text-indent: 0;
+  }
+  [data-mm-story].archived-piece-page .archive-prose > .mm-scene-start {
+    margin-top: 1.4em;
+    text-indent: 0;
+  }
+  [data-mm-story] .mm-keep { white-space: nowrap; }
+  [data-mm-story][data-mm-sequencing] .archive-prose { overflow-anchor: none; }
+  [data-mm-story] .mm-prefix-letter,
+  [data-mm-story] .mm-remember-word,
+  [data-mm-story] .mm-overwrite {
+    display: inline-block;
+    white-space: pre;
+  }
+  [data-mm-story] .mm-prefix-letter,
+  [data-mm-story] .mm-remember-word { vertical-align: top; }
+  [data-mm-story] .mm-prefix-letter { overflow: hidden; }
+  [data-mm-story].archived-piece-page .archive-prose > .mm-lines { text-indent: 0; }
+  [data-mm-story] .mm-text-line {
+    display: block;
+    white-space: pre;
+    text-indent: 0;
+    overflow: hidden;
+  }
+  [data-mm-story] .mm-text-line:first-child { text-indent: 1.4em; }
+  [data-mm-story] .mm-erasure { display: inline-block; text-indent: 0; }
+  [data-mm-story] .mm-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  [data-mm-story] [data-mm-rewrite]:focus { outline: none; }
+  .mm-coda { display: none; }
+  .mm-ring,
+  [data-mm-story] .mm-action {
+    appearance: none;
+    border: 0;
+    border-radius: 2px;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    text-align: inherit;
+    text-indent: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mm-ring:disabled,
+  [data-mm-story] .mm-action:disabled {
+    opacity: 1;
+    cursor: inherit;
+    -webkit-text-fill-color: currentColor;
+  }
+  .mm-ring img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    image-rendering: pixelated;
+    user-select: none;
+    pointer-events: none;
+  }
+  .mm-ring:enabled,
+  [data-mm-story] .mm-action:enabled {
+    cursor: pointer;
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+  .mm-ring:focus-visible,
+  [data-mm-story] .mm-action:focus-visible {
+    outline: 1px solid var(--text-soft);
+    outline-offset: 5px;
+  }
+  .mm-ring--header {
+    display: none;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .mm-ring--header[data-mm-ready] { display: block; }
+  .mm-header-scene {
+    position: relative;
+    display: block;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+  }
+  .mm-header-water { display: none; }
+  .mm-ring[data-mm-gone] { visibility: hidden; pointer-events: none; }
+  .mm-ring:enabled img { animation: mm-ring-invitation 2.6s ease-in-out infinite; }
+  [data-mm-story] .mm-action:enabled { animation: mm-word-invitation 2.6s ease-in-out infinite; }
+  @keyframes mm-ring-invitation {
+    0%, 100% { filter: drop-shadow(0 0 2px rgba(219, 191, 105, 0.18)); }
+    50% { filter: drop-shadow(0 0 7px rgba(219, 191, 105, 0.7)); }
+  }
+  @keyframes mm-word-invitation {
+    0%, 100% { text-shadow: 0 0 2px rgba(242, 236, 220, 0.16); }
+    50% { text-shadow: 0 0 7px rgba(242, 236, 220, 0.8), 0 0 18px rgba(242, 236, 220, 0.36); }
+  }
+
+  .mm-water,
+  .mm-header-water {
+    position: absolute;
+    z-index: 3;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent),
+      linear-gradient(to bottom, #000 70%, transparent);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent),
+      linear-gradient(to bottom, #000 70%, transparent);
+    mask-composite: intersect;
+  }
+  /* Fill the transparent space below the supplied surface opaquely. */
+  .mm-water::before,
+  .mm-header-water::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--mm-water-width) * 0.095) 0 0;
+    background: linear-gradient(#060607, #070707);
+  }
+  .mm-water__surface {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    aspect-ratio: 1;
+    transform: translateY(-44%);
+    background-size: 300% 100%;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    animation: mm-water-frames 2.4s step-end infinite;
+    animation-play-state: paused;
+  }
+  .mm-coda[data-mm-water-visible] .mm-water__surface,
+  .mm-header-water[data-mm-water-visible] .mm-water__surface { animation-play-state: running; }
+  @keyframes mm-water-frames {
+    0%, 100% { background-position: 0 0; }
+    33.333% { background-position: 50% 0; }
+    66.667% { background-position: 100% 0; }
+  }
+
+  @media (min-width: 861px) {
+    /* This column spans the prose. The cover and pouch stay at the start;
+       only the ring travels. Making the entire column sticky pins the pouch
+       to the ring and prevents the intended journey. */
+    [data-mm-story] .archive-body-shell.has-archive-cover .marry-me-cover-slot {
+      display: flex;
+      grid-column: 2;
+      grid-row: 1;
+      flex-direction: column;
+      align-self: stretch;
+      position: relative;
+      min-height: 0;
+      width: 100%;
+    }
+    [data-mm-story] .archive-body-shell.has-archive-cover .marry-me-cover-slot .archive-cover-card {
+      position: static;
+      flex: 0 0 auto;
+      width: 100%;
+      margin: 0;
+    }
+    .mm-coda[data-mm-ready] {
+      display: block;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      flex: 1 1 auto;
+      min-height: 0;
+      margin-top: 24px;
+      --mm-water-width: 280px;
+    }
+    .mm-pouch {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      left: 50%;
+      width: min(228px, 90%);
+      height: auto;
+      transform: translateX(-50%);
+      image-rendering: pixelated;
+      filter: grayscale(1);
+      transition: filter 420ms ease;
+      pointer-events: auto;
+      user-select: none;
+    }
+    .mm-pouch:hover { filter: grayscale(0); }
+    /* Clip the ring below the opaque middle of the river, before the
+       river's soft lower edge. Feathering must never reveal it again. */
+    .mm-ring-track {
+      position: absolute;
+      z-index: 1;
+      inset: 0 0 32px;
+      overflow: hidden;
+    }
+    .mm-ring--desktop {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 50%;
+      width: 76px;
+      height: 76px;
+      transform: translate(-50%, var(--mm-ring-y, 135px));
+    }
+    .mm-water {
+      bottom: 0;
+      width: 100%;
+      height: 80px;
+    }
+  }
+
+  /* The header ring gives way to water only after its completed drop.
+     Keep this treatment through the tablet range,
+     where the cover is no longer in a separate column. */
+  @media (max-width: 860px) {
+    .site-header[data-header-coda-type="ring"] { position: sticky; top: 0; }
+    .site-header[data-header-coda-type="ring"] .header-inner { position: relative; }
+    .site-header[data-header-coda-type="ring"] .header-coda-slot {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+    .mm-header-water:not([hidden]) {
+      display: block;
+      top: 24px;
+      width: 128px;
+      height: 28px;
+      --mm-water-width: 128px;
+    }
+    /* Retain the water even when the title comes back into view. */
+    .site-header[data-mm-water] .header-coda {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .site-header[data-header-coda-type="ring"].header-coda-on .brand,
+    .site-header[data-header-coda-type="ring"][data-mm-water] .brand {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mm-pouch { transition: none; }
+    .mm-ring:enabled img,
+    .mm-water__surface,
+    [data-mm-story] .mm-action:enabled { animation: none; }
+    .mm-ring:enabled img { filter: drop-shadow(0 0 4px rgba(219, 191, 105, 0.65)); }
+    [data-mm-story] .mm-action:enabled {
+      text-decoration: underline dotted;
+      text-underline-offset: 0.18em;
+    }
+  }
+</style>

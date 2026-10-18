@@ -392,7 +392,12 @@
       "cover": "covers/pieces/marry-me.jpg",
       "excerpt": "The cathedral before you sprawled upward, carved from night in streaks of golden light.",
       "genre": "Flash fiction",
-      "issue": "Anthology IX"
+      "issue": "Anthology IX",
+      "account": {
+        "slug": "marry-me",
+        "label": "Read story",
+        "title": "Marry Me?"
+      }
     },
     {
       "title": "Boxer",

@@ -4,7 +4,7 @@ import { withBase } from '../lib/paths';
 import HeaderCoda from './HeaderCoda.astro';
 
 interface Props {
-  headerCoda?: 'moon' | 'counter' | 'pills' | 'eyes' | 'clock' | 'rabbit' | 'paws';
+  headerCoda?: 'moon' | 'counter' | 'pills' | 'eyes' | 'clock' | 'rabbit' | 'paws' | 'ring';
 }
 
 const { headerCoda } = Astro.props;
@@ -66,7 +66,7 @@ const desktopNavItems = [
 ];
 ---
 
-<header class="site-header" data-site-header>
+<header class="site-header" data-site-header data-header-coda-type={headerCoda}>
   <div class="page-shell header-inner">
     <a class="brand" href={homeHref} data-site-brand><span class="brand-initial">{brandParts.firstInitial}</span><span class="brand-fold">{brandParts.firstRest}&nbsp;</span><span class="brand-initial">{brandParts.lastInitial}</span><span class="brand-fold">{brandParts.lastRest}</span></a>
 
