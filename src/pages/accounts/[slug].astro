@@ -101,11 +101,12 @@ const seoGenreLabels: Record<string, string> = {
   'Other': 'Writing'
 };
 const seoGenreLabel = piece?.genre ? (seoGenreLabels[piece.genre] ?? piece.genre) : 'Writing';
+const seoExcerpt = piece?.excerpt?.replace(/\s+/g, ' ').trim() ?? '';
 const seoTitle = fullText && piece
   ? `${piece.title} — ${seoGenreLabel} by ${site.author}`
   : `${title} — ${site.author}`;
 const seoDescription = fullText && piece
-  ? `${piece.genre ?? 'Writing'} by ${site.author}, originally published in ${originalPublication}.${piece.excerpt ? ` ${piece.excerpt}` : ''}`
+  ? `${piece.genre ?? 'Writing'} by ${site.author}, originally published in ${originalPublication}.${seoExcerpt ? ` ${seoExcerpt}` : ''}`
   : archiveDescription;
 const publishedIso = fullText && piece ? formatIsoDate(piece.date) : '';
 const accountUrl = absoluteSiteUrl(`accounts/${entry.id}/`, Astro.site);

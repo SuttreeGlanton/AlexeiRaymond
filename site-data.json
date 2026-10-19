@@ -1060,12 +1060,17 @@
       "publication": "Gopnik Press",
       "date": "06/07/2026",
       "tags": [
-        "Online"
+        "Defunct"
       ],
-      "link": "https://www.gopnikpress.com/AlexeiRaymond",
+      "link": "",
       "cover": "covers/pieces/smert-moya.jpg",
-      "excerpt": "Never seen though\nFelt nesting amidst bonebranches & bloodvines—",
-      "genre": "Poem"
+      "excerpt": "Never seen though\nFelt nesting ’midst bonebranches & bloodvines—",
+      "genre": "Poem",
+      "account": {
+        "slug": "smert-moya",
+        "label": "Read poem",
+        "title": "Смерть моя"
+      }
     },
     {
       "title": "The Mountains Have Fallen",
