@@ -71,7 +71,7 @@ const isTruth = entry.id === 'truth-or-its-evidence';
 const isSheLovesHerMother = entry.id === 'she-loves-her-mother';
 const isMarryMe = entry.id === 'marry-me';
 const isLeaves = entry.id === 'leaves';
-const headerCoda = isLeaves ? 'leaf' : isMarryMe ? 'ring' : isMourningHounds ? 'paws' : isWitnesses ? 'moon' : isSixThousandEighty ? 'counter' : isTheTrail ? 'pills' : isGuestsHere ? 'eyes' : isNow ? 'clock' : isTruth ? 'rabbit' : undefined;
+const headerCoda = isAlleyMoney ? 'cacodemon' : isLeaves ? 'leaf' : isMarryMe ? 'ring' : isMourningHounds ? 'paws' : isWitnesses ? 'moon' : isSixThousandEighty ? 'counter' : isTheTrail ? 'pills' : isGuestsHere ? 'eyes' : isNow ? 'clock' : isTruth ? 'rabbit' : undefined;
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? '' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -209,7 +209,7 @@ const breadcrumbSchema = piece ? {
     {isStarCrossed && <StarCrossedCoda />}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
-        <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}${isWitnesses ? ' witnesses-cover-slot' : ''}${isNow ? ' now-cover-slot' : ''}${isTruth ? ' truth-cover-slot' : ''}${isLothariOnline ? ' lothario-cover-slot' : ''}${isMourningHounds ? ' mourning-hounds-cover-slot' : ''}${isMarryMe ? ' marry-me-cover-slot' : ''}${isLeaves ? ' leaves-cover-slot' : ''}`}>
+        <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}${isWitnesses ? ' witnesses-cover-slot' : ''}${isNow ? ' now-cover-slot' : ''}${isTruth ? ' truth-cover-slot' : ''}${isLothariOnline ? ' lothario-cover-slot' : ''}${isMourningHounds ? ' mourning-hounds-cover-slot' : ''}${isMarryMe ? ' marry-me-cover-slot' : ''}${isLeaves ? ' leaves-cover-slot' : ''}${isAlleyMoney ? ' alley-money-cover-slot' : ''}`}>
           <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
             <div class="archive-cover-media">
               {isStarCrossed ? <StarCrossedCover alt={archiveCoverAlt} cover={piece.cover} variants={piece.coverVariants ?? [piece.cover]} /> : <OptimizedImage
@@ -240,6 +240,7 @@ const breadcrumbSchema = piece ? {
           {isMourningHounds && <MourningHoundsCoda variant="desktop" />}
           {isMarryMe && <MarryMeCoda variant="desktop" />}
           {isLeaves && <LeavesCoda variant="desktop" />}
+          {isAlleyMoney && <AlleyMoneyCoda variant="desktop" />}
         </div>
       )}
       <div class="prose archive-prose">
@@ -254,7 +255,6 @@ const breadcrumbSchema = piece ? {
         {isClotheslineDivorce && <ClotheslineDivorceCoda />}
         {isLothariOnline && <LothariOnlineCoda variant="mobile" />}
         {isNoRabbit && <NoRabbitCoda />}
-        {isAlleyMoney && <AlleyMoneyCoda />}
         {isFatherFrost && <FatherFrostCoda />}
         {isLifeToDragons && <LifeToDragonsCoda />}
         {isNatureOfSleep && <NatureOfSleepCoda />}

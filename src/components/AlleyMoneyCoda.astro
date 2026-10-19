@@ -1,163 +1,30 @@
 ---
 import cacodemonSheet from '../assets/codas/cacodemon.png';
 import { assetPath } from '../lib/paths';
+
+interface Props {
+  variant: 'desktop' | 'header';
+}
+const { variant } = Astro.props;
 ---
 
-<figure class="am-coda" data-am-coda data-sprite-sheet={cacodemonSheet.src}>
-  <button
-    class="am-cacodemon"
-    type="button"
-    aria-label="Defeat the Cacodemon"
-    data-am-cacodemon
-  >
-    <canvas width="112" height="112" aria-hidden="true" data-am-cacodemon-canvas></canvas>
-  </button>
-  <audio src={assetPath('audio/doom.mp3')} preload="auto" data-am-cacodemon-audio></audio>
-  <span class="sr-only" aria-live="polite" data-am-cacodemon-status></span>
-</figure>
+<span class={`am-coda am-coda--${variant}`} data-am-coda={variant} data-sprite-sheet={cacodemonSheet.src}>
+  <span class="am-traveler" data-am-traveler>
+    <button
+      class="am-cacodemon"
+      type="button"
+      aria-label="Defeat the Cacodemon"
+      data-am-cacodemon
+    >
+      <canvas width="112" height="112" aria-hidden="true" data-am-cacodemon-canvas></canvas>
+    </button>
+  </span>
+</span>
+{variant === 'desktop' && <audio src={assetPath('audio/doom.mp3')} preload="auto" data-am-cacodemon-audio></audio>}
+{variant === 'desktop' && <span class="sr-only" aria-live="polite" data-am-cacodemon-status></span>}
 
 <script>
-  const cacodemonCodas = document.querySelectorAll<HTMLElement>('[data-am-coda]');
-
-  for (const coda of cacodemonCodas) {
-    const button = coda.querySelector('[data-am-cacodemon]');
-    const canvas = coda.querySelector('[data-am-cacodemon-canvas]');
-    const audio = coda.querySelector('[data-am-cacodemon-audio]');
-    const status = coda.querySelector('[data-am-cacodemon-status]');
-    const spriteSheet = coda.dataset.spriteSheet;
-
-    if (!(button instanceof HTMLButtonElement) || !(canvas instanceof HTMLCanvasElement) || !spriteSheet) {
-      continue;
-    }
-
-    const context = canvas.getContext('2d', { willReadFrequently: true });
-    if (!context) continue;
-
-    type SpriteFrame = { x: number; y: number; width: number; height: number };
-
-    // Coordinates measured against the actual sprite sheet (425x859).
-    const idleFrame: SpriteFrame = { x: 239, y: 12, width: 61, height: 66 };
-    const deathFrames: SpriteFrame[] = [
-      { x: 23, y: 765, width: 63, height: 67 },
-      { x: 92, y: 765, width: 63, height: 67 },
-      { x: 165, y: 762, width: 67, height: 76 },
-      { x: 247, y: 771, width: 69, height: 66 },
-      { x: 329, y: 783, width: 75, height: 49 }
-    ];
-
-    // Every frame hangs from a shared baseline so the Cacodemon collapses
-    // downward into its own gib pool rather than each frame recentring.
-    const baseline = Math.round(canvas.height * 0.84);
-
-    const sprite = new Image();
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let playing = false;
-
-    const wait = (milliseconds: number) =>
-      new Promise<void>((resolve) => window.setTimeout(resolve, milliseconds));
-
-    const clear = () => context.clearRect(0, 0, canvas.width, canvas.height);
-
-    const playKillSound = () => {
-      if (!(audio instanceof HTMLAudioElement)) {
-        return wait(reducedMotion ? 1100 : 2400);
-      }
-
-      audio.pause();
-      audio.currentTime = 0;
-
-      return new Promise<void>((resolve) => {
-        let finished = false;
-
-        const finish = () => {
-          if (finished) return;
-          finished = true;
-          audio.removeEventListener('ended', finish);
-          audio.removeEventListener('error', finish);
-          resolve();
-        };
-
-        audio.addEventListener('ended', finish, { once: true });
-        audio.addEventListener('error', finish, { once: true });
-
-        const playback = audio.play();
-        if (playback) {
-          playback.catch(() => {
-            window.setTimeout(finish, reducedMotion ? 1100 : 2400);
-          });
-        }
-      });
-    };
-
-    const drawFrame = (frame: SpriteFrame) => {
-      clear();
-      context.imageSmoothingEnabled = false;
-
-      const destinationX = Math.round((canvas.width - frame.width) / 2);
-      const destinationY = baseline - frame.height;
-
-      context.drawImage(
-        sprite,
-        frame.x,
-        frame.y,
-        frame.width,
-        frame.height,
-        destinationX,
-        destinationY,
-        frame.width,
-        frame.height
-      );
-
-      // Key out the cyan matte, tolerating anti-aliased fringe pixels.
-      const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
-      for (let index = 0; index < pixels.data.length; index += 4) {
-        const red = pixels.data[index];
-        const green = pixels.data[index + 1];
-        const blue = pixels.data[index + 2];
-
-        if (red < 80 && green > 170 && blue > 170) {
-          pixels.data[index + 3] = 0;
-        }
-      }
-      context.putImageData(pixels, 0, 0);
-    };
-
-    const playDeath = async () => {
-      if (playing) return;
-
-      playing = true;
-      button.disabled = true;
-      button.setAttribute('aria-busy', 'true');
-      const soundFinished = playKillSound();
-
-      if (reducedMotion) {
-        drawFrame(deathFrames.at(-1) ?? idleFrame);
-        await wait(140);
-      } else {
-        for (const frame of deathFrames) {
-          drawFrame(frame);
-          await wait(105);
-        }
-      }
-
-      clear();
-      if (status instanceof HTMLElement) status.textContent = 'Cacodemon defeated.';
-      await soundFinished;
-
-      drawFrame(idleFrame);
-      if (status instanceof HTMLElement) status.textContent = 'The Cacodemon returned.';
-      button.disabled = false;
-      button.removeAttribute('aria-busy');
-      playing = false;
-    };
-
-    sprite.addEventListener('load', () => {
-      drawFrame(idleFrame);
-      button.addEventListener('click', () => void playDeath());
-    }, { once: true });
-
-    sprite.src = spriteSheet;
-  }
+  import '../scripts/alley-money-coda';
 </script>
 
 <style>
@@ -184,31 +51,43 @@ import { assetPath } from '../lib/paths';
   }
 
   .am-coda {
-    display: grid;
-    justify-items: center;
-    min-height: 10rem;
-    margin: clamp(4rem, 10vw, 7rem) 0 0;
-    text-align: center;
+    display: none;
+    position: relative;
+    margin: 0;
+    line-height: 1;
     text-indent: 0;
+    pointer-events: none;
+  }
+
+  .am-traveler {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 112px;
+    height: 112px;
   }
 
   .am-cacodemon {
+    display: block;
+    pointer-events: auto;
     width: 112px;
     height: 112px;
     padding: 0;
     border: 0;
     background: transparent;
     cursor: crosshair;
-    animation: am-cacodemon-hover 2.8s ease-in-out infinite;
+    --am-bob: 8px;
+    animation: am-cacodemon-hover 1.6s steps(8, end) infinite;
     touch-action: manipulation;
   }
 
-  .am-cacodemon:disabled {
+  .am-cacodemon[aria-disabled="true"] {
     cursor: default;
   }
 
   .am-cacodemon[aria-busy='true'] {
-    animation: none;
+    animation-play-state: paused;
   }
 
   .am-cacodemon:focus-visible {
@@ -224,26 +103,98 @@ import { assetPath } from '../lib/paths';
   }
 
   @keyframes am-cacodemon-hover {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-3px); }
+    0%, 100% { transform: translateY(calc(-1 * var(--am-bob))); }
+    50% { transform: translateY(var(--am-bob)); }
   }
 
-  @media (max-width: 640px) {
-    .am-coda {
-      min-height: 9rem;
-      margin-top: 3.8rem;
-    }
-
-    .am-cacodemon,
-    .am-cacodemon canvas {
-      width: 96px;
-      height: 96px;
+  @media (min-width: 861px) {
+    .am-coda--desktop[data-am-ready] {
+      display: block;
+      height: clamp(112px, calc(100svh - 510px), 300px);
+      margin-top: 12px;
     }
   }
+
+  @media (max-width: 860px) {
+    .am-coda--header[data-am-ready] {
+      display: block;
+      width: min(228px, calc(100vw - 132px));
+      height: 44px;
+    }
+    .am-coda--header .am-traveler,
+    .am-coda--header .am-cacodemon,
+    .am-coda--header canvas {
+      width: 64px;
+      height: 64px;
+    }
+    .am-coda--header .am-traveler { top: -10px; }
+    .am-coda--header .am-cacodemon { --am-bob: 4px; }
+    :global(.site-header:not(.header-coda-on)) .am-cacodemon {
+      pointer-events: none;
+      animation-play-state: paused;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 860px) {
+    .am-coda--header[data-am-ready] { width: 150px; }
+  }
+
+  .am-coda[data-am-paused] .am-cacodemon { animation-play-state: paused; }
 
   @media (prefers-reduced-motion: reduce) {
     .am-cacodemon {
       animation: none;
     }
   }
+
+  @media print {
+    .am-coda--desktop[data-am-ready],
+    .am-coda--header[data-am-ready] { display: none; }
+  }
+</style>
+
+<style is:global>
+  @media (min-width: 861px) {
+    .archived-piece-page--alley-money .archive-body-shell.has-archive-cover .alley-money-cover-slot {
+      display: block;
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: 96px;
+      align-self: start;
+      width: 100%;
+    }
+    .archived-piece-page--alley-money .archive-body-shell.has-archive-cover .alley-money-cover-slot .archive-cover-card {
+      position: static;
+      margin: 0;
+      width: 100%;
+    }
+  }
+
+  /* A short desktop viewport still needs room to aim below the cover. */
+  @media (min-width: 861px) and (max-height: 640px) {
+    .archived-piece-page--alley-money .alley-money-cover-slot .archive-cover-media {
+      aspect-ratio: auto;
+      height: max(80px, calc(100svh - 240px));
+    }
+  }
+
+  @media (max-width: 860px) {
+    .site-header[data-header-coda-type="cacodemon"] { position: sticky; top: 0; }
+    .site-header[data-header-coda-type="cacodemon"] .header-inner { position: relative; }
+    .site-header[data-header-coda-type="cacodemon"] .header-coda-slot {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+    .site-header[data-header-coda-type="cacodemon"].header-coda-on .brand {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
 </style>
