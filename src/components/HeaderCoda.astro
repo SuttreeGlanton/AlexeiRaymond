@@ -1,12 +1,13 @@
 ---
 import MourningHoundsCoda from './MourningHoundsCoda.astro';
 import MarryMeCoda from './MarryMeCoda.astro';
+import LeavesCoda from './LeavesCoda.astro';
 
 /* Header coda: a miniature of the story's coda that takes over the brand
    slot in the sticky mobile header once the reader scrolls past the title.
    Mobile only (<= 640px); desktop never renders the slot (SiteHeader CSS). */
 interface Props {
-  type: 'moon' | 'counter' | 'pills' | 'eyes' | 'clock' | 'rabbit' | 'paws' | 'ring';
+  type: 'moon' | 'counter' | 'pills' | 'eyes' | 'clock' | 'rabbit' | 'paws' | 'ring' | 'leaf';
 }
 
 const { type } = Astro.props as Props;
@@ -16,6 +17,7 @@ const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
 <span class="header-coda" data-header-coda={type}>
   {type === 'paws' && <MourningHoundsCoda variant="header" />}
   {type === 'ring' && <MarryMeCoda variant="header" />}
+  {type === 'leaf' && <LeavesCoda variant="header" />}
   {type === 'moon' && (
     <span class="hc-moon" aria-hidden="true">
       <span class="hc-moon-drift">
@@ -475,7 +477,7 @@ const PILLS = [0, 1, 2, 3, 4, 5, 6, 7];
   if (hcRoot) {
     const hcType = hcRoot.dataset.headerCoda || '';
     const hcReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const hcMobileQuery = window.matchMedia(hcType === 'ring' ? '(max-width: 860px)' : '(max-width: 640px)');
+    const hcMobileQuery = window.matchMedia((hcType === 'ring' || hcType === 'leaf') ? '(max-width: 860px)' : '(max-width: 640px)');
     const hcHeader = document.querySelector<HTMLElement>('[data-site-header]');
     const hcTitle = document.getElementById('account-title');
     const hcProse = document.querySelector<HTMLElement>('.archive-prose');

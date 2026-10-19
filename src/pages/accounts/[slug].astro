@@ -24,6 +24,7 @@ import AlphaSoundCoda from '../../components/AlphaSoundCoda.astro';
 import MourningHoundsCoda from '../../components/MourningHoundsCoda.astro';
 import StarCrossedCoda from '../../components/StarCrossedCoda.astro';
 import MarryMeCoda from '../../components/MarryMeCoda.astro';
+import LeavesCoda from '../../components/LeavesCoda.astro';
 import StarCrossedCover from '../../components/StarCrossedCover.astro';
 import RedCherrySlack from '../../components/RedCherrySlack.astro';
 import SheLovesHerMotherPortrait from '../../components/SheLovesHerMotherPortrait.astro';
@@ -69,7 +70,8 @@ const isNow = entry.id === 'now';
 const isTruth = entry.id === 'truth-or-its-evidence';
 const isSheLovesHerMother = entry.id === 'she-loves-her-mother';
 const isMarryMe = entry.id === 'marry-me';
-const headerCoda = isMarryMe ? 'ring' : isMourningHounds ? 'paws' : isWitnesses ? 'moon' : isSixThousandEighty ? 'counter' : isTheTrail ? 'pills' : isGuestsHere ? 'eyes' : isNow ? 'clock' : isTruth ? 'rabbit' : undefined;
+const isLeaves = entry.id === 'leaves';
+const headerCoda = isLeaves ? 'leaf' : isMarryMe ? 'ring' : isMourningHounds ? 'paws' : isWitnesses ? 'moon' : isSixThousandEighty ? 'counter' : isTheTrail ? 'pills' : isGuestsHere ? 'eyes' : isNow ? 'clock' : isTruth ? 'rabbit' : undefined;
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? '' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -180,7 +182,7 @@ const breadcrumbSchema = piece ? {
   publishedTime={publishedIso || undefined}
   structuredData={[workSchema, breadcrumbSchema]}
 >
-  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${isTheTrail ? ' archived-piece-page--trail' : ''}${isRedCherry ? ' archived-piece-page--red-cherry' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title" data-mh-story={isMourningHounds || undefined} data-sc-story={isStarCrossed || undefined} data-mm-story={isMarryMe || undefined}>
+  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${isTheTrail ? ' archived-piece-page--trail' : ''}${isRedCherry ? ' archived-piece-page--red-cherry' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title" data-mh-story={isMourningHounds || undefined} data-sc-story={isStarCrossed || undefined} data-mm-story={isMarryMe || undefined} data-leaves-story={isLeaves || undefined}>
     <a class="back-link" href={backHref}>&larr; {backLabel}</a>
     {overlineLabel && <div class="overline">{overlineLabel}</div>}
     <h1
@@ -207,7 +209,7 @@ const breadcrumbSchema = piece ? {
     {isStarCrossed && <StarCrossedCoda />}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
-        <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}${isWitnesses ? ' witnesses-cover-slot' : ''}${isNow ? ' now-cover-slot' : ''}${isTruth ? ' truth-cover-slot' : ''}${isLothariOnline ? ' lothario-cover-slot' : ''}${isMourningHounds ? ' mourning-hounds-cover-slot' : ''}${isMarryMe ? ' marry-me-cover-slot' : ''}`}>
+        <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}${isWitnesses ? ' witnesses-cover-slot' : ''}${isNow ? ' now-cover-slot' : ''}${isTruth ? ' truth-cover-slot' : ''}${isLothariOnline ? ' lothario-cover-slot' : ''}${isMourningHounds ? ' mourning-hounds-cover-slot' : ''}${isMarryMe ? ' marry-me-cover-slot' : ''}${isLeaves ? ' leaves-cover-slot' : ''}`}>
           <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
             <div class="archive-cover-media">
               {isStarCrossed ? <StarCrossedCover alt={archiveCoverAlt} cover={piece.cover} variants={piece.coverVariants ?? [piece.cover]} /> : <OptimizedImage
@@ -237,6 +239,7 @@ const breadcrumbSchema = piece ? {
           {isLothariOnline && <LothariOnlineCoda variant="desktop" />}
           {isMourningHounds && <MourningHoundsCoda variant="desktop" />}
           {isMarryMe && <MarryMeCoda variant="desktop" />}
+          {isLeaves && <LeavesCoda variant="desktop" />}
         </div>
       )}
       <div class="prose archive-prose">
@@ -273,6 +276,15 @@ const breadcrumbSchema = piece ? {
       <p class="account-outbound">
         <a href={piece.link} target="_blank" rel="noreferrer">Read &ldquo;{piece.title}&rdquo; at <span class="card-publication">{piece.publication}</span> &rarr;</a>
       </p>
+    )}
+    {isLeaves && (
+      <div class="leaves-restart-row">
+        <button type="button" class="leaves-restart" data-leaves-restart aria-label="Restart Leaves" disabled>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M3 10a9 9 0 1 1 2.7 8.4M3 4v6h6" />
+          </svg>
+        </button>
+      </div>
     )}
   </article>
 

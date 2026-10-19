@@ -1,0 +1,214 @@
+---
+import sheet from '../assets/codas/leaves/leaf-sheet.png';
+import controllerUrl from '../scripts/leaves-coda.js?url';
+
+interface Props {
+  variant: 'desktop' | 'header';
+}
+const { variant } = Astro.props;
+---
+
+<span class={`leaves-coda leaves-coda--${variant}`} data-leaves-coda={variant} data-leaves-sheet={sheet.src} aria-hidden="true">
+  <span class="leaves-sprite" data-leaves-sprite style={`--leaves-sheet: url("${sheet.src}")`}>
+  </span>
+</span>
+
+{variant === 'desktop' && <script is:inline type="module" src={controllerUrl}></script>}
+
+<style>
+  .leaves-coda {
+    display: none;
+    position: relative;
+    pointer-events: none;
+    line-height: 1;
+    text-indent: 0;
+  }
+
+  .leaves-sprite {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 114px;
+    height: 114px;
+    background-image: var(--leaves-sheet);
+    background-size: 2400% 100%;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    transform-origin: center;
+  }
+
+  .leaves-coda[data-leaves-departed] .leaves-sprite { visibility: hidden; }
+
+  @media (min-width: 861px) {
+    .leaves-coda--desktop[data-leaves-ready] {
+      display: block;
+      height: clamp(114px, calc(100svh - 510px), 300px);
+      margin-top: 12px;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .leaves-coda--header[data-leaves-ready] {
+      display: block;
+      width: min(228px, calc(100vw - 132px));
+      height: 44px;
+    }
+    .leaves-coda--header .leaves-sprite {
+      width: 80px;
+      height: 80px;
+      top: -18px;
+      left: -16px;
+    }
+  }
+
+  /* The desktop navigation remains in this width range. Keep the leaf
+     inside the existing brand's width, clear of the navigation. */
+  @media (min-width: 641px) and (max-width: 860px) {
+    .leaves-coda--header[data-leaves-ready] { width: 150px; }
+  }
+</style>
+
+<style is:global>
+  /* Retain the manuscript's hard line breaks and unindented paragraphs.
+     The centered opening and ending are the only separated bookends. */
+  [data-leaves-story].archived-piece-page .archive-prose > p {
+    margin: 0;
+    text-indent: 0;
+  }
+  [data-leaves-story].archived-piece-page .archive-prose > .leaves-bookend {
+    text-align: center;
+  }
+  [data-leaves-story].archived-piece-page .archive-prose > [data-leaves-opening] {
+    margin-bottom: 1.5em;
+  }
+  [data-leaves-story].archived-piece-page .archive-prose > [data-leaves-ending] {
+    margin-top: 1.5em;
+  }
+
+  [data-leaves-trigger] {
+    appearance: none;
+    display: inline;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 2px;
+    background: none;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-align: inherit;
+    line-height: inherit;
+    white-space: normal;
+    opacity: 1;
+    touch-action: manipulation;
+  }
+  [data-leaves-story][data-leaves-ready] [data-leaves-trigger]:enabled {
+    animation: leaves-invitation 2.6s ease-in-out infinite;
+  }
+  [data-leaves-trigger]:enabled { cursor: pointer; }
+  [data-leaves-trigger]:focus-visible {
+    outline: 1px solid var(--text-soft);
+    outline-offset: 6px;
+  }
+  @keyframes leaves-invitation {
+    0%, 100% { text-shadow: 0 0 2px rgba(242, 236, 220, 0.16); }
+    50% { text-shadow: 0 0 7px rgba(242, 236, 220, 0.8), 0 0 18px rgba(242, 236, 220, 0.36); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-leaves-story][data-leaves-ready] [data-leaves-trigger]:enabled { animation: none; }
+  }
+
+  .leaves-restart-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    visibility: hidden;
+  }
+  [data-leaves-story][data-leaves-ready][data-leaves-stage="3"]:not([data-leaves-busy]) .leaves-restart-row {
+    visibility: visible;
+  }
+  .leaves-restart {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--text-soft);
+    opacity: 0.28;
+    touch-action: manipulation;
+  }
+  .leaves-restart:enabled { cursor: pointer; }
+  .leaves-restart:enabled:hover { opacity: 0.5; }
+  .leaves-restart:focus-visible {
+    opacity: 0.6;
+    outline: 1px solid var(--text-soft);
+    outline-offset: -6px;
+    border-radius: 50%;
+  }
+
+  /* Color is a paint-only change. These inline spans keep the original
+     text, word wrapping, kerning, line boxes, and empty positions. */
+  [data-leaves-story] .leaves-gone {
+    color: transparent;
+    text-shadow: none;
+  }
+  [data-leaves-story][data-leaves-stage="3"] .archive-prose {
+    visibility: hidden;
+  }
+
+  .leaves-flight {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    pointer-events: none;
+  }
+
+  @media (min-width: 861px) {
+    [data-leaves-story] .archive-body-shell.has-archive-cover .leaves-cover-slot {
+      display: block;
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: 96px;
+      align-self: start;
+      width: 100%;
+    }
+    [data-leaves-story] .archive-body-shell.has-archive-cover .leaves-cover-slot .archive-cover-card {
+      position: static;
+      margin: 0;
+      width: 100%;
+    }
+  }
+
+  /* Use the same mobile/tablet brand slot as the ring coda. */
+  @media (max-width: 860px) {
+    .site-header[data-header-coda-type="leaf"] { position: sticky; top: 0; }
+    .site-header[data-header-coda-type="leaf"] .header-inner { position: relative; }
+    .site-header[data-header-coda-type="leaf"] .header-coda-slot {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+    .site-header[data-header-coda-type="leaf"].header-coda-on .brand {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  @media print {
+    .leaves-coda, .leaves-flight, .leaves-restart-row { display: none; }
+    [data-leaves-story][data-leaves-stage="3"] .archive-prose { visibility: visible; }
+    [data-leaves-story] .leaves-gone { color: inherit; }
+    [data-leaves-story][data-leaves-ready] [data-leaves-trigger] {
+      animation: none;
+      opacity: 1;
+      text-shadow: none;
+    }
+  }
+</style>

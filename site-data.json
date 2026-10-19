@@ -325,7 +325,10 @@
       "cover": "covers/pieces/leaves.jpg",
       "excerpt": "He turns to her delicate, lovely ear, offering unbelievable, desecrated gospel.",
       "genre": "Flash fiction",
-      "issue": "Anthology IX"
+      "issue": "Anthology IX",
+      "account": {
+        "slug": "leaves"
+      }
     },
     {
       "title": "Now",
