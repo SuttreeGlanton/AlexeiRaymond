@@ -3,10 +3,21 @@
    Italian "falene" in the story as a quiet button. A click releases moths; the
    final instance bursts a small swarm on each click and streams a continuous
    flutter while held down.
-   The live-moth cap keeps either from ever overwhelming the page. */
+   The live-moth cap keeps either from ever overwhelming the page.
+   Resident moths additionally gather on head, the buzzing lamp, and body words. */
 ---
 
-<!-- mothhead coda (behavior only) -->
+<!-- Strengthen the sprites' own translucent pixels without changing their
+     artwork, colors, or transparent background. Only resident moths use this. -->
+<svg class="mh-filter-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="mh-resident-solid" color-interpolation-filters="sRGB">
+      <feComponentTransfer>
+        <feFuncA type="gamma" amplitude="1" exponent="0.55" offset="0" />
+      </feComponentTransfer>
+    </filter>
+  </defs>
+</svg>
 
 <script>
   const MH_SPRITES = [
@@ -67,6 +78,16 @@
       window.setTimeout(() => word.classList.remove('is-resting'), ms);
     };
 
+    // Shared winding flight and bank for releases and the resident moths.
+    const mhFlightDrift = (t: number, angle: number, wobbles: number, amp: number) => {
+      const side = Math.sin(t * Math.PI * wobbles) * amp * (1 - t * 0.35);
+      return {
+        dx: Math.cos(angle + Math.PI / 2) * side,
+        dy: Math.sin(angle + Math.PI / 2) * side,
+        bank: Math.cos(t * Math.PI * wobbles) * 14 * (1 - t * 0.4)
+      };
+    };
+
     const spawnMothFrom = (rect: DOMRect) => {
       if (mhLive >= MH_MAX_LIVE) return;
       mhLive++;
@@ -111,11 +132,11 @@
       for (let i = 0; i <= N; i++) {
         const t = i / N;
         const along = travel * t;
-        const side = Math.sin(t * Math.PI * wobbles) * amp * (1 - t * 0.35);
-        const dx = Math.cos(angle) * along + Math.cos(angle + Math.PI / 2) * side;
-        const dy = Math.sin(angle) * along + Math.sin(angle + Math.PI / 2) * side;
+        const drift = mhFlightDrift(t, angle, wobbles, amp);
+        const dx = Math.cos(angle) * along + drift.dx;
+        const dy = Math.sin(angle) * along + drift.dy;
         const pop = t < 0.08 ? 0.35 + (t / 0.08) * 0.65 : 1;
-        const bank = Math.cos(t * Math.PI * wobbles) * 14 * (1 - t * 0.4);
+        const bank = drift.bank;
         frames.push({
           transform: `translate(${x0 + dx}px, ${y0 + dy}px) translate(-50%, -50%) rotate(${baseRot + bank}deg) scale(${size * pop})`,
           opacity: t < 0.05 ? t / 0.05 : t > 0.78 ? Math.max(0, 1 - (t - 0.78) / 0.22) : 1
@@ -150,6 +171,337 @@
         }
       });
     }
+
+    /* ---- resident moths: one controller, the same sprites and flight wobble ---- */
+    type RoostKind = 'head' | 'lamp' | 'nose' | 'lips' | 'ear' | 'forehead' | 'neck';
+    const singleMoth = (kind: RoostKind) => kind !== 'head' && kind !== 'lamp';
+    type Resident = {
+      el: HTMLSpanElement; img: HTMLImageElement; x: number; y: number;
+      angle: number; slot: number; next: number; phase: string;
+      flight?: Animation; wings?: Animation;
+    };
+    type Roost = {
+      word: HTMLButtonElement; text: HTMLSpanElement; kind: RoostKind;
+      moths: Resident[]; points: { x: number; y: number }[];
+      active: boolean; clock: number;
+    };
+    const roosts: Roost[] = [];
+    const random = (lo: number, hi: number) => lo + Math.random() * (hi - lo);
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const makeRoost = (node: Text, start: number, length: number, kind: RoostKind) => {
+      const selected = node.splitText(start);
+      selected.splitText(length);
+      const word = document.createElement('button');
+      word.type = 'button';
+      word.className = `mh-word mh-roost mh-roost--${kind}`;
+      word.setAttribute('aria-label', `${selected.data}: ${singleMoth(kind) ? 'disturb the moth' : 'scatter the moths'}`);
+      const text = document.createElement('span');
+      text.className = 'mh-roost-text';
+      text.textContent = selected.data;
+      word.append(text);
+      selected.replaceWith(word);
+      const roost: Roost = { word, text, kind, moths: [], points: [], active: false, clock: 0 };
+      roosts.push(roost);
+      return roost;
+    };
+
+    const title = document.querySelector('#account-title');
+    if (title?.textContent?.trim() === 'Mothhead' && title.firstChild?.nodeType === Node.TEXT_NODE) {
+      const node = title.firstChild as Text;
+      makeRoost(node, node.data.indexOf('Mothhead') + 4, 4, 'head');
+    }
+    // Exact prose anchors: only the requested instances receive resident moths.
+    // Existing moth-word buttons have already split this sentence into text nodes.
+    for (const [phrase, kind] of [
+      [' to a large buzzing lamp.', 'lamp'],
+      ['It perches itself on my nose.', 'nose'],
+      ['Another tickles my lips:', 'lips'],
+      ['to burrow into my ear:', 'ear'],
+      ['My hand goes to my forehead,', 'forehead'],
+      ['in the back of my neck,', 'neck']
+    ] as const) {
+      const walker = document.createTreeWalker(mhProse, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) {
+        const node = walker.currentNode as Text;
+        const at = node.data.indexOf(phrase);
+        if (at < 0 || node.parentElement?.closest('button, a, script, style')) continue;
+        makeRoost(node, at + phrase.lastIndexOf(kind), kind.length, kind);
+        break;
+      }
+    }
+
+    const pose = (x: number, y: number, angle: number) =>
+      `translate(${x}px, ${y}px) translate(-50%, -50%) rotate(${angle}deg)`;
+
+    // Sample the rendered letters' ink, so feet meet letter strokes instead of
+    // perching on an invisible rectangular box. Re-measure only for font/size changes.
+    const measure = (roost: Roost) => {
+      const style = getComputedStyle(roost.word);
+      const size = parseFloat(style.fontSize);
+      const box = roost.word.getBoundingClientRect();
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.ceil(box.width + size * 2);
+      canvas.height = Math.ceil(size * 3);
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      const points: { x: number; y: number }[] = [];
+      if (ctx) {
+        ctx.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+        ctx.textBaseline = 'alphabetic';
+        const node = roost.text.firstChild!;
+        const chars = roost.text.textContent || '';
+        for (let i = 0; i < chars.length; i++) {
+          const range = document.createRange();
+          range.setStart(node, i);
+          range.setEnd(node, i + 1);
+          const letter = range.getBoundingClientRect();
+          const metrics = ctx.measureText(chars[i]);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillText(chars[i], size, size * 2);
+          const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+          // Range bounds include font ascent/descent, not the paragraph leading.
+          const ascent = metrics.fontBoundingBoxAscent ?? size * 0.8;
+          const descent = metrics.fontBoundingBoxDescent ?? size * 0.2;
+          const baseline = letter.top - box.top + (letter.height - ascent - descent) / 2 + ascent;
+          for (const fraction of [0.3, 0.7]) {
+            const desired = Math.round(size + letter.width * fraction);
+            let found: { x: number; y: number } | undefined;
+            for (let delta = 0; delta <= Math.ceil(letter.width / 2) && !found; delta++) {
+              for (const col of [desired - delta, desired + delta]) {
+                if (col < size || col >= size + letter.width) continue;
+                for (let row = 0; row < canvas.height; row++) {
+                  if (pixels[(row * canvas.width + col) * 4 + 3] > 96) {
+                    found = { x: letter.left - box.left + col - size, y: baseline + row - size * 2 };
+                    break;
+                  }
+                }
+                if (found) break;
+              }
+            }
+            if (found) points.push(found);
+          }
+        }
+      }
+      roost.points = points.length ? points : Array.from({ length: 8 }, (_, i) => ({ x: box.width * (i + 0.5) / 8, y: box.height * 0.35 }));
+    };
+    const perch = (roost: Roost, moth: Resident) => {
+      const point = roost.points[moth.slot % roost.points.length];
+      // The body overlaps the letter slightly; wings can obscure the lamp.
+      return { x: point.x, y: point.y + (roost.kind === 'lamp' ? 4 : 0) };
+    };
+    const wings = (roost: Roost, moth: Resident, flying: boolean) => {
+      moth.wings?.cancel();
+      moth.wings = undefined;
+      if (reduced.matches) return;
+      moth.wings = moth.img.animate(flying ? [
+        { transform: 'scaleX(1)' }, { transform: 'scaleX(0.5)' }
+      ] : [
+        { transform: 'scaleX(0.86)' },
+        { transform: 'scaleX(0.86)', offset: 0.72 },
+        { transform: 'scaleX(0.70)', offset: 0.81 },
+        { transform: 'scaleX(0.92)', offset: 0.9 },
+        { transform: 'scaleX(0.86)' }
+      ], { duration: flying ? 150 : random(2600, 5100), iterations: Infinity,
+        direction: flying ? 'alternate' : 'normal', easing: 'ease-in-out' });
+      if (!roost.active) moth.wings.pause();
+    };
+    const settle = (roost: Roost, moth: Resident) => {
+      const point = perch(roost, moth);
+      moth.x = point.x; moth.y = point.y;
+      moth.el.style.transform = pose(moth.x, moth.y, moth.angle);
+      moth.el.style.opacity = '1';
+      moth.phase = 'settled';
+      moth.next = roost.clock + random(5500, 16000);
+      wings(roost, moth, false);
+    };
+    const travel = (roost: Roost, moth: Resident, to: { x: number; y: number }, duration: number,
+      phase: string, done: () => void, fade: 'in' | 'none' = 'none') => {
+      // Capture a disturbed moth where it actually is, even halfway through flight.
+      const current = getComputedStyle(moth.el);
+      const matrix = new DOMMatrixReadOnly(current.transform);
+      const x0 = matrix.m41 + moth.el.offsetWidth / 2;
+      const y0 = matrix.m42 + moth.el.offsetHeight / 2;
+      const opacity = Number(current.opacity);
+      moth.flight?.cancel();
+      moth.phase = phase;
+      moth.x = to.x; moth.y = to.y;
+      const angle = Math.atan2(to.y - y0, to.x - x0);
+      const baseRot = angle * 180 / Math.PI + 90;
+      const wobbles = random(2, 4);
+      const amp = random(12, 22);
+      const frames: Keyframe[] = [];
+      for (let i = 0; i <= 26; i++) {
+        const t = i / 26;
+        // Same winding drift/bank as the original flights, tapered at touchdown.
+        const drift = mhFlightDrift(t, angle, wobbles, amp);
+        const taper = Math.sin(Math.PI * t);
+        const x = x0 + (to.x - x0) * t + drift.dx * taper;
+        const y = y0 + (to.y - y0) * t + drift.dy * taper;
+        const turn = Math.sin(Math.PI * t);
+        frames.push({ transform: pose(x, y, moth.angle + (baseRot + drift.bank - moth.angle) * turn),
+          opacity: fade === 'in' ? Math.min(1, t * 5) : opacity + (1 - opacity) * t });
+      }
+      wings(roost, moth, true);
+      const flight = moth.el.animate(frames, { duration, easing: 'linear', fill: 'forwards' });
+      moth.flight = flight;
+      if (!roost.active) flight.pause();
+      flight.finished.then(() => {
+        if (moth.flight !== flight) return;
+        moth.el.style.transform = pose(to.x, to.y, moth.angle);
+        moth.el.style.opacity = '1';
+        moth.flight = undefined;
+        flight.cancel();
+        done();
+      }, () => {});
+    };
+    const nearby = (roost: Roost, moth: Resident, far = false) => {
+      const point = perch(roost, moth);
+      const box = roost.word.getBoundingClientRect();
+      const angle = random(-Math.PI, 0);
+      const distance = far ? random(70, 130) : random(24, 48);
+      return {
+        x: Math.max(18 - box.left, Math.min(window.innerWidth - box.left - 18, point.x + Math.cos(angle) * distance)),
+        y: point.y + Math.sin(angle) * distance - 12
+      };
+    };
+    const arrive = (roost: Roost, moth: Resident) => {
+      if (moth.slot % 3 === 0) {
+        travel(roost, moth, nearby(roost, moth), random(1200, 1900), 'arriving', () => {
+          travel(roost, moth, perch(roost, moth), random(1300, 2100), 'returning', () => settle(roost, moth));
+        }, 'in');
+      } else {
+        travel(roost, moth, perch(roost, moth), random(1600, 2500), 'arriving', () => settle(roost, moth), 'in');
+      }
+    };
+    const excursion = (roost: Roost, moth: Resident) => {
+      travel(roost, moth, nearby(roost, moth), random(800, 1300), 'away', () => {
+        travel(roost, moth, nearby(roost, moth), random(900, 1500), 'hovering', () => {
+          travel(roost, moth, perch(roost, moth), random(1000, 1600), 'returning', () => settle(roost, moth));
+        });
+      });
+    };
+
+    for (const roost of roosts) {
+      measure(roost);
+      const count = singleMoth(roost.kind) ? 1 : 7;
+      const slots = roost.points.map((_, i) => i);
+      // Shuffle once per visit, giving each single moth a fresh letter/stroke.
+      for (let i = slots.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [slots[i], slots[j]] = [slots[j], slots[i]];
+      }
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('span');
+        el.className = 'mh-resident';
+        el.setAttribute('aria-hidden', 'true');
+        const img = document.createElement('img');
+        img.src = MH_SPRITES[i % MH_SPRITES.length];
+        img.alt = ''; img.draggable = false;
+        el.append(img); roost.word.append(el);
+        const moth: Resident = { el, img, x: 0, y: 0, angle: random(-32, 32), slot: slots[i % slots.length], next: 0, phase: 'settled' };
+        roost.moths.push(moth);
+        settle(roost, moth);
+        if (roost.kind === 'head' && !reduced.matches) {
+          const point = nearby(roost, moth, true);
+          el.style.transform = pose(point.x, point.y, moth.angle);
+          el.style.opacity = '0';
+          moth.phase = 'waiting';
+          moth.next = 300 + i * random(650, 1150);
+        }
+      }
+      roost.word.addEventListener('click', () => {
+        if (singleMoth(roost.kind) && roost.moths[0].phase !== 'settled') return;
+        for (const [i, moth] of roost.moths.entries()) {
+          // Moths still on their initial approach keep arriving normally.
+          if (roost.kind === 'head' && moth.phase === 'waiting') continue;
+          if (reduced.matches) {
+            moth.flight?.cancel(); moth.flight = undefined;
+            // No moving flight in reduced motion: step aside, remain solid,
+            // then return to the letter after the same short pause.
+            const point = perch(roost, moth);
+            moth.el.style.transform = pose(point.x, point.y - 16, moth.angle);
+            moth.el.style.opacity = '1';
+            moth.phase = 'waiting';
+            moth.next = roost.clock + 1500 + i * 180;
+          } else {
+            excursion(roost, moth);
+          }
+        }
+        sync();
+      });
+    }
+
+    // Local coordinates follow scrolling automatically. No scroll layout loop.
+    // A single timer runs only while a habitat is visible; animations pause too.
+    let timer = 0;
+    let previous = performance.now();
+    const visibility = new Map<Element, boolean>();
+    const tick = () => {
+      const now = performance.now();
+      const dt = Math.min(600, now - previous);
+      previous = now;
+      for (const roost of roosts) {
+        if (!roost.active) continue;
+        roost.clock += dt;
+        for (const moth of roost.moths) {
+          if (moth.next > roost.clock) continue;
+          if (moth.phase === 'waiting') {
+            if (reduced.matches) settle(roost, moth);
+            else arrive(roost, moth);
+          } else if (roost.kind === 'head' && moth.phase === 'settled' && !reduced.matches) {
+            // Several stay put; no more than two residents flutter nearby at once.
+            const airborne = roost.moths.filter(m => !['settled', 'waiting'].includes(m.phase)).length;
+            if (airborne < 2 && Math.random() < 0.55) excursion(roost, moth);
+            else moth.next = roost.clock + random(4000, 10000);
+          }
+        }
+      }
+    };
+    const sync = () => {
+      for (const roost of roosts) {
+        roost.active = !document.hidden && visibility.get(roost.word) === true;
+        roost.word.classList.toggle('mh-paused', !roost.active);
+        for (const moth of roost.moths) {
+          for (const animation of [moth.flight, moth.wings]) {
+            if (!animation || animation.playState === 'finished' || animation.playState === 'idle') continue;
+            if (roost.active) animation.play(); else animation.pause();
+          }
+        }
+      }
+      const active = roosts.some(r => r.active);
+      if (active && !timer) { previous = performance.now(); timer = window.setInterval(tick, 400); }
+      if (!active && timer) { window.clearInterval(timer); timer = 0; }
+    };
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) visibility.set(entry.target, entry.isIntersecting);
+      sync();
+    });
+    for (const roost of roosts) observer.observe(roost.word);
+    document.addEventListener('visibilitychange', sync);
+    const remeasure = () => {
+      for (const roost of roosts) {
+        measure(roost);
+        for (const moth of roost.moths) {
+          if (moth.phase === 'settled') settle(roost, moth);
+        }
+      }
+    };
+    const resize = new ResizeObserver(remeasure);
+    for (const roost of roosts) resize.observe(roost.word);
+    document.fonts.ready.then(remeasure);
+    reduced.addEventListener('change', () => {
+      for (const roost of roosts) for (const moth of roost.moths) {
+        moth.flight?.cancel(); moth.flight = undefined;
+        settle(roost, moth);
+      }
+    });
+    window.addEventListener('pagehide', () => {
+      window.clearInterval(timer); timer = 0;
+      for (const roost of roosts) for (const moth of roost.moths) {
+        moth.flight?.pause(); moth.wings?.pause();
+      }
+    });
+    window.addEventListener('pageshow', sync);
 
     /* ---- press-and-hold the final word for a continuous release ---- */
     if (mhFinal) {
@@ -217,8 +569,8 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  .mh-word:hover:not(.is-resting),
-  .mh-word:focus-visible:not(.is-resting) {
+  .mh-word:hover:not(.is-resting):not(.mh-roost),
+  .mh-word:focus-visible:not(.is-resting):not(.mh-roost) {
     text-shadow:
       0 0 9px rgba(236, 214, 176, 0.6),
       0 0 2px rgba(236, 214, 176, 0.45);
@@ -289,12 +641,66 @@
     height: auto;
   }
 
+  .mh-filter-defs { position: absolute; pointer-events: none; }
+
+  .mh-roost {
+    position: relative;
+    display: inline-block;
+    vertical-align: baseline;
+    line-height: inherit;
+    text-indent: 0;
+    text-align: inherit;
+    white-space: nowrap;
+    overflow: visible;
+    touch-action: manipulation;
+  }
+
+  /* Glow only the letters, never the moths. Same 2.6-second invitation as
+     Misremember, with lower opacity at both ends of its cycle. */
+  .mh-roost--head .mh-roost-text,
+  .mh-roost--lamp .mh-roost-text {
+    animation: mh-word-invitation 2.6s ease-in-out infinite;
+  }
+  @keyframes mh-word-invitation {
+    0%, 100% { text-shadow: 0 0 2px rgba(242, 236, 220, 0.10); }
+    50% { text-shadow: 0 0 7px rgba(242, 236, 220, 0.48), 0 0 18px rgba(242, 236, 220, 0.20); }
+  }
+  .mh-paused .mh-roost-text { animation-play-state: paused; }
+  .mh-resident {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 17px;
+    line-height: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+  .mh-roost--head .mh-resident { width: clamp(23px, 2.5vw, 29px); }
+  .mh-roost .mh-resident img {
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    filter: url(#mh-resident-solid);
+  }
+  @media print {
+    .mh-resident, .mh-moth-fly { display: none; }
+    .mh-word, .mh-roost-text { animation: none !important; text-shadow: none !important; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .mh-word {
       transition: none;
     }
 
-    .mh-word--final {
+    .mh-word--final,
+    .mh-roost--head .mh-roost-text,
+    .mh-roost--lamp .mh-roost-text {
       animation: none;
     }
   }
