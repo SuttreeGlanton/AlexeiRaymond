@@ -38,7 +38,7 @@ const longTitle = piece.title.length >= 18;
 const cycleTitleFit = piece.title === '193 Thoughts of You';
 const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-defunct' : ''}${longTitle ? ' has-long-title' : ''}${cycleTitleFit ? ' has-cycle-title-fit' : ''}`;
 
-const cycleLabel = showCycle ? `From the ${piece.cycle} cycle` : '';
+const cycleLabel = showCycle ? `From ${/^the\s/i.test(piece.cycle) ? '' : 'the '}${piece.cycle} cycle` : '';
 // Render the date as a compact cover plate to prevent metadata wrapping.
 const dateLabel = upcoming ? '' : formatShortDate(piece.date);
 const publicationTime = parseDate(piece.date)?.getTime() ?? 0;
