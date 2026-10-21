@@ -110,6 +110,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
             const previousYear = index > 0 ? parseDate(published[index - 1].date)?.getFullYear() : null;
             const pieceCycles = cycleLinksForPiece(piece);
             const monthYear = formatMonthYear(piece.date);
+            const readLabel = piece.genre === 'Poem' ? 'Read poem' : 'Read story';
 
             return (
               <>
@@ -130,8 +131,8 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                       )}
                     </h3>
                     {piece.account && (
-                      <a class="chronology-read-link" href={withBase(`accounts/${piece.account.slug}/`)} aria-label={`Read story: ${piece.title} on this site`}>
-                        Read story <span aria-hidden="true">&rarr;</span>
+                      <a class="chronology-read-link" href={withBase(`accounts/${piece.account.slug}/`)} aria-label={`${readLabel}: ${piece.title} on this site`}>
+                        {readLabel} <span aria-hidden="true">&rarr;</span>
                       </a>
                     )}
                   </div>
