@@ -8,7 +8,7 @@ export interface PublicationCredits {
 
 const venueKey = (name: string) => name.toLocaleLowerCase('en');
 
-function uniqueVenues(names: readonly string[]): string[] {
+export function uniqueVenues(names: readonly string[]): string[] {
   const venues = new Map<string, string>();
   for (const value of names) {
     const name = value.normalize('NFC').trim().replace(/\s+/gu, ' ');

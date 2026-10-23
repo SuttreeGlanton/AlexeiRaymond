@@ -1,0 +1,54 @@
+---
+import { uniqueVenues } from '../lib/publication-credits';
+
+interface Props {
+  names: string[];
+  initial: string[];
+}
+
+const { names, initial } = Astro.props;
+const pool = uniqueVenues(names);
+const opening = uniqueVenues([...initial, ...pool]).slice(0, 2);
+const sentence = (venues: string[]) => `Work published in ${venues.join(' and ')}, among others.`;
+// Reserve space for long credits without giving short names oversized slots.
+const longest = [...pool].sort((a, b) => b.length - a.length).slice(0, 2);
+---
+
+{opening.length > 0 && (
+  <span class="publication-heartbeat" data-publication-heartbeat data-venues={JSON.stringify(pool)}>
+    <span class="sr-only">{sentence(opening)}</span>
+    <span class="publication-heartbeat-copy" aria-hidden="true">
+      Work published in <i data-publication-name>{opening[0]}</i>{opening[1] && <> and <i data-publication-name>{opening[1]}</i></>}, among others.
+    </span>
+    <span class="publication-heartbeat-reserve" aria-hidden="true">
+      Work published in <i>{longest[0]}</i>{longest[1] && <> and <i>{longest[1]}</i></>}, among others.
+    </span>
+  </span>
+)}
+
+<script>
+  import '../scripts/publication-heartbeat';
+</script>
+
+<style>
+  .publication-heartbeat {
+    display: grid;
+    overflow-wrap: anywhere;
+  }
+
+  .publication-heartbeat-copy,
+  .publication-heartbeat-reserve {
+    grid-area: 1 / 1;
+    min-width: 0;
+  }
+
+  .publication-heartbeat-reserve {
+    visibility: hidden;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  @media print, (prefers-reduced-motion: reduce) {
+    .publication-heartbeat-reserve { display: none; }
+  }
+</style>

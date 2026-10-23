@@ -8,7 +8,8 @@ import {
   canLinkToPiece,
 } from '../lib/data';
 import { withBase } from '../lib/paths';
-import { selectPublicationCredits, publicationCreditLines } from '../lib/publication-credits';
+import { selectPublicationCredits } from '../lib/publication-credits';
+import PublicationHeartbeat from './PublicationHeartbeat.astro';
 
 const published = publishedPieces();
 const latest = published
@@ -24,10 +25,12 @@ const KNOWN_RELEASE_DATES = new Map<string, string>([
 ]);
 
 const upcoming = upcomingPieces();
-const creditLines = publicationCreditLines(selectPublicationCredits(
+const credits = selectPublicationCredits(
   published.map((piece) => piece.publication),
   upcoming.map((piece) => piece.publication),
-));
+);
+const forthcomingCreditParts = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' })
+  .formatToParts(credits.upcoming);
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 
@@ -67,7 +70,12 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
         <a class="latest-strip-chronology" href={withBase('chronology/')}>Full chronology &rarr;</a>
       </div>
       <p class="latest-strip-credit">
-        {creditLines.map((line) => <span class="latest-strip-credit-line">{line}</span>)}
+        <PublicationHeartbeat names={published.map((piece) => piece.publication)} initial={credits.published.slice(0, 2)} />
+        {credits.upcoming.length > 0 && (
+          <span class="latest-strip-credit-line">
+            Forthcoming in {forthcomingCreditParts.map((part) => part.type === 'element' ? <i>{part.value}</i> : part.value)}.
+          </span>
+        )}
       </p>
       <div class="latest-strip-row">
         <p class="latest-strip-item">
