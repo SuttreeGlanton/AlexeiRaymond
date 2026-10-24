@@ -388,12 +388,7 @@ img {
   }
 
   .home-cycle-index {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    text-align: left;
-  }
-
-  .home-cycle-index a {
-    justify-content: flex-start;
+    display: none;
   }
 }
 
