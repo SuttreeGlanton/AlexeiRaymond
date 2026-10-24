@@ -121,6 +121,10 @@ img {
   white-space: nowrap;
 }
 
+.home-page .site-header .brand .brand-initial {
+  color: #ff4057;
+}
+
 /* Brand monogram accordion. The full name is always in the markup (screen
    readers announce it whole), but on the homepage — while the giant hero H1
    already says the name — the header folds down to the "AR" initials, keeping
