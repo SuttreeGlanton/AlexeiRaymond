@@ -2770,6 +2770,10 @@ img {
 
 /* --- Homepage mobile cycle focus color --- */
 @media (max-width: 640px) {
+  .home-cycle-grid .tile.is-mobile-focus .cycle-initial {
+    color: #ff4057;
+  }
+
   .home-cycle-grid .tile.is-mobile-focus {
     border-color: var(--border-strong);
     background: var(--panel-lift);
