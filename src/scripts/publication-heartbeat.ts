@@ -5,10 +5,27 @@ if (credit) {
   const venues: string[] = JSON.parse(credit.dataset.venues ?? '[]');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const print = window.matchMedia('print');
-  const opening = slots.map((slot) => slot.textContent ?? '');
-  // A shared queue visits every venue before repeating, and never shows a
-  // venue in both positions. Each position keeps its name for two beats.
-  let queue = venues.filter((name) => !opening.includes(name));
+  function shuffled(names: string[]): string[] {
+    const result = [...names];
+    for (let index = result.length - 1; index > 0; index--) {
+      const other = Math.floor(Math.random() * (index + 1));
+      [result[index], result[other]] = [result[other]!, result[index]!];
+    }
+    return result;
+  }
+
+  // Shuffle in the browser so every visit gets a fresh opening and order.
+  // Refill only after the queue is exhausted, excluding both visible names.
+  // Each position still keeps its name for two beats.
+  let queue = shuffled(venues);
+  for (const slot of slots) {
+    const name = queue.shift();
+    if (name) slot.textContent = name;
+  }
+  const accessibleCopy = credit.querySelector<HTMLElement>('.sr-only');
+  if (accessibleCopy) {
+    accessibleCopy.textContent = `Work published in ${slots.map((slot) => slot.textContent).join(' and ')}, among others.`;
+  }
   let nextSlot = 0;
   let visible = false;
   let timer = 0;
@@ -37,8 +54,11 @@ if (credit) {
       await activeAnimation.finished;
       if (generation !== currentGeneration || !running()) return;
 
+      if (!queue.length) {
+        const visibleNames = slots.map((item) => item.textContent);
+        queue = shuffled(venues.filter((name) => !visibleNames.includes(name)));
+      }
       const next = queue.shift()!;
-      queue.push(slot.textContent ?? '');
       slot.textContent = next;
       activeAnimation.cancel();
       activeAnimation = slot.animate([
