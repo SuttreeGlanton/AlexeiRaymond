@@ -121,7 +121,8 @@ img {
   white-space: nowrap;
 }
 
-.home-page .site-header .brand .brand-initial {
+.site-header .brand .brand-initial,
+.tile-title .cycle-initial {
   color: #ff4057;
 }
 

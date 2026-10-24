@@ -9,6 +9,7 @@ interface Props {
 }
 
 const { cycle } = Astro.props;
+const nameParts = cycle.name.split(/(\s+)/);
 const teaser = cycleTeaser(cycle);
 const cover = cycle.cover ? assetPath(cycle.cover) : '';
 const coverImage = imageAsset(cycle.cover);
@@ -43,7 +44,7 @@ const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295p
         )}
       </div>
       <div class="tile-body">
-        <h3 class="tile-title">{cycle.name}</h3>
+        <h3 class="tile-title">{nameParts.map((part) => /^\s+$/.test(part) ? part : <><span class="cycle-initial">{part.slice(0, 1)}</span>{part.slice(1)}</>)}</h3>
         {teaser && <p class="tile-mobile-blurb">{teaser}</p>}
       </div>
     </div>
@@ -69,7 +70,7 @@ const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295p
         )}
       </div>
       <div class="tile-body">
-        <h3 class="tile-title">{cycle.name}</h3>
+        <h3 class="tile-title">{nameParts.map((part) => /^\s+$/.test(part) ? part : <><span class="cycle-initial">{part.slice(0, 1)}</span>{part.slice(1)}</>)}</h3>
         {teaser && <p class="tile-mobile-blurb">{teaser}</p>}
       </div>
     </a>
