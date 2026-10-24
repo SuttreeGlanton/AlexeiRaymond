@@ -2,6 +2,7 @@
 import { cycles, site } from '../lib/data';
 import { withBase } from '../lib/paths';
 import HeaderCoda from './HeaderCoda.astro';
+import CycleName from './CycleName.astro';
 
 interface Props {
   headerCoda?: 'moon' | 'counter' | 'pills' | 'eyes' | 'clock' | 'rabbit' | 'paws' | 'ring' | 'leaf' | 'cacodemon';
@@ -100,7 +101,7 @@ const desktopNavItems = [
             </a>
             <div class="nav-cycle-panel" aria-label="Cycle navigation">
               {cycleNavItems.map((cycle) => (
-                <a href={cycle.href} aria-current={cycle.active ? 'page' : undefined}>{cycle.label}</a>
+                <a href={cycle.href} aria-current={cycle.active ? 'page' : undefined}><CycleName name={cycle.label} /></a>
               ))}
             </div>
           </div>
@@ -154,7 +155,7 @@ const desktopNavItems = [
       <div class="mobile-cycle-list">
         {cycleNavItems.map((cycle) => (
           <a class="mobile-cycle-link" href={cycle.href} aria-current={cycle.active ? 'page' : undefined}>
-            {cycle.label}
+            <CycleName name={cycle.label} />
           </a>
         ))}
       </div>

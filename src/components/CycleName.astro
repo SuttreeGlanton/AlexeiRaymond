@@ -1,0 +1,10 @@
+---
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+const parts = name.split(/(\s+)/);
+---
+
+<span class="cycle-name">{parts.map((part) => /^\s+$/.test(part) ? part : <><span class="cycle-initial">{part.slice(0, 1)}</span>{part.slice(1)}</>)}</span>

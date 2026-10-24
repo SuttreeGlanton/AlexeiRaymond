@@ -2,6 +2,7 @@
 import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TagList from '../components/TagList.astro';
+import CycleName from '../components/CycleName.astro';
 import chronologyVisual from '../assets/page-visuals/chronology-records.jpg';
 import { canLinkToPiece, cycleByName, cycleNamesForPiece, formatIsoDate, formatMonthYear, parseDate, pieces, publishedNewestFirst, site, upcomingPieces, publicationLabel } from '../lib/data';
 import { withBase } from '../lib/paths';
@@ -82,7 +83,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                       {pieceCycles.map((cycle, index) => (
                         <>
                           {index > 0 && <span aria-hidden="true">·</span>}
-                          <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
+                          <a href={withBase(`cycles/${cycle.id}/`)}><CycleName name={cycle.name} /></a>
                         </>
                       ))}
                     </div>
@@ -152,7 +153,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                       {pieceCycles.map((cycle, index) => (
                         <>
                           {index > 0 && <span aria-hidden="true">·</span>}
-                          <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a>
+                          <a href={withBase(`cycles/${cycle.id}/`)}><CycleName name={cycle.name} /></a>
                         </>
                       ))}
                     </div>

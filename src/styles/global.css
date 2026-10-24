@@ -122,7 +122,17 @@ img {
 }
 
 .site-header .brand .brand-initial,
-.tile-title .cycle-initial {
+.tile:hover .tile-title .cycle-initial,
+.tile:focus-visible .tile-title .cycle-initial,
+.tile.is-fan-focus .tile-title .cycle-initial,
+.nav-cycle-panel a:hover .cycle-initial,
+.nav-cycle-panel a:focus-visible .cycle-initial,
+.mobile-cycle-link:hover .cycle-initial,
+.mobile-cycle-link:focus-visible .cycle-initial,
+.home-cycle-index a:hover .cycle-initial,
+.home-cycle-index a:focus-visible .cycle-initial,
+.chronology-cycle-links a:hover .cycle-initial,
+.chronology-cycle-links a:focus-visible .cycle-initial {
   color: #ff4057;
 }
 
@@ -568,6 +578,8 @@ img {
 
 /* Keep the longest homepage cycle name on one line without shrinking its peers. */
 .home-cycle-grid > .tile[data-cycle-id='valentines-star'] .tile-title {
+  display: flex;
+  justify-content: center;
   font-size: clamp(1.4rem, 2.05vw, 2.1rem);
   white-space: nowrap;
 }

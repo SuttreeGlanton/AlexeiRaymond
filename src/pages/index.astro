@@ -2,6 +2,7 @@
 import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CycleTile from '../components/CycleTile.astro';
+import CycleName from '../components/CycleName.astro';
 import LatestStrip from '../components/LatestStrip.astro';
 import TeaserAccordion from '../components/TeaserAccordion.astro';
 import { cycles, site } from '../lib/data';
@@ -143,7 +144,7 @@ const websiteSchema = {
     </div>
     <nav class="home-cycle-index" aria-label="Story cycle index">
       {cycles.filter((cycle) => !cycle.disabled).map((cycle) => (
-        <a href={withBase(`cycles/${cycle.id}/`)} data-home-cycle-link={cycle.id}>{cycle.name}</a>
+        <a href={withBase(`cycles/${cycle.id}/`)} data-home-cycle-link={cycle.id}><CycleName name={cycle.name} /></a>
       ))}
     </nav>
   </section>
