@@ -1786,6 +1786,7 @@ img {
 
 .about-copy .prose {
   margin-top: clamp(18px, 2.5vw, 28px);
+  font-family: var(--serif);
 }
 
 .about-copy .prose p {
