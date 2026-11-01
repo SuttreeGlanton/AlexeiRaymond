@@ -7,11 +7,9 @@ import { absoluteSiteUrl, withBase } from '../lib/paths';
 
 const bloodHoneyUrl = 'https://www.bloodhoneylit.com/';
 const bloodHoneyName = 'Blood+Honey';
-const [bioBefore, bioAfter] = site.bio.split(bloodHoneyName);
-const canLinkBloodHoney = typeof bioAfter === 'string';
 const publicationsPhrase = 'a variety of publications';
-const [bioMiddle, bioTail] = typeof bioAfter === 'string' ? bioAfter.split(publicationsPhrase) : [];
-const canLinkPublications = canLinkBloodHoney && typeof bioTail === 'string';
+const [bioBefore, bioAfter] = site.bio.split(publicationsPhrase);
+const canLinkPublications = typeof bioAfter === 'string';
 const siteUrl = absoluteSiteUrl('', Astro.site);
 const aboutUrl = absoluteSiteUrl('about/', Astro.site);
 const profileSchema = {
@@ -56,11 +54,7 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
         <p>
           {canLinkPublications ? (
             <>
-              {bioBefore}<a href={bloodHoneyUrl} target="_blank" rel="noopener noreferrer" aria-label={`${bloodHoneyName}. Opens in a new tab.`}>{bloodHoneyName}</a>{bioMiddle}<a href={withBase('chronology/')}>{publicationsPhrase}</a>{bioTail}
-            </>
-          ) : canLinkBloodHoney ? (
-            <>
-              {bioBefore}<a href={bloodHoneyUrl} target="_blank" rel="noopener noreferrer" aria-label={`${bloodHoneyName}. Opens in a new tab.`}>{bloodHoneyName}</a>{bioAfter}
+              {bioBefore}<a href={withBase('chronology/')}>{publicationsPhrase}</a>{bioAfter}
             </>
           ) : (
             site.bio
