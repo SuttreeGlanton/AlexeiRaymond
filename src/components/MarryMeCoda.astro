@@ -321,6 +321,15 @@ const waterImage = await getImage({ src: water, width: 2172, format: 'webp', qua
      Keep this treatment through the tablet range,
      where the cover is no longer in a separate column. */
   @media (max-width: 860px) {
+    /* Keep inviting the next action for as long as it remains available.
+       A slightly fuller glow makes the opening easier to notice on phones. */
+    [data-mm-story] [data-mm-remember]:enabled {
+      animation: mm-remember-invitation 2.6s ease-in-out infinite;
+    }
+    @keyframes mm-remember-invitation {
+      0%, 100% { text-shadow: 0 0 3px rgba(242, 236, 220, 0.24); }
+      50% { text-shadow: 0 0 8px rgba(242, 236, 220, 0.95), 0 0 20px rgba(242, 236, 220, 0.5); }
+    }
     .site-header[data-header-coda-type="ring"] { position: sticky; top: 0; }
     .site-header[data-header-coda-type="ring"] .header-inner { position: relative; }
     .site-header[data-header-coda-type="ring"] .header-coda-slot {
@@ -355,7 +364,8 @@ const waterImage = await getImage({ src: water, width: 2172, format: 'webp', qua
     .mm-pouch { transition: none; }
     .mm-ring:enabled img,
     .mm-water__surface,
-    [data-mm-story] .mm-action:enabled { animation: none; }
+    [data-mm-story] .mm-action:enabled,
+    [data-mm-story] [data-mm-remember]:enabled { animation: none; }
     .mm-ring:enabled img { filter: drop-shadow(0 0 4px rgba(219, 191, 105, 0.65)); }
     [data-mm-story] .mm-action:enabled {
       text-decoration: underline dotted;

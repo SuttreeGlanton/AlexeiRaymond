@@ -144,6 +144,9 @@
       // Three dimensional turns, using the supplied views. No CSS rotation.
       setFrame(reduced.matches ? 0 : Math.floor(progress * frames.length * 3) % frames.length);
       for (const ring of rings) ring.disabled = progress < 1;
+      // On phones/tablets either invitation starts the same complete return.
+      // Reversing the scroll or crossing the desktop breakpoint disarms it.
+      returnButton.disabled = desktop.matches || progress < 1;
     }
     checkReturn();
   };
@@ -152,7 +155,7 @@
   };
   const remeasure = () => { dirty = true; schedule(); };
 
-  const finishDrop = (keyboard) => {
+  const finishDrop = (keyboard, returnAfterDrop) => {
     for (const ring of rings) ring.dataset.mmGone = '';
     // The pouch has served its purpose. Hide it before the return to the
     // title, preserving its geometry so the column and river stay in place.
@@ -161,17 +164,20 @@
     header?.setAttribute('data-mm-water', '');
     syncWater();
     setState('dropped');
-    returnButton.disabled = false;
-    if (keyboard) returnButton.focus({ preventScroll: true });
+    returnButton.disabled = returnAfterDrop;
+    if (returnAfterDrop) returnToTitle();
+    else if (keyboard) returnButton.focus({ preventScroll: true });
   };
 
   const drop = (event) => {
     if (state !== 'reading' || progress < 1) return;
     setState('dropping');
     rings.forEach((ring) => { ring.disabled = true; });
+    returnButton.disabled = true;
+    const returnAfterDrop = !desktop.matches;
     const keyboard = event.detail === 0;
-    if (reduced.matches) { finishDrop(keyboard); return; }
     const ring = desktop.matches ? desktopRing : headerRing;
+    if (reduced.matches || !ring.animate) { finishDrop(keyboard, returnAfterDrop); return; }
     let animation;
     if (desktop.matches) {
       // The river is in front of the ring. The opaque fill hides it as it
@@ -186,7 +192,10 @@
         { transform: 'translateY(48px)', opacity: 0 }
       ], { duration: 420, easing: 'ease-in', fill: 'forwards' });
     }
-    animation.finished.then(() => finishDrop(keyboard), () => finishDrop(keyboard));
+    animation.finished.then(
+      () => finishDrop(keyboard, returnAfterDrop),
+      () => finishDrop(keyboard, returnAfterDrop)
+    );
   };
 
   const returnToTitle = () => {
@@ -458,7 +467,10 @@
   };
 
   rings.forEach((ring) => ring.addEventListener('click', drop));
-  returnButton.addEventListener('click', returnToTitle);
+  returnButton.addEventListener('click', (event) => {
+    if (state === 'reading' && !desktop.matches) drop(event);
+    else returnToTitle();
+  });
   rememberButton.addEventListener('click', remember);
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('scrollend', schedule);
