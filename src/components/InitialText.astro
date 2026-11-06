@@ -1,13 +1,12 @@
 ---
+import { splitInitialText } from '../lib/initial-text';
+
 interface Props {
   text: string;
 }
 
 const { text } = Astro.props;
-const parts = text.split(/(\s+)/u).map((part) => {
-  const match = part.match(/^([^\p{L}\p{N}]*)([\p{L}\p{N}])(.*)$/u);
-  return match ? { prefix: match[1], initial: match[2], rest: match[3] } : { rest: part };
-});
+const parts = splitInitialText(text);
 ---
 
 {parts.map(({ prefix, initial, rest }) => <>{prefix}{initial && <span class="text-initial">{initial}</span>}{rest}</>)}

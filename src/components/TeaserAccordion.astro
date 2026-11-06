@@ -1,4 +1,5 @@
 ---
+import InitialText from './InitialText.astro';
 import { pieces, canLinkToPiece, cycleByName } from '../lib/data';
 import { withBase } from '../lib/paths';
 
@@ -44,12 +45,14 @@ const firstTeaser = teasers[0];
         href={firstTeaser.href}
         aria-label={firstTeaser.external ? `${firstTeaser.title} (opens in a new tab)` : undefined}
         {...(firstTeaser.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-      >{firstTeaser.title}</a>
+      ><span data-teaser-title><InitialText text={firstTeaser.title} /></span> <span class="home-link-arrow" aria-hidden="true">→</span></a>
     </p>
   </div>
 )}
 
 <script>
+  import { splitInitialText } from '../lib/initial-text';
+
   (() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const HOLD_MS = 5000;
@@ -59,9 +62,10 @@ const firstTeaser = teasers[0];
       const fold = root.querySelector<HTMLElement>('[data-teaser-fold]');
       const copy = root.querySelector<HTMLElement>('[data-teaser-copy]');
       const source = root.querySelector<HTMLAnchorElement>('[data-teaser-source]');
+      const sourceTitle = source?.querySelector('[data-teaser-title]');
       const rawTeasers = root.dataset.teasers;
 
-      if (!fold || !copy || !source || !rawTeasers) return;
+      if (!fold || !copy || !source || !sourceTitle || !rawTeasers) return;
 
       type Teaser = { excerpt: string; title: string; href: string; external: boolean };
       let teasers: Teaser[] = [];
@@ -98,10 +102,16 @@ const firstTeaser = teasers[0];
       }
 
       function showTeaser(nextIndex: number) {
-        if (!copy || !source) return;
+        if (!copy || !source || !sourceTitle) return;
         const teaser = teasers[nextIndex];
         copy.textContent = `${teaser.excerpt}”`;
-        source.textContent = teaser.title;
+        sourceTitle.replaceChildren(...splitInitialText(teaser.title).flatMap(({ prefix, initial, rest }) => {
+          if (!initial) return [rest];
+          const letter = document.createElement('span');
+          letter.className = 'text-initial';
+          letter.textContent = initial;
+          return [prefix, letter, rest];
+        }));
         source.href = teaser.href;
         if (teaser.external) {
           source.target = '_blank';
@@ -257,17 +267,16 @@ const firstTeaser = teasers[0];
   }
 
   .teaser-accordion-source a {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 44px;
     padding: 6px 0;
-    text-decoration: underline;
-    text-decoration-color: var(--muted);
-    text-underline-offset: 5px;
   }
 
   .teaser-accordion-source a:hover,
   .teaser-accordion-source a:focus-visible {
     color: var(--text);
-    text-decoration-color: currentColor;
   }
 
   .teaser-accordion.is-folded .teaser-accordion-fold {
@@ -283,23 +292,6 @@ const firstTeaser = teasers[0];
     .teaser-accordion {
       border-top: 0;
       padding-top: 0;
-    }
-
-    .teaser-accordion-source a {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      min-height: 44px;
-      text-decoration: none;
-    }
-
-    .teaser-accordion-source a::after {
-      content: '→' / '';
-      flex-shrink: 0;
-    }
-
-    .teaser-accordion-source a[target='_blank']::after {
-      content: '↗' / '';
     }
   }
 

@@ -1,6 +1,7 @@
 ---
 import { site } from '../lib/data';
 import { withBase } from '../lib/paths';
+import InitialText from './InitialText.astro';
 
 const year = new Date().getFullYear();
 
@@ -68,9 +69,9 @@ const socialLinks = site.socials.flatMap((social) => {
 
     <nav class="footer-nav" aria-label="Footer navigation">
       {footerLinks.map((item) => (
-        <a href={item.href}>{item.label}</a>
+        <a href={item.href}><InitialText text={item.label} /></a>
       ))}
-      <a href="#">Back to top &uarr;</a>
+      <a href="#"><InitialText text="Back to top" /> <span aria-hidden="true">&uarr;</span></a>
     </nav>
   </div>
 </footer>

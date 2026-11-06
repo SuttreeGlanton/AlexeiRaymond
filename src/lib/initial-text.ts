@@ -1,0 +1,4 @@
+export const splitInitialText = (text: string) => text.split(/(\s+)/u).map((part) => {
+  const match = part.match(/^([^\p{L}\p{N}]*)([\p{L}\p{N}])(.*)$/u);
+  return match ? { prefix: match[1], initial: match[2], rest: match[3] } : { rest: part };
+});
