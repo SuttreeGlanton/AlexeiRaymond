@@ -35,7 +35,7 @@ const coverImage = imageAsset(interview.cover);
         <h2>{interview.title}</h2>
         <p class="interview-meta">{interview.publication} · {formatMonthYear(interview.date)}</p>
         {interview.excerpt && <p class="interview-excerpt">&ldquo;{interview.excerpt}&rdquo;</p>}
-        <a class="interview-link" href={interview.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${interview.title}. Opens in a new tab.`}>Read interview</a>
+        <a class="interview-link" href={interview.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${interview.title}. Opens in a new tab.`}>Read <span class="text-initial">i</span>nterview</a>
       </div>
     </article>
   </section>

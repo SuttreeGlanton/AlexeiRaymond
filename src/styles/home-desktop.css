@@ -154,11 +154,6 @@
     text-wrap: pretty;
   }
 
-  .home-page .nav-cycle-panel a:hover,
-  .home-page .nav-cycle-panel a:focus-visible {
-    text-decoration: underline;
-    text-underline-offset: 5px;
-  }
 }
 @media (min-width: 861px) and (max-height: 830px) {
   .home-page .hero { padding: 48px 0; }

@@ -133,6 +133,13 @@ img {
 .home-cycle-index a:focus-visible .cycle-initial,
 .chronology-cycle-links a:hover .cycle-initial,
 .chronology-cycle-links a:focus-visible .cycle-initial,
+:is(.selected-piece-grid, .cycle-piece-carousel) .piece-card:is(:hover, :focus-within) .card-title .text-initial,
+.cycle-piece-carousel .piece-card.is-mobile-focus .card-title .text-initial,
+.cycle-hero .back-link:is(:hover, :focus-visible) .text-initial,
+.cycle-switcher-links a:is(:hover, :focus-visible, [aria-current='page']) .cycle-initial,
+.cycle-order-toggle .sort-button[aria-pressed='true'] .text-initial,
+.interview-card:hover .interview-link .text-initial,
+.interview-link:focus-visible .text-initial,
 .chronology-item:hover .chronology-piece-title .text-initial,
 .chronology-piece-title a:focus-visible .text-initial,
 :is(.hero-start, .teaser-accordion-source a, a.latest-strip-title, .latest-strip-chronology, .footer-nav a):is(:hover, :focus-visible) .text-initial,
@@ -794,16 +801,14 @@ img {
   list-style: none;
 }
 
-.social-list a,
-.interview-link {
+.social-list a {
   display: inline-block;
   border-bottom: 1px solid var(--border-strong);
   color: var(--text);
   transition: border-color 240ms ease, color 240ms ease;
 }
 
-.social-list a:hover,
-.interview-link:hover {
+.social-list a:hover {
   border-color: var(--text);
 }
 
@@ -866,7 +871,9 @@ img {
 }
 
 .interview-link {
+  display: inline-block;
   margin-top: 28px;
+  color: var(--text);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.18em;
@@ -1554,23 +1561,20 @@ img {
 }
 
 .cycle-switcher-links a {
-  border-bottom: 1px solid transparent;
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  transition: border-color 220ms ease, color 220ms ease;
+  transition: color 220ms ease;
 }
 
 .cycle-switcher-links a:hover,
 .cycle-switcher-links a:focus-visible {
-  border-color: var(--border-strong);
   color: var(--text-soft);
 }
 
 .cycle-switcher-links a[aria-current='page'] {
-  border-color: var(--text-soft);
   color: var(--text);
 }
 
@@ -1723,18 +1727,16 @@ img {
 .contact-reveal {
   padding: 0;
   border: 0;
-  border-bottom: 1px solid var(--border-strong);
   background: none;
   color: var(--text-soft);
   font-family: var(--sans);
   font-size: 1rem;
   cursor: pointer;
-  transition: border-color 240ms ease, color 240ms ease;
+  transition: color 240ms ease;
 }
 
 .contact-reveal:hover,
 .contact-reveal:focus-visible {
-  border-color: var(--text);
   color: var(--text);
 }
 

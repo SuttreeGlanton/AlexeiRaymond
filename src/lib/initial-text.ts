@@ -1,4 +1,7 @@
-export const splitInitialText = (text: string) => text.split(/(\s+)/u).map((part) => {
+export const splitInitialText = (text: string, capitalInitials = false) => text.split(
+  capitalInitials ? /([\s\p{Pd}]+|(?<=\p{Ll})(?=\p{Lu}))/u : /(\s+)/u
+).map((part) => {
   const match = part.match(/^([^\p{L}\p{N}]*)([\p{L}\p{N}])(.*)$/u);
-  return match ? { prefix: match[1], initial: match[2], rest: match[3] } : { rest: part };
+  if (!match || (capitalInitials && !/^\p{Lu}$/u.test(match[2]))) return { rest: part };
+  return { prefix: match[1], initial: match[2], rest: match[3] };
 });

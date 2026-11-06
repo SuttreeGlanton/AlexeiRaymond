@@ -2,6 +2,7 @@
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import CycleIcon from './CycleIcon.astro';
+import InitialText from './InitialText.astro';
 import type { Cycle } from '../lib/data';
 import { cycleTeaser } from '../lib/data';
 import { withBase } from '../lib/paths';
@@ -59,7 +60,7 @@ const dreamsTeaserMatch = cycle.id === 'dreams' ? teaser.match(/^(.*?)(bubbling 
   <div class="page-shell cycle-hero-content">
     <a class="back-link" href={withBase('')}>
       <span class="back-link-arrow" aria-hidden="true">&larr;</span>
-      <span class="back-link-label">All cycles</span>
+      <span class="back-link-label"><InitialText text="All cycles" /></span>
     </a>
     <h1 class="cycle-title" id="cycle-title"><CycleIcon id={cycle.id} />{cycle.name}</h1>
     {teaser && (
@@ -203,6 +204,7 @@ const dreamsTeaserMatch = cycle.id === 'dreams' ? teaser.match(/^(.*?)(bubbling 
     gap: 0.55em;
     width: fit-content;
     margin-bottom: clamp(14px, 2vw, 24px);
+    border-bottom: 0;
     color: rgba(241, 239, 233, 0.96);
     font-weight: 600;
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.95);
@@ -210,20 +212,12 @@ const dreamsTeaserMatch = cycle.id === 'dreams' ? teaser.match(/^(.*?)(bubbling 
   }
 
   .cycle-hero .back-link-label {
-    border-bottom: 1px solid transparent;
     line-height: 1.2;
-    transition: border-color 180ms ease;
   }
 
   .cycle-hero .back-link:hover,
   .cycle-hero .back-link:focus-visible {
-    border-color: transparent;
     color: var(--text);
-  }
-
-  .cycle-hero .back-link:hover .back-link-label,
-  .cycle-hero .back-link:focus-visible .back-link-label {
-    border-bottom-color: currentColor;
   }
 
   .cycle-hero .cycle-title {

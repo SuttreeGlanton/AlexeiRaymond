@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CycleHero from '../../components/CycleHero.astro';
+import CycleName from '../../components/CycleName.astro';
+import InitialText from '../../components/InitialText.astro';
 import PieceCard from '../../components/PieceCard.astro';
 import type { Cycle } from '../../lib/data';
 import { cycles, isUpcoming, parseDate, piecesForCycle, site } from '../../lib/data';
@@ -77,7 +79,7 @@ const breadcrumbSchema = {
               href={withBase(`cycles/${item.id}/`)}
               aria-current={item.id === cycle.id ? 'page' : undefined}
             >
-              {item.name}
+              <CycleName name={item.name} />
             </a>
           ))}
         </div>
@@ -95,14 +97,14 @@ const breadcrumbSchema = {
               data-cycle-order="publication"
               aria-pressed="true"
               aria-controls={`cycle-grid-${cycle.id}`}
-            >Publication order</button>
+            ><InitialText text="Publication order" /></button>
             <button
               type="button"
               class="sort-button"
               data-cycle-order="story"
               aria-pressed="false"
               aria-controls={`cycle-grid-${cycle.id}`}
-            >Piece order</button>
+            ><InitialText text="Piece order" /></button>
           </div>
           <span class="sr-only" aria-live="polite" data-cycle-order-status></span>
         </div>
@@ -116,6 +118,7 @@ const breadcrumbSchema = {
         {cyclePieces.map((piece) => (
           <PieceCard
             piece={piece}
+            titleInitials
             storyOrder={hasStoryOrder ? storyIndex.get(piece.title) : undefined}
             sourceOrder={sourceIndex.get(piece.title)}
           />

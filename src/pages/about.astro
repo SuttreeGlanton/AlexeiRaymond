@@ -54,7 +54,7 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
         <p>
           {canLinkPublications ? (
             <>
-              {bioBefore}<a href={withBase('chronology/')}>{publicationsPhrase}</a>{bioAfter}
+              {bioBefore}<a class="about-publications-link" href={withBase('chronology/')}>{publicationsPhrase}</a>{bioAfter}
             </>
           ) : (
             site.bio
@@ -142,6 +142,10 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
 </BaseLayout>
 
 <style>
+  .prose .about-publications-link {
+    border-bottom: 0;
+  }
+
   .about-social-icon-list {
     display: flex;
     align-items: center;
@@ -167,7 +171,7 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
   .about-social-icon-list .about-social-icon:focus-visible {
     border-color: var(--border-strong);
     background: rgba(255, 255, 255, 0.025);
-    color: var(--text-soft);
+    color: #ff4057;
   }
 
   .about-social-icon-list .about-social-icon svg {

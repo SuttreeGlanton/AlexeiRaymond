@@ -3,10 +3,11 @@ import { splitInitialText } from '../lib/initial-text';
 
 interface Props {
   text: string;
+  capitalInitials?: boolean;
 }
 
-const { text } = Astro.props;
-const parts = splitInitialText(text);
+const { text, capitalInitials } = Astro.props;
+const parts = splitInitialText(text, capitalInitials);
 ---
 
 {parts.map(({ prefix, initial, rest }) => <>{prefix}{initial && <span class="text-initial">{initial}</span>}{rest}</>)}
