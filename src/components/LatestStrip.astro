@@ -68,7 +68,7 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
     <div class="latest-strip-band">
       <div class="latest-strip-head">
         <h2>Publications</h2>
-        <a class="latest-strip-chronology" href={withBase('chronology/')}><span><InitialText text="Full chronology" /></span> <span class="home-link-arrow" aria-hidden="true">→</span></a>
+        <a class="latest-strip-chronology" href={withBase('chronology/')}><span><InitialText text="Chronology" /></span> <span class="home-link-arrow" aria-hidden="true">→</span></a>
       </div>
       <p class="latest-strip-credit">
         <PublicationHeartbeat names={published.map((piece) => piece.publication)} initial={credits.published.slice(0, 2)} />
@@ -100,7 +100,7 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
           </p>
         )}
         <p class="latest-strip-item latest-strip-item--chronology">
-          <a class="latest-strip-chronology" href={withBase('chronology/')}><span><InitialText text="Full chronology" /></span> <span class="home-link-arrow" aria-hidden="true">→</span></a>
+          <a class="latest-strip-chronology" href={withBase('chronology/')}><span><InitialText text="Chronology" /></span> <span class="home-link-arrow" aria-hidden="true">→</span></a>
         </p>
       </div>
     </div>
