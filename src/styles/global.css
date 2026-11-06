@@ -137,7 +137,7 @@ img {
 .cycle-piece-carousel .piece-card.is-mobile-focus .card-title .text-initial,
 .cycle-hero .back-link:is(:hover, :focus-visible) .text-initial,
 .cycle-switcher-links a:is(:hover, :focus-visible, [aria-current='page']) .cycle-initial,
-.cycle-order-toggle .sort-button[aria-pressed='true'] .text-initial,
+:is(.cycle-order-toggle, .chronology-sort) .sort-button[aria-pressed='true'] .text-initial,
 .interview-card:hover .interview-link .text-initial,
 .interview-link:focus-visible .text-initial,
 .chronology-item:hover .chronology-piece-title .text-initial,
