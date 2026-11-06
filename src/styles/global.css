@@ -1886,6 +1886,13 @@ img {
 }
 
 /* --- Footer, sound glyph, and mobile nav polish --- */
+.hero-sound-toggle,
+.mobile-menu-toggle,
+.footer-nav a,
+.footer-social-link {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .footer-inner {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
