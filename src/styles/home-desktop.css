@@ -9,7 +9,7 @@
   }
 
   .home-page .site-header { border-bottom: 0; }
-  .home-page .main-nav a,
+  .home-page .nav-cycle-panel a,
   .home-page .hero-start,
   .home-page .latest-strip .latest-strip-title { border-bottom: 0; }
 
@@ -182,8 +182,8 @@
     text-wrap: pretty;
   }
 
-  .home-page .main-nav a:hover,
-  .home-page .main-nav a:focus-visible,
+  .home-page .nav-cycle-panel a:hover,
+  .home-page .nav-cycle-panel a:focus-visible,
   .home-page .hero-start:hover,
   .home-page .hero-start:focus-visible,
   .home-page .hero-teaser-feed .teaser-accordion-source a:hover,
