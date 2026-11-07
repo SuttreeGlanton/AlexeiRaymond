@@ -658,13 +658,29 @@ img {
   line-height: 0.93;
 }
 
+#selected-title {
+  --title-shimmer-color: #d7a84c;
+}
+
+#chronology-title {
+  --title-shimmer-color: #f3e54e;
+}
+
+#about-title {
+  --title-shimmer-color: #000;
+}
+
+#elsewhere-title {
+  --title-shimmer-color: #adb9c9;
+}
+
 @supports (background-clip: text) or (-webkit-background-clip: text) {
   @media screen and (prefers-reduced-motion: no-preference) and (forced-colors: none) {
     [data-cherry-sweeping] {
       background-image: linear-gradient(
         108deg,
         currentColor 0% 42%,
-        var(--initial-accent) 49% 51%,
+        var(--title-shimmer-color, var(--initial-accent)) 49% 51%,
         currentColor 58% 100%
       );
       background-size: 260% 100%;
