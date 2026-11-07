@@ -65,8 +65,8 @@ const breadcrumbSchema = {
   structuredData={[collectionSchema, breadcrumbSchema]}
 >
   <div class="page-shell fiction-index">
-    <section class="page-hero" aria-labelledby="fiction-title">
-      <h1 class="page-title" id="fiction-title">Short fiction</h1>
+    <section class="page-hero page-hero--index" aria-labelledby="fiction-title">
+      <h1 class="page-heading" id="fiction-title" data-title-shimmer>Short fiction</h1>
       <p class="page-intro cycle-intro fiction-intro">
         Short stories and flash fiction by {site.author}, first published in literary journals and anthologies.
         Every piece below is available to read in full on this site.
@@ -110,7 +110,6 @@ const breadcrumbSchema = {
 
   <style>
     .fiction-index {
-      max-width: 960px;
       padding-bottom: clamp(48px, 7vw, 88px);
     }
 
@@ -133,13 +132,18 @@ const breadcrumbSchema = {
       min-height: 44px;
     }
 
-    .fiction-group {
+    .fiction-group,
+    .fiction-more {
+      max-width: 960px;
+    }
+
+    .fiction-group + .fiction-group {
       margin-top: 40px;
     }
 
     .fiction-group h2 {
       scroll-margin-top: 110px;
-      margin-bottom: 24px;
+      margin: 0 0 24px;
     }
 
     .fiction-list {

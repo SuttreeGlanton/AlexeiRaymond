@@ -40,7 +40,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
 <BaseLayout title={`Publications & Bibliography — ${site.author}`} description="Alexei Raymond's short fiction, flash fiction and poetry in literary journals and anthologies, with publication dates and links to read online.">
   <div class="page-shell page-with-visual chronology-with-visual">
     <div class="page-copy">
-      <section class="page-hero chronology-hero" aria-labelledby="chronology-title">
+      <section class="page-hero page-hero--index chronology-hero" aria-labelledby="chronology-title">
         <picture style="display: contents">
           {chronologySources.map((image) => (
             <source media="(max-width: 1080px)" type={`image/${image.options.format}`} srcset={image.srcSet.attribute} sizes="100vw" />
@@ -58,7 +58,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
           />
         </picture>
         <div class="chronology-hero-scrim" aria-hidden="true"></div>
-        <h1 class="page-title" id="chronology-title">Chronology</h1>
+        <h1 class="page-heading" id="chronology-title" data-title-shimmer>Chronology</h1>
         <p class="page-intro cycle-intro">A chronological bibliography of published and forthcoming work.</p>
       </section>
 
@@ -327,6 +327,10 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
   </script>
 
   <style is:global>
+    .chronology-hero + .chronology-section {
+      margin-top: 0;
+    }
+
     /* The records photograph rides the right margin on desktop; below
        1081px that side visual is hidden, so the same image becomes a
        Selected-style banner behind the page title instead. */
@@ -338,11 +342,8 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
     @media (max-width: 1080px) {
       .chronology-hero {
         position: relative;
-        display: grid;
-        align-content: end;
-        min-height: clamp(220px, 46vw, 340px);
-        margin: 0 calc(50% - 50vw) clamp(26px, 5vw, 40px);
-        padding: clamp(72px, 16vw, 120px) calc(50vw - 50%) clamp(26px, 5vw, 38px);
+        margin-inline: calc(50% - 50vw);
+        padding-inline: calc(50vw - 50%);
         overflow: hidden;
         isolation: isolate;
       }
@@ -380,10 +381,14 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
         pointer-events: none;
       }
 
-      .chronology-hero .page-title,
+      .chronology-hero .page-heading,
       .chronology-hero .page-intro {
         position: relative;
         z-index: 2;
+      }
+
+      .chronology-hero .page-intro {
+        text-shadow: 0 1px 3px #000, 0 2px 12px #000;
       }
     }
   </style>

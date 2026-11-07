@@ -48,8 +48,8 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
   structuredData={profileSchema}
 >
   <div class="page-shell page-with-visual about-with-visual">
-    <section class="page-hero text-page page-copy about-copy" aria-labelledby="about-title">
-      <h1 class="page-title" id="about-title">About</h1>
+    <section class="page-hero page-hero--index text-page page-copy about-copy" aria-labelledby="about-title">
+      <h1 class="page-heading" id="about-title" data-title-shimmer>About</h1>
       <div class="prose">
         <p>
           {canLinkPublications ? (
@@ -171,7 +171,7 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
   .about-social-icon-list .about-social-icon:focus-visible {
     border-color: var(--border-strong);
     background: rgba(255, 255, 255, 0.025);
-    color: #ff4057;
+    color: var(--initial-accent);
   }
 
   .about-social-icon-list .about-social-icon svg {

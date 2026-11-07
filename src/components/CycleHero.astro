@@ -62,7 +62,7 @@ const dreamsTeaserMatch = cycle.id === 'dreams' ? teaser.match(/^(.*?)(bubbling 
       <span class="back-link-arrow" aria-hidden="true">&larr;</span>
       <span class="back-link-label"><InitialText text="All cycles" /></span>
     </a>
-    <h1 class="cycle-title" id="cycle-title"><CycleIcon id={cycle.id} />{cycle.name}</h1>
+    <h1 class="page-heading" id="cycle-title" data-title-shimmer><CycleIcon id={cycle.id} />{cycle.name}</h1>
     {teaser && (
       <p class="cycle-intro">
         {dreamsTeaserMatch ? (
@@ -115,9 +115,6 @@ const dreamsTeaserMatch = cycle.id === 'dreams' ? teaser.match(/^(.*?)(bubbling 
     position: relative;
     isolation: isolate;
     display: grid;
-    align-items: end;
-    min-height: clamp(260px, 28vw, 390px);
-    margin-bottom: clamp(24px, 3.5vw, 42px);
     overflow: hidden;
   }
 
@@ -188,22 +185,21 @@ const dreamsTeaserMatch = cycle.id === 'dreams' ? teaser.match(/^(.*?)(bubbling 
   .cycle-hero-content {
     position: relative;
     z-index: 1;
-    display: flex;
-    justify-content: flex-end;
-    flex-direction: column;
-    padding-top: clamp(76px, 9vw, 128px);
-    padding-bottom: clamp(30px, 4vw, 48px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: var(--page-heading-offset) auto;
+    padding-bottom: var(--page-hero-tail);
     -webkit-user-select: none;
     user-select: none;
   }
 
   .cycle-hero .back-link {
-    align-self: flex-start;
+    align-self: center;
     display: inline-flex;
     align-items: center;
     gap: 0.55em;
     width: fit-content;
-    margin-bottom: clamp(14px, 2vw, 24px);
+    margin-bottom: 0;
     border-bottom: 0;
     color: rgba(241, 239, 233, 0.96);
     font-weight: 600;
@@ -220,19 +216,18 @@ const dreamsTeaserMatch = cycle.id === 'dreams' ? teaser.match(/^(.*?)(bubbling 
     color: var(--text);
   }
 
-  .cycle-hero .cycle-title {
-    max-width: 100%;
-    margin-top: 0;
+  .cycle-hero .page-heading {
+    --title-shimmer-shadow: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.95))
+      drop-shadow(0 4px 12px rgba(0, 0, 0, 0.65));
     color: var(--text);
-    font-size: clamp(2.75rem, 7.25vw, 6.75rem);
-    text-shadow:
+    text-shadow: var(--title-ink-shadow,
       0 2px 3px rgba(0, 0, 0, 0.95),
-      0 4px 24px rgba(0, 0, 0, 0.88);
+      0 4px 24px rgba(0, 0, 0, 0.88)
+    );
   }
 
   .cycle-hero .cycle-intro {
     max-width: 660px;
-    margin-top: 14px;
     color: var(--text);
     font-weight: 500;
     text-shadow:
@@ -265,27 +260,13 @@ const dreamsTeaserMatch = cycle.id === 'dreams' ? teaser.match(/^(.*?)(bubbling 
   }
 
   @media (max-width: 900px) {
-    .cycle-hero {
-      min-height: clamp(250px, 52vw, 340px);
-      margin-bottom: 24px;
-    }
-
     .cycle-hero .back-link {
-      margin-bottom: 14px;
       color: rgba(241, 239, 233, 0.96);
       text-shadow: 0 1px 8px rgba(0, 0, 0, 0.95);
     }
 
-    .cycle-hero .cycle-title {
-      font-size: clamp(2.55rem, 10vw, 4.15rem);
-      text-shadow:
-        0 2px 3px rgba(0, 0, 0, 0.95),
-        0 4px 24px rgba(0, 0, 0, 0.88);
-    }
-
     .cycle-hero .cycle-intro {
       max-width: 34ch;
-      margin-top: 12px;
       font-size: 1rem;
       text-shadow:
         0 1px 2px rgba(0, 0, 0, 1),
@@ -295,25 +276,6 @@ const dreamsTeaserMatch = cycle.id === 'dreams' ? teaser.match(/^(.*?)(bubbling 
   }
 
   @media (max-width: 640px) {
-    .cycle-hero {
-      min-height: clamp(260px, 76vw, 340px);
-      margin-bottom: 24px;
-    }
-
-    .cycle-hero-content {
-      padding-top: 76px;
-      padding-bottom: 28px;
-    }
-
-    .cycle-hero .cycle-title {
-      font-size: clamp(2.45rem, 12.5vw, 4rem);
-    }
-
-    .cycle-hero[data-cycle-id='valentines-star'] .cycle-title {
-      font-size: clamp(1.95rem, 9vw, 3rem);
-      white-space: nowrap;
-    }
-
     .cycle-hero-image--mono {
       display: none;
     }

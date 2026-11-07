@@ -12,8 +12,8 @@ const coverImage = imageAsset(interview.cover);
   title={`Elsewhere: Interviews — ${site.author}`}
   description={`Read an excerpt from ${site.author}'s interview with ${interview.publication} and follow the link to the full conversation.`}
 >
-  <section class="page-shell page-hero text-page" aria-labelledby="elsewhere-title">
-    <h1 class="page-title" id="elsewhere-title">Elsewhere</h1>
+  <section class="page-shell page-hero page-hero--index" aria-labelledby="elsewhere-title">
+    <h1 class="page-heading" id="elsewhere-title" data-title-shimmer>Elsewhere</h1>
     <p class="page-intro cycle-intro">Interviews, conversations, and other traces outside the bibliography.</p>
 
     <article class="interview-card" data-interview-color-card>
@@ -39,6 +39,13 @@ const coverImage = imageAsset(interview.cover);
       </div>
     </article>
   </section>
+
+  <style>
+    .interview-card {
+      max-width: 820px;
+      margin-top: min(36px, var(--page-hero-tail));
+    }
+  </style>
 
   <script>
     /* Elsewhere interview mobile color focus. */
