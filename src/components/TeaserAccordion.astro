@@ -45,7 +45,7 @@ const firstTeaser = teasers[0];
         href={firstTeaser.href}
         aria-label={firstTeaser.external ? `${firstTeaser.title} (opens in a new tab)` : undefined}
         {...(firstTeaser.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-      ><span data-teaser-title><InitialText text={firstTeaser.title} /></span> <span class="home-link-arrow" aria-hidden="true">→</span></a>
+      ><span data-teaser-title><InitialText text={firstTeaser.title} capitalInitials /></span> <span class="home-link-arrow" aria-hidden="true">→</span></a>
     </p>
   </div>
 )}
@@ -105,7 +105,7 @@ const firstTeaser = teasers[0];
         if (!copy || !source || !sourceTitle) return;
         const teaser = teasers[nextIndex];
         copy.textContent = `${teaser.excerpt}”`;
-        sourceTitle.replaceChildren(...splitInitialText(teaser.title).flatMap(({ prefix, initial, rest }) => {
+        sourceTitle.replaceChildren(...splitInitialText(teaser.title, true).flatMap(({ prefix, initial, rest }) => {
           if (!initial) return [rest];
           const letter = document.createElement('span');
           letter.className = 'text-initial';
