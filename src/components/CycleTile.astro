@@ -10,7 +10,7 @@ interface Props {
 }
 
 const { cycle } = Astro.props;
-const teaser = cycleTeaser(cycle);
+const teaser = cycleTeaser(cycle).replace(/\s+(\S+)$/u, '\u00a0$1');
 const cover = cycle.cover ? assetPath(cycle.cover) : '';
 const coverImage = imageAsset(cycle.cover);
 const disabled = Boolean(cycle.disabled);
@@ -45,7 +45,7 @@ const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295p
       </div>
       <div class="tile-body">
         <h3 class="tile-title"><CycleName name={cycle.name} /></h3>
-        {teaser && <p class="tile-mobile-blurb">{teaser}</p>}
+        {teaser && <p class="tile-caption">{teaser}</p>}
       </div>
     </div>
   ) : (
@@ -71,7 +71,7 @@ const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295p
       </div>
       <div class="tile-body">
         <h3 class="tile-title"><CycleName name={cycle.name} /></h3>
-        {teaser && <p class="tile-mobile-blurb">{teaser}</p>}
+        {teaser && <p class="tile-caption">{teaser}</p>}
       </div>
     </a>
   )

@@ -74,7 +74,11 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
         <PublicationHeartbeat names={published.map((piece) => piece.publication)} initial={credits.published.slice(0, 2)} />
         {credits.upcoming.length > 0 && (
           <span class="latest-strip-credit-line">
-            Forthcoming in {forthcomingCreditParts.map((part) => part.type === 'element' ? <i>{part.value}</i> : part.value)}.
+            <span class="credit-wide">Forthcoming in </span>
+            <span class="credit-mobile credit-label">Coming in</span>
+            {forthcomingCreditParts.map((part) => (
+              part.type === 'element' ? <i>{part.value}</i> : <span class="credit-wide">{part.value}</span>
+            ))}<span class="credit-wide">.</span>
           </span>
         )}
       </p>
@@ -94,7 +98,7 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
         </p>
         {forthcoming && (
           <p class="latest-strip-item">
-            <span class="latest-strip-overline">Forthcoming</span>
+            <span class="latest-strip-overline">Soon</span>
             <span class="latest-strip-title">{forthcoming.title}</span>
             <span class="latest-strip-meta"><i>{publicationLabel(forthcoming)}</i></span>
           </p>
@@ -117,8 +121,7 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
     margin: 0 0 0.75rem;
   }
 
-  /* The desktop heading has its own chronology link. Only one link is visible
-     at each breakpoint; the mobile link retains its existing reading order. */
+  /* The desktop heading has its own chronology link. */
   .latest-strip-head {
     display: none;
   }
@@ -143,7 +146,8 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
     color: var(--text-soft);
   }
 
-  .latest-strip-overline {
+  .latest-strip-overline,
+  .latest-strip-credit :global(.credit-label) {
     text-transform: uppercase;
     font-size: 0.69rem;
     letter-spacing: 0.14em;
@@ -158,6 +162,11 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
     letter-spacing: 0.01em;
     color: var(--text);
     text-decoration: none;
+  }
+
+  .latest-strip-title,
+  .latest-strip-title > span:first-child {
+    text-wrap: balance;
   }
 
   a.latest-strip-title {
@@ -190,10 +199,15 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
     font-size: 0.78rem;
     letter-spacing: 0.01em;
     color: var(--muted);
+    text-wrap: pretty;
   }
 
   .latest-strip-credit-line {
     display: block;
+  }
+
+  .latest-strip-credit :global(.credit-mobile) {
+    display: none;
   }
 
   .latest-strip-item--chronology {
@@ -219,8 +233,64 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
     }
 
     .latest-strip-row {
-      grid-template-columns: minmax(0, 1fr);
-      row-gap: 1.75rem;
+      display: contents;
+    }
+
+    .latest-strip-item {
+      order: 1;
+    }
+
+    .latest-strip-item + .latest-strip-item {
+      margin-top: 1.75rem;
+    }
+
+    .latest-strip-item.latest-strip-item--chronology {
+      order: 3;
+      align-self: flex-start;
+      margin-top: 0.75rem;
+    }
+
+    .latest-strip-chronology {
+      font-family: var(--serif);
+    }
+
+    .latest-strip-credit {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .latest-strip-credit :global(.publication-heartbeat) {
+      overflow-wrap: normal;
+    }
+
+    .latest-strip-credit :global(.credit-wide),
+    .latest-strip-credit :global(.publication-heartbeat-reserve) {
+      display: none;
+    }
+
+    .latest-strip-credit :global(.credit-mobile) {
+      display: block;
+    }
+
+    .latest-strip-credit :global(.credit-label) {
+      margin-bottom: 0.35rem;
+    }
+
+    .latest-strip-credit :global(i) {
+      display: block;
+      color: var(--text-soft);
+      font: italic 1rem/1.4 var(--serif);
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .latest-strip-credit :global(.credit-tail) {
+      margin-top: 0.2rem;
+    }
+
+    .latest-strip-credit-line {
+      margin-top: 1rem;
     }
   }
 </style>

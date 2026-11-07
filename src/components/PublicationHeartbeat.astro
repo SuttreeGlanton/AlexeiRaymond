@@ -18,10 +18,15 @@ const longest = [...pool].sort((a, b) => b.length - a.length).slice(0, 2);
   <span class="publication-heartbeat" data-publication-heartbeat data-venues={JSON.stringify(pool)}>
     <span class="sr-only">{sentence(opening)}</span>
     <span class="publication-heartbeat-copy" aria-hidden="true">
-      Work published in <i data-publication-name>{opening[0]}</i>{opening[1] && <> and <i data-publication-name>{opening[1]}</i></>}, among others.
+      <span class="credit-wide">Work published in </span>
+      <span class="credit-mobile credit-label">Published in</span>
+      <i data-publication-name>{opening[0]}</i>{opening[1] && (
+        <><span class="credit-wide"> and </span><i data-publication-name>{opening[1]}</i></>
+      )}<span class="credit-wide">, among&nbsp;others.</span>
+      <span class="credit-mobile credit-tail">among others</span>
     </span>
     <span class="publication-heartbeat-reserve" aria-hidden="true">
-      Work published in <i>{longest[0]}</i>{longest[1] && <> and <i>{longest[1]}</i></>}, among others.
+      Work published in <i>{longest[0]}</i>{longest[1] && <> and <i>{longest[1]}</i></>}, among&nbsp;others.
     </span>
   </span>
 )}

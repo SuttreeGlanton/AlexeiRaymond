@@ -141,9 +141,17 @@
   }
   .home-page .latest-strip .latest-strip-item--chronology { display: none; }
 
-  .home-page .home-cycles { padding-top: 56px; }
+  .home-page .home-cycles {
+    display: grid;
+    grid-template-columns: minmax(0, 9fr) minmax(0, 11fr);
+    gap: 26px clamp(24px, 5vw, 72px);
+    align-items: start;
+    padding-top: 56px;
+  }
   .home-page .home-cycles .section-head {
     display: block;
+    grid-area: 1 / 1;
+    margin-bottom: 0;
     border-top: 0;
     padding-top: 0;
   }
@@ -152,6 +160,27 @@
     margin-top: 12px;
     text-align: left;
     text-wrap: pretty;
+  }
+  .home-page .home-cycle-index {
+    grid-area: 1 / 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 24px;
+    max-width: none;
+    margin: 0;
+    padding-bottom: 0;
+    text-align: left;
+  }
+  .home-page .home-cycle-index a {
+    justify-content: flex-start;
+    min-height: 34px;
+    padding: 4px 0;
+    font-size: var(--home-link);
+  }
+  .home-page .home-cycle-index-numeral {
+    flex-basis: 2rem;
+  }
+  .home-page .home-cycle-grid {
+    grid-column: 1 / -1;
   }
 
 }

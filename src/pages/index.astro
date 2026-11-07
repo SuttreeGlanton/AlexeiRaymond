@@ -173,7 +173,9 @@ const websiteSchema = {
     </div>
     <nav class="home-cycle-index" aria-label="Story cycle index">
       {cycles.filter((cycle) => !cycle.disabled).map((cycle) => (
-        <a href={withBase(`cycles/${cycle.id}/`)} data-home-cycle-link={cycle.id}><CycleName name={cycle.name} /></a>
+        <a href={withBase(`cycles/${cycle.id}/`)} data-home-cycle-link={cycle.id}>
+          <span class="home-cycle-index-numeral" aria-hidden="true"></span><CycleName name={cycle.name} />
+        </a>
       ))}
     </nav>
   </section>
@@ -289,13 +291,28 @@ const websiteSchema = {
 
       // Index links share the existing focus state. Keep them outside the fan
       // so the liquid renderer still measures exactly the same eight cards.
-      const indexLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-home-cycle-link]'));
+      const cycleIndex = fan.parentElement?.querySelector<HTMLElement>('.home-cycle-index');
+      const indexLinks = Array.from(cycleIndex?.querySelectorAll<HTMLAnchorElement>('[data-home-cycle-link]') ?? []);
       const tileForLink = (link?: HTMLAnchorElement) =>
         link ? tiles.find((tile) => tile.dataset.cycleId === link.dataset.homeCycleLink) : undefined;
 
+      // Match tab order to the layout while leaving the tablet index below the cards.
+      function placeIndex() {
+        if (!cycleIndex || desktop.matches === (cycleIndex.nextElementSibling === fan)) return;
+
+        const focusedLink = indexLinks.find((link) => link === document.activeElement);
+        if (desktop.matches) fan.before(cycleIndex);
+        else fan.after(cycleIndex);
+        focusedLink?.focus({ preventScroll: true });
+      }
+
       function setFanFocus(focusedTile?: HTMLElement) {
+        const liftTile = reducedMotion.matches ? undefined : focusedTile;
         tiles.forEach((tile) => {
-          tile.classList.toggle('is-fan-focus', tile === focusedTile);
+          tile.classList.toggle('is-fan-focus', tile === liftTile);
+        });
+        indexLinks.forEach((link) => {
+          link.classList.toggle('is-fan-highlight', link.dataset.homeCycleLink === focusedTile?.dataset.cycleId);
         });
       }
 
@@ -313,14 +330,23 @@ const websiteSchema = {
         setFanFocus(hoverTile ?? tileForLink(hoverLink) ?? keyboardTile ?? tileForLink(keyboardLink));
       }
 
+      let entranceTimer = 0;
+      let entranceObserver: IntersectionObserver | undefined;
+
+      function finishFanEntrance() {
+        window.clearTimeout(entranceTimer);
+        entranceObserver?.disconnect();
+        fan.classList.remove('is-fan-pending', 'is-fan-entering');
+      }
+
       function playFanEntrance() {
         fan.classList.remove('is-fan-pending');
         fan.classList.add('is-fan-entering');
 
         /* 950ms animation + 135ms outermost delay: hand over right as the
            last ring lands, with no dead beat before the focus lift. */
-        window.setTimeout(() => {
-          fan.classList.remove('is-fan-entering');
+        entranceTimer = window.setTimeout(() => {
+          finishFanEntrance();
           restoreFanFocus();
         }, 1100);
       }
@@ -339,12 +365,12 @@ const websiteSchema = {
           return;
         }
 
-        const observer = new IntersectionObserver(
+        entranceObserver = new IntersectionObserver(
           (entries) => {
-            if (!entries.some((entry) => entry.isIntersecting)) return;
+            if (!fan.classList.contains('is-fan-pending') || !entries.some((entry) => entry.isIntersecting)) return;
 
-            observer.disconnect();
-            window.setTimeout(playFanEntrance, 240);
+            entranceObserver?.disconnect();
+            entranceTimer = window.setTimeout(playFanEntrance, 240);
           },
           {
             rootMargin: '0px 0px -12% 0px',
@@ -352,7 +378,7 @@ const websiteSchema = {
           },
         );
 
-        observer.observe(fan);
+        entranceObserver.observe(fan);
       }
 
       tiles.forEach((tile) => {
@@ -364,6 +390,12 @@ const websiteSchema = {
           ) {
             setFanFocus(tile);
           }
+        });
+
+        tile.addEventListener('pointerleave', () => {
+          if (tile.matches(':focus-visible')) return;
+          indexLinks.find((link) => link.dataset.homeCycleLink === tile.dataset.cycleId)
+            ?.classList.remove('is-fan-highlight');
         });
 
         tile.addEventListener('focusin', () => {
@@ -381,20 +413,31 @@ const websiteSchema = {
       });
 
       indexLinks.forEach((link) => {
-        link.addEventListener('pointerenter', () => {
-          if (desktop.matches && !fan.classList.contains('is-fan-pending') && !fan.classList.contains('is-fan-entering')) {
-            setFanFocus(tileForLink(link));
-          }
-        });
+        function focusLinkedTile() {
+          if (!desktop.matches) return;
+          finishFanEntrance();
+          setFanFocus(tileForLink(link));
+        }
+
+        link.addEventListener('pointerenter', focusLinkedTile);
         link.addEventListener('focusin', () => {
-          if (desktop.matches) setFanFocus(tileForLink(link));
+          if (link.matches(':focus-visible')) focusLinkedTile();
         });
-        link.addEventListener('pointerleave', restoreFanFocus);
+        link.addEventListener('pointerleave', () => requestAnimationFrame(restoreFanFocus));
         link.addEventListener('focusout', () => requestAnimationFrame(restoreFanFocus));
       });
 
-      desktop.addEventListener('change', restoreFanFocus);
+      desktop.addEventListener('change', () => {
+        finishFanEntrance();
+        placeIndex();
+        restoreFanFocus();
+      });
+      reducedMotion.addEventListener('change', () => {
+        if (reducedMotion.matches) finishFanEntrance();
+        restoreFanFocus();
+      });
 
+      placeIndex();
       armFanEntrance();
     })();
   </script>
@@ -403,9 +446,11 @@ const websiteSchema = {
     /* Homepage mobile cycle focus color. */
     (() => {
       const media = window.matchMedia('(max-width: 640px)');
-      const grid = document.querySelector('[data-home-cycle-focus]');
+      const gridElement = document.querySelector<HTMLElement>('[data-home-cycle-focus]');
 
-      if (!grid) return;
+      if (!gridElement) return;
+
+      const grid: HTMLElement = gridElement;
 
       const tiles = Array.from(grid.querySelectorAll('.tile'));
       if (!tiles.length) return;
@@ -418,22 +463,23 @@ const websiteSchema = {
       }
 
       function updateFocus() {
+        frame = 0;
         if (!media.matches || !gridVisible) {
           clearFocus();
           return;
         }
 
-        const viewportCenter = window.innerHeight / 2;
+        const { left, width } = grid.getBoundingClientRect();
+        const carouselCenter = left + width / 2;
         let closestTile = tiles[0];
         let closestDistance = Infinity;
 
         tiles.forEach((tile) => {
           const rect = tile.getBoundingClientRect();
-          const tileCenter = rect.top + rect.height / 2;
-          const distance = Math.abs(tileCenter - viewportCenter);
-          const visible = rect.bottom > 0 && rect.top < window.innerHeight;
+          const tileCenter = rect.left + rect.width / 2;
+          const distance = Math.abs(tileCenter - carouselCenter);
 
-          if (visible && distance < closestDistance) {
+          if (distance < closestDistance) {
             closestDistance = distance;
             closestTile = tile;
           }
@@ -448,9 +494,7 @@ const websiteSchema = {
         // Reading every card's bounding box forces a full layout. Do not do
         // that during the homepage's critical first render while the grid is
         // still below the viewport.
-        if (!media.matches || !gridVisible) return;
-
-        cancelAnimationFrame(frame);
+        if (!media.matches || !gridVisible || frame) return;
         frame = requestAnimationFrame(updateFocus);
       }
 
@@ -468,7 +512,7 @@ const websiteSchema = {
         clearFocus();
       }
 
-      window.addEventListener('scroll', scheduleUpdate, { passive: true });
+      grid.addEventListener('scroll', scheduleUpdate, { passive: true });
       window.addEventListener('resize', scheduleUpdate);
 
       media.addEventListener('change', () => {
@@ -697,12 +741,13 @@ const websiteSchema = {
       }
 
       /* Full tile-local → grid-local matrix: layout position plus the CSS
-         transform around the 50% 100% origin, so cover clones and seam
+         transform around its actual origin, so cover clones and seam
          geometry stay in perfect register with the real card. */
       function tileMatrix(tile: HTMLElement): DOMMatrix {
         const cs = getComputedStyle(tile);
-        const ox = tile.offsetWidth * 0.5;
-        const oy = tile.offsetHeight;
+        const [originX = '0', originY = '0'] = cs.transformOrigin.split(' ');
+        const ox = parseFloat(originX);
+        const oy = parseFloat(originY);
         const m = new DOMMatrixReadOnly(cs.transform === 'none' ? '' : cs.transform);
         return new DOMMatrix()
           .translate(tile.offsetLeft + ox, tile.offsetTop + oy)

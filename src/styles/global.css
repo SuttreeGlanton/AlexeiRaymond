@@ -42,7 +42,7 @@ p,
 .section-note,
 .cycle-intro,
 .tile-blurb,
-.tile-mobile-blurb,
+.tile-caption,
 .hero-kicker,
 .card-note {
   text-wrap: pretty;
@@ -133,8 +133,7 @@ img {
 .nav-cycle-panel a:focus-visible .cycle-initial,
 .mobile-cycle-link:hover .cycle-initial,
 .mobile-cycle-link:focus-visible .cycle-initial,
-.home-cycle-index a:hover .cycle-initial,
-.home-cycle-index a:focus-visible .cycle-initial,
+.home-cycle-index a:is(:hover, :focus-visible, .is-fan-highlight) :is(.cycle-initial, .home-cycle-index-numeral),
 .chronology-cycle-links a:hover .cycle-initial,
 .chronology-cycle-links a:focus-visible .cycle-initial,
 :is(.selected-piece-grid, .cycle-piece-carousel) .piece-card:is(:hover, :focus-within) .card-title .text-initial,
@@ -368,22 +367,35 @@ img {
   margin: 0 auto;
   padding-bottom: clamp(40px, 5vw, 64px);
   text-align: center;
+  counter-reset: home-cycle-index;
 }
 
 .home-cycle-index a {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.55em;
   min-height: 44px;
   padding: 8px 0;
   color: var(--text-soft);
   font-family: var(--serif);
   font-size: 1.05rem;
   line-height: 1.4;
+  counter-increment: home-cycle-index;
 }
 
-.home-cycle-index a:hover,
-.home-cycle-index a:focus-visible {
+.home-cycle-index-numeral {
+  flex: none;
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.home-cycle-index-numeral::before {
+  content: counter(home-cycle-index, upper-roman);
+}
+
+.home-cycle-index a:is(:hover, :focus-visible, .is-fan-highlight) {
   color: var(--text);
 }
 
@@ -585,12 +597,14 @@ img {
   text-align: center;
 }
 
-/* Keep the longest homepage cycle name on one line without shrinking its peers. */
-.home-cycle-grid > .tile[data-cycle-id='valentines-star'] .tile-title {
-  display: flex;
-  justify-content: center;
-  font-size: clamp(1.4rem, 2.05vw, 2.1rem);
-  white-space: nowrap;
+@media (max-width: 860px) {
+  /* Keep the longest homepage cycle name on one line without shrinking its peers. */
+  .home-cycle-grid > .tile[data-cycle-id='valentines-star'] .tile-title {
+    display: flex;
+    justify-content: center;
+    font-size: clamp(1.4rem, 2.05vw, 2.1rem);
+    white-space: nowrap;
+  }
 }
 
 .card-meta,
@@ -600,7 +614,7 @@ img {
   font-size: 0.78rem;
 }
 
-.tile-mobile-blurb {
+.tile-caption {
   display: none;
   margin: 12px 0 0;
   color: var(--muted);
@@ -986,7 +1000,8 @@ img {
 
   /* Cycle galleries swipe horizontally on mobile, one card at a time,
      with the next card peeking in from the edge. */
-  .piece-grid {
+  .piece-grid,
+  .home-cycle-grid {
     display: flex;
     gap: 14px;
     overflow-x: auto;
@@ -995,7 +1010,8 @@ img {
     scrollbar-width: none;
   }
 
-  .piece-grid::-webkit-scrollbar {
+  .piece-grid::-webkit-scrollbar,
+  .home-cycle-grid::-webkit-scrollbar {
     display: none;
   }
 
@@ -1004,11 +1020,23 @@ img {
     scroll-snap-align: center;
   }
 
+  .home-cycle-grid {
+    margin-inline: -20px;
+    padding-inline: 20px;
+    padding-top: 6px;
+    scroll-padding-inline: 20px;
+  }
+
+  .home-cycle-grid > .tile {
+    flex: 0 0 82vw;
+    scroll-snap-align: start;
+  }
+
   .tile-overlay {
     display: none;
   }
 
-  .tile-mobile-blurb {
+  .tile-caption {
     display: block;
   }
 
@@ -2585,28 +2613,52 @@ img {
   .home-cycle-grid {
     position: relative;
     display: block;
-    height: clamp(450px, 45vw, 540px);
-    margin-bottom: 24px;
+    height: clamp(500px, 45vw, 540px);
+    margin-bottom: clamp(40px, 5vw, 64px);
     padding-bottom: 0;
     isolation: isolate;
   }
 
   .home-cycle-grid > .tile .tile-title {
-    font-size: clamp(1.45rem, 2.15vw, 2.2rem);
+    font-size: clamp(1.25rem, 1.7vw, 1.5rem);
+  }
+
+  .home-cycle-grid .tile-body {
+    padding: 14px;
+  }
+
+  .home-cycle-grid .tile-caption {
+    display: block;
+    min-block-size: 4lh;
+    margin-top: 8px;
+    color: var(--text-soft);
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .home-cycle-grid .tile-overlay {
+    display: none;
   }
 
   .home-cycle-grid > .tile {
+    --fan-rest-transform:
+      translateX(calc(-50% + var(--fan-x)))
+      translateY(var(--fan-y))
+      rotate(var(--fan-rotate));
+    --fan-focus-transform:
+      translateX(calc(-50% + var(--fan-x)))
+      translateY(-30px)
+      rotate(0deg)
+      scale(1.075);
     position: absolute;
     top: clamp(18px, 2.5vw, 30px);
     left: 50%;
     z-index: var(--fan-z);
     width: clamp(215px, 21vw, 258px);
     box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
-    transform:
-      translateX(calc(-50% + var(--fan-x)))
-      translateY(var(--fan-y))
-      rotate(var(--fan-rotate));
-    transform-origin: 50% 100%;
+    transform: var(--fan-rest-transform);
+    /* Keep the pivot near the original card base above the new caption space. */
+    transform-origin: 50% calc(100% - 4.5rem);
     transition:
       transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
       box-shadow 320ms ease,
@@ -2700,11 +2752,7 @@ img {
     box-shadow:
       0 28px 64px rgba(0, 0, 0, 0.58),
       0 0 0 1px rgba(255, 255, 255, 0.035);
-    transform:
-      translateX(calc(-50% + var(--fan-x)))
-      translateY(-30px)
-      rotate(0deg)
-      scale(1.075);
+    transform: var(--fan-focus-transform);
     transition:
       transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
       box-shadow 320ms ease,
@@ -2747,7 +2795,12 @@ img {
 
 @media (min-width: 861px) and (prefers-reduced-motion: reduce) {
   .home-cycle-grid > .tile {
+    --fan-focus-transform: var(--fan-rest-transform);
     animation: none;
+  }
+
+  .home-cycle-grid > .tile:is(:hover, :focus-visible) img {
+    transform: none;
   }
 }
 
