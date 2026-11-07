@@ -101,6 +101,35 @@ const websiteSchema = {
         justify-self: end;
       }
 
+      @media (min-width: 861px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+        .hero-scrim::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 220ms ease;
+          background: radial-gradient(
+            ellipse var(--quote-scrim-radius) 150px at var(--quote-scrim-x) var(--quote-scrim-y),
+            rgba(10, 10, 10, 0.42) 0%,
+            rgba(10, 10, 10, 0.36) 44%,
+            rgba(10, 10, 10, 0.19) 68%,
+            transparent 100%
+          );
+          -webkit-mask-image: var(--hero-reveal-mask);
+          mask-image: var(--hero-reveal-mask);
+        }
+
+        .hero.is-color-reveal-active .hero-scrim::after {
+          opacity: 1;
+        }
+
+        .hero.is-color-reveal-active .hero-teaser-feed :global(.teaser-accordion-line),
+        .hero.is-color-reveal-active .hero-teaser-feed :global(.teaser-accordion-source) {
+          color: color-mix(in srgb, var(--text-soft), var(--text) var(--quote-lift, 0%));
+        }
+      }
+
       @media (max-width: 860px) {
         .hero-layout {
           grid-template-columns: minmax(0, 1fr);
@@ -159,26 +188,55 @@ const websiteSchema = {
 
     if (canReveal && hero) {
       const heroEl = hero;
+      const quote = heroEl.querySelector<HTMLElement>('.hero-teaser-feed');
+      const desktopQuote = window.matchMedia('(min-width: 861px)');
       let frame = 0;
+      let pointer: PointerEvent | null = null;
+
+      function drawReveal() {
+        frame = 0;
+        if (!pointer) return;
+        const rect = heroEl.getBoundingClientRect();
+        const quoteRect = desktopQuote.matches ? quote?.getBoundingClientRect() : undefined;
+        const x = pointer.clientX - rect.left;
+        const y = pointer.clientY - rect.top;
+
+        heroEl.style.setProperty('--reveal-x', `${(x / rect.width) * 100}%`);
+        heroEl.style.setProperty('--reveal-y', `${(y / rect.height) * 100}%`);
+        if (quoteRect?.height) {
+          const quoteX = quoteRect.left - rect.left + quoteRect.width / 2;
+          const quoteY = quoteRect.top - rect.top + quoteRect.height / 2 - 6;
+          const distance = Math.hypot(x - quoteX, y - quoteY);
+          const lift = Math.max(0, Math.min(1, (390 - distance) / 160));
+          heroEl.style.setProperty('--quote-scrim-x', `${quoteX}px`);
+          heroEl.style.setProperty('--quote-scrim-y', `${quoteY}px`);
+          heroEl.style.setProperty('--quote-scrim-radius', `${quoteRect.width / 2 + 135}px`);
+          heroEl.style.setProperty('--quote-lift', `${lift * 100}%`);
+        }
+        heroEl.classList.add('is-color-reveal-active');
+      }
+
+      function queueReveal() {
+        if (!frame && pointer) frame = requestAnimationFrame(drawReveal);
+      }
 
       function moveReveal(event: PointerEvent) {
-        const rect = heroEl.getBoundingClientRect();
-        const x = ((event.clientX - rect.left) / rect.width) * 100;
-        const y = ((event.clientY - rect.top) / rect.height) * 100;
-
-        cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(() => {
-          heroEl.style.setProperty('--reveal-x', x + '%');
-          heroEl.style.setProperty('--reveal-y', y + '%');
-          heroEl.classList.add('is-color-reveal-active');
-        });
+        pointer = event;
+        queueReveal();
       }
 
       heroEl.addEventListener('pointermove', moveReveal);
       heroEl.addEventListener('pointerenter', moveReveal);
       heroEl.addEventListener('pointerleave', () => {
+        pointer = null;
         heroEl.classList.remove('is-color-reveal-active');
       });
+
+      if (quote && typeof ResizeObserver !== 'undefined') {
+        const resize = new ResizeObserver(queueReveal);
+        resize.observe(heroEl);
+        resize.observe(quote);
+      }
     }
   </script>
   <script>
