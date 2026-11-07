@@ -30,6 +30,7 @@ const credits = selectPublicationCredits(
   published.map((piece) => piece.publication),
   upcoming.map((piece) => piece.publication),
 );
+const pairedCredits = credits.published.length > 0 && credits.upcoming.length > 0;
 const forthcomingCreditParts = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' })
   .formatToParts(credits.upcoming);
 const today = new Date();
@@ -70,7 +71,7 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
         <h2>Publications</h2>
         <a class="latest-strip-chronology" href={withBase('chronology/')}><span><InitialText text="Chronology" /></span> <span class="home-link-arrow" aria-hidden="true">→</span></a>
       </div>
-      <p class="latest-strip-credit">
+      <p class:list={['latest-strip-credit', { 'latest-strip-credit--paired': pairedCredits }]}>
         <PublicationHeartbeat names={published.map((piece) => piece.publication)} initial={credits.published.slice(0, 2)} />
         {credits.upcoming.length > 0 && (
           <span class="latest-strip-credit-line">
@@ -291,6 +292,30 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
 
     .latest-strip-credit-line {
       margin-top: 1rem;
+    }
+  }
+
+  @media (min-width: 350px) and (max-width: 640px) {
+    .latest-strip-credit--paired {
+      display: grid;
+      grid-template-columns: minmax(0, 16fr) minmax(0, 9fr);
+      gap: 0.875rem;
+      align-items: start;
+    }
+
+    .latest-strip-credit--paired .latest-strip-credit-line {
+      margin-top: 0;
+    }
+
+    .latest-strip-credit--paired :global(i) {
+      font-size: 0.9375rem;
+      white-space: normal;
+    }
+  }
+
+  @media screen and (min-width: 350px) and (max-width: 640px) and (prefers-reduced-motion: no-preference) {
+    .latest-strip-credit--paired :global(.publication-heartbeat-reserve) {
+      display: block;
     }
   }
 </style>
