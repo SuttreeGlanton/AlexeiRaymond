@@ -15,8 +15,11 @@ interface Props {
 const { cycle, image } = Astro.props;
 const bannerWidths = [640, 768, 960, 1280, 1440, 1600, 1920, 2048];
 const teaser = cycleTeaser(cycle);
-const bindTeaserEnding = cycle.id === 'the-real' || cycle.id === 'valentines-star';
-const teaserEndingMatch = bindTeaserEnding ? teaser.match(/^(.*\S)\s+(\S+\s+\S+)$/) : null;
+const bindTeaserEnding = ['mythmaking', 'the-real', 'valentines-star'].includes(cycle.id);
+const teaserEndingPattern = cycle.id === 'mythmaking'
+  ? /^(.*\S)\s+(prior to words\.)$/
+  : /^(.*\S)\s+(\S+\s+\S+)$/;
+const teaserEndingMatch = bindTeaserEnding ? teaser.match(teaserEndingPattern) : null;
 const teaserLead = teaserEndingMatch?.[1] ?? teaser;
 const teaserEnding = teaserEndingMatch?.[2] ?? '';
 const dreamsTeaserMatch = cycle.id === 'dreams' ? teaser.match(/^(.*?)(bubbling up\.)(.*)$/) : null;
@@ -140,6 +143,10 @@ const dreamsTeaserMatch = cycle.id === 'dreams' ? teaser.match(/^(.*?)(bubbling 
   @media (width > 900px) and (hover: hover) and (pointer: fine) {
     .cycle-hero[data-cycle-id='dreams'] .cycle-hero-image {
       object-position: 50% 65%;
+    }
+
+    .cycle-hero[data-cycle-id='mythmaking'] .cycle-hero-image {
+      object-position: 50% 30%;
     }
   }
 

@@ -89,8 +89,7 @@ const breadcrumbSchema = {
     <section class="page-shell" aria-label={`${cycle.name} pieces`}>
       {hasStoryOrder && (
         <div class="cycle-order-bar">
-          <span class="cycle-order-label" id={`cycle-order-label-${cycle.id}`}>Order</span>
-          <div class="cycle-order-toggle" role="group" aria-labelledby={`cycle-order-label-${cycle.id}`}>
+          <div class="cycle-order-toggle" role="group" aria-label="Sort pieces">
             <button
               type="button"
               class="sort-button is-active"
