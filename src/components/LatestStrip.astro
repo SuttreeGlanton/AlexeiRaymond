@@ -113,11 +113,11 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
 )}
 
 <style>
-  /* Desktop uses a rule; mobile separates sections with space. */
+  /* On mobile the divider sits below the latest and forthcoming entries. */
   .latest-strip-band {
     display: flex;
     flex-direction: column;
-    border-top: 1px solid var(--border);
+    background: var(--banner-divider);
     padding: 1.5rem 0;
     margin: 0 0 0.75rem;
   }
@@ -228,7 +228,7 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
 
   @media (max-width: 640px) {
     .latest-strip-band {
-      border-top: 0;
+      background: none;
       padding: 1rem 0 2.5rem;
       margin-bottom: 0;
     }
@@ -258,7 +258,7 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
     .latest-strip-credit {
       margin-top: 1.5rem;
       padding-top: 1rem;
-      border-top: 1px solid var(--border);
+      background: var(--banner-divider);
     }
 
     .latest-strip-credit :global(.publication-heartbeat) {
