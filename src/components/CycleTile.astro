@@ -47,6 +47,7 @@ const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295p
         <h3 class="tile-title"><CycleName name={cycle.name} /></h3>
         {teaser && <p class="tile-caption">{teaser}</p>}
       </div>
+      <span class="home-cycle-rim" aria-hidden="true"></span>
     </div>
   ) : (
     <a class="tile" data-cycle-id={cycle.id} href={href}>
@@ -73,6 +74,7 @@ const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295p
         <h3 class="tile-title"><CycleName name={cycle.name} /></h3>
         {teaser && <p class="tile-caption">{teaser}</p>}
       </div>
+      <span class="home-cycle-rim" aria-hidden="true"></span>
     </a>
   )
 }

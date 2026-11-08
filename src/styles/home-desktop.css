@@ -1,3 +1,7 @@
+.home-cycle-rim {
+  display: none;
+}
+
 /* Homepage desktop composition. Mobile retains its existing layout and controls. */
 @media (min-width: 861px) {
   .home-page {
@@ -182,7 +186,63 @@
     grid-column: 1 / -1;
   }
 
+  .home-cycle-grid[data-home-cycle-fan]:not(.is-fan-pending, .is-fan-entering) {
+    & > .tile.is-fan-focus,
+    &:not(:has(> .tile.is-fan-focus)) > .tile:is(:hover, :focus-visible) {
+      overflow: visible;
+
+      &::before,
+      & > .home-cycle-rim {
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        pointer-events: none;
+      }
+
+      &::before {
+        content: '';
+        box-shadow:
+          0 0 0 1px color-mix(in srgb, var(--initial-accent) 32%, transparent),
+          0 0 12px color-mix(in srgb, var(--initial-accent) 36%, transparent),
+          0 0 30px color-mix(in srgb, var(--initial-accent) 22%, transparent);
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        & > .home-cycle-rim {
+          display: block;
+          z-index: 1;
+          overflow: clip;
+          padding: 2px;
+          /* Keep the rim mask fixed as the gradient moves underneath. */
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask-composite: exclude;
+        }
+
+        & > .home-cycle-rim::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 250%;
+          height: 250%;
+          background: linear-gradient(
+            135deg,
+            transparent 40%,
+            color-mix(in srgb, var(--initial-accent) 85%, transparent) 50%,
+            transparent 60%
+          );
+          animation: home-cycle-rim-shimmer 2.9s ease-in-out infinite;
+        }
+      }
+    }
+  }
 }
+
+@keyframes home-cycle-rim-shimmer {
+  0% { transform: translate(-60%, -60%); }
+  75%, 100% { transform: translate(0, 0); }
+}
+
 @media (min-width: 861px) and (max-height: 830px) {
   .home-page .hero { padding-bottom: 48px; }
   .home-page .hero-sound-toggle { bottom: 48px; }
