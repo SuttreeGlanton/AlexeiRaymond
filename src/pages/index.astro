@@ -443,7 +443,7 @@ const websiteSchema = {
   </script>
 
   <script>
-    /* Homepage mobile cycle focus color. */
+    /* Homepage mobile cycle loop and focus color. */
     (() => {
       const media = window.matchMedia('(max-width: 640px)');
       const gridElement = document.querySelector<HTMLElement>('[data-home-cycle-focus]');
@@ -452,14 +452,58 @@ const websiteSchema = {
 
       const grid: HTMLElement = gridElement;
 
-      const tiles = Array.from(grid.querySelectorAll('.tile'));
+      const tiles = Array.from(grid.querySelectorAll<HTMLElement>(':scope > .tile'));
       if (!tiles.length) return;
 
+      let loop: { ordered: HTMLElement[]; before: HTMLElement[]; after: HTMLElement[] } | undefined;
+      let focused: HTMLElement[] = [];
       let gridVisible = false;
       let frame = 0;
 
       function clearFocus() {
-        tiles.forEach((tile) => tile.classList.remove('is-mobile-focus'));
+        focused.forEach((tile) => tile.classList.remove('is-mobile-focus'));
+        focused = [];
+      }
+
+      function createLoop() {
+        // Match the existing visual order, which differs from the desktop fan.
+        const visualOrder = tiles.map((tile) => ({ tile, order: Number(getComputedStyle(tile).order) }));
+        visualOrder.sort((a, b) => a.order - b.order);
+        const ordered = visualOrder.map(({ tile }) => tile);
+        const copySet = (groupOrder: number) => ordered.map((tile) => {
+          const copy = tile.cloneNode(true) as HTMLElement;
+          copy.style.order = String(groupOrder);
+          copy.setAttribute('aria-hidden', 'true');
+          if (copy instanceof HTMLAnchorElement) copy.tabIndex = -1;
+          return copy;
+        });
+
+        const before = copySet(visualOrder[0].order - 1);
+        const after = copySet(visualOrder[visualOrder.length - 1].order + 1);
+        const position = grid.scrollLeft;
+        loop = { ordered, before, after };
+        grid.prepend(...before);
+        grid.append(...after);
+        grid.scrollTo({ left: position + loopWidth(), behavior: 'instant' });
+      }
+
+      function loopWidth() {
+        if (!loop) return 0;
+        return loop.after[0].getBoundingClientRect().left - loop.ordered[0].getBoundingClientRect().left;
+      }
+
+      function recenterLoop() {
+        if (!media.matches || !loop) return;
+
+        const width = loopWidth();
+        const position = grid.scrollLeft;
+        // Wait for the native swipe and snap to finish, then shift to the
+        // same view in the original set. Allow for fractional snap positions.
+        if (position < width - 1) {
+          grid.scrollTo({ left: position + width, behavior: 'instant' });
+        } else if (position >= 2 * width - 1) {
+          grid.scrollTo({ left: position - width, behavior: 'instant' });
+        }
       }
 
       function updateFocus() {
@@ -469,25 +513,32 @@ const websiteSchema = {
           return;
         }
 
+        if (!loop && tiles.length > 1) createLoop();
+
         const { left, width } = grid.getBoundingClientRect();
         const carouselCenter = left + width / 2;
-        let closestTile = tiles[0];
+        const ordered = loop?.ordered ?? tiles;
+        const period = loopWidth();
+        let closestIndex = 0;
         let closestDistance = Infinity;
 
-        tiles.forEach((tile) => {
+        ordered.forEach((tile, index) => {
           const rect = tile.getBoundingClientRect();
-          const tileCenter = rect.left + rect.width / 2;
-          const distance = Math.abs(tileCenter - carouselCenter);
+          const delta = rect.left + rect.width / 2 - carouselCenter;
+          const distance = Math.abs(period ? delta - Math.round(delta / period) * period : delta);
 
           if (distance < closestDistance) {
             closestDistance = distance;
-            closestTile = tile;
+            closestIndex = index;
           }
         });
 
-        tiles.forEach((tile) => {
-          tile.classList.toggle('is-mobile-focus', tile === closestTile);
-        });
+        if (focused[0] === ordered[closestIndex]) return;
+        clearFocus();
+        // Keep the visual state matched when a copy becomes an original.
+        focused = [ordered[closestIndex]];
+        if (loop) focused.push(loop.before[closestIndex], loop.after[closestIndex]);
+        focused.forEach((tile) => tile.classList.add('is-mobile-focus'));
       }
 
       function scheduleUpdate() {
@@ -513,11 +564,41 @@ const websiteSchema = {
       }
 
       grid.addEventListener('scroll', scheduleUpdate, { passive: true });
+      if (Reflect.has(grid, 'onscrollend')) {
+        grid.addEventListener('scrollend', recenterLoop);
+      } else {
+        let settleTimer = 0;
+        let touching = false;
+
+        function scheduleRecenter() {
+          window.clearTimeout(settleTimer);
+          if (!touching && loop) settleTimer = window.setTimeout(recenterLoop, 150);
+        }
+
+        grid.addEventListener('scroll', scheduleRecenter, { passive: true });
+        grid.addEventListener('touchstart', () => {
+          touching = true;
+          scheduleRecenter();
+        }, { passive: true });
+        function finishTouch(event: TouchEvent) {
+          touching = event.targetTouches.length > 0;
+          scheduleRecenter();
+        }
+        grid.addEventListener('touchend', finishTouch, { passive: true });
+        grid.addEventListener('touchcancel', finishTouch, { passive: true });
+      }
       window.addEventListener('resize', scheduleUpdate);
 
       media.addEventListener('change', () => {
-        if (!media.matches) clearFocus();
-        else scheduleUpdate();
+        if (media.matches) {
+          scheduleUpdate();
+          return;
+        }
+
+        clearFocus();
+        loop?.before.forEach((tile) => tile.remove());
+        loop?.after.forEach((tile) => tile.remove());
+        loop = undefined;
       });
 
       if ('IntersectionObserver' in window) {
@@ -525,7 +606,7 @@ const websiteSchema = {
           (entries) => {
             setGridVisible(entries.some((entry) => entry.isIntersecting));
           },
-          { threshold: 0 },
+          { rootMargin: '120px 0px' },
         );
 
         observer.observe(grid);
