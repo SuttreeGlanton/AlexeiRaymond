@@ -1,4 +1,5 @@
-.home-cycle-rim {
+.home-cycle-rim,
+.home-cycle-suit {
   display: none;
 }
 
@@ -186,10 +187,40 @@
     grid-column: 1 / -1;
   }
 
+  .home-cycle-grid[data-home-cycle-fan] .home-cycle-suit {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 1;
+    display: grid;
+    color: #000;
+    pointer-events: none;
+  }
+
+  .home-cycle-suit .cycle-icon {
+    width: 30px;
+    height: 30px;
+    margin: 0;
+  }
+
+  .home-cycle-suit svg {
+    stroke-width: 2;
+  }
+
   .home-cycle-grid[data-home-cycle-fan]:not(.is-fan-pending, .is-fan-entering) {
     & > .tile.is-fan-focus,
     &:not(:has(> .tile.is-fan-focus)) > .tile:is(:hover, :focus-visible) {
       overflow: visible;
+
+      & .home-cycle-suit {
+        color: var(--initial-accent);
+
+        & svg {
+          filter:
+            drop-shadow(0 0 0.8px #000)
+            drop-shadow(0 1px 1.2px rgb(0 0 0 / 80%));
+        }
+      }
 
       &::before,
       & > .home-cycle-rim {

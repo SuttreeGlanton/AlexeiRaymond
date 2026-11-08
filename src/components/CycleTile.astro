@@ -1,5 +1,6 @@
 ---
 import OptimizedImage from './OptimizedImage.astro';
+import CycleIcon from './CycleIcon.astro';
 import CycleName from './CycleName.astro';
 import { cycleTeaser, type Cycle } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
@@ -37,6 +38,7 @@ const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295p
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
         )}
+        <span class="home-cycle-suit"><CycleIcon id={cycle.id} /></span>
         {teaser && (
           <div class="tile-overlay" aria-hidden="true">
             <p class="tile-blurb">{teaser}</p>
@@ -64,6 +66,7 @@ const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295p
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
         )}
+        <span class="home-cycle-suit"><CycleIcon id={cycle.id} /></span>
         {teaser && (
           <div class="tile-overlay" aria-hidden="true">
             <p class="tile-blurb">{teaser}</p>
