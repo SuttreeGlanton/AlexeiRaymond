@@ -76,9 +76,9 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                   <div class="chronology-title-row">
                     <h3 class="chronology-piece-title">
                       {accountHref ? (
-                        <a href={accountHref}><InitialText text={piece.title} /></a>
+                        <a href={accountHref}><InitialText text={piece.title} capitalInitials /></a>
                       ) : (
-                        <InitialText text={piece.title} />
+                        <InitialText text={piece.title} capitalInitials />
                       )}
                     </h3>
                     {accountHref && (
@@ -141,11 +141,11 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                   <div class="chronology-title-row">
                     <h3 class="chronology-piece-title">
                       {canLinkToPiece(piece) ? (
-                        <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}><InitialText text={piece.title} /></a>
+                        <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}><InitialText text={piece.title} capitalInitials /></a>
                       ) : accountHref ? (
-                        <a href={accountHref}><InitialText text={piece.title} /></a>
+                        <a href={accountHref}><InitialText text={piece.title} capitalInitials /></a>
                       ) : (
-                        <InitialText text={piece.title} />
+                        <InitialText text={piece.title} capitalInitials />
                       )}
                     </h3>
                     {accountHref && (
