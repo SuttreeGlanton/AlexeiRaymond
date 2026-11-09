@@ -5,8 +5,6 @@ import aboutVisual from '../assets/page-visuals/about-portrait.jpg';
 import { site, socialHref, socialLabel } from '../lib/data';
 import { absoluteSiteUrl, withBase } from '../lib/paths';
 
-const bloodHoneyUrl = 'https://www.bloodhoneylit.com/';
-const bloodHoneyName = 'Blood+Honey';
 const publicationsPhrase = 'a variety of publications';
 const [bioBefore, bioAfter] = site.bio.split(publicationsPhrase);
 const canLinkPublications = typeof bioAfter === 'string';
@@ -24,12 +22,7 @@ const profileSchema = {
     name: site.author,
     url: siteUrl,
     description: site.bio,
-    jobTitle: ['Writer', 'Fiction Editor'],
-    worksFor: {
-      '@type': 'Organization',
-      name: bloodHoneyName,
-      url: bloodHoneyUrl
-    },
+    jobTitle: 'Writer',
     sameAs: [
       ...site.socials.map(socialHref).filter(Boolean),
       'https://www.bloodhoneylit.com/alexei-raymond',

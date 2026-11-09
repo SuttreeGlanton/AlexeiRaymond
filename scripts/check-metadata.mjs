@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import sharp from 'sharp';
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, '..');
@@ -141,6 +142,56 @@ function extractJsonLdBlocks(html) {
   return blocks;
 }
 
+function distFileForUrl(value, site, base) {
+  const prefix = `${site}/${base ? `${base}/` : ''}`;
+  if (!value.startsWith(prefix)) return;
+
+  const url = new URL(value);
+  const basePath = base ? `/${base}/` : '/';
+  if (!url.pathname.startsWith(basePath)) return;
+
+  const file = path.resolve(distDir, decodeURIComponent(url.pathname.slice(basePath.length)));
+  const relative = path.relative(distDir, file);
+  if (relative && !relative.startsWith('..') && !path.isAbsolute(relative)) return file;
+}
+
+function sitemapLocations(xml) {
+  return Array.from(xml.matchAll(/<loc>([^<]*)<\/loc>/g), (match) => decodeHtml(match[1]));
+}
+
+function checkSitemap(site, base, indexableCanonicals) {
+  const sitemapIndexUrl = expectedCanonicalForRoute('/sitemap-index.xml', site, base);
+  const robots = readText('dist/robots.txt');
+  const advertisedSitemaps = Array.from(robots.matchAll(/^\s*Sitemap:\s*(\S+)\s*$/gim), (match) => match[1]);
+  if (!advertisedSitemaps.includes(sitemapIndexUrl)) {
+    addError(`dist/robots.txt: missing Sitemap directive for ${sitemapIndexUrl}.`);
+  }
+
+  const children = sitemapLocations(readText('dist/sitemap-index.xml'));
+  if (!children.length) addError('dist/sitemap-index.xml: missing sitemap locations.');
+
+  const urls = new Set();
+  for (const child of children) {
+    const file = distFileForUrl(child, site, base);
+    if (!file) {
+      addError(`dist/sitemap-index.xml: sitemap is outside this site's build: ${child}.`);
+      continue;
+    }
+
+    for (const url of sitemapLocations(fs.readFileSync(file, 'utf8'))) {
+      if (urls.has(url)) addError(`Sitemap contains a duplicate URL: ${url}.`);
+      urls.add(url);
+      if (!indexableCanonicals.has(url)) addError(`Sitemap URL is not an indexable canonical: ${url}.`);
+    }
+  }
+
+  for (const url of indexableCanonicals) {
+    if (!urls.has(url)) addError(`Indexable canonical is missing from the sitemap: ${url}.`);
+  }
+
+  return urls.size;
+}
+
 if (!fs.existsSync(distDir)) {
   addError('dist/ does not exist. Run npm run build before npm run check:metadata.');
 }
@@ -170,16 +221,19 @@ if (!htmlFiles.length) {
 
 const seenTitles = new Map();
 const seenCanonicals = new Map();
+const indexableCanonicals = new Set();
+const imageMetadata = new Map();
 
 for (const file of htmlFiles) {
   const relative = normalizeSlash(path.relative(repoRoot, file));
   const html = fs.readFileSync(file, 'utf8');
 
   const robots = getMeta(html, 'name', 'robots').toLowerCase();
+  const noindex = robots.split(/[,\s]+/).includes('noindex');
   const isMetaRefreshRedirect = /<meta\b[^>]*http-equiv=["']refresh["'][^>]*>/i.test(html);
 
   // Redirect/alias stubs are intentionally not full metadata-bearing pages.
-  if (robots.includes('noindex') && isMetaRefreshRedirect) {
+  if (noindex && isMetaRefreshRedirect) {
     continue;
   }
 
@@ -192,6 +246,8 @@ for (const file of htmlFiles) {
   const ogDescription = getMeta(html, 'property', 'og:description');
   const ogUrl = getMeta(html, 'property', 'og:url');
   const ogImage = getMeta(html, 'property', 'og:image');
+  const ogImageWidth = getMeta(html, 'property', 'og:image:width');
+  const ogImageHeight = getMeta(html, 'property', 'og:image:height');
   const twitterCard = getMeta(html, 'name', 'twitter:card');
   const twitterTitle = getMeta(html, 'name', 'twitter:title');
   const twitterDescription = getMeta(html, 'name', 'twitter:description');
@@ -201,7 +257,9 @@ for (const file of htmlFiles) {
   if (!description) addError(`${relative}: missing meta description.`);
   // The 404 page is noindex and intentionally omits canonical/og:url.
   const isNotFoundPage = relative === 'dist/404.html';
+  const isIndexablePage = !noindex && !isMetaRefreshRedirect && !isNotFoundPage;
   if (!canonical && !isNotFoundPage) addError(`${relative}: missing canonical link.`);
+  if (canonical && isIndexablePage) indexableCanonicals.add(canonical);
   if (!ogType) addError(`${relative}: missing og:type.`);
   if (!ogSiteName) addError(`${relative}: missing og:site_name.`);
   if (!ogTitle) addError(`${relative}: missing og:title.`);
@@ -259,7 +317,8 @@ for (const file of htmlFiles) {
   const expectedCanonical = site ? expectedCanonicalForRoute(routePath, site, base) : '';
 
   if (canonical && expectedCanonical && canonical !== expectedCanonical) {
-    addWarning(`${relative}: canonical differs from expected route URL. Expected ${expectedCanonical}, found ${canonical}.`);
+    const reportMismatch = isIndexablePage ? addError : addWarning;
+    reportMismatch(`${relative}: canonical differs from expected route URL. Expected ${expectedCanonical}, found ${canonical}.`);
   }
 
   if (ogImage && !/^https?:\/\//i.test(ogImage)) {
@@ -278,8 +337,25 @@ for (const file of htmlFiles) {
     addError(`${relative}: has twitter:image but missing og:image.`);
   }
 
-  if (ogImage && site && !ogImage.startsWith(`${site}/`)) {
-    addWarning(`${relative}: og:image does not start with configured site "${site}".`);
+  if (ogImage && site) {
+    if (!ogImage.startsWith(`${site}/`)) {
+      addWarning(`${relative}: og:image does not start with configured site "${site}".`);
+    } else {
+      try {
+        const file = distFileForUrl(ogImage, site, base);
+        if (!file) throw new Error('URL is outside the build');
+        if (!imageMetadata.has(file)) imageMetadata.set(file, sharp(file).metadata());
+        const { width, height } = await imageMetadata.get(file);
+        if (ogImageWidth && ogImageWidth !== String(width)) {
+          addError(`${relative}: og:image:width is ${ogImageWidth}, but the built image is ${width}px wide.`);
+        }
+        if (ogImageHeight && ogImageHeight !== String(height)) {
+          addError(`${relative}: og:image:height is ${ogImageHeight}, but the built image is ${height}px high.`);
+        }
+      } catch (error) {
+        addError(`${relative}: could not read built og:image (${error.message}).`);
+      }
+    }
   }
 
   const jsonLdBlocks = extractJsonLdBlocks(html);
@@ -320,8 +396,18 @@ for (const file of htmlFiles) {
   }
 }
 
+let sitemapUrlCount = 0;
+if (site && htmlFiles.length) {
+  try {
+    sitemapUrlCount = checkSitemap(site, base, indexableCanonicals);
+  } catch (error) {
+    addError(`Could not check the built sitemap (${error.message}).`);
+  }
+}
+
 console.log('Metadata check');
 console.log(`HTML pages checked: ${htmlFiles.length}`);
+console.log(`Sitemap URLs checked: ${sitemapUrlCount}`);
 console.log(`Site: ${site || '(missing)'}`);
 console.log(`Base: /${base}`);
 console.log('');

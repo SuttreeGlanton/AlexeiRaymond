@@ -111,9 +111,20 @@ const seoDescription = fullText && piece
 const publishedIso = fullText && piece ? formatIsoDate(piece.date) : '';
 const accountUrl = absoluteSiteUrl(`accounts/${entry.id}/`, Astro.site);
 const authorUrl = absoluteSiteUrl('', Astro.site);
+const socialCoverWidth = 1200;
 const socialCover = fullText && archiveCoverImage
-  ? await getImage({ src: archiveCoverImage, width: 1200, format: 'jpeg', quality: 80 })
+  ? await getImage({ src: archiveCoverImage, width: socialCoverWidth, format: 'jpeg', quality: 80 })
   : undefined;
+// Read Astro's copy of the source metadata so the original asset stays unreferenced.
+const socialCoverSource = socialCover?.rawOptions.src;
+// Sharp leaves smaller covers at their source dimensions.
+const socialImage = socialCover && socialCoverSource && typeof socialCoverSource !== 'string' ? {
+  src: socialCover.src,
+  width: Math.min(socialCoverWidth, socialCoverSource.width),
+  height: socialCoverSource.width < socialCoverWidth
+    ? socialCoverSource.height
+    : Number(socialCover.attributes.height) || undefined
+} : undefined;
 const coverUrl = socialCover ? absoluteSiteUrl(socialCover.src, Astro.site) : '';
 const workSchema = fullText && piece ? {
   '@context': 'https://schema.org',
@@ -177,7 +188,7 @@ const breadcrumbSchema = piece ? {
   title={seoTitle}
   headerCoda={headerCoda}
   description={seoDescription}
-  socialImage={socialCover ? { src: socialCover.src, width: Number(socialCover.attributes.width) || undefined, height: Number(socialCover.attributes.height) || undefined } : undefined}
+  socialImage={socialImage}
   socialImageAlt={fullText && piece ? archiveCoverAlt : undefined}
   ogType={fullText && piece ? 'article' : 'website'}
   publishedTime={publishedIso || undefined}
