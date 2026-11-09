@@ -114,3 +114,28 @@
   0% { transform: translate(-60%, -60%); }
   75%, 100% { transform: translate(0, 0); }
 }
+
+.home-cycle-flux {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+
+.home-cycle-flux.is-visible {
+  opacity: 1;
+}
+
+.home-cycle-flux > canvas {
+  position: absolute;
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-cycle-flux {
+    display: none;
+  }
+}
