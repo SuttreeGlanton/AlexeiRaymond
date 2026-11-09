@@ -964,8 +964,9 @@ if (rootElement && rootElement.dataset.enhanced !== 'true') {
     }
 
     if (option.next) {
-      state.currentChoice = option.next;
       await delay(680);
+      if (state.runToken !== runToken) return;
+      state.currentChoice = option.next;
       showChoice(index);
       return;
     }

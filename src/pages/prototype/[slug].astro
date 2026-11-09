@@ -65,26 +65,33 @@ if (secedeBetaAccessPhrase === '__SET_SECEDE_BETA_ACCESS_PHRASE__') {
 
     document.documentElement.classList.add('secede-beta-locked');
 
-    if (sessionStorage.getItem(storageKey) === secedeBetaAccessPhrase) {
-      unlock();
-    } else {
-      input.focus();
-    }
-
     form.addEventListener('submit', (event) => {
       event.preventDefault();
 
       if (input.value === secedeBetaAccessPhrase) {
-        sessionStorage.setItem(storageKey, secedeBetaAccessPhrase);
         error.hidden = true;
         input.value = '';
         unlock();
+        try {
+          sessionStorage.setItem(storageKey, secedeBetaAccessPhrase);
+        } catch {
+          // The current visit is unlocked even when the browser cannot remember it.
+        }
         return;
       }
 
       error.hidden = false;
       input.select();
     });
+
+    let remembered = false;
+    try {
+      remembered = sessionStorage.getItem(storageKey) === secedeBetaAccessPhrase;
+    } catch {
+      // Storage can be unavailable. The form still accepts the password.
+    }
+    if (remembered) unlock();
+    else input.focus();
   </script>
 
   <style>
