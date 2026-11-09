@@ -1,44 +1,47 @@
 ---
-import { Picture } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PieceCard from '../components/PieceCard.astro';
 import { featuredPieces, site } from '../lib/data';
 import selectedHeader from '../assets/selected-header-trees.jpg';
+import selectedHeaderMobile from '../assets/selected-header-trees-mobile.webp';
 
 const selected = featuredPieces();
 const selectedHeroWidths = [640, 768, 960, 1280, 1440, 1600, 1920, 2048];
+const heroImageOptions = { widths: selectedHeroWidths, width: 2048, quality: 55 };
+const [heroAvif, heroWebp, mobileAvif, mobileWebp] = await Promise.all([
+  getImage({ src: selectedHeader, ...heroImageOptions, format: 'avif' }),
+  getImage({ src: selectedHeader, ...heroImageOptions, format: 'webp' }),
+  getImage({ src: selectedHeaderMobile, ...heroImageOptions, format: 'avif' }),
+  getImage({ src: selectedHeaderMobile, ...heroImageOptions, format: 'webp' }),
+]);
+// The crop trims the vertical margins of the existing 46% mobile framing.
+// Keep the full source for narrower layouts where the title can wrap.
+const mobileHeroMedia = '(min-width: 360px) and (max-width: 640px)';
 ---
 
 <BaseLayout title={`Selected Stories & Poems — ${site.author}`} description="Read a selection of short stories, flash fiction and poems by Alexei Raymond, with original publication credits and links to the full texts.">
   <section class="selected-hero" aria-labelledby="selected-title" data-color-reveal>
-    <Picture
-      pictureAttributes={{ style: 'display: contents' }}
-      class="selected-hero-backdrop selected-hero-backdrop--mono"
-      src={selectedHeader}
-      alt=""
-      widths={selectedHeroWidths}
-      width={2048}
-      sizes="100vw"
-      formats={['avif']}
-      fallbackFormat="webp"
-      quality={55}
-      priority
-    />
-    <Picture
-      pictureAttributes={{ style: 'display: contents' }}
-      class="selected-hero-backdrop selected-hero-color-reveal"
-      src={selectedHeader}
-      alt=""
-      widths={selectedHeroWidths}
-      width={2048}
-      sizes="100vw"
-      formats={['avif']}
-      fallbackFormat="webp"
-      quality={55}
-      loading="eager"
-      decoding="async"
-      aria-hidden="true"
-    />
+    {['selected-hero-backdrop--mono', 'selected-hero-color-reveal'].map((layer, index) => (
+      <picture style="display: contents">
+        <source media={mobileHeroMedia} type="image/avif" srcset={mobileAvif.srcSet.attribute} sizes="100vw" />
+        <source media={mobileHeroMedia} type="image/webp" srcset={mobileWebp.srcSet.attribute} sizes="100vw" />
+        <source type="image/avif" srcset={heroAvif.srcSet.attribute} sizes="100vw" />
+        <img
+          class={`selected-hero-backdrop ${layer}`}
+          src={heroWebp.src}
+          srcset={heroWebp.srcSet.attribute}
+          sizes="100vw"
+          width={selectedHeader.width}
+          height={selectedHeader.height}
+          alt=""
+          loading="eager"
+          decoding={index === 0 ? 'sync' : 'async'}
+          fetchpriority={index === 0 ? 'high' : undefined}
+          aria-hidden={index === 1 ? 'true' : undefined}
+        />
+      </picture>
+    ))}
     <div class="selected-hero-scrim" aria-hidden="true"></div>
 
     <div class="page-shell selected-hero-content">

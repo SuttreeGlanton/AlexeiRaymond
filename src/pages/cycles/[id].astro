@@ -115,9 +115,10 @@ const breadcrumbSchema = {
         data-mobile-focus-carousel
         data-cycle-order-grid={hasStoryOrder ? '' : undefined}
       >
-        {cyclePieces.map((piece) => (
+        {cyclePieces.map((piece, index) => (
           <PieceCard
             piece={piece}
+            priority={index === 0}
             titleInitials
             storyOrder={hasStoryOrder ? storyIndex.get(piece.title) : undefined}
             sourceOrder={sourceIndex.get(piece.title)}
@@ -140,16 +141,21 @@ const breadcrumbSchema = {
       if (!(root instanceof HTMLElement) || !(grid instanceof HTMLElement) || !buttons.length) return;
 
       type CycleOrderMode = 'story' | 'publication';
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
       const mobileLayout = window.matchMedia('(max-width: 640px)');
+      const orderAnimations: Animation[] = [];
 
       const numericData = (card: HTMLElement, key: 'storyOrder' | 'sourceOrder' | 'publicationTime') =>
         Number(card.dataset[key] || 0);
 
       const applyOrder = (mode: CycleOrderMode) => {
+        if (root.dataset.orderMode === mode) return;
+
         const cards = Array.from(grid.querySelectorAll<HTMLElement>(':scope > [data-piece-card]'));
-        cards.forEach((card) => card.getAnimations().forEach((animation) => animation.cancel()));
-        const firstPositions = new Map(cards.map((card) => [card, card.getBoundingClientRect()]));
+        orderAnimations.splice(0).forEach((animation) => animation.cancel());
+        const firstPositions = !reducedMotion.matches && !mobileLayout.matches
+          ? cards.map((card) => card.getBoundingClientRect())
+          : null;
         const previousScrollLeft = grid.scrollLeft;
         const ordered = cards.slice();
 
@@ -189,23 +195,23 @@ const breadcrumbSchema = {
             : 'Showing pieces in publication order, latest first.';
         }
 
-        if (!reducedMotion && !mobileLayout.matches) {
-          for (const card of cards) {
-            const first = firstPositions.get(card);
-            const last = card.getBoundingClientRect();
-            if (!first) continue;
+        if (firstPositions) {
+          const lastPositions = cards.map((card) => card.getBoundingClientRect());
+          for (const [index, card] of cards.entries()) {
+            const first = firstPositions[index];
+            const last = lastPositions[index];
 
             const deltaX = first.left - last.left;
             const deltaY = first.top - last.top;
             if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) continue;
 
-            card.animate(
+            orderAnimations.push(card.animate(
               [
                 { transform: `translate(${deltaX}px, ${deltaY}px)` },
                 { transform: 'translate(0, 0)' }
               ],
               { duration: 460, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
-            );
+            ));
           }
         }
 

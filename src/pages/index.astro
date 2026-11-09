@@ -249,28 +249,54 @@ const websiteSchema = {
 
     if (soundButton && ambientAudio) {
       const toggle = soundButton;
-      ambientAudio.volume = 0.32;
+      const audio = ambientAudio;
+      audio.volume = 0.32;
+      const labels = {
+        off: 'Sound off',
+        starting: 'Sound ...',
+        playing: 'Sound on',
+        unavailable: 'Sound unavailable',
+      };
+      let soundState: keyof typeof labels = 'off';
+      let playbackAttempt = 0;
 
-      function setSoundState(label: string, pressed: boolean) {
-        toggle.setAttribute('aria-pressed', pressed ? 'true' : 'false');
-        toggle.setAttribute('aria-label', 'Sound ' + label.toLowerCase());
+      function setSoundState(next: keyof typeof labels) {
+        soundState = next;
+        toggle.setAttribute('aria-pressed', String(next === 'playing'));
+        toggle.setAttribute('aria-label', labels[next]);
       }
 
-      toggle.addEventListener('click', async () => {
-        const isOn = toggle.getAttribute('aria-pressed') === 'true';
+      audio.addEventListener('playing', () => {
+        if (!audio.paused) setSoundState('playing');
+      });
+      audio.addEventListener('pause', () => {
+        if (!audio.paused) return;
+        playbackAttempt += 1;
+        if (soundState !== 'unavailable') setSoundState('off');
+      });
+      audio.addEventListener('error', () => {
+        if (!audio.error) return;
+        playbackAttempt += 1;
+        setSoundState('unavailable');
+      });
 
-        if (isOn) {
-          ambientAudio.pause();
-          setSoundState('Off', false);
+      toggle.addEventListener('click', async () => {
+        if (soundState === 'starting' || soundState === 'playing' || !audio.paused) {
+          playbackAttempt += 1;
+          setSoundState('off');
+          audio.pause();
           return;
         }
 
+        const attempt = ++playbackAttempt;
+        setSoundState('starting');
         try {
-          setSoundState('...', false);
-          await ambientAudio.play();
-          setSoundState('On', true);
-        } catch {
-          setSoundState('Unavailable', false);
+          if (audio.error) audio.load();
+          await audio.play();
+          if (attempt === playbackAttempt && !audio.paused) setSoundState('playing');
+        } catch (error) {
+          if (attempt !== playbackAttempt) return;
+          setSoundState(error instanceof DOMException && error.name === 'AbortError' ? 'off' : 'unavailable');
         }
       });
     }
@@ -457,6 +483,8 @@ const websiteSchema = {
       if (!tiles.length) return;
 
       let loop: { ordered: HTMLElement[]; before: HTMLElement[]; after: HTMLElement[] } | undefined;
+      let geometry: { centers: number[]; viewportHalf: number; period: number } | undefined;
+      let centeredCycleId: string | undefined;
       let focused: HTMLElement[] = [];
       let gridVisible = false;
       let frame = 0;
@@ -485,18 +513,34 @@ const websiteSchema = {
         loop = { ordered, before, after };
         grid.prepend(...before);
         grid.append(...after);
-        grid.scrollTo({ left: position + loopWidth(), behavior: 'instant' });
+        const { centers, viewportHalf, period } = measureGeometry();
+        const restoredIndex = ordered.findIndex((tile) => tile.dataset.cycleId === centeredCycleId);
+        const left = restoredIndex >= 0 ? centers[restoredIndex] - viewportHalf : position + period;
+        grid.scrollTo({ left, behavior: 'instant' });
       }
 
-      function loopWidth() {
-        if (!loop) return 0;
-        return loop.after[0].getBoundingClientRect().left - loop.ordered[0].getBoundingClientRect().left;
+      function measureGeometry() {
+        const gridBox = grid.getBoundingClientRect();
+        const scrollLeft = grid.scrollLeft;
+        const boxes = (loop?.ordered ?? tiles).map((tile) => tile.getBoundingClientRect());
+        geometry = {
+          centers: boxes.map((box) => box.left - gridBox.left + scrollLeft + box.width / 2),
+          viewportHalf: gridBox.width / 2,
+          period: loop ? loop.after[0].getBoundingClientRect().left - boxes[0].left : 0,
+        };
+        return geometry;
+      }
+
+      function invalidateGeometry() {
+        geometry = undefined;
+        scheduleUpdate();
       }
 
       function recenterLoop() {
-        if (!media.matches || !loop) return;
+        if (!media.matches || !gridVisible || !loop) return;
 
-        const width = loopWidth();
+        const { period: width } = geometry ?? measureGeometry();
+        if (!width) return;
         const position = grid.scrollLeft;
         // Wait for the native swipe and snap to finish, then shift to the
         // same view in the original set. Allow for fractional snap positions.
@@ -516,16 +560,14 @@ const websiteSchema = {
 
         if (!loop && tiles.length > 1) createLoop();
 
-        const { left, width } = grid.getBoundingClientRect();
-        const carouselCenter = left + width / 2;
+        const { centers, viewportHalf, period } = geometry ?? measureGeometry();
+        const carouselCenter = grid.scrollLeft + viewportHalf;
         const ordered = loop?.ordered ?? tiles;
-        const period = loopWidth();
         let closestIndex = 0;
         let closestDistance = Infinity;
 
-        ordered.forEach((tile, index) => {
-          const rect = tile.getBoundingClientRect();
-          const delta = rect.left + rect.width / 2 - carouselCenter;
+        centers.forEach((center, index) => {
+          const delta = center - carouselCenter;
           const distance = Math.abs(period ? delta - Math.round(delta / period) * period : delta);
 
           if (distance < closestDistance) {
@@ -535,6 +577,7 @@ const websiteSchema = {
         });
 
         if (focused[0] === ordered[closestIndex]) return;
+        centeredCycleId = ordered[closestIndex].dataset.cycleId;
         clearFocus();
         // Keep the visual state matched when a copy becomes an original.
         focused = [ordered[closestIndex]];
@@ -543,9 +586,7 @@ const websiteSchema = {
       }
 
       function scheduleUpdate() {
-        // Reading every card's bounding box forces a full layout. Do not do
-        // that during the homepage's critical first render while the grid is
-        // still below the viewport.
+        // Keep loop setup and measurements out of the opening render.
         if (!media.matches || !gridVisible || frame) return;
         frame = requestAnimationFrame(updateFocus);
       }
@@ -555,7 +596,7 @@ const websiteSchema = {
         gridVisible = visible;
 
         if (gridVisible) {
-          scheduleUpdate();
+          invalidateGeometry();
           return;
         }
 
@@ -588,9 +629,11 @@ const websiteSchema = {
         grid.addEventListener('touchend', finishTouch, { passive: true });
         grid.addEventListener('touchcancel', finishTouch, { passive: true });
       }
-      window.addEventListener('resize', scheduleUpdate);
+      window.addEventListener('resize', invalidateGeometry);
+      if ('ResizeObserver' in window) new ResizeObserver(invalidateGeometry).observe(grid);
 
       media.addEventListener('change', () => {
+        geometry = undefined;
         if (media.matches) {
           scheduleUpdate();
           return;

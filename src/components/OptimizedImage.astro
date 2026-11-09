@@ -1,5 +1,5 @@
 ---
-import { Picture } from 'astro:assets';
+import { getImage, Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { assetPath } from '../lib/paths';
 import { CARD_IMAGE_QUALITY, CARD_IMAGE_WIDTHS } from '../lib/image-assets';
@@ -14,6 +14,7 @@ interface Props {
   widths?: number[];
   sizes?: string;
   quality?: number;
+  mobileAvifQuality?: number;
 }
 
 const {
@@ -25,27 +26,44 @@ const {
   fetchpriority,
   widths = CARD_IMAGE_WIDTHS,
   sizes = '(max-width: 640px) 85vw, (max-width: 860px) 45vw, 360px',
-  quality = CARD_IMAGE_QUALITY
+  quality = CARD_IMAGE_QUALITY,
+  mobileAvifQuality,
 } = Astro.props;
 
 const fallbackSrc = path ? assetPath(path) : '';
+const imageOptions = {
+  widths,
+  width: Math.max(...widths),
+  sizes,
+  quality,
+  alt,
+  loading,
+  decoding,
+  fetchpriority,
+  fit: 'cover',
+  position: 'center',
+} as const;
+const mobileSources = image && mobileAvifQuality !== undefined
+  ? await Promise.all([
+    getImage({ src: image, ...imageOptions, format: 'avif', quality: mobileAvifQuality }),
+    getImage({ src: image, ...imageOptions, format: 'webp' }),
+    getImage({ src: image, ...imageOptions, format: 'jpeg' }),
+  ])
+  : null;
 ---
 
-{image ? (
+{mobileSources ? (
+  <picture>
+    <source media="(max-width: 640px)" type="image/avif" srcset={mobileSources[0].srcSet.attribute} sizes={sizes} />
+    <source type="image/webp" srcset={mobileSources[1].srcSet.attribute} sizes={sizes} />
+    <img src={mobileSources[2].src} srcset={mobileSources[2].srcSet.attribute} {...mobileSources[2].attributes} />
+  </picture>
+) : image ? (
   <Picture
     src={image}
     formats={['webp']}
     fallbackFormat="jpeg"
-    widths={widths}
-    width={Math.max(...widths)}
-    sizes={sizes}
-    quality={quality}
-    alt={alt}
-    loading={loading}
-    decoding={decoding}
-    fetchpriority={fetchpriority}
-    fit="cover"
-    position="center"
+    {...imageOptions}
   />
 ) : fallbackSrc ? (
   <img

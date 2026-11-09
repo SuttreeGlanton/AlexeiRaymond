@@ -20,6 +20,7 @@ const href = disabled ? '' : withBase(`cycles/${cycle.id}/`);
 // extra density is visually redundant here and previously made Lighthouse
 // choose a 760px source for a roughly 583px rendered image.
 const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295px';
+const mobileAvifQuality = ['dreams', 'portici', 'the-real'].includes(cycle.id) ? 54 : undefined;
 ---
 
 {
@@ -34,6 +35,7 @@ const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295p
             loading="lazy"
             sizes={cycleCoverSizes}
             widths={CARD_IMAGE_WIDTHS}
+            mobileAvifQuality={mobileAvifQuality}
           />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>
@@ -62,6 +64,7 @@ const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295p
             loading="lazy"
             sizes={cycleCoverSizes}
             widths={CARD_IMAGE_WIDTHS}
+            mobileAvifQuality={mobileAvifQuality}
           />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{cycle.name}</span></div>

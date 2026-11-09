@@ -35,6 +35,11 @@ const defunct = isDefunct(piece);
 const linked = canLinkToPiece(piece);
 const cover = piece.cover ? assetPath(piece.cover) : '';
 const coverImage = imageAsset(piece.cover);
+const mobileAvifQuality = [
+  'covers/pieces/glassdom.jpg',
+  'covers/pieces/last-sight-of-her.jpg',
+  'covers/pieces/nazi.jpg',
+].includes(piece.cover ?? '') ? 54 : undefined;
 const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : '';
 const accountLabel = piece.account?.label || 'Account';
 const displayTitleLines = titleLines ?? [piece.title];
@@ -85,7 +90,7 @@ const metaParts = [
     <a class="card-cover-link" href={piece.link} target="_blank" rel="noopener noreferrer" tabindex="-1" aria-label={coverLinkLabel}>
       <div class="card-media">
         {cover ? (
-          <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} />
+          <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} mobileAvifQuality={mobileAvifQuality} />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
         )}
@@ -101,7 +106,7 @@ const metaParts = [
   ) : (
     <div class="card-media">
       {cover ? (
-        <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} />
+        <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} mobileAvifQuality={mobileAvifQuality} />
       ) : (
         <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
       )}

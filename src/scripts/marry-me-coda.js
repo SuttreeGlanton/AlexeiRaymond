@@ -71,7 +71,7 @@
   let metrics = null;
   let dirty = true;
   let raf = 0;
-  let returnTarget = null;
+  let returnAttempt = null;
   let waterVisible = false;
   let sequence = null;
   const setState = (next) => { state = next; story.dataset.mmState = next; };
@@ -111,14 +111,28 @@
     for (const image of images) image.src = frames[next];
   };
 
+  const clearReturn = () => {
+    window.clearTimeout(returnAttempt?.timer);
+    returnAttempt = null;
+  };
+
+  const cancelReturn = () => {
+    if (!returnAttempt) return;
+    clearReturn();
+    window.scrollTo({ top: window.scrollY, behavior: 'instant' });
+    setState('dropped');
+    returnButton.disabled = false;
+  };
+
   const checkReturn = () => {
-    if (state !== 'returning' || returnTarget === null) return;
+    if (!returnAttempt) return;
     const rect = title.getBoundingClientRect();
     const inset = header?.getBoundingClientRect().height || 0;
     // Arrival is measured against the title and sticky header, never against
     // Misremember. Focusing with preventScroll cannot undo that placement.
-    if (Math.abs(window.scrollY - returnTarget) < 3 &&
+    if (Math.abs(window.scrollY - returnAttempt.target) < 3 &&
         rect.top >= inset + 6 && rect.bottom < window.innerHeight) {
+      clearReturn();
       setState('remember-ready');
       returnButton.disabled = true;
       rememberButton.disabled = false;
@@ -199,8 +213,9 @@
   };
 
   const returnToTitle = () => {
-    if (state !== 'dropped' && state !== 'returning') return;
+    if (state !== 'dropped') return;
     setState('returning');
+    returnButton.disabled = true;
     const inset = header?.getBoundingClientRect().height || 0;
     // On short phones the normal in-flow cover can separate the title and
     // opening by more than one screen. Fit the cover only when necessary,
@@ -213,8 +228,17 @@
         dirty = true;
       }
     }
-    returnTarget = Math.max(0, window.scrollY + title.getBoundingClientRect().top - inset - 24);
-    window.scrollTo({ top: returnTarget, behavior: reduced.matches ? 'instant' : 'smooth' });
+    const target = Math.max(0, window.scrollY + title.getBoundingClientRect().top - inset - 24);
+    returnAttempt = {
+      target,
+      width: window.innerWidth,
+      // A browser can stop the smooth scroll or settle at a stale position.
+      timer: window.setTimeout(() => {
+        checkReturn();
+        cancelReturn();
+      }, 3000),
+    };
+    window.scrollTo({ top: target, behavior: reduced.matches ? 'instant' : 'smooth' });
     schedule();
   };
 
@@ -446,6 +470,10 @@
   };
 
   const stopFollowing = () => {
+    if (returnAttempt) {
+      cancelReturn();
+      return;
+    }
     if (!sequence?.follow) return;
     sequence.follow = false;
     window.scrollTo({ top: window.scrollY, behavior: 'instant' });
@@ -454,13 +482,13 @@
     window.addEventListener(type, stopFollowing, { passive: true });
   }
   window.addEventListener('keydown', (event) => {
-    if (!sequence) return;
-    if (event.key === 'Escape') { stopFollowing(); finishRewrite(); }
+    if (event.key === 'Escape') { stopFollowing(); if (sequence) finishRewrite(); }
     else if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) stopFollowing();
   });
   const layoutChanged = () => {
     // Mobile browser bars change viewport height during a scroll. Only a
     // changed text width invalidates the frozen lines, not that height change.
+    if (returnAttempt && window.innerWidth !== returnAttempt.width) cancelReturn();
     if (sequence && Math.abs(prose.getBoundingClientRect().width - sequence.width) > 1) finishRewrite();
     remeasure();
     syncWater();
@@ -498,6 +526,7 @@
   }
   document.addEventListener('visibilitychange', () => { syncWater(); if (!document.hidden) remeasure(); });
   document.fonts?.ready.then(remeasure);
+  window.addEventListener('pagehide', cancelReturn);
   window.addEventListener('pageshow', remeasure);
   preload.forEach((image) => image.addEventListener('load', schedule, { once: true }));
   update();
