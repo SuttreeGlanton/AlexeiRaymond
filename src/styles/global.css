@@ -107,6 +107,11 @@ img {
   z-index: 20;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   background: #000;
+}
+
+/* Open menus use the header as their backdrop root. */
+.site-header:has(.nav-cycle-menu:is(:hover, :focus-within)),
+.site-header.is-mobile-menu-open {
   backdrop-filter: blur(18px);
 }
 
@@ -1442,11 +1447,10 @@ img {
   align-items: center;
 }
 
-.hero {
-  --reveal-x: 50%;
-  --reveal-y: 50%;
+.hero-color-reveal,
+.hero-scrim {
   --hero-reveal-mask: radial-gradient(
-    circle at var(--reveal-x) var(--reveal-y),
+    circle at var(--reveal-x, 50%) var(--reveal-y, 50%),
     rgba(0, 0, 0, 1) 0,
     rgba(0, 0, 0, 1) 120px,
     rgba(0, 0, 0, 0.78) 230px,

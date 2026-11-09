@@ -1,0 +1,10 @@
+/* Match the two extended glyphs used in Sūdō. Other characters can still
+   use the installed Inter faces declared before this one. */
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../assets/fonts/inter-macrons.woff2?no-inline') format('woff2');
+  unicode-range: U+014D, U+016B;
+}

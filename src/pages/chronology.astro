@@ -261,32 +261,15 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
   </script>
 
   <script>
-    /* Chronology photo color flashlight: desktop pointer only, reduced-motion safe. */
+    import { setRevealPosition, trackColorReveal } from '../scripts/color-reveal';
+
     const visual = document.querySelector<HTMLElement>('[data-chronology-visual]');
     const container = document.querySelector<HTMLElement>('.chronology-with-visual');
-    const canReveal =
-      visual &&
-      container &&
-      window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
-      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (canReveal && visual && container) {
-      const visualEl = visual;
-      let frame = 0;
-
-      function moveReveal(event: PointerEvent) {
-        cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(() => {
-          const rect = visualEl.getBoundingClientRect();
-          visualEl.style.setProperty('--reveal-x', (event.clientX - rect.left) + 'px');
-          visualEl.style.setProperty('--reveal-y', (event.clientY - rect.top) + 'px');
-          visualEl.classList.add('is-color-reveal-active');
-        });
-      }
-
-      container.addEventListener('pointermove', moveReveal);
-      container.addEventListener('pointerleave', () => {
-        visualEl.classList.remove('is-color-reveal-active');
+    const layer = visual?.querySelector<HTMLElement>('.chronology-color');
+    if (visual && container && layer) {
+      trackColorReveal(visual, (x, y) => setRevealPosition(layer, x, y), {
+        trigger: container,
+        minWidth: 1081,
       });
     }
   </script>

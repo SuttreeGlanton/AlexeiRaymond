@@ -182,64 +182,29 @@ const websiteSchema = {
   </section>
 
   <script>
-    /* Homepage color flashlight: desktop pointer only, reduced-motion safe. */
+    import { setRevealPosition, trackColorReveal } from '../scripts/color-reveal';
+
     const hero = document.querySelector<HTMLElement>('.hero[data-color-reveal]');
-    const canReveal =
-      hero &&
-      window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
-      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (canReveal && hero) {
-      const heroEl = hero;
-      const quote = heroEl.querySelector<HTMLElement>('.hero-teaser-feed');
+    const layer = hero?.querySelector<HTMLElement>('.hero-color-reveal');
+    const scrim = hero?.querySelector<HTMLElement>('.hero-scrim');
+    if (hero && layer && scrim) {
+      const quote = hero.querySelector<HTMLElement>('.hero-teaser-feed');
       const desktopQuote = window.matchMedia('(min-width: 861px)');
-      let frame = 0;
-      let pointer: PointerEvent | null = null;
-
-      function drawReveal() {
-        frame = 0;
-        if (!pointer) return;
-        const rect = heroEl.getBoundingClientRect();
+      trackColorReveal(hero, (x, y, rect) => {
         const quoteRect = desktopQuote.matches ? quote?.getBoundingClientRect() : undefined;
-        const x = pointer.clientX - rect.left;
-        const y = pointer.clientY - rect.top;
-
-        heroEl.style.setProperty('--reveal-x', `${(x / rect.width) * 100}%`);
-        heroEl.style.setProperty('--reveal-y', `${(y / rect.height) * 100}%`);
-        if (quoteRect?.height) {
+        setRevealPosition(layer, x, y, rect);
+        if (quote && quoteRect?.height) {
           const quoteX = quoteRect.left - rect.left + quoteRect.width / 2;
           const quoteY = quoteRect.top - rect.top + quoteRect.height / 2 - 6;
           const distance = Math.hypot(x - quoteX, y - quoteY);
           const lift = Math.max(0, Math.min(1, (390 - distance) / 160));
-          heroEl.style.setProperty('--quote-scrim-x', `${quoteX}px`);
-          heroEl.style.setProperty('--quote-scrim-y', `${quoteY}px`);
-          heroEl.style.setProperty('--quote-scrim-radius', `${quoteRect.width / 2 + 135}px`);
-          heroEl.style.setProperty('--quote-lift', `${lift * 100}%`);
+          setRevealPosition(scrim, x, y, rect);
+          scrim.style.setProperty('--quote-scrim-x', `${quoteX}px`);
+          scrim.style.setProperty('--quote-scrim-y', `${quoteY}px`);
+          scrim.style.setProperty('--quote-scrim-radius', `${quoteRect.width / 2 + 135}px`);
+          quote.style.setProperty('--quote-lift', `${lift * 100}%`);
         }
-        heroEl.classList.add('is-color-reveal-active');
-      }
-
-      function queueReveal() {
-        if (!frame && pointer) frame = requestAnimationFrame(drawReveal);
-      }
-
-      function moveReveal(event: PointerEvent) {
-        pointer = event;
-        queueReveal();
-      }
-
-      heroEl.addEventListener('pointermove', moveReveal);
-      heroEl.addEventListener('pointerenter', moveReveal);
-      heroEl.addEventListener('pointerleave', () => {
-        pointer = null;
-        heroEl.classList.remove('is-color-reveal-active');
-      });
-
-      if (quote && typeof ResizeObserver !== 'undefined') {
-        const resize = new ResizeObserver(queueReveal);
-        resize.observe(heroEl);
-        resize.observe(quote);
-      }
+      }, { resizeTarget: quote ?? undefined });
     }
   </script>
   <script>

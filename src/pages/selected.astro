@@ -69,35 +69,12 @@ const mobileHeroMedia = '(min-width: 360px) and (max-width: 640px)';
   </div>
 
   <script>
-    /* Selected Works color flashlight: desktop pointer only, reduced-motion safe. */
-    const selectedHero = document.querySelector<HTMLElement>('.selected-hero[data-color-reveal]');
-    const canRevealSelected =
-      selectedHero &&
-      window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
-      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    import { setRevealPosition, trackColorReveal } from '../scripts/color-reveal';
 
-    if (canRevealSelected && selectedHero) {
-      const heroEl = selectedHero;
-      let frame = 0;
-
-      function moveSelectedReveal(event: PointerEvent) {
-        const rect = heroEl.getBoundingClientRect();
-        const x = ((event.clientX - rect.left) / rect.width) * 100;
-        const y = ((event.clientY - rect.top) / rect.height) * 100;
-
-        cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(() => {
-          heroEl.style.setProperty('--reveal-x', x + '%');
-          heroEl.style.setProperty('--reveal-y', y + '%');
-          heroEl.classList.add('is-color-reveal-active');
-        });
-      }
-
-      heroEl.addEventListener('pointermove', moveSelectedReveal);
-      heroEl.addEventListener('pointerenter', moveSelectedReveal);
-      heroEl.addEventListener('pointerleave', () => {
-        heroEl.classList.remove('is-color-reveal-active');
-      });
+    const hero = document.querySelector<HTMLElement>('.selected-hero[data-color-reveal]');
+    const layer = hero?.querySelector<HTMLElement>('.selected-hero-color-reveal');
+    if (hero && layer) {
+      trackColorReveal(hero, (x, y, bounds) => setRevealPosition(layer, x, y, bounds));
     }
   </script>
 

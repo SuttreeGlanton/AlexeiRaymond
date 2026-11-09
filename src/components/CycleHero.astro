@@ -79,35 +79,12 @@ const dreamsTeaserMatch = cycle.id === 'dreams' ? teaser.match(/^(.*?)(bubbling 
 </section>
 
 <script>
-  /* Desktop pointer flashlight; touch layouts show the complete color image. */
-  const cycleHero = document.querySelector<HTMLElement>('[data-cycle-color-reveal]');
-  const canRevealCycle =
-    cycleHero &&
-    window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
-    !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  import { setRevealPosition, trackColorReveal } from '../scripts/color-reveal';
 
-  if (canRevealCycle && cycleHero) {
-    const heroEl = cycleHero;
-    let frame = 0;
-
-    const moveCycleReveal = (event: PointerEvent) => {
-      const rect = heroEl.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width) * 100;
-      const y = ((event.clientY - rect.top) / rect.height) * 100;
-
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        heroEl.style.setProperty('--reveal-x', `${x}%`);
-        heroEl.style.setProperty('--reveal-y', `${y}%`);
-        heroEl.classList.add('is-color-reveal-active');
-      });
-    };
-
-    heroEl.addEventListener('pointermove', moveCycleReveal);
-    heroEl.addEventListener('pointerenter', moveCycleReveal);
-    heroEl.addEventListener('pointerleave', () => {
-      heroEl.classList.remove('is-color-reveal-active');
-    });
+  const hero = document.querySelector<HTMLElement>('[data-cycle-color-reveal]');
+  const layer = hero?.querySelector<HTMLElement>('.cycle-hero-image--color');
+  if (hero && layer) {
+    trackColorReveal(hero, (x, y, bounds) => setRevealPosition(layer, x, y, bounds));
   }
 </script>
 
