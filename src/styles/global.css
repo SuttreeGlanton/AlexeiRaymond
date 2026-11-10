@@ -2354,7 +2354,7 @@ img {
   }
 }
 
-/* --- Mobile cycle carousel focused cover color --- */
+/* --- Cycle carousel and award card focus --- */
 .cycle-piece-carousel .piece-card {
   display: flex;
   flex-direction: column;
@@ -2364,18 +2364,18 @@ img {
   flex: 1;
 }
 
-.cycle-piece-carousel > .has-card-rim {
+:is(.cycle-piece-carousel, .selected-piece-grid) > .has-card-rim {
   --card-rim-color: #d7a84c;
 }
 
-.cycle-piece-carousel > .has-card-rim:is(.is-mobile-focus, :has(:focus-visible)) {
+:is(.cycle-piece-carousel, .selected-piece-grid) > .has-card-rim:is(.is-mobile-focus, :has(:focus-visible)) {
   --card-rim-display: block;
   overflow: visible;
   z-index: 1;
 }
 
 @media (hover: hover) {
-  .cycle-piece-carousel > .has-card-rim:hover {
+  :is(.cycle-piece-carousel, .selected-piece-grid) > .has-card-rim:hover {
     --card-rim-display: block;
     overflow: visible;
     z-index: 1;
