@@ -89,6 +89,12 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                   </div>
                   <p class="chronology-publication-line">
                     Forthcoming in <span class="pub">{publicationLabel(piece)}</span>
+                    {piece.awardNote && (
+                      <span class="chronology-award-note">
+                        <span class="chronology-publication-separator" aria-hidden="true">&middot;</span>
+                        <strong class="award-note">{piece.awardNote}</strong>
+                      </span>
+                    )}
                   </p>
                   <div class="chronology-meta">
                     <TagList tags={piece.tags.filter((tag) => tag !== 'Upcoming')} genre={piece.genre} />
@@ -161,6 +167,12 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                         <span class="chronology-publication-separator" aria-hidden="true">&middot;</span>
                         <time datetime={formatIsoDate(piece.date)}>{monthYear}</time>
                       </>
+                    )}
+                    {piece.awardNote && (
+                      <span class="chronology-award-note">
+                        <span class="chronology-publication-separator" aria-hidden="true">&middot;</span>
+                        <strong class="award-note">{piece.awardNote}</strong>
+                      </span>
                     )}
                   </p>
                   <div class="chronology-meta">

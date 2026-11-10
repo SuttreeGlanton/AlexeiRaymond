@@ -218,6 +218,9 @@ const breadcrumbSchema = piece ? {
         {formatLongDate(piece.date) && <> &middot; {formatLongDate(piece.date)}</>}
       </p>
     )}
+    {piece?.awardNote && (
+      <p class="account-award-note"><strong class="award-note">{piece.awardNote}</strong></p>
+    )}
     {isStarCrossed && <StarCrossedCoda />}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
@@ -466,6 +469,11 @@ const breadcrumbSchema = piece ? {
     font-size: 0.78rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+  }
+
+  .account-award-note {
+    margin: 4px 0 0;
+    font-size: 0.78rem;
   }
 
   .account-outbound {

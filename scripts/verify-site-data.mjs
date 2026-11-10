@@ -400,6 +400,10 @@ if (Array.isArray(data.pieces)) {
       addWarning(`${label}: excerpt is empty.`);
     }
 
+    if ('awardNote' in piece) {
+      requireString(piece.awardNote, `${label}.awardNote`);
+    }
+
     if (piece.account !== undefined) {
       if (!requireObject(piece.account, `${label}.account`)) return;
 

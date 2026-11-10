@@ -25,7 +25,7 @@ const mobileAvifQuality = ['dreams', 'portici', 'the-real'].includes(cycle.id) ?
 
 {
   disabled ? (
-    <div class="tile tile--disabled" data-cycle-id={cycle.id} aria-disabled="true">
+    <div class="tile tile--disabled has-card-rim" data-cycle-id={cycle.id} aria-disabled="true">
       <div class="tile-media">
         {cover ? (
           <OptimizedImage
@@ -51,10 +51,10 @@ const mobileAvifQuality = ['dreams', 'portici', 'the-real'].includes(cycle.id) ?
         <h3 class="tile-title"><CycleName name={cycle.name} /></h3>
         {teaser && <p class="tile-caption">{teaser}</p>}
       </div>
-      <span class="home-cycle-rim" aria-hidden="true"></span>
+      <span class="card-rim" aria-hidden="true"></span>
     </div>
   ) : (
-    <a class="tile" data-cycle-id={cycle.id} href={href}>
+    <a class="tile has-card-rim" data-cycle-id={cycle.id} href={href}>
       <div class="tile-media">
         {cover ? (
           <OptimizedImage
@@ -80,7 +80,7 @@ const mobileAvifQuality = ['dreams', 'portici', 'the-real'].includes(cycle.id) ?
         <h3 class="tile-title"><CycleName name={cycle.name} /></h3>
         {teaser && <p class="tile-caption">{teaser}</p>}
       </div>
-      <span class="home-cycle-rim" aria-hidden="true"></span>
+      <span class="card-rim" aria-hidden="true"></span>
     </a>
   )
 }

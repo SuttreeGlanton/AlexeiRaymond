@@ -59,6 +59,7 @@ export interface Piece {
   /** Ordered cover variations used by a piece's presentation. Includes cover. */
   coverVariants?: string[];
   issue?: string;
+  awardNote?: string;
   note?: string;
   excerpt?: string;
   genre?: Genre;

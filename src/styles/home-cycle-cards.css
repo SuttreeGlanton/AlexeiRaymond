@@ -1,4 +1,3 @@
-.home-cycle-rim,
 .home-cycle-suit {
   display: none;
 }
@@ -29,51 +28,6 @@
       stroke-width: 2;
       filter: var(--home-cycle-suit-shadow, none);
     }
-
-    & > .tile::before,
-    & > .tile > .home-cycle-rim {
-      position: absolute;
-      inset: -1px;
-      border-radius: inherit;
-      pointer-events: none;
-    }
-
-    & > .tile::before {
-      content: '';
-      display: var(--home-cycle-glow, none);
-      box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--initial-accent) 32%, transparent),
-        0 0 12px color-mix(in srgb, var(--initial-accent) 36%, transparent),
-        0 0 30px color-mix(in srgb, var(--initial-accent) 22%, transparent);
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-      & > .tile > .home-cycle-rim {
-        display: var(--home-cycle-glow, none);
-        z-index: 1;
-        overflow: clip;
-        padding: 2px;
-        /* Keep the rim mask fixed as the gradient moves underneath. */
-        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-        mask-composite: exclude;
-      }
-
-      & > .tile > .home-cycle-rim::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 250%;
-        height: 250%;
-        background: linear-gradient(
-          135deg,
-          transparent 40%,
-          color-mix(in srgb, var(--initial-accent) 85%, transparent) 50%,
-          transparent 60%
-        );
-        animation: home-cycle-rim-shimmer 2.9s ease-in-out infinite;
-      }
-    }
   }
 }
 
@@ -84,14 +38,14 @@
     padding-top: 24px;
 
     & > .tile.is-mobile-focus {
-      --home-cycle-glow: block;
+      --card-rim-display: block;
       --home-cycle-suit-ink: var(--initial-accent);
       --home-cycle-suit-shadow: var(--home-cycle-lit-shadow);
       z-index: 1;
       overflow: visible;
     }
 
-    & .home-cycle-rim {
+    & .card-rim {
       /* The three loop copies share focus. Skip offscreen rim rendering. */
       content-visibility: auto;
     }
@@ -102,17 +56,12 @@
   .home-cycle-grid[data-home-cycle-fan]:not(.is-fan-pending, .is-fan-entering) {
     & > .tile.is-fan-focus,
     &:not(:has(> .tile.is-fan-focus)) > .tile:is(:hover, :focus-visible) {
-      --home-cycle-glow: block;
+      --card-rim-display: block;
       --home-cycle-suit-ink: var(--initial-accent);
       --home-cycle-suit-shadow: var(--home-cycle-lit-shadow);
       overflow: visible;
     }
   }
-}
-
-@keyframes home-cycle-rim-shimmer {
-  0% { transform: translate(-60%, -60%); }
-  75%, 100% { transform: translate(0, 0); }
 }
 
 .home-cycle-flux {

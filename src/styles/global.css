@@ -469,6 +469,64 @@ img {
   background: var(--panel-lift);
 }
 
+.has-card-rim {
+  --card-rim-color: var(--initial-accent);
+}
+
+.has-card-rim::before,
+.card-rim {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.has-card-rim::before {
+  content: '';
+  display: var(--card-rim-display, none);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--card-rim-color) 32%, transparent),
+    0 0 12px color-mix(in srgb, var(--card-rim-color) 36%, transparent),
+    0 0 30px color-mix(in srgb, var(--card-rim-color) 22%, transparent);
+}
+
+.card-rim {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card-rim {
+    display: var(--card-rim-display, none);
+    z-index: 1;
+    overflow: clip;
+    padding: 2px;
+    /* Keep the rim mask fixed as the gradient moves underneath. */
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+  }
+
+  .card-rim::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 250%;
+    height: 250%;
+    background: linear-gradient(
+      135deg,
+      transparent 40%,
+      color-mix(in srgb, var(--card-rim-color) 85%, transparent) 50%,
+      transparent 60%
+    );
+    animation: card-rim-shimmer 2.9s ease-in-out infinite;
+  }
+}
+
+@keyframes card-rim-shimmer {
+  0% { transform: translate(-60%, -60%); }
+  75%, 100% { transform: translate(0, 0); }
+}
+
 .tile-media,
 .card-media {
   position: relative;
@@ -742,6 +800,19 @@ img {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 12px;
+}
+
+.award-note {
+  color: #d0b991;
+  font-weight: 700;
+}
+
+.card-meta:has(.card-award-note) {
+  row-gap: 3px;
+}
+
+.card-award-note {
+  flex-basis: 100%;
 }
 
 .card-note,
@@ -1135,6 +1206,21 @@ img {
 .chronology-publication-separator {
   padding: 0 0.35em;
   color: var(--dim);
+}
+
+.chronology-award-note {
+  display: inline-block;
+}
+
+@media (max-width: 640px) {
+  .chronology-award-note {
+    display: block;
+    margin-top: 1px;
+  }
+
+  .chronology-award-note .chronology-publication-separator {
+    display: none;
+  }
 }
 
 .chronology-read-link {
@@ -2276,6 +2362,24 @@ img {
 
 .cycle-piece-carousel .card-body {
   flex: 1;
+}
+
+.cycle-piece-carousel > .has-card-rim {
+  --card-rim-color: #d7a84c;
+}
+
+.cycle-piece-carousel > .has-card-rim:has(:focus-visible) {
+  --card-rim-display: block;
+  overflow: visible;
+  z-index: 1;
+}
+
+@media (hover: hover) {
+  .cycle-piece-carousel > .has-card-rim:hover {
+    --card-rim-display: block;
+    overflow: visible;
+    z-index: 1;
+  }
 }
 
 @media (min-width: 641px) {
