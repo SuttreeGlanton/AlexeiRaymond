@@ -2368,7 +2368,7 @@ img {
   --card-rim-color: #d7a84c;
 }
 
-.cycle-piece-carousel > .has-card-rim:has(:focus-visible) {
+.cycle-piece-carousel > .has-card-rim:is(.is-mobile-focus, :has(:focus-visible)) {
   --card-rim-display: block;
   overflow: visible;
   z-index: 1;
@@ -2390,6 +2390,12 @@ img {
 }
 
 @media (max-width: 640px) {
+  .cycle-piece-carousel:has(> .has-card-rim) {
+    /* Give the halo room above the cards inside the scrollport. */
+    margin-top: -18px;
+    padding-top: 24px;
+  }
+
   .cycle-piece-carousel .piece-card {
     transition: border-color 320ms ease, background 320ms ease, opacity 320ms ease;
   }
