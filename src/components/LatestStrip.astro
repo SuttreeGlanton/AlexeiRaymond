@@ -3,14 +3,18 @@ import {
   publishedPieces,
   upcomingPieces,
   parseDate,
-  formatMonthYear,
+  formatIsoDate,
   publicationLabel,
   canLinkToPiece,
+  cycleByName,
 } from '../lib/data';
 import { withBase } from '../lib/paths';
+import { imageAsset } from '../lib/image-assets';
 import { selectPublicationCredits } from '../lib/publication-credits';
 import PublicationHeartbeat from './PublicationHeartbeat.astro';
 import InitialText from './InitialText.astro';
+import OptimizedImage from './OptimizedImage.astro';
+import CycleIcon from './CycleIcon.astro';
 
 const published = publishedPieces();
 const latest = published
@@ -62,203 +66,433 @@ const latestHref = latest?.account
     ? latest.link
     : '';
 const latestExternal = Boolean(latestHref) && !latest?.account;
+const latestCover = imageAsset(latest?.cover);
+const latestCycle = latest ? cycleByName.get(latest.cycle) : undefined;
+const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en-GB', {
+  month: 'short',
+  year: 'numeric',
+});
 ---
 
 {latest && (
-  <section class="page-shell latest-strip" aria-label="Latest and forthcoming work">
+  <section class="page-shell latest-strip" aria-labelledby="home-publications">
     <div class="latest-strip-band">
-      <div class="latest-strip-head">
-        <h2>Publications</h2>
-        <a class="latest-strip-chronology" href={withBase('chronology/')}><span><InitialText text="Chronology" /></span> <span class="home-link-arrow" aria-hidden="true">→</span></a>
-      </div>
-      <p class:list={['latest-strip-credit', { 'latest-strip-credit--paired': pairedCredits }]}>
-        <PublicationHeartbeat names={published.map((piece) => piece.publication)} initial={credits.published.slice(0, 2)} />
-        {credits.upcoming.length > 0 && (
-          <span class="latest-strip-credit-line">
-            <span class="credit-wide">Forthcoming in </span>
-            <span class="credit-mobile credit-label">Coming in</span>
-            {forthcomingCreditParts.map((part) => (
-              part.type === 'element' ? <i>{part.value}</i> : <span class="credit-wide">{part.value}</span>
-            ))}<span class="credit-wide">.</span>
-          </span>
+      <h2 class="latest-strip-heading" id="home-publications">Publications</h2>
+      <article class:list={['latest-release-card', { 'has-cover': latest.cover }]}>
+        {latest.cover && (
+          <div class="latest-release-media">
+            <OptimizedImage
+              path={latest.cover}
+              image={latestCover}
+              alt=""
+              sizes="(max-width: 640px) calc(100vw - 24px), 212px"
+            />
+            {latestCycle && (
+              <span class="latest-release-glyph" role="img" aria-label={`${latestCycle.name} cycle`}>
+                <CycleIcon id={latestCycle.id} />
+              </span>
+            )}
+            {latestDateLabel && (
+              <time class="date-mark latest-release-date" datetime={formatIsoDate(latest.date)}>{latestDateLabel}</time>
+            )}
+          </div>
         )}
-      </p>
-      <div class="latest-strip-row">
-        <p class="latest-strip-item">
-          <span class="latest-strip-overline">Latest</span>
-          {latestHref ? (
+        <div class="latest-release-body">
+          <p class="latest-strip-overline">Latest</p>
+          <h3 class="latest-release-title"><InitialText text={latest.title} capitalInitials /></h3>
+          <p class="latest-release-meta">
+            {publicationLabel(latest)}
+            {!latest.cover && latestDateLabel && <> · <time datetime={formatIsoDate(latest.date)}>{latestDateLabel}</time></>}
+          </p>
+          {latest.excerpt && <p class="latest-release-excerpt">&ldquo;{latest.excerpt}&rdquo;</p>}
+          {latestHref && (
             <a
-              class="latest-strip-title"
+              class="latest-release-read"
               href={latestHref}
+              aria-label={`Read ${latest.title}${latestExternal ? ' (opens in a new tab)' : ''}`}
               {...(latestExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-            ><span><InitialText text={latest.title} /></span> <span class="home-link-arrow" aria-hidden="true">→</span></a>
-          ) : (
-            <span class="latest-strip-title">{latest.title}</span>
+            >
+              Read <span class="home-link-arrow" aria-hidden="true">→</span>
+            </a>
           )}
-          <span class="latest-strip-meta"><i>{publicationLabel(latest)}</i>{formatMonthYear(latest.date) ? `, ${formatMonthYear(latest.date)}` : ''}</span>
-        </p>
+        </div>
+      </article>
+      <a class="latest-strip-chronology" href={withBase('chronology/')}>
+        <span><InitialText text="Chronology" /></span> <span class="home-link-arrow" aria-hidden="true">→</span>
+      </a>
+      <div class="latest-strip-notes">
         {forthcoming && (
-          <p class="latest-strip-item">
+          <p class="latest-strip-forthcoming">
             <span class="latest-strip-overline">Soon</span>
             <span class="latest-strip-title">{forthcoming.title}</span>
-            <span class="latest-strip-meta"><i>{publicationLabel(forthcoming)}</i></span>
+            <span>{publicationLabel(forthcoming)}</span>
           </p>
         )}
-        <p class="latest-strip-item latest-strip-item--chronology">
-          <a class="latest-strip-chronology" href={withBase('chronology/')}><span><InitialText text="Chronology" /></span> <span class="home-link-arrow" aria-hidden="true">→</span></a>
+        <p class:list={['latest-strip-credit', { 'latest-strip-credit--paired': pairedCredits }]}>
+          <PublicationHeartbeat names={published.map((piece) => piece.publication)} initial={credits.published.slice(0, 2)} />
+          {credits.upcoming.length > 0 && (
+            <span class="latest-strip-credit-line">
+              <span class="credit-wide">Forthcoming in </span>
+              <span class="credit-mobile credit-label">Coming in</span>
+              {forthcomingCreditParts.map((part) => (
+                part.type === 'element' ? <i>{part.value}</i> : <span class="credit-wide">{part.value}</span>
+              ))}<span class="credit-wide">.</span>
+            </span>
+          )}
         </p>
       </div>
     </div>
   </section>
 )}
 
+<script>
+  const card = document.querySelector('.latest-release-card');
+
+  if (card && 'IntersectionObserver' in window) {
+    const mobile = window.matchMedia('(max-width: 640px)');
+    let observer: IntersectionObserver | undefined;
+
+    const syncFocus = () => {
+      observer?.disconnect();
+      observer = undefined;
+
+      if (!mobile.matches) {
+        card.classList.remove('is-mobile-focus');
+        return;
+      }
+
+      // A narrow band tracks the viewport center without a scroll handler.
+      const inset = Math.max(0, Math.floor(document.documentElement.clientHeight / 2) - 1);
+      observer = new IntersectionObserver(([entry], activeObserver) => {
+        if (activeObserver === observer) {
+          card.classList.toggle('is-mobile-focus', entry.isIntersecting);
+        }
+      }, { rootMargin: `-${inset}px 0px` });
+      observer.observe(card);
+    };
+
+    window.addEventListener('resize', syncFocus);
+    syncFocus();
+  }
+</script>
+
 <style>
-  /* On mobile the divider sits below the latest and forthcoming entries. */
   .latest-strip-band {
-    display: flex;
-    flex-direction: column;
-    background: var(--banner-divider);
-    padding: 1.5rem 0;
-    margin: 0 0 0.75rem;
-  }
-
-  /* The desktop heading has its own chronology link. */
-  .latest-strip-head {
-    display: none;
-  }
-
-  .latest-strip-row {
-    order: 1;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
-    gap: 1.5rem 3rem;
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'release release' 'soon chronology' 'credits credits';
+    gap: 1.4rem 1rem;
+    padding: 0.5rem 0 2.5rem;
   }
 
-  .latest-strip-item {
-    display: grid;
-    justify-items: start;
-    gap: 0.35rem;
-    min-width: 0;
+  .latest-strip-notes {
+    display: contents;
+  }
+
+  .latest-strip-heading {
+    grid-area: heading;
     margin: 0;
-    font-family: var(--sans);
-    font-size: 0.82rem;
-    letter-spacing: 0.01em;
-    color: var(--text-soft);
+    font: 400 var(--home-section)/1.15 var(--serif);
+  }
+
+  .latest-release-card {
+    position: relative;
+    grid-area: release;
+    display: grid;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--border-strong);
+    border-radius: 7px;
+    background: var(--panel);
+    box-shadow: 0 10px 24px -14px rgb(0 0 0 / 0.8);
+    transition: border-color 240ms ease, box-shadow 240ms ease;
+  }
+
+  .latest-release-card:is(.is-mobile-focus, :has(.latest-release-read:is(:hover, :focus-visible))) {
+    border-color: color-mix(in srgb, var(--initial-accent) 38%, var(--border-strong));
+    box-shadow: 0 12px 24px -16px color-mix(in srgb, var(--initial-accent) 42%, transparent);
+
+    & .latest-release-media :global(img) {
+      filter: brightness(0.98);
+    }
+
+    & .latest-release-title :global(.text-initial),
+    & .latest-release-glyph {
+      color: var(--initial-accent);
+    }
+
+    & .latest-release-glyph {
+      filter: drop-shadow(0 0 0.8px #000) drop-shadow(0 1px 1.2px rgb(0 0 0 / 80%));
+    }
+  }
+
+  .latest-release-media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 5 / 3;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-soft);
+  }
+
+  .latest-release-media :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 73%;
+    filter: saturate(0.86) brightness(0.88);
+    transition: filter 280ms ease, transform 280ms ease;
+  }
+
+  .latest-release-date {
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  .latest-release-glyph {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    display: grid;
+    color: #000;
+    pointer-events: none;
+  }
+
+  .latest-release-glyph :global(.cycle-icon) {
+    width: 30px;
+    height: 30px;
+    margin: 0;
+  }
+
+  .latest-release-glyph :global(svg) {
+    stroke-width: 2;
+  }
+
+  .latest-release-body {
+    min-width: 0;
+    padding: 1.15rem 1.2rem 1.3rem;
+    font-family: var(--serif);
   }
 
   .latest-strip-overline,
   .latest-strip-credit :global(.credit-label) {
-    text-transform: uppercase;
-    font-size: 0.69rem;
-    letter-spacing: 0.14em;
+    margin: 0;
     color: var(--muted);
-    margin-bottom: 0.15rem;
+    font: 400 0.69rem/1.4 var(--sans);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
-  .latest-strip-title {
-    font-family: var(--serif);
-    font-size: 1.55rem;
-    line-height: 1.25;
-    letter-spacing: 0.01em;
+  .latest-release-title {
+    margin: 0.55rem 0 0;
     color: var(--text);
-    text-decoration: none;
+    font: 400 clamp(2.05rem, 10vw, 2.5rem)/1.06 var(--serif);
+    overflow-wrap: anywhere;
   }
 
-  .latest-strip-title,
-  .latest-strip-title > span:first-child {
+  .latest-release-title :global(.text-initial) {
+    transition: color 240ms ease;
+  }
+
+  .latest-release-meta {
+    margin: 0.3rem 0 0;
+    color: var(--text-soft);
+    font-size: 0.96rem;
+    line-height: 1.35;
+  }
+
+  .latest-release-excerpt {
+    max-width: 55ch;
+    margin: 0.95rem 0 0;
+    color: var(--text-soft);
+    font: italic 1.12rem/1.3 var(--serif);
     text-wrap: balance;
   }
 
-  a.latest-strip-title {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5em;
-    min-height: 44px;
-  }
-
+  .latest-release-read,
   .latest-strip-chronology {
     display: inline-flex;
     align-items: center;
-    gap: 0.5em;
-    min-height: 44px;
-    font-size: 0.81rem;
+    gap: 0.55em;
+    width: fit-content;
+  }
+
+  .latest-release-read {
+    margin-top: 0.95rem;
+    color: var(--text);
+    font-size: 1.12rem;
+    line-height: 1.2;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* The reading link covers the card while its heading and excerpt stay separate. */
+  .latest-release-read::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+  }
+
+  .latest-release-card:has(.latest-release-read:focus-visible) {
+    outline: 1px solid var(--focus);
+    outline-offset: 5px;
+  }
+
+  .latest-release-read:focus-visible {
+    outline: none;
+  }
+
+  .latest-strip-forthcoming {
+    grid-area: soon;
+    display: grid;
+    gap: 0.22rem;
+    min-width: 0;
+    margin: 0;
     color: var(--text-soft);
-    text-decoration: none;
+    font: 400 0.94rem/1.35 var(--serif);
+  }
+
+  .latest-strip-title {
+    margin-top: 0.22rem;
+    color: var(--text);
+    font-size: clamp(1.32rem, 4.8vw, 1.75rem);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  .latest-strip-chronology {
+    grid-area: chronology;
+    align-self: center;
+    justify-self: end;
+    min-height: 44px;
+    color: var(--text-soft);
+    font: 400 0.94rem/1.4 var(--serif);
     transition: color 200ms ease;
   }
 
-  .latest-strip-chronology:hover,
-  .latest-strip-chronology:focus-visible {
+  .latest-strip-chronology:is(:hover, :focus-visible) {
     color: var(--text);
   }
 
   .latest-strip-credit {
-    order: 2;
-    margin: 1.35rem 0 0;
-    font-family: var(--sans);
-    font-size: 0.78rem;
-    letter-spacing: 0.01em;
+    grid-area: credits;
+    margin: 0;
+    padding-top: 1rem;
+    background: var(--banner-divider);
     color: var(--muted);
-    text-wrap: pretty;
+    font: 400 0.94rem/1.45 var(--serif);
   }
 
   .latest-strip-credit-line {
     display: block;
+    margin-top: 1rem;
   }
 
   .latest-strip-credit :global(.credit-mobile) {
     display: none;
   }
 
-  .latest-strip-item--chronology {
-    align-self: center;
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .latest-release-card:has(.latest-release-read:is(:hover, :focus-visible)) .latest-release-media :global(img) {
+      transform: scale(1.018);
+    }
   }
 
   @media (max-width: 860px) {
-    .latest-strip-row {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1.25rem 2rem;
+    .latest-strip-heading {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  @media (min-width: 641px) {
+    .latest-release-card.has-cover {
+      grid-template-columns: clamp(186px, 26%, 212px) minmax(0, 1fr);
+      min-height: 17.8rem;
     }
 
-    .latest-strip-item--chronology {
-      grid-column: 1 / -1;
+    .latest-release-media {
+      aspect-ratio: auto;
+      border-right: 1px solid var(--border);
+      border-bottom: 0;
+    }
+
+    .latest-release-media :global(img) {
+      object-position: center;
+      filter: saturate(0.75) brightness(0.86);
+    }
+
+    .latest-release-body {
+      align-self: center;
+      padding: 1.7rem clamp(1.35rem, 2.5vw, 2.15rem);
+    }
+
+    .latest-release-title {
+      font-size: clamp(2.5rem, 3.75vw, 3.2rem);
+    }
+
+    .latest-release-meta {
+      font-size: 1.03rem;
+    }
+
+    .latest-release-excerpt {
+      margin-top: 1.35rem;
+      font-size: 1.3rem;
+    }
+
+    .latest-release-read {
+      margin-top: 1.25rem;
+      font-size: 1.22rem;
+    }
+  }
+
+  @media (min-width: 861px) {
+    .latest-strip-band {
+      grid-template-columns: minmax(0, 2.7fr) minmax(0, 1fr);
+      grid-template-areas: 'heading chronology' 'release notes';
+      column-gap: clamp(1.5rem, 3.8vw, 3.25rem);
+      row-gap: 1.05rem;
+      padding: 1.75rem 0 0;
+      background: var(--banner-divider);
+    }
+
+    .latest-strip-notes {
+      grid-area: notes;
+      display: flex;
+      flex-direction: column;
+      gap: 1.55rem;
+      padding-top: 1rem;
+    }
+
+    .latest-strip-forthcoming {
+      font-size: var(--home-detail);
+    }
+
+    .latest-strip-forthcoming .latest-strip-overline {
+      font: 400 var(--home-detail)/1.4 var(--serif);
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .latest-strip-chronology {
+      font-size: var(--home-link);
+    }
+
+    .latest-strip-credit {
+      padding-top: 0;
+      background: none;
+      font-size: var(--home-detail);
     }
   }
 
   @media (max-width: 640px) {
-    .latest-strip-band {
-      background: none;
-      padding: 1rem 0 2.5rem;
-      margin-bottom: 0;
-    }
-
-    .latest-strip-row {
-      display: contents;
-    }
-
-    .latest-strip-item {
-      order: 1;
-    }
-
-    .latest-strip-item + .latest-strip-item {
-      margin-top: 1.75rem;
-    }
-
-    .latest-strip-item.latest-strip-item--chronology {
-      order: 3;
-      align-self: flex-start;
-      margin-top: 0.75rem;
-    }
-
-    .latest-strip-chronology {
-      font-family: var(--serif);
-    }
-
-    .latest-strip-credit {
-      margin-top: 1.5rem;
-      padding-top: 1rem;
-      background: var(--banner-divider);
+    .latest-release-card.is-mobile-focus .home-link-arrow {
+      color: var(--initial-accent);
     }
 
     .latest-strip-credit :global(.publication-heartbeat) {
@@ -288,10 +522,6 @@ const latestExternal = Boolean(latestHref) && !latest?.account;
 
     .latest-strip-credit :global(.credit-tail) {
       margin-top: 0.2rem;
-    }
-
-    .latest-strip-credit-line {
-      margin-top: 1rem;
     }
   }
 

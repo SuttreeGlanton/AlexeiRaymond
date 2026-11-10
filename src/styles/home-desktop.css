@@ -4,7 +4,6 @@
     --home-reading: 1.375rem;
     --home-link: 1.125rem;
     --home-detail: 1rem;
-    --home-title: 1.75rem;
     --home-section: 2.25rem;
   }
 
@@ -16,9 +15,6 @@
   .home-page .hero-kicker,
   .home-page .hero-start,
   .home-page .teaser-accordion-source,
-  .home-page .latest-strip .latest-strip-item,
-  .home-page .latest-strip .latest-strip-chronology,
-  .home-page .latest-strip .latest-strip-credit,
   .home-page .home-cycles .section-note {
     font-family: var(--serif);
     font-weight: 400;
@@ -29,8 +25,7 @@
   .home-page .brand { letter-spacing: 0; }
   .home-page .main-nav,
   .home-page .hero-start,
-  .home-page .teaser-accordion-source,
-  .home-page .latest-strip .latest-strip-chronology {
+  .home-page .teaser-accordion-source {
     font-size: var(--home-link);
     line-height: 1.45;
   }
@@ -90,55 +85,11 @@
     background: rgba(24, 24, 22, 0.9);
   }
 
-  .home-page .latest-strip .latest-strip-band {
-    display: block;
-    padding: 28px 0 0;
-    margin-bottom: 0;
-  }
-  .home-page .latest-strip .latest-strip-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 32px;
-    margin: 0;
-  }
-  .home-page .latest-strip .latest-strip-head h2,
   .home-page .home-cycles .section-head h2 {
     margin: 0;
     font: 400 var(--home-section)/1.15 var(--serif);
     letter-spacing: 0;
   }
-  .home-page .latest-strip .latest-strip-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 72px;
-  }
-  .home-page .latest-strip .latest-strip-item { gap: 6px; }
-  .home-page .latest-strip .latest-strip-overline,
-  .home-page .latest-strip .latest-strip-meta,
-  .home-page .latest-strip .latest-strip-credit {
-    font: 400 var(--home-detail)/1.45 var(--serif);
-    letter-spacing: 0;
-    text-transform: none;
-  }
-  .home-page .latest-strip .latest-strip-overline { margin: 0; color: var(--text-soft); }
-  .home-page .latest-strip .latest-strip-meta i { font-style: normal; }
-  .home-page .latest-strip .latest-strip-title {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    min-height: 44px;
-    font-size: var(--home-title);
-    line-height: 1.25;
-    letter-spacing: 0;
-  }
-  .home-page .latest-strip .latest-strip-credit {
-    max-width: calc((100% - 72px) / 2);
-    margin: 8px 0 24px;
-    line-height: 1.5;
-    color: var(--text-soft);
-    text-wrap: pretty;
-  }
-  .home-page .latest-strip .latest-strip-item--chronology { display: none; }
 
   .home-page .home-cycles {
     display: grid;

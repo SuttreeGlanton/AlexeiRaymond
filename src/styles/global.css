@@ -154,7 +154,7 @@ img {
 .interview-link:focus-visible .text-initial,
 .chronology-item:hover .chronology-piece-title .text-initial,
 .chronology-piece-title a:focus-visible .text-initial,
-:is(.hero-start, .teaser-accordion-source a, a.latest-strip-title, .latest-strip-chronology, .footer-nav a):is(:hover, :focus-visible) .text-initial,
+:is(.hero-start, .teaser-accordion-source a, .latest-strip-chronology, .footer-nav a):is(:hover, :focus-visible) .text-initial,
 .footer-social-link:is(:hover, :focus-visible),
 .hero-sound-toggle:is(:hover, :focus-visible, [aria-pressed='true']),
 .main-nav .nav-link:is(:hover, :focus-visible, [aria-current='page']) > span::first-letter,
@@ -3234,6 +3234,15 @@ img {
   flex: none;
   color: var(--text-soft);
   font: 400 0.95em/1 var(--serif);
+}
+
+@media (hover: hover) {
+  .home-page a:hover .home-link-arrow,
+  .home-page .footer-nav a[href='#']:hover > [aria-hidden='true'],
+  .home-page .mobile-menu-drilldown:hover .mobile-menu-chevron,
+  .home-page .mobile-cycle-back:hover > [aria-hidden='true'] {
+    color: var(--initial-accent);
+  }
 }
 
 
