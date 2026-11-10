@@ -1,15 +1,16 @@
 ---
 import TagList from './TagList.astro';
+import CycleIcon from './CycleIcon.astro';
 import InitialText from './InitialText.astro';
 import OptimizedImage from './OptimizedImage.astro';
 import type { Piece } from '../lib/data';
-import { canLinkToPiece, formatShortDate, isDefunct, isUpcoming, parseDate, publicationLabel } from '../lib/data';
+import { canLinkToPiece, cycleByName, formatShortDate, isDefunct, isUpcoming, parseDate, publicationLabel } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
 import { CARD_IMAGE_WIDTHS, imageAsset } from '../lib/image-assets';
 
 interface Props {
   piece: Piece;
-  showCycle?: boolean;
+  variant?: 'selected';
   storyOrder?: number;
   sourceOrder?: number;
   priority?: boolean;
@@ -21,7 +22,7 @@ interface Props {
 
 const {
   piece,
-  showCycle = false,
+  variant,
   storyOrder,
   sourceOrder,
   priority = false,
@@ -47,7 +48,9 @@ const longTitle = piece.title.length >= 18;
 const cycleTitleFit = piece.title === '193 Thoughts of You';
 const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-defunct' : ''}${longTitle ? ' has-long-title' : ''}${cycleTitleFit ? ' has-cycle-title-fit' : ''}`;
 
-const cycleLabel = showCycle ? `From ${/^the\s/i.test(piece.cycle) ? '' : 'the '}${piece.cycle} cycle` : '';
+const selected = variant === 'selected';
+const cycleLabel = selected ? `From ${/^the\s/i.test(piece.cycle) ? '' : 'the '}${piece.cycle} cycle` : '';
+const cycle = selected ? cycleByName.get(piece.cycle) : undefined;
 // Render the date as a compact cover plate to prevent metadata wrapping.
 const dateLabel = upcoming ? '' : formatShortDate(piece.date);
 const publicationTime = parseDate(piece.date)?.getTime() ?? 0;
@@ -73,13 +76,13 @@ const coverLinkLabel = [
   'Opens in a new tab.'
 ].filter(Boolean).join(' ');
 const metaParts = [
-  cycleLabel ? { text: cycleLabel } : null,
+  cycleLabel ? { text: cycleLabel, className: cycle ? 'card-cycle-label' : undefined } : null,
   piece.publication ? { text: publicationLabel(piece), className: 'card-publication' } : null
-].filter((part): part is { text: string; className?: string } => Boolean(part));
+].filter((part) => part !== null);
 ---
 
 <article
-  class:list={[className, { 'has-card-rim': piece.awardNote }]}
+  class:list={[className, { 'has-card-rim': selected || piece.awardNote, 'has-award-rim': piece.awardNote }]}
   data-piece-card
   data-story-order={storyOrder}
   data-source-order={sourceOrder}
@@ -119,6 +122,11 @@ const metaParts = [
       )}
     </div>
   )}
+  {cycle && (
+    <span class="card-cycle-glyph" role="img" aria-label={cycleLabel}>
+      <CycleIcon id={cycle.id} />
+    </span>
+  )}
   <div class="card-body">
     {storyOrderLabel && <span class="story-order-mark">{storyOrderLabel}</span>}
     <h2 class="card-title">
@@ -153,5 +161,5 @@ const metaParts = [
   {piece.account && (
     <a class="account-strip" href={accountHref} aria-label={`${accountLabel}: ${piece.title} on this site`}>{accountLabel} &rarr;</a>
   )}
-  {piece.awardNote && <span class="card-rim" aria-hidden="true"></span>}
+  {(selected || piece.awardNote) && <span class="card-rim" aria-hidden="true"></span>}
 </article>

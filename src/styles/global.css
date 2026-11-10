@@ -146,7 +146,7 @@ img {
 .chronology-cycle-links a:hover .cycle-initial,
 .chronology-cycle-links a:focus-visible .cycle-initial,
 :is(.selected-piece-grid, .cycle-piece-carousel) .piece-card:is(:hover, :focus-within) .card-title .text-initial,
-.cycle-piece-carousel .piece-card.is-mobile-focus .card-title .text-initial,
+:is(.selected-piece-grid, .cycle-piece-carousel) .piece-card.is-mobile-focus .card-title .text-initial,
 .cycle-hero .back-link:is(:hover, :focus-visible) .text-initial,
 .cycle-switcher-links a:is(:hover, :focus-visible, [aria-current='page']) .cycle-initial,
 :is(.cycle-order-toggle, .chronology-sort) .sort-button[aria-pressed='true'] .text-initial,
@@ -2185,172 +2185,65 @@ img {
   }
 }
 
-/* --- Selected Works mobile compact-card test --- */
+.card-cycle-glyph {
+  display: none;
+}
+
+/* --- Selected Works mobile gallery --- */
 @media (max-width: 640px) {
   .selected-piece-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    overflow-x: visible;
-    scroll-snap-type: none;
-    padding-bottom: clamp(54px, 11vw, 92px);
+    /* Center both end cards and leave space for the halo at the edges. */
+    margin: -18px -11px 0;
+    padding: 24px 9vw clamp(54px, 11vw, 92px);
   }
 
-  .selected-piece-grid .piece-card {
-    display: grid;
-    grid-template-columns: 86px minmax(0, 1fr);
-    flex: none;
-    min-height: 122px;
-    scroll-snap-align: none;
+  .selected-piece-grid > .piece-card {
+    flex-basis: 82vw;
   }
 
-  .selected-piece-grid .piece-card > .card-cover-link,
-  .selected-piece-grid .piece-card > .card-media {
-    grid-column: 1;
-    grid-row: 1;
-    display: block;
-    min-width: 0;
-  }
-
-  .selected-piece-grid .card-media {
-    width: 86px;
-    height: 100%;
-    min-height: 122px;
-    aspect-ratio: auto;
-    border-right: 1px solid var(--border);
-    border-bottom: 0;
-  }
-
-  .selected-piece-grid .card-media img,
-  .selected-piece-grid .card-media .placeholder {
-    height: 100%;
-  }
-
-  .selected-piece-grid .genre-mark {
-    top: 7px;
-    left: 7px;
-    right: auto;
-    max-width: calc(100% - 14px);
-    padding: 4px 5px 3px;
-    font-size: 0.48rem;
-    letter-spacing: 0.08em;
-  }
-
-  .selected-piece-grid .date-mark {
-    right: 7px;
-    bottom: 7px;
-    padding: 4px 5px 3px;
-    font-size: 0.48rem;
-    letter-spacing: 0.08em;
-  }
-
-  .selected-piece-grid .card-body {
-    grid-column: 2;
-    grid-row: 1;
-    min-width: 0;
-    padding: 13px 13px 12px;
-  }
-
-  .selected-piece-grid .card-title {
-    font-size: clamp(1.18rem, 5.4vw, 1.55rem);
-    line-height: 1.02;
-  }
-
-  .selected-piece-grid .card-meta {
-    gap: 4px 6px;
-    margin-top: 8px;
-    font-size: 0.62rem;
-    line-height: 1.35;
-  }
-
-  .selected-piece-grid .coming-soon {
-    margin-top: 8px;
-    font-size: 0.55rem;
-    letter-spacing: 0.14em;
-  }
-
-  .selected-piece-grid .card-mobile-excerpt,
-  .selected-piece-grid .card-note {
+  .selected-piece-grid .card-cycle-label,
+  .selected-piece-grid .card-cycle-label + .meta-separator {
     display: none;
   }
 
-  .selected-piece-grid .tags {
-    gap: 5px;
-    margin-top: 10px;
+  .selected-piece-grid .card-cycle-glyph {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 2;
+    display: grid;
+    color: #000;
+    pointer-events: none;
   }
 
-  .selected-piece-grid .tag {
-    padding: 4px 5px 3px;
-    font-size: 0.48rem;
-    letter-spacing: 0.12em;
+  .selected-piece-grid .card-cycle-glyph .cycle-icon {
+    width: 30px;
+    height: 30px;
+    margin: 0;
   }
 
-  .selected-piece-grid .account-strip {
-    grid-column: 1 / -1;
-  }
-}
-
-/* --- Selected Works mobile compact-card refinement --- */
-@media (max-width: 640px) {
-  .selected-piece-grid .piece-card {
-    grid-template-columns: 112px minmax(0, 1fr);
-    min-height: 148px;
-  }
-
-  .selected-piece-grid .card-media {
-    width: 112px;
-    min-height: 148px;
+  .selected-piece-grid .card-cycle-glyph svg {
+    stroke-width: 2;
   }
 
   .selected-piece-grid .genre-mark {
-    top: 8px;
-    left: 8px;
-    right: auto;
-    max-width: calc(100% - 16px);
-    padding: 4px 6px 3px;
-    font-size: 0.48rem;
-    letter-spacing: 0.07em;
-    line-height: 1;
-    white-space: nowrap;
-  }
-
-  .selected-piece-grid .date-mark {
     top: auto;
-    right: 8px;
-    bottom: 8px;
-    left: auto;
-    width: auto;
-    min-width: 0;
-    height: auto;
-    min-height: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px 6px 3px;
-    border-radius: 5px;
-    font-size: 0.48rem;
-    letter-spacing: 0.08em;
-    line-height: 1;
-    white-space: nowrap;
-    writing-mode: horizontal-tb;
-    transform: none;
+    bottom: 10px;
   }
 
-  .selected-piece-grid .card-body {
-    padding: 15px 15px 13px;
+  .selected-piece-grid .piece-card .date-mark {
+    opacity: 1;
   }
 
-  .selected-piece-grid .card-title {
-    font-size: clamp(1.28rem, 5.5vw, 1.68rem);
+  .selected-piece-grid > .piece-card:is(.is-mobile-focus, :has(:focus-visible)) {
+    --card-rim-display: block;
+    overflow: visible;
+    z-index: 1;
   }
 
-  .selected-piece-grid .card-meta {
-    margin-top: 9px;
-    font-size: 0.65rem;
-  }
-
-  .selected-piece-grid .tags {
-    margin-top: 12px;
+  .selected-piece-grid > .piece-card:is(.is-mobile-focus, :has(:focus-visible)) .card-cycle-glyph {
+    color: var(--card-rim-color);
+    filter: drop-shadow(0 0 0.8px #000) drop-shadow(0 1px 1.2px rgb(0 0 0 / 80%));
   }
 }
 
@@ -2364,18 +2257,18 @@ img {
   flex: 1;
 }
 
-:is(.cycle-piece-carousel, .selected-piece-grid) > .has-card-rim {
+:is(.cycle-piece-carousel, .selected-piece-grid) > .has-award-rim {
   --card-rim-color: #d7a84c;
 }
 
-:is(.cycle-piece-carousel, .selected-piece-grid) > .has-card-rim:is(.is-mobile-focus, :has(:focus-visible)) {
+:is(.cycle-piece-carousel, .selected-piece-grid) > .has-award-rim:is(.is-mobile-focus, :has(:focus-visible)) {
   --card-rim-display: block;
   overflow: visible;
   z-index: 1;
 }
 
 @media (hover: hover) {
-  :is(.cycle-piece-carousel, .selected-piece-grid) > .has-card-rim:hover {
+  :is(.cycle-piece-carousel, .selected-piece-grid) > .has-award-rim:hover {
     --card-rim-display: block;
     overflow: visible;
     z-index: 1;
@@ -2396,21 +2289,21 @@ img {
     padding-top: 24px;
   }
 
-  .cycle-piece-carousel .piece-card {
+  :is(.cycle-piece-carousel, .selected-piece-grid) .piece-card {
     transition: border-color 320ms ease, background 320ms ease, opacity 320ms ease;
   }
 
-  .cycle-piece-carousel .piece-card.is-mobile-focus {
+  :is(.cycle-piece-carousel, .selected-piece-grid) .piece-card.is-mobile-focus {
     border-color: var(--border-strong);
     background: var(--panel-lift);
   }
 
-  .cycle-piece-carousel .piece-card.is-mobile-focus img {
+  :is(.cycle-piece-carousel, .selected-piece-grid) .piece-card.is-mobile-focus img {
     filter: grayscale(0) brightness(0.96) contrast(1.04);
     transform: scale(1.014);
   }
 
-  .cycle-piece-carousel .piece-card.is-mobile-focus .card-media {
+  :is(.cycle-piece-carousel, .selected-piece-grid) .piece-card.is-mobile-focus .card-media {
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.055);
   }
 }

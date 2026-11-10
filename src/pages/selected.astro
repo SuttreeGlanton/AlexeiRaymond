@@ -46,18 +46,18 @@ const mobileHeroMedia = '(min-width: 360px) and (max-width: 640px)';
 
     <div class="page-shell selected-hero-content">
       <h1 class="page-heading" id="selected-title" data-title-shimmer>Selected Works</h1>
-      <p class="page-intro cycle-intro">A selected variety from across the cycles.</p>
+      <p class="page-intro cycle-intro">A selected variety from across the&nbsp;cycles.</p>
     </div>
   </section>
 
   <div class="page-shell">
     {selected.length > 0 ? (
-      <section class="piece-grid selected-piece-grid" aria-label="Selected works">
+      <section class="piece-grid selected-piece-grid" aria-label="Selected works" data-mobile-focus-carousel>
         {selected.map((piece) => (
           <PieceCard
             piece={piece}
-            showCycle={true}
-            imageSizes="(max-width: 640px) 112px, (max-width: 860px) 45vw, 360px"
+            variant="selected"
+            imageSizes="(max-width: 640px) 82vw, (max-width: 860px) 45vw, 360px"
             titleLines={piece.titleLines}
             titleInitials
           />
@@ -69,6 +69,7 @@ const mobileHeroMedia = '(min-width: 360px) and (max-width: 640px)';
   </div>
 
   <script>
+    import '../scripts/mobile-piece-carousel';
     import { setRevealPosition, trackColorReveal } from '../scripts/color-reveal';
 
     const hero = document.querySelector<HTMLElement>('.selected-hero[data-color-reveal]');
@@ -76,6 +77,15 @@ const mobileHeroMedia = '(min-width: 360px) and (max-width: 640px)';
     if (hero && layer) {
       trackColorReveal(hero, (x, y, bounds) => setRevealPosition(layer, x, y, bounds));
     }
+
+    const gallery = document.querySelector<HTMLElement>('.selected-piece-grid');
+    const mobile = window.matchMedia('(max-width: 640px)');
+    gallery?.addEventListener('focusin', (event) => {
+      const link = event.target;
+      if (!mobile.matches || !(link instanceof HTMLElement) || !link.matches(':focus-visible')) return;
+
+      link.closest('[data-piece-card]')?.scrollIntoView({ block: 'nearest', inline: 'center' });
+    });
   </script>
 
   <style is:global>
