@@ -89,6 +89,11 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
                 alt=""
                 sizes="(max-width: 640px) calc(100vw - 24px), 212px"
               />
+              {latest.excerpt && (
+                <div class="latest-release-cover-quote" aria-hidden="true">
+                  <p>&ldquo;{latest.excerpt}&rdquo;</p>
+                </div>
+              )}
             </div>
             {latestCycle && (
               <span class="latest-release-glyph" role="img" aria-label={`${latestCycle.name} cycle`}>
@@ -180,6 +185,46 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
 </script>
 
 <style>
+  .latest-release-cover-quote {
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    .latest-release-cover-quote {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: end;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.86));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 320ms ease;
+    }
+
+    .latest-release-cover-quote p {
+      margin: 0;
+      color: var(--text-soft);
+      font: italic 0.98rem/1.35 var(--serif);
+      text-wrap: pretty;
+      white-space: pre-line;
+    }
+
+    .latest-release-card:is(.is-mobile-focus, :focus-within) .latest-release-cover-quote {
+      opacity: 1;
+    }
+
+    .latest-release-card.has-cover .latest-release-excerpt {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+  }
+
   .latest-strip-band {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
