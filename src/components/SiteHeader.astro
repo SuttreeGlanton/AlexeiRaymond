@@ -253,6 +253,32 @@ const desktopNavItems = [
 
     brand.setAttribute('data-brand-reveal', '');
 
+    // Mobile keeps the full name's layout width and slides the surname instead
+    // of reflowing the header on every animation frame. Measure only when its
+    // typography changes, including font loading and viewport resizing.
+    const firstFold = brand.querySelector<HTMLElement>('.brand-fold');
+    const mobileBrand = window.matchMedia('(max-width: 640px)');
+    const measureFold = () => {
+      if (!firstFold || !mobileBrand.matches) return;
+      brand.style.setProperty('--brand-first-fold-width', `${firstFold.getBoundingClientRect().width}px`);
+    };
+    const foldResize = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(measureFold)
+      : null;
+    const syncMobileBrand = () => {
+      foldResize?.disconnect();
+      if (!firstFold || !mobileBrand.matches) return;
+      measureFold();
+      foldResize?.observe(firstFold);
+    };
+
+    syncMobileBrand();
+    mobileBrand.addEventListener('change', syncMobileBrand);
+    if (!foldResize) {
+      window.addEventListener('resize', measureFold, { passive: true });
+      document.fonts.ready.then(measureFold);
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
