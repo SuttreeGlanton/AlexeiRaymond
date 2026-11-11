@@ -2209,10 +2209,24 @@ img {
 /* --- Footer, sound glyph, and mobile nav polish --- */
 .hero-sound-toggle,
 .mobile-menu-toggle,
+.site-header .brand,
+.tile[data-cycle-id],
+.chronology-with-visual .page-copy,
 .cycle-switcher-links a,
 .footer-nav a,
 .footer-social-link {
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Keep touch selection off navigation and bibliography text, not story prose.
+   Native links, keyboard focus, scrolling, and pinch zoom remain unchanged. */
+@media (hover: none) and (pointer: coarse) {
+  .site-header .brand,
+  .tile[data-cycle-id],
+  .chronology-with-visual .page-copy {
+    -webkit-user-select: none;
+    user-select: none;
+  }
 }
 
 .footer-inner {
