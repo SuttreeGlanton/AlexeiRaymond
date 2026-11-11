@@ -98,7 +98,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                     )}
                   </p>
                   <div class="chronology-meta">
-                    <TagList tags={piece.tags.filter((tag) => tag !== 'Upcoming')} />
+                    <TagList tags={piece.tags.filter((tag) => tag !== 'Upcoming').map((tag) => tag === 'In print' ? 'Print' : tag)} />
                     <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
                       <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
                       {pieceCycles.map((cycle, index) => (
@@ -177,7 +177,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                     )}
                   </p>
                   <div class="chronology-meta">
-                    <TagList tags={piece.tags} />
+                    <TagList tags={piece.tags.map((tag) => tag === 'In print' ? 'Print' : tag)} />
                     <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
                       <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
                       {pieceCycles.map((cycle, index) => (
