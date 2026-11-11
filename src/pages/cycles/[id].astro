@@ -79,7 +79,7 @@ const breadcrumbSchema = {
           class="cycle-switcher-toggle"
           type="button"
           aria-expanded="true"
-          aria-controls={`cycle-switcher-links-${cycle.id}`}
+          aria-controls={`cycle-switcher-panel-${cycle.id}`}
         >
           <span class="cycle-switcher-label">Cycles</span>
           <span class="cycle-switcher-current" style={`--cycle-number: ${currentCycleNumber}`}>
@@ -90,16 +90,20 @@ const breadcrumbSchema = {
             <path d="m4 6 4 4 4-4" />
           </svg>
         </button>
-        <div class="cycle-switcher-links" id={`cycle-switcher-links-${cycle.id}`}>
-          {otherCycles.map((item) => (
-            <a
-              href={withBase(`cycles/${item.id}/`)}
-              aria-current={item.id === cycle.id ? 'page' : undefined}
-            >
-              <span class="cycle-switcher-numeral" aria-hidden="true"></span>
-              <CycleName name={item.name} />
-            </a>
-          ))}
+        <div class="cycle-switcher-panel" id={`cycle-switcher-panel-${cycle.id}`}>
+          <div class="cycle-switcher-clip">
+            <div class="cycle-switcher-links">
+              {otherCycles.map((item) => (
+                <a
+                  href={withBase(`cycles/${item.id}/`)}
+                  aria-current={item.id === cycle.id ? 'page' : undefined}
+                >
+                  <span class="cycle-switcher-numeral" aria-hidden="true"></span>
+                  <CycleName name={item.name} />
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       </nav>
       <script is:inline>
@@ -108,14 +112,18 @@ const breadcrumbSchema = {
           const root = document.currentScript?.previousElementSibling;
           if (!(root instanceof HTMLElement)) return;
           const toggle = root.querySelector('.cycle-switcher-toggle');
+          const panel = root.querySelector('.cycle-switcher-panel');
           const links = root.querySelector('.cycle-switcher-links');
-          if (!(toggle instanceof HTMLButtonElement) || !(links instanceof HTMLElement)) return;
+          if (!(toggle instanceof HTMLButtonElement) || !(panel instanceof HTMLElement) || !(links instanceof HTMLElement)) return;
 
           const mobile = window.matchMedia('(max-width: 640px)');
           let mobileOpen = false;
 
           function render() {
-            toggle.setAttribute('aria-expanded', String(!mobile.matches || mobileOpen));
+            const expanded = !mobile.matches || mobileOpen;
+            toggle.setAttribute('aria-expanded', String(expanded));
+            // Keep closing/closed links out of keyboard and assistive navigation.
+            panel.inert = !expanded;
           }
 
           toggle.addEventListener('click', () => {
