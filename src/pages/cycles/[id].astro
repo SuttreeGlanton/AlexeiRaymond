@@ -37,6 +37,7 @@ const publishedCyclePieces = cycleSourcePieces
   .sort((a, b) => (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0));
 const cyclePieces = [...upcomingCyclePieces, ...publishedCyclePieces];
 const otherCycles = cycles.filter((item) => !item.disabled);
+const currentCycleNumber = otherCycles.findIndex((item) => item.id === cycle.id) + 1;
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -72,19 +73,77 @@ const breadcrumbSchema = {
     <CycleHero cycle={cycle} image={cycleBanner} />
 
     <section class="page-shell cycle-navigation" aria-label="Cycle navigation">
-      <nav class="cycle-switcher" aria-label="Cycle navigation">
+      <nav class="cycle-switcher" aria-label="Cycle navigation" data-cycle-switcher>
         <span class="cycle-switcher-label">Cycles</span>
-        <div class="cycle-switcher-links">
+        <button
+          class="cycle-switcher-toggle"
+          type="button"
+          aria-expanded="true"
+          aria-controls={`cycle-switcher-links-${cycle.id}`}
+        >
+          <span class="cycle-switcher-label">Cycles</span>
+          <span class="cycle-switcher-current" style={`--cycle-number: ${currentCycleNumber}`}>
+            <span class="cycle-switcher-numeral" aria-hidden="true"></span>
+            <CycleName name={cycle.name} />
+          </span>
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path d="m4 6 4 4 4-4" />
+          </svg>
+        </button>
+        <div class="cycle-switcher-links" id={`cycle-switcher-links-${cycle.id}`}>
           {otherCycles.map((item) => (
             <a
               href={withBase(`cycles/${item.id}/`)}
               aria-current={item.id === cycle.id ? 'page' : undefined}
             >
+              <span class="cycle-switcher-numeral" aria-hidden="true"></span>
               <CycleName name={item.name} />
             </a>
           ))}
         </div>
       </nav>
+      <script is:inline>
+        // Enhance before the first paint. Without JavaScript every cycle stays visible.
+        (() => {
+          const root = document.currentScript?.previousElementSibling;
+          if (!(root instanceof HTMLElement)) return;
+          const toggle = root.querySelector('.cycle-switcher-toggle');
+          const links = root.querySelector('.cycle-switcher-links');
+          if (!(toggle instanceof HTMLButtonElement) || !(links instanceof HTMLElement)) return;
+
+          const mobile = window.matchMedia('(max-width: 640px)');
+          let mobileOpen = false;
+
+          function render() {
+            toggle.setAttribute('aria-expanded', String(!mobile.matches || mobileOpen));
+          }
+
+          toggle.addEventListener('click', () => {
+            mobileOpen = !mobileOpen;
+            render();
+          });
+
+          root.addEventListener('keydown', (event) => {
+            if (event.key !== 'Escape' || !mobile.matches || !mobileOpen) return;
+            event.preventDefault();
+            mobileOpen = false;
+            render();
+            toggle.focus({ preventScroll: true });
+          });
+
+          mobile.addEventListener('change', () => {
+            // Never hide a focused link or leave focus on a hidden desktop toggle.
+            if (mobile.matches && links.contains(document.activeElement)) mobileOpen = true;
+            const moveFocus = !mobile.matches && document.activeElement === toggle;
+            render();
+            const currentLink = links.querySelector('[aria-current="page"]');
+            if (moveFocus && currentLink instanceof HTMLAnchorElement) currentLink.focus({ preventScroll: true });
+          });
+
+          render();
+          root.dataset.menuReady = '';
+        })();
+      </script>
     </section>
 
     <section class="page-shell" aria-label={`${cycle.name} pieces`}>
