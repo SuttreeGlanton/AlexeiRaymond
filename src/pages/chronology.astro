@@ -84,7 +84,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                     </h3>
                     {accountHref && (
                       <a class="chronology-read-link" href={accountHref} aria-label={`${readLabel}: ${piece.title} on this site`}>
-                        {readLabel} <ReadArrow />
+                        <span><InitialText text={readLabel} /></span> <ReadArrow />
                       </a>
                     )}
                   </div>
@@ -157,7 +157,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                     </h3>
                     {accountHref && (
                       <a class="chronology-read-link" href={accountHref} aria-label={`${readLabel}: ${piece.title} on this site`}>
-                        {readLabel} <ReadArrow />
+                        <span><InitialText text={readLabel} /></span> <ReadArrow />
                       </a>
                     )}
                   </div>

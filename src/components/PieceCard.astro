@@ -153,7 +153,7 @@ const metaParts = [
     <TagList tags={piece.tags.filter((tag) => tag !== 'Online' && tag !== 'In print')} />
   </div>
   {piece.account && (
-    <a class="account-strip" href={accountHref} aria-label={`${accountLabel}: ${piece.title} on this site`}>{accountLabel} <ReadArrow /></a>
+    <a class="account-strip" href={accountHref} aria-label={`${accountLabel}: ${piece.title} on this site`}><span><InitialText text={accountLabel} /></span> <ReadArrow /></a>
   )}
   {(selected || piece.awardNote) && <span class="card-rim" aria-hidden="true"></span>}
 </article>

@@ -883,21 +883,19 @@ img {
 .read-arrow {
   display: inline-block;
   flex: none;
-  width: 16px;
-  height: 14px;
   margin-left: 0.2em;
-  vertical-align: -0.22em;
+  font: 400 0.95em/1 var(--serif);
   transition: color 240ms ease;
 }
 
-.piece-card:is(:focus-within, .is-mobile-focus) .account-strip .read-arrow,
-.chronology-read-link:focus-visible .read-arrow {
+.piece-card:is(:focus-within, .is-mobile-focus) .account-strip :is(.text-initial, .read-arrow),
+.chronology-read-link:focus-visible :is(.text-initial, .read-arrow) {
   color: var(--initial-accent);
 }
 
 @media (hover: hover) {
-  .piece-card:hover .account-strip .read-arrow,
-  .chronology-read-link:hover .read-arrow {
+  .piece-card:hover .account-strip :is(.text-initial, .read-arrow),
+  .chronology-read-link:hover :is(.text-initial, .read-arrow) {
     color: var(--initial-accent);
   }
 }
@@ -1239,7 +1237,6 @@ img {
   display: inline-flex;
   align-items: center;
   min-height: 24px;
-  border-bottom: 1px solid transparent;
   padding: 5px 0 4px;
   color: var(--text-soft);
   font-size: 0.65rem;
@@ -1248,12 +1245,11 @@ img {
   line-height: 1.2;
   text-transform: uppercase;
   white-space: nowrap;
-  transition: border-color 180ms ease, color 180ms ease;
+  transition: color 180ms ease;
 }
 
 .chronology-read-link:hover,
 .chronology-read-link:focus-visible {
-  border-color: var(--text-soft);
   color: var(--text);
 }
 
@@ -1683,14 +1679,12 @@ img {
 }
 
 .chronology-cycle-links a {
-  border-bottom: 1px solid transparent;
   color: var(--muted);
-  transition: border-color 180ms ease, color 180ms ease;
+  transition: color 180ms ease;
 }
 
 .chronology-cycle-links a:hover,
 .chronology-cycle-links a:focus-visible {
-  border-color: var(--border-strong);
   color: var(--text-soft);
 }
 
