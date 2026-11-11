@@ -150,7 +150,7 @@ const metaParts = [
     {upcoming && <p class="coming-soon">Coming soon</p>}
     {piece.excerpt && <p class="card-mobile-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>}
     {piece.note && <p class="card-note">{piece.note}</p>}
-    <TagList tags={piece.tags} />
+    <TagList tags={piece.tags.filter((tag) => tag !== 'Online' && tag !== 'In print')} />
   </div>
   {piece.account && (
     <a class="account-strip" href={accountHref} aria-label={`${accountLabel}: ${piece.title} on this site`}>{accountLabel} <ReadArrow /></a>
