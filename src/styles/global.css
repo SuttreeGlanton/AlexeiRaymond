@@ -2195,6 +2195,7 @@ img {
 /* --- Footer, sound glyph, and mobile nav polish --- */
 .hero-sound-toggle,
 .mobile-menu-toggle,
+.cycle-switcher-links a,
 .footer-nav a,
 .footer-social-link {
   -webkit-tap-highlight-color: transparent;
