@@ -2,6 +2,7 @@
 import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TagList from '../components/TagList.astro';
+import ReadArrow from '../components/ReadArrow.astro';
 import CycleName from '../components/CycleName.astro';
 import InitialText from '../components/InitialText.astro';
 import chronologyVisual from '../assets/page-visuals/chronology-records.jpg';
@@ -69,7 +70,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
             {upcoming.map((piece) => {
               const pieceCycles = cycleLinksForPiece(piece);
               const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : undefined;
-              const readLabel = piece.genre === 'Poem' ? 'Read poem' : 'Read story';
+              const readLabel = 'Read';
 
               return (
                 <li class="chronology-item">
@@ -83,7 +84,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                     </h3>
                     {accountHref && (
                       <a class="chronology-read-link" href={accountHref} aria-label={`${readLabel}: ${piece.title} on this site`}>
-                        {readLabel} <span aria-hidden="true">&rarr;</span>
+                        {readLabel} <ReadArrow />
                       </a>
                     )}
                   </div>
@@ -97,7 +98,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                     )}
                   </p>
                   <div class="chronology-meta">
-                    <TagList tags={piece.tags.filter((tag) => tag !== 'Upcoming')} genre={piece.genre} />
+                    <TagList tags={piece.tags.filter((tag) => tag !== 'Upcoming')} />
                     <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
                       <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
                       {pieceCycles.map((cycle, index) => (
@@ -132,7 +133,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
             const pieceCycles = cycleLinksForPiece(piece);
             const monthYear = formatMonthYear(piece.date);
             const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : undefined;
-            const readLabel = piece.genre === 'Poem' ? 'Read poem' : 'Read story';
+            const readLabel = 'Read';
 
             return (
               <>
@@ -156,7 +157,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                     </h3>
                     {accountHref && (
                       <a class="chronology-read-link" href={accountHref} aria-label={`${readLabel}: ${piece.title} on this site`}>
-                        {readLabel} <span aria-hidden="true">&rarr;</span>
+                        {readLabel} <ReadArrow />
                       </a>
                     )}
                   </div>
@@ -176,7 +177,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                     )}
                   </p>
                   <div class="chronology-meta">
-                    <TagList tags={piece.tags} genre={piece.genre} />
+                    <TagList tags={piece.tags} />
                     <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
                       <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
                       {pieceCycles.map((cycle, index) => (

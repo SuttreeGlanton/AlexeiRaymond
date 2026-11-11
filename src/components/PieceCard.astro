@@ -1,5 +1,6 @@
 ---
 import TagList from './TagList.astro';
+import ReadArrow from './ReadArrow.astro';
 import CycleIcon from './CycleIcon.astro';
 import InitialText from './InitialText.astro';
 import OptimizedImage from './OptimizedImage.astro';
@@ -42,7 +43,7 @@ const mobileAvifQuality = [
   'covers/pieces/nazi.jpg',
 ].includes(piece.cover ?? '') ? 54 : undefined;
 const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : '';
-const accountLabel = piece.account?.label || 'Account';
+const accountLabel = /^read\b/i.test(piece.account?.label ?? '') ? 'Read' : piece.account?.label || 'Account';
 const displayTitleLines = titleLines ?? [piece.title];
 const longTitle = piece.title.length >= 18;
 const cycleTitleFit = piece.title === '193 Thoughts of You';
@@ -51,26 +52,17 @@ const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-d
 const selected = variant === 'selected';
 const cycleLabel = selected ? `From ${/^the\s/i.test(piece.cycle) ? '' : 'the '}${piece.cycle} cycle` : '';
 const cycle = selected ? cycleByName.get(piece.cycle) : undefined;
-// Render the date as a compact cover plate to prevent metadata wrapping.
+// Keep the abbreviated publication date on the cover's attached label.
 const dateLabel = upcoming ? '' : formatShortDate(piece.date);
-const publicationTime = parseDate(piece.date)?.getTime() ?? 0;
+const publicationDate = parseDate(piece.date);
+const publicationTime = publicationDate?.getTime() ?? 0;
+const publicationYear = publicationDate?.getFullYear();
 const storyOrderLabel = storyOrder ? String(storyOrder).padStart(2, '0') : '';
 
-// Use shortened genre labels for the compact cover plate.
-const GENRE_SHORT: Record<string, string> = {
-  'Short fiction': 'Short fiction',
-  'Flash fiction': 'Flash',
-  'Poem': 'Poem',
-  'Non-fiction': 'Non-fiction',
-  'Other': 'Other'
-};
-const genreLabel = piece.genre ? (GENRE_SHORT[piece.genre] ?? piece.genre) : '';
-const genreSlug = piece.genre ? piece.genre.toLowerCase().replace(/[^a-z]+/g, '-') : '';
 const imageLoading = priority ? 'eager' : 'lazy';
 const imageFetchPriority = priority ? 'high' : undefined;
 const coverLinkLabel = [
   `${piece.title} cover`,
-  genreLabel,
   dateLabel,
   `Read ${piece.title} at ${publicationLabel(piece)}.`,
   'Opens in a new tab.'
@@ -91,35 +83,37 @@ const metaParts = [
 >
   {linked ? (
     <a class="card-cover-link" href={piece.link} target="_blank" rel="noopener noreferrer" tabindex="-1" aria-label={coverLinkLabel}>
+      <div class="date-cover" data-publication-year={publicationYear}>
+        <div class="card-media">
+          {cover ? (
+            <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} mobileAvifQuality={mobileAvifQuality} />
+          ) : (
+            <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
+          )}
+          {piece.excerpt && (
+            <div class="card-overlay" aria-hidden="true">
+              <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
+            </div>
+          )}
+        </div>
+        {dateLabel && <span class="date-mark" data-publication-year={publicationYear}>{dateLabel}</span>}
+      </div>
+    </a>
+  ) : (
+    <div class="date-cover" data-publication-year={publicationYear}>
       <div class="card-media">
         {cover ? (
           <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} mobileAvifQuality={mobileAvifQuality} />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
         )}
-        {genreLabel && <span class="genre-mark" data-genre={genreSlug}>{genreLabel}</span>}
-        {dateLabel && <span class="date-mark">{dateLabel}</span>}
         {piece.excerpt && (
           <div class="card-overlay" aria-hidden="true">
             <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
           </div>
         )}
       </div>
-    </a>
-  ) : (
-    <div class="card-media">
-      {cover ? (
-        <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} mobileAvifQuality={mobileAvifQuality} />
-      ) : (
-        <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
-      )}
-      {genreLabel && <span class="genre-mark" data-genre={genreSlug}>{genreLabel}</span>}
-      {dateLabel && <span class="date-mark">{dateLabel}</span>}
-      {piece.excerpt && (
-        <div class="card-overlay" aria-hidden="true">
-          <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
-        </div>
-      )}
+      {dateLabel && <span class="date-mark" data-publication-year={publicationYear}>{dateLabel}</span>}
     </div>
   )}
   {cycle && (
@@ -159,7 +153,7 @@ const metaParts = [
     <TagList tags={piece.tags} />
   </div>
   {piece.account && (
-    <a class="account-strip" href={accountHref} aria-label={`${accountLabel}: ${piece.title} on this site`}>{accountLabel} &rarr;</a>
+    <a class="account-strip" href={accountHref} aria-label={`${accountLabel}: ${piece.title} on this site`}>{accountLabel} <ReadArrow /></a>
   )}
   {(selected || piece.awardNote) && <span class="card-rim" aria-hidden="true"></span>}
 </article>

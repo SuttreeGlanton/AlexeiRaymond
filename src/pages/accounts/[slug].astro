@@ -84,15 +84,7 @@ const archiveDescription = piece
 const archiveCoverImage = piece?.cover ? imageAsset(piece.cover) : undefined;
 const archiveCoverAlt = piece ? `${piece.title} cover` : '';
 const archiveDateLabel = piece ? formatShortDate(piece.date) : '';
-const archiveGenreLabels: Record<string, string> = {
-  'Short fiction': 'Short fiction',
-  'Flash fiction': 'Flash',
-  'Poem': 'Poem',
-  'Non-fiction': 'Non-fiction',
-  'Other': 'Other'
-};
-const archiveGenreLabel = piece?.genre ? (archiveGenreLabels[piece.genre] ?? piece.genre) : '';
-const archiveGenreSlug = piece?.genre ? piece.genre.toLowerCase().replace(/[^a-z]+/g, '-') : '';
+const archivePublicationYear = piece ? formatIsoDate(piece.date).slice(0, 4) : '';
 const seoGenreLabels: Record<string, string> = {
   'Short fiction': 'Short Fiction',
   'Flash fiction': 'Flash Fiction',
@@ -226,22 +218,23 @@ const breadcrumbSchema = piece ? {
       {piece?.cover && (
         <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}${isWitnesses ? ' witnesses-cover-slot' : ''}${isNow ? ' now-cover-slot' : ''}${isTruth ? ' truth-cover-slot' : ''}${isLothariOnline ? ' lothario-cover-slot' : ''}${isMourningHounds ? ' mourning-hounds-cover-slot' : ''}${isMarryMe ? ' marry-me-cover-slot' : ''}${isLeaves ? ' leaves-cover-slot' : ''}${isAlleyMoney ? ' alley-money-cover-slot' : ''}`}>
           <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
-            <div class="archive-cover-media">
-              {isStarCrossed ? <StarCrossedCover alt={archiveCoverAlt} cover={piece.cover} variants={piece.coverVariants ?? [piece.cover]} /> : <OptimizedImage
-                path={piece.cover}
-                image={archiveCoverImage}
-                alt={archiveCoverAlt}
-                loading="eager"
-                fetchpriority="high"
-                sizes="(max-width: 640px) 76vw, (max-width: 860px) 42vw, 280px"
-              />}
-              {archiveGenreLabel && <span class="genre-mark" data-genre={archiveGenreSlug}>{archiveGenreLabel}</span>}
-              {archiveDateLabel && <span class="date-mark">{archiveDateLabel}</span>}
-              {piece.excerpt && (
-                <div class="card-overlay" aria-hidden="true">
-                  <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
-                </div>
-              )}
+            <div class="date-cover" data-publication-year={archivePublicationYear}>
+              <div class="archive-cover-media">
+                {isStarCrossed ? <StarCrossedCover alt={archiveCoverAlt} cover={piece.cover} variants={piece.coverVariants ?? [piece.cover]} /> : <OptimizedImage
+                  path={piece.cover}
+                  image={archiveCoverImage}
+                  alt={archiveCoverAlt}
+                  loading="eager"
+                  fetchpriority="high"
+                  sizes="(max-width: 640px) 76vw, (max-width: 860px) 42vw, 280px"
+                />}
+                {piece.excerpt && (
+                  <div class="card-overlay" aria-hidden="true">
+                    <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
+                  </div>
+                )}
+              </div>
+              {archiveDateLabel && <span class="date-mark" data-publication-year={archivePublicationYear}>{archiveDateLabel}</span>}
             </div>
           </aside>
           {isRedCherry && <RedCherrySlack />}

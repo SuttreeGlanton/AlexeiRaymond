@@ -68,6 +68,7 @@ const latestHref = latest?.account
 const latestExternal = Boolean(latestHref) && !latest?.account;
 const latestCover = imageAsset(latest?.cover);
 const latestCycle = latest ? cycleByName.get(latest.cycle) : undefined;
+const latestPublicationYear = latest ? parseDate(latest.date)?.getFullYear() : undefined;
 const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en-GB', {
   month: 'short',
   year: 'numeric',
@@ -80,20 +81,22 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
       <h2 class="latest-strip-heading" id="home-publications">Publications</h2>
       <article class:list={['latest-release-card', { 'has-cover': latest.cover }]}>
         {latest.cover && (
-          <div class="latest-release-media">
-            <OptimizedImage
-              path={latest.cover}
-              image={latestCover}
-              alt=""
-              sizes="(max-width: 640px) calc(100vw - 24px), 212px"
-            />
+          <div class="latest-release-cover date-cover" data-publication-year={latestPublicationYear}>
+            <div class="latest-release-media">
+              <OptimizedImage
+                path={latest.cover}
+                image={latestCover}
+                alt=""
+                sizes="(max-width: 640px) calc(100vw - 24px), 212px"
+              />
+            </div>
             {latestCycle && (
               <span class="latest-release-glyph" role="img" aria-label={`${latestCycle.name} cycle`}>
                 <CycleIcon id={latestCycle.id} />
               </span>
             )}
             {latestDateLabel && (
-              <time class="date-mark latest-release-date" datetime={formatIsoDate(latest.date)}>{latestDateLabel}</time>
+              <time class="date-mark latest-release-date" data-publication-year={latestPublicationYear} datetime={formatIsoDate(latest.date)}>{latestDateLabel}</time>
             )}
           </div>
         )}
@@ -200,7 +203,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
     grid-area: release;
     display: grid;
     min-width: 0;
-    overflow: hidden;
+    overflow: visible;
     border: 1px solid var(--border-strong);
     border-radius: 7px;
     background: var(--panel);
@@ -224,12 +227,25 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
     & .latest-release-glyph {
       filter: drop-shadow(0 0 0.8px #000) drop-shadow(0 1px 1.2px rgb(0 0 0 / 80%));
     }
+
+    & .date-cover {
+      --date-label: var(--date-accent);
+    }
+
+    & .latest-release-date {
+      color: #0a0a0a;
+    }
+  }
+
+  .latest-release-cover {
+    aspect-ratio: 5 / 3;
   }
 
   .latest-release-media {
-    position: relative;
+    position: absolute;
+    inset: 0;
     overflow: hidden;
-    aspect-ratio: 5 / 3;
+    border-radius: 6px 6px 0 0;
     border-bottom: 1px solid var(--border);
     background: var(--bg-soft);
   }
@@ -254,6 +270,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
     position: absolute;
     top: 8px;
     left: 8px;
+    z-index: 2;
     display: grid;
     color: #000;
     pointer-events: none;
@@ -416,8 +433,12 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
       min-height: 17.8rem;
     }
 
-    .latest-release-media {
+    .latest-release-cover {
       aspect-ratio: auto;
+    }
+
+    .latest-release-media {
+      border-radius: 6px 0 0 6px;
       border-right: 1px solid var(--border);
       border-bottom: 0;
     }

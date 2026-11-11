@@ -1,17 +1,15 @@
 ---
 interface Props {
   tags: string[];
-  genre?: string;
 }
 
-const { tags, genre } = Astro.props;
+const { tags } = Astro.props;
 // Keep publication availability in the data for link rules, not as a public tag.
 const visibleTags = tags.filter((tag) => tag !== 'Defunct');
 ---
 
-{(visibleTags.length > 0 || genre) && (
+{visibleTags.length > 0 && (
   <div class="tags" aria-label="Piece tags">
-    {genre && <span class="genre-chip">{genre}</span>}
     {visibleTags.map((tag) => <span class="tag">{tag}</span>)}
   </div>
 )}
