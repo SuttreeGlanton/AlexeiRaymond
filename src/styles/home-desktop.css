@@ -54,11 +54,6 @@
     right: max(20px, calc((100% - 1180px) / 2));
     bottom: 56px;
   }
-  .home-page .hero-sound-icon,
-  .home-page .hero-sound-icon svg {
-    width: 16px;
-    height: 16px;
-  }
 
   .home-page .home-cycles .section-head h2 {
     margin: 0;

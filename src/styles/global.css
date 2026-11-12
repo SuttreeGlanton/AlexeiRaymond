@@ -2008,6 +2008,7 @@ img {
 
 .hero-sound-toggle:is(:active, [aria-pressed='true']),
 .mobile-menu-toggle:is(:active, [aria-expanded='true']) {
+  /* Same upper-left light: the near rim shadows the recess, whose far edge catches light. */
   background: linear-gradient(145deg, #030303, #090909 65%, #101010);
   box-shadow:
     inset 2px 3px 5px rgba(0, 0, 0, 0.95),
@@ -2390,14 +2391,14 @@ img {
 .hero-sound-icon {
   display: inline-grid;
   place-items: center;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 
 .hero-sound-icon svg {
   display: block;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.7;
@@ -2407,6 +2408,11 @@ img {
 
 .hero-sound-toggle[aria-pressed='false'] .hero-sound-wave {
   opacity: 0.28;
+}
+
+/* Keep the quiet off-state; all three graduated waves appear during playback. */
+.hero-sound-toggle[aria-pressed='false'] .hero-sound-wave--extra {
+  opacity: 0;
 }
 
 @media (max-width: 860px) {
