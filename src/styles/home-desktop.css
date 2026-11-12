@@ -48,41 +48,16 @@
   .home-page .hero-teaser-feed .teaser-accordion-source { margin-top: 12px; }
   .home-page .hero-teaser-feed .teaser-accordion-source a { gap: 10px; }
 
+  /* Keep desktop placement; the shared control styles own both relief states. */
   .home-page .hero-sound-toggle {
     top: auto;
     right: max(20px, calc((100% - 1180px) / 2));
     bottom: 56px;
-    border: 0;
-    background: transparent;
-    backdrop-filter: none;
-    isolation: isolate;
-  }
-  /* A quiet 32px outline inside the full 44px click target. */
-  .home-page .hero-sound-toggle::before {
-    content: '';
-    position: absolute;
-    inset: 6px 0;
-    z-index: -1;
-    border: 1px solid rgba(241, 239, 233, 0.14);
-    border-radius: inherit;
-    background: rgba(14, 14, 13, 0.8);
-    transition: border-color 220ms ease, background 220ms ease;
   }
   .home-page .hero-sound-icon,
   .home-page .hero-sound-icon svg {
     width: 16px;
     height: 16px;
-  }
-  .home-page .hero-sound-toggle:hover,
-  .home-page .hero-sound-toggle:focus-visible,
-  .home-page .hero-sound-toggle[aria-pressed='true'] {
-    background: transparent;
-  }
-  .home-page .hero-sound-toggle:hover::before,
-  .home-page .hero-sound-toggle:focus-visible::before,
-  .home-page .hero-sound-toggle[aria-pressed='true']::before {
-    border-color: rgba(241, 239, 233, 0.3);
-    background: rgba(24, 24, 22, 0.9);
   }
 
   .home-page .home-cycles .section-head h2 {
