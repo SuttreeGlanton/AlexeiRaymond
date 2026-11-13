@@ -1,22 +1,28 @@
+import { clamp } from '../lib/motion';
+
+interface RingMetrics { start: number; end: number; surface: number; size: number; sceneTop: number; startScroll: number; endScroll: number }
+interface RewriteRun { controller: AbortController; signal: AbortSignal; follow: boolean; keyboard: boolean; width: number }
+type ReadingState = 'reading' | 'dropping' | 'dropped' | 'returning' | 'remember-ready' | 'remembering' | 'showing-ending' | 'rewriting' | 'rewritten';
+
 // The original story is the static HTML. Every commitment is confined to
 // this page visit; reloading restores it without any storage or cookies.
 (() => {
-  const story = document.querySelector('[data-mm-story]');
+  const story = document.querySelector<HTMLElement>('[data-mm-story]');
   if (!story || story.dataset.mmInitialized) return;
-  const prose = story.querySelector('.archive-prose');
-  const title = story.querySelector('#account-title');
-  const opening = story.querySelector('[data-mm-opening]');
-  const deletion = story.querySelector('[data-mm-delete]');
-  const rewrite = story.querySelector('[data-mm-rewrite]');
-  const proposal = story.querySelector('[data-mm-proposal]');
-  const scene = story.querySelector('[data-mm-desktop]');
-  const pouch = scene?.querySelector('[data-mm-pouch]');
-  const water = scene?.querySelector('[data-mm-water]');
-  const desktopRing = scene?.querySelector('[data-mm-drop]');
-  const headerRing = document.querySelector('[data-mm-header]');
-  const headerWater = document.querySelector('[data-mm-header-water]');
-  const header = document.querySelector('[data-site-header]');
-  const cover = story.querySelector('.archive-cover-card');
+  const prose = story.querySelector<HTMLElement>('.archive-prose');
+  const title = story.querySelector<HTMLElement>('#account-title');
+  const opening = story.querySelector<HTMLElement>('[data-mm-opening]');
+  const deletion = story.querySelector<HTMLElement>('[data-mm-delete]');
+  const rewrite = story.querySelector<HTMLElement>('[data-mm-rewrite]');
+  const proposal = story.querySelector<HTMLElement>('[data-mm-proposal]');
+  const scene = story.querySelector<HTMLElement>('[data-mm-desktop]');
+  const pouch = scene?.querySelector<HTMLElement>('[data-mm-pouch]');
+  const water = scene?.querySelector<HTMLElement>('[data-mm-water]');
+  const desktopRing = scene?.querySelector<HTMLButtonElement>('[data-mm-drop]');
+  const headerRing = document.querySelector<HTMLButtonElement>('[data-mm-header]');
+  const headerWater = document.querySelector<HTMLElement>('[data-mm-header-water]');
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  const cover = story.querySelector<HTMLElement>('.archive-cover-card');
   if (!prose || !title || !opening || !deletion || !rewrite || !proposal ||
       !scene || !pouch || !water || !desktopRing || !headerRing || !headerWater || !cover) return;
 
@@ -25,16 +31,17 @@
       !deletion.textContent.startsWith('Dream it happened this way.') ||
       !rewrite.textContent.startsWith('No, it really did happen this way,') ||
       proposal.textContent.trim() !== 'Ida, will you…') return;
-  let frames;
-  try { frames = JSON.parse(scene.dataset.mmFrames); } catch { return; }
+  let frames: string[];
+  try { frames = JSON.parse(scene.dataset.mmFrames ?? '[]'); } catch { return; }
   if (!Array.isArray(frames) || frames.length !== 13) return;
   story.dataset.mmInitialized = 'true';
 
   const desktop = window.matchMedia('(min-width: 861px)');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
   const rings = [desktopRing, headerRing];
-  const images = rings.map((ring) => ring.querySelector('[data-mm-frame]'));
+  const images = rings.map((ring) => ring.querySelector<HTMLImageElement>('[data-mm-frame]'))
+    .filter((image): image is HTMLImageElement => image !== null);
+  if (images.length !== rings.length) return;
   // The complete native sequence is about 12 KB. Preload once so a reversal
   // never flashes a missing frame or waits on an image request.
   const preload = frames.map((src) => {
@@ -42,7 +49,7 @@
     image.src = src;
     return image;
   });
-  const action = (text, name) => {
+  const action = (text: string, name: string) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'mm-action';
@@ -55,7 +62,7 @@
   opening.replaceChildren(rememberButton);
   const returnButton = action('will you…', 'data-mm-return');
   // Keep the manuscript's italic final line, including the non-clickable Ida.
-  const proposalText = proposal.querySelector('em') || proposal;
+  const proposalText = proposal.querySelector<HTMLElement>('em') || proposal;
   proposalText.replaceChildren(document.createTextNode('Ida, '), returnButton);
   title.tabIndex = -1;
   const status = document.createElement('span');
@@ -64,17 +71,17 @@
   status.setAttribute('aria-live', 'polite');
   story.append(status);
 
-  let state = 'reading';
+  let state: ReadingState = 'reading';
   let frame = -1;
   let progress = 0;
   let ringY = 0;
-  let metrics = null;
+  let metrics: RingMetrics | null = null;
   let dirty = true;
   let raf = 0;
-  let returnAttempt = null;
+  let returnAttempt: { target: number; width: number; timer: number } | null = null;
   let waterVisible = false;
-  let sequence = null;
-  const setState = (next) => { state = next; story.dataset.mmState = next; };
+  let sequence: RewriteRun | null = null;
+  const setState = (next: ReadingState) => { state = next; story.dataset.mmState = next; };
   setState('reading');
   scene.dataset.mmReady = '';
   headerRing.dataset.mmReady = '';
@@ -105,7 +112,7 @@
     dirty = false;
   };
 
-  const setFrame = (next) => {
+  const setFrame = (next: number) => {
     if (frame === next) return;
     frame = next;
     for (const image of images) image.src = frames[next];
@@ -141,7 +148,7 @@
     }
   };
 
-  const clearTitleFlash = (event) => {
+  const clearTitleFlash = (event: AnimationEvent) => {
     if (event.animationName === 'mm-title-gold') title.classList.remove('mm-title-gold');
   };
   title.addEventListener('animationend', clearTitleFlash);
@@ -150,6 +157,7 @@
   const update = () => {
     raf = 0;
     if (dirty) measure();
+    if (!metrics) return;
     if (state === 'reading') {
       progress = clamp((window.scrollY - metrics.startScroll) /
         Math.max(1, metrics.endScroll - metrics.startScroll), 0, 1);
@@ -169,7 +177,7 @@
   };
   const remeasure = () => { dirty = true; schedule(); };
 
-  const finishDrop = (keyboard, returnAfterDrop) => {
+  const finishDrop = (keyboard: boolean, returnAfterDrop: boolean) => {
     for (const ring of rings) ring.dataset.mmGone = '';
     // The pouch has served its purpose. Hide it before the return to the
     // title, preserving its geometry so the column and river stay in place.
@@ -183,8 +191,8 @@
     else if (keyboard) returnButton.focus({ preventScroll: true });
   };
 
-  const drop = (event) => {
-    if (state !== 'reading' || progress < 1) return;
+  const drop = (event: MouseEvent) => {
+    if (state !== 'reading' || progress < 1 || !metrics) return;
     setState('dropping');
     rings.forEach((ring) => { ring.disabled = true; });
     returnButton.disabled = true;
@@ -201,7 +209,7 @@
         { transform: 'translate(-50%, ' + (metrics.surface + metrics.size) + 'px)' }
       ], { duration: 620, easing: 'cubic-bezier(0.42, 0, 0.8, 0.55)', fill: 'forwards' });
     } else {
-      animation = ring.querySelector('img').animate([
+      animation = images[1].animate([
         { transform: 'translateY(0)', opacity: 1 },
         { transform: 'translateY(48px)', opacity: 0 }
       ], { duration: 420, easing: 'ease-in', fill: 'forwards' });
@@ -243,9 +251,9 @@
   };
 
   const abortError = () => new DOMException('Rewrite finished early.', 'AbortError');
-  const assertRunning = (run) => { if (run.signal.aborted) throw abortError(); };
+  const assertRunning = (run: RewriteRun) => { if (run.signal.aborted) throw abortError(); };
 
-  const pause = (ms, run) => new Promise((resolve, reject) => {
+  const pause = (ms: number, run: RewriteRun) => new Promise<void>((resolve, reject) => {
     assertRunning(run);
     const cancel = () => { clearTimeout(timer); reject(abortError()); };
     const timer = window.setTimeout(() => {
@@ -255,7 +263,7 @@
     run.signal.addEventListener('abort', cancel, { once: true });
   });
 
-  const animate = async (element, keyframes, duration, run) => {
+  const animate = async (element: HTMLElement, keyframes: Keyframe[], duration: number, run: RewriteRun) => {
     assertRunning(run);
     if (reduced.matches || !element.animate) return;
     const animation = element.animate(keyframes, { duration, easing: 'ease-in-out', fill: 'forwards' });
@@ -272,7 +280,7 @@
 
   // Follow only this explicitly requested sequence. A wheel, touch, click,
   // or navigation key gives scrolling back to the reader immediately.
-  const scrollForRewrite = async (element, run, force = false) => {
+  const scrollForRewrite = async (element: HTMLElement, run: RewriteRun, force = false) => {
     assertRunning(run);
     if (!run.follow) return;
     const box = element.getBoundingClientRect();
@@ -282,7 +290,7 @@
     const target = clamp(window.scrollY + box.top - inset - 24, 0, maximum);
     window.scrollTo({ top: target, behavior: reduced.matches ? 'instant' : 'smooth' });
     if (reduced.matches) return;
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
       let id = 0;
       let settled = 0;
       const started = performance.now();
@@ -312,12 +320,12 @@
   // Measure the browser's actual line breaks once, at the current font and
   // width. Both affected paragraphs are plain text. No guessed character
   // count, fixed desktop line width, or per-scroll text measurement is used.
-  const prepareLines = (paragraph, keep = 0) => {
+  const prepareLines = (paragraph: HTMLElement, keep = 0) => {
     const text = paragraph.textContent;
     const node = document.createTextNode(text);
     paragraph.replaceChildren(node);
     const range = document.createRange();
-    const lines = [];
+    const lines: { top: number; start: number; end: number }[] = [];
     for (const match of text.matchAll(/\S+\s*/g)) {
       range.setStart(node, match.index);
       range.setEnd(node, match.index + match[0].trimEnd().length);
@@ -328,7 +336,7 @@
         lines.push({ top: rect.top, start: match.index, end: match.index + match[0].length });
       } else last.end = match.index + match[0].length;
     }
-    if (!lines.length) lines.push({ start: 0, end: text.length });
+    if (!lines.length) lines.push({ top: 0, start: 0, end: text.length });
     const fragments = lines.map(({ start, end }) => {
       const line = document.createElement('span');
       line.className = 'mm-text-line';
@@ -349,7 +357,7 @@
     return fragments;
   };
 
-  const eraseLines = async (paragraph, keep, run) => {
+  const eraseLines = async (paragraph: HTMLElement, keep: number, run: RewriteRun) => {
     const lines = prepareLines(paragraph, keep);
     for (const { line, erasure, retained } of lines) {
       if (!erasure) continue;
@@ -385,7 +393,7 @@
     remeasure();
   };
 
-  const remember = async (event) => {
+  const remember = async (event: MouseEvent) => {
     if (state !== 'remember-ready') return;
     const controller = new AbortController();
     const run = {
@@ -465,7 +473,7 @@
     } catch (error) {
       // Resizing or selecting reduced motion commits a clean, reflowable
       // ending. Unexpected animation failures also leave readable prose.
-      if (error.name !== 'AbortError') finishRewrite();
+      if (!(error instanceof Error) || error.name !== 'AbortError') finishRewrite();
     }
   };
 
@@ -531,3 +539,5 @@
   preload.forEach((image) => image.addEventListener('load', schedule, { once: true }));
   update();
 })();
+
+export {};

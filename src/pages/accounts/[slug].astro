@@ -5,34 +5,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import InitialText from '../../components/InitialText.astro';
 import ReadArrow from '../../components/ReadArrow.astro';
 import OptimizedImage from '../../components/OptimizedImage.astro';
-import AlleyMoneyCoda from '../../components/AlleyMoneyCoda.astro';
-import ClotheslineDivorceCoda from '../../components/ClotheslineDivorceCoda.astro';
-import DeathwishPresentation from '../../components/DeathwishPresentation.astro';
-import LothariOnlineCoda from '../../components/LothariOnlineCoda.astro';
-import NoRabbitCoda from '../../components/NoRabbitCoda.astro';
-import SixThousandEightyCoda from '../../components/SixThousandEightyCoda.astro';
-import FatherFrostCoda from '../../components/FatherFrostCoda.astro';
-import LifeToDragonsCoda from '../../components/LifeToDragonsCoda.astro';
-import NatureOfSleepCoda from '../../components/NatureOfSleepCoda.astro';
-import NutcrackerCoda from '../../components/NutcrackerCoda.astro';
-import GuestsEyesCoda from '../../components/GuestsEyesCoda.astro';
-import TheTrailCoda from '../../components/TheTrailCoda.astro';
-import WitnessesCoda from '../../components/WitnessesCoda.astro';
-import NightGlowsCoda from '../../components/NightGlowsCoda.astro';
-import NowClockCoda from '../../components/NowClockCoda.astro';
-import RabbitLampCoda from '../../components/RabbitLampCoda.astro';
-import MothheadCoda from '../../components/MothheadCoda.astro';
-import AlphaSoundCoda from '../../components/AlphaSoundCoda.astro';
-import MourningHoundsCoda from '../../components/MourningHoundsCoda.astro';
-import StarCrossedCoda from '../../components/StarCrossedCoda.astro';
-import MarryMeCoda from '../../components/MarryMeCoda.astro';
-import LeavesCoda from '../../components/LeavesCoda.astro';
 import StarCrossedCover from '../../components/StarCrossedCover.astro';
-import RedCherrySlack from '../../components/RedCherrySlack.astro';
-import SheLovesHerMotherPortrait from '../../components/SheLovesHerMotherPortrait.astro';
 import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
 import { absoluteSiteUrl, withBase } from '../../lib/paths';
 import { imageAsset } from '../../lib/image-assets';
+import { storyPresentation } from '../../lib/story-registry.mjs';
+import StoryCoda from '../../components/StoryCoda.astro';
 
 export async function getStaticPaths() {
   const entries = await getCollection('accounts');
@@ -48,32 +26,8 @@ const archived = piece ? isDefunct(piece) : false;
 const fullText = entry.data.fullText === true;
 const isLog = entry.data.format === 'log';
 const isTracked = entry.data.format === 'tracked';
-const isGenesis = entry.id === 'genesis';
-const isAlleyMoney = entry.id === 'alley-money';
-const isClotheslineDivorce = entry.id === 'clothesline-divorce';
-const isDeathwish = entry.id === 'deathwish';
-const isLothariOnline = entry.id === 'lotharionline';
-const isNoRabbit = entry.id === 'no-rabbit';
-const isSixThousandEighty = entry.id === '6080';
-const isFatherFrost = entry.id === 'father-frost';
-const isLifeToDragons = entry.id === 'life-to-dragons';
-const isNatureOfSleep = entry.id === 'on-the-nature-of-sleep';
-const isNutcrackerCharge = entry.id === 'the-nutcrackers-charge';
-const isGuestsHere = entry.id === 'the-guests-are-here';
-const isTheTrail = entry.id === 'the-trail';
-const isRedCherry = entry.id === 'red-they-are-cherry-red';
-const isWitnesses = entry.id === 'witnesses';
-const isHowTheNightGlows = entry.id === 'how-the-night-glows';
-const isMothhead = entry.id === 'mothhead';
-const isAlpha = entry.id === 'alpha';
-const isMourningHounds = entry.id === 'the-mourning-hounds';
-const isStarCrossed = entry.id === 'star-crossed';
-const isNow = entry.id === 'now';
-const isTruth = entry.id === 'truth-or-its-evidence';
-const isSheLovesHerMother = entry.id === 'she-loves-her-mother';
-const isMarryMe = entry.id === 'marry-me';
-const isLeaves = entry.id === 'leaves';
-const headerCoda = isAlleyMoney ? 'cacodemon' : isLeaves ? 'leaf' : isMarryMe ? 'ring' : isMourningHounds ? 'paws' : isWitnesses ? 'moon' : isSixThousandEighty ? 'counter' : isTheTrail ? 'pills' : isGuestsHere ? 'eyes' : isNow ? 'clock' : isTruth ? 'rabbit' : undefined;
+const presentation = storyPresentation(entry.id);
+const storyAttributes = presentation.storyAttribute ? { [presentation.storyAttribute]: true } : {};
 const archivePresentation = archived || fullText;
 const overlineLabel = archived ? 'Archived piece' : fullText ? '' : 'Account';
 const title = entry.data.title || (piece ? `Account of ${piece.title}` : 'Account');
@@ -180,7 +134,7 @@ const breadcrumbSchema = piece ? {
 
 <BaseLayout
   title={seoTitle}
-  headerCoda={headerCoda}
+  headerCoda={presentation.headerCoda}
   description={seoDescription}
   socialImage={socialImage}
   socialImageAlt={fullText && piece ? archiveCoverAlt : undefined}
@@ -188,17 +142,17 @@ const breadcrumbSchema = piece ? {
   publishedTime={publishedIso || undefined}
   structuredData={[workSchema, breadcrumbSchema]}
 >
-  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${isGenesis ? ' archived-piece-page--genesis' : ''}${isAlleyMoney ? ' archived-piece-page--alley-money' : ''}${isGuestsHere ? ' archived-piece-page--guests' : ''}${isTheTrail ? ' archived-piece-page--trail' : ''}${isRedCherry ? ' archived-piece-page--red-cherry' : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title" data-mh-story={isMourningHounds || undefined} data-sc-story={isStarCrossed || undefined} data-mm-story={isMarryMe || undefined} data-leaves-story={isLeaves || undefined}>
+  <article class={`page-shell page-hero text-page${archivePresentation ? ' archived-piece-page' : ''}${isLog ? ' archived-piece-page--log' : ''}${isTracked ? ' archived-piece-page--tracked' : ''}${presentation.pageClass ? ` ${presentation.pageClass}` : ''}${entry.data.epigraph ? ' has-epigraph' : ''}`} aria-labelledby="account-title" {...storyAttributes}>
     <a class="back-link account-back-link" href={backHref}><span class="account-back-arrow" aria-hidden="true">&larr;</span> <InitialText text={backLabel} /></a>
     {overlineLabel && <div class="overline">{overlineLabel}</div>}
     <h1
       class="page-title account-title"
       id="account-title"
-      tabindex={isRedCherry ? -1 : undefined}
+      tabindex={presentation.titleStyle === 'red-cherry' ? -1 : undefined}
     >
-      {entry.id === 'his-green-delight' ? (
+      {presentation.titleStyle === 'green' ? (
         <>His <span class="hgd-green">Green</span> Delight</>
-      ) : isRedCherry ? (
+      ) : presentation.titleStyle === 'red-cherry' ? (
         <>
           <span class="rcr-title-color">Red</span>, They Are{' '}
           <span class="rcr-title-color">Cherry Red</span>
@@ -215,14 +169,14 @@ const breadcrumbSchema = piece ? {
     {piece?.awardNote && (
       <p class="account-award-note"><strong class="award-note">{piece.awardNote}</strong></p>
     )}
-    {isStarCrossed && <StarCrossedCoda />}
+    {presentation.beforeBody?.map((coda) => <StoryCoda {...coda} />)}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
-        <div class={`archive-cover-slot${isSixThousandEighty ? ' sixty-eighty-cover-slot' : ''}${isGuestsHere ? ' guests-cover-slot' : ''}${isTheTrail ? ' trail-cover-slot' : ''}${isRedCherry ? ' red-cherry-cover-slot' : ''}${isWitnesses ? ' witnesses-cover-slot' : ''}${isNow ? ' now-cover-slot' : ''}${isTruth ? ' truth-cover-slot' : ''}${isLothariOnline ? ' lothario-cover-slot' : ''}${isMourningHounds ? ' mourning-hounds-cover-slot' : ''}${isMarryMe ? ' marry-me-cover-slot' : ''}${isLeaves ? ' leaves-cover-slot' : ''}${isAlleyMoney ? ' alley-money-cover-slot' : ''}`}>
+        <div class={`archive-cover-slot${presentation.coverClass ? ` ${presentation.coverClass}` : ''}`}>
           <aside class="archive-cover-card" aria-label={`${archiveCoverAlt} and publication details`} tabindex="0" data-archive-mobile-focus>
             <div class="date-cover" data-publication-year={archivePublicationYear}>
               <div class="archive-cover-media">
-                {isStarCrossed ? <StarCrossedCover alt={archiveCoverAlt} cover={piece.cover} variants={piece.coverVariants ?? [piece.cover]} /> : <OptimizedImage
+                {presentation.coverStyle === 'star-crossed' ? <StarCrossedCover alt={archiveCoverAlt} cover={piece.cover} variants={piece.coverVariants ?? [piece.cover]} /> : <OptimizedImage
                   path={piece.cover}
                   image={archiveCoverImage}
                   alt={archiveCoverAlt}
@@ -239,47 +193,15 @@ const breadcrumbSchema = piece ? {
               {archiveDateLabel && <span class="date-mark" data-publication-year={archivePublicationYear}>{archiveDateLabel}</span>}
             </div>
           </aside>
-          {isRedCherry && <RedCherrySlack />}
-          {isSixThousandEighty && <SixThousandEightyCoda variant="desktop" />}
-          {isGuestsHere && <GuestsEyesCoda variant="desktop" />}
-          {isTheTrail && <TheTrailCoda variant="desktop" />}
-          {isWitnesses && <WitnessesCoda variant="moon" />}
-          {isNow && <NowClockCoda />}
-          {isTruth && <RabbitLampCoda variant="desktop" />}
-          {isLothariOnline && <LothariOnlineCoda variant="desktop" />}
-          {isMourningHounds && <MourningHoundsCoda variant="desktop" />}
-          {isMarryMe && <MarryMeCoda variant="desktop" />}
-          {isLeaves && <LeavesCoda variant="desktop" />}
-          {isAlleyMoney && <AlleyMoneyCoda variant="desktop" />}
+          {presentation.besideCover?.map((coda) => <StoryCoda {...coda} />)}
         </div>
       )}
       <div class="prose archive-prose">
-        {isDeathwish && <DeathwishPresentation />}
+        {presentation.beforeText?.map((coda) => <StoryCoda {...coda} />)}
         <Content />
-        {isSheLovesHerMother && <SheLovesHerMotherPortrait />}
-        {isSixThousandEighty && (
-          <div class="coda-relocated-to-header">
-            <SixThousandEightyCoda variant="mobile" />
-          </div>
-        )}
-        {isClotheslineDivorce && <ClotheslineDivorceCoda />}
-        {isLothariOnline && <LothariOnlineCoda variant="mobile" />}
-        {isNoRabbit && <NoRabbitCoda />}
-        {isFatherFrost && <FatherFrostCoda />}
-        {isLifeToDragons && <LifeToDragonsCoda />}
-        {isNatureOfSleep && <NatureOfSleepCoda />}
-        {isNutcrackerCharge && <NutcrackerCoda />}
-        {isGuestsHere && (
-          <div class="coda-relocated-to-header">
-            <GuestsEyesCoda variant="mobile" />
-          </div>
-        )}
-        {isTheTrail && <TheTrailCoda variant="mobile" />}
-        {isWitnesses && <WitnessesCoda variant="cat" />}
-        {isHowTheNightGlows && <NightGlowsCoda />}
-        {isMothhead && <MothheadCoda />}
-        {isAlpha && <AlphaSoundCoda />}
-        {isMourningHounds && <MourningHoundsCoda variant="tablet" />}
+        {presentation.afterText?.map((coda) => coda.relocated ? (
+          <div class="coda-relocated-to-header"><StoryCoda {...coda} /></div>
+        ) : <StoryCoda {...coda} />)}
       </div>
     </div>
     {piece && canLinkToPiece(piece) && (
@@ -287,7 +209,7 @@ const breadcrumbSchema = piece ? {
         <a href={piece.link} target="_blank" rel="noreferrer">Read &ldquo;<InitialText text={piece.title} capitalInitials />&rdquo; at <span class="card-publication">{piece.publication}</span> <ReadArrow /></a>
       </p>
     )}
-    {isLeaves && (
+    {presentation.replay === 'leaves' && (
       <div class="leaves-restart-row">
         <button type="button" class="leaves-restart" data-leaves-restart aria-label="Restart Leaves" disabled>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
@@ -452,6 +374,10 @@ const breadcrumbSchema = piece ? {
     }
   </script>
 </BaseLayout>
+
+<style is:global>
+  @import '../../styles/reading.css';
+</style>
 
 <style>
   .account-title {

@@ -8,6 +8,7 @@ import {
   canLinkToPiece,
   cycleByName,
 } from '../lib/data';
+import { selectLatestPublished, selectUpcoming } from '../lib/data-rules.mjs';
 import { withBase } from '../lib/paths';
 import { imageAsset } from '../lib/image-assets';
 import { selectPublicationCredits } from '../lib/publication-credits';
@@ -17,9 +18,7 @@ import OptimizedImage from './OptimizedImage.astro';
 import CycleIcon from './CycleIcon.astro';
 
 const published = publishedPieces();
-const latest = published
-  .filter((piece) => parseDate(piece.date))
-  .sort((a, b) => (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0))[0];
+const latest = selectLatestPublished(published);
 
 const upcoming = upcomingPieces();
 const credits = selectPublicationCredits(
@@ -30,9 +29,7 @@ const pairedCredits = credits.published.length > 0 && credits.upcoming.length > 
 const forthcomingCreditParts = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' })
   .formatToParts(credits.upcoming);
 // Choose from the authoritative Upcoming records at build time.
-const forthcoming = upcoming.length
-  ? upcoming[Math.floor(Math.random() * upcoming.length)]
-  : undefined;
+const forthcoming = selectUpcoming(upcoming);
 
 const latestHref = latest?.account
   ? withBase(`accounts/${latest.account.slug}/`)

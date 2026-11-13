@@ -1,9 +1,9 @@
 // One controller for this story's cover, header, and tablet instances.
 // This module is emitted only by the story component, not the shared layout.
-const story = document.querySelector('[data-mh-story]');
-const prose = story?.querySelector('.archive-prose');
-const trails = Array.from(document.querySelectorAll('[data-mh-coda]'));
-const paragraphs = prose ? Array.from(prose.querySelectorAll(':scope > p')) : [];
+const story = document.querySelector<HTMLElement>('[data-mh-story]');
+const prose = story?.querySelector<HTMLElement>('.archive-prose');
+const trails = Array.from(document.querySelectorAll<HTMLElement>('[data-mh-coda]'));
+const paragraphs = prose ? Array.from(prose.querySelectorAll<HTMLElement>(':scope > p')) : [];
 const opening = paragraphs[0];
 const ending = paragraphs.at(-1);
 
@@ -14,20 +14,20 @@ if (story && prose && opening && ending && trails.length) {
   // Fail closed if the prose changes. Never search the title or other stories.
   if (opening.textContent.startsWith(openingText) && ending.textContent.trimEnd().endsWith(endingText)) {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const header = document.querySelector('[data-site-header]');
-    const coverSlot = story.querySelector('.mourning-hounds-cover-slot');
-    const steps = trails.map((trail) => Array.from(trail.querySelectorAll('[data-mh-step]')));
-    const returnButtons = trails.flatMap((trail) => Array.from(trail.querySelectorAll('.mh-return')));
+    const header = document.querySelector<HTMLElement>('[data-site-header]');
+    const coverSlot = story.querySelector<HTMLElement>('.mourning-hounds-cover-slot');
+    const steps = trails.map((trail) => Array.from(trail.querySelectorAll<HTMLElement>('[data-mh-step]')));
+    const returnButtons = trails.flatMap((trail) => Array.from(trail.querySelectorAll<HTMLButtonElement>('.mh-return')));
 
     // The original text node is never replaced by the alternate word. The
     // echo is CSS-generated on an aria-hidden layer, preserving copying and
     // screen-reader text. The two layers reserve the wider word's natural
     // width, avoiding both compressed letters and movement during a swap.
-    function wrapWord(paragraph, word, echo, offset) {
+    function wrapWord(paragraph: HTMLElement, word: string, echo: string, offset: number) {
       const walker = document.createTreeWalker(paragraph, NodeFilter.SHOW_TEXT);
-      let node;
+      let node: Text | null;
       let consumed = 0;
-      while ((node = walker.nextNode())) {
+      while ((node = walker.nextNode() as Text | null)) {
         if (offset >= consumed && offset + word.length <= consumed + node.length) {
           const target = node.splitText(offset - consumed);
           if (!target.data.startsWith(word)) return null;
@@ -65,7 +65,7 @@ if (story && prose && opening && ending && trails.length) {
       let invitationTimer = 0;
       let echoTimer = 0;
       let echoEndTimer = 0;
-      let activeWord = null;
+      let activeWord: HTMLElement | null = null;
       let progressFrame = 0;
       let returnFrame = 0;
       let returning = false;
@@ -73,20 +73,20 @@ if (story && prose && opening && ending && trails.length) {
       let endingBottom = 1;
       let headerHeight = 72;
 
-      const updateWordControl = (word) => {
-        const original = word.querySelector('.mh-original').textContent;
-        const echo = word.querySelector('.mh-echo').dataset.mhEcho;
+      const updateWordControl = (word: HTMLElement) => {
+        const original = word.querySelector<HTMLElement>('.mh-original')!.textContent;
+        const echo = word.querySelector<HTMLElement>('.mh-echo')!.dataset.mhEcho;
         const changed = word.classList.contains('is-echo');
-        const button = word.querySelector('.mh-word-toggle');
+        const button = word.querySelector<HTMLButtonElement>('.mh-word-toggle')!;
         if (word === lastWord && !endPlayed && !reducedMotion.matches) {
           button.setAttribute('aria-label', `${original}. Start word sequence.`);
           return;
         }
         button.setAttribute('aria-label', `${changed ? echo : original}. Change to ${changed ? original : echo}.`);
       };
-      const unlockWord = (word) => {
+      const unlockWord = (word: HTMLElement) => {
         updateWordControl(word);
-        word.querySelector('.mh-word-toggle').hidden = false;
+        word.querySelector<HTMLButtonElement>('.mh-word-toggle')!.hidden = false;
       };
       const clearInvitation = () => {
         window.clearTimeout(invitationTimer);
@@ -116,7 +116,7 @@ if (story && prose && opening && ending && trails.length) {
         }
       };
 
-      const playEcho = (word) => {
+      const playEcho = (word: HTMLElement) => {
         clearEcho();
         if (reducedMotion.matches) { unlockWord(word); return; }
         if (document.hidden) return;
@@ -134,7 +134,7 @@ if (story && prose && opening && ending && trails.length) {
       // reading directly. The opening sequence still starts on paw return.
       for (const word of [firstWord, lastWord]) {
         updateWordControl(word);
-        word.querySelector('.mh-word-toggle').addEventListener('click', () => {
+        word.querySelector<HTMLButtonElement>('.mh-word-toggle')!.addEventListener('click', () => {
           if (word === lastWord && !endPlayed) {
             endPlayed = true;
             clearInvitation();
@@ -148,7 +148,7 @@ if (story && prose && opening && ending && trails.length) {
         });
       }
 
-      const reveal = (count) => {
+      const reveal = (count: number) => {
         if (count <= laid) return;
         laid = count;
         for (const trailSteps of steps) {
@@ -267,3 +267,5 @@ if (story && prose && opening && ending && trails.length) {
     }
   }
 }
+
+export {};

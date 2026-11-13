@@ -1,0 +1,55 @@
+---
+import AlleyMoneyCoda from './AlleyMoneyCoda.astro';
+import ClotheslineDivorceCoda from './ClotheslineDivorceCoda.astro';
+import DeathwishPresentation from './DeathwishPresentation.astro';
+import LothariOnlineCoda from './LothariOnlineCoda.astro';
+import NoRabbitCoda from './NoRabbitCoda.astro';
+import SixThousandEightyCoda from './SixThousandEightyCoda.astro';
+import FatherFrostCoda from './FatherFrostCoda.astro';
+import LifeToDragonsCoda from './LifeToDragonsCoda.astro';
+import NatureOfSleepCoda from './NatureOfSleepCoda.astro';
+import NutcrackerCoda from './NutcrackerCoda.astro';
+import GuestsEyesCoda from './GuestsEyesCoda.astro';
+import TheTrailCoda from './TheTrailCoda.astro';
+import RedCherrySlack from './RedCherrySlack.astro';
+import WitnessesCoda from './WitnessesCoda.astro';
+import NightGlowsCoda from './NightGlowsCoda.astro';
+import MothheadCoda from './MothheadCoda.astro';
+import AlphaSoundCoda from './AlphaSoundCoda.astro';
+import MourningHoundsCoda from './MourningHoundsCoda.astro';
+import StarCrossedCoda from './StarCrossedCoda.astro';
+import NowClockCoda from './NowClockCoda.astro';
+import RabbitLampCoda from './RabbitLampCoda.astro';
+import SheLovesHerMotherPortrait from './SheLovesHerMotherPortrait.astro';
+import MarryMeCoda from './MarryMeCoda.astro';
+import LeavesCoda from './LeavesCoda.astro';
+import type { StoryCoda as StoryCodaDefinition } from '../lib/story-registry.mjs';
+
+type Props = StoryCodaDefinition;
+const coda = Astro.props;
+---
+
+{coda.component === 'AlleyMoneyCoda' && <AlleyMoneyCoda {...coda.props} />}
+{coda.component === 'ClotheslineDivorceCoda' && <ClotheslineDivorceCoda />}
+{coda.component === 'DeathwishPresentation' && <DeathwishPresentation />}
+{coda.component === 'LothariOnlineCoda' && <LothariOnlineCoda {...coda.props} />}
+{coda.component === 'NoRabbitCoda' && <NoRabbitCoda />}
+{coda.component === 'SixThousandEightyCoda' && <SixThousandEightyCoda {...coda.props} />}
+{coda.component === 'FatherFrostCoda' && <FatherFrostCoda />}
+{coda.component === 'LifeToDragonsCoda' && <LifeToDragonsCoda />}
+{coda.component === 'NatureOfSleepCoda' && <NatureOfSleepCoda />}
+{coda.component === 'NutcrackerCoda' && <NutcrackerCoda />}
+{coda.component === 'GuestsEyesCoda' && <GuestsEyesCoda {...coda.props} />}
+{coda.component === 'TheTrailCoda' && <TheTrailCoda {...coda.props} />}
+{coda.component === 'RedCherrySlack' && <RedCherrySlack />}
+{coda.component === 'WitnessesCoda' && <WitnessesCoda {...coda.props} />}
+{coda.component === 'NightGlowsCoda' && <NightGlowsCoda />}
+{coda.component === 'MothheadCoda' && <MothheadCoda />}
+{coda.component === 'AlphaSoundCoda' && <AlphaSoundCoda />}
+{coda.component === 'MourningHoundsCoda' && <MourningHoundsCoda {...coda.props} />}
+{coda.component === 'StarCrossedCoda' && <StarCrossedCoda />}
+{coda.component === 'NowClockCoda' && <NowClockCoda />}
+{coda.component === 'RabbitLampCoda' && <RabbitLampCoda {...coda.props} />}
+{coda.component === 'SheLovesHerMotherPortrait' && <SheLovesHerMotherPortrait />}
+{coda.component === 'MarryMeCoda' && <MarryMeCoda {...coda.props} />}
+{coda.component === 'LeavesCoda' && <LeavesCoda {...coda.props} />}

@@ -1,28 +1,35 @@
+import { clamp01 as clamp } from '../lib/motion';
+
 // Loaded only on Leaves. The prose stays ordinary static HTML until the
 // first deliberate gust; no animation loop runs while the reader is idle.
-const story = document.querySelector('[data-leaves-story]');
-const prose = story?.querySelector('.archive-prose');
-const opening = prose?.querySelector('[data-leaves-opening]');
-const ending = prose?.querySelector('[data-leaves-ending]');
-const trigger = ending?.querySelector('[data-leaves-trigger]');
-const restart = story?.querySelector('[data-leaves-restart]');
-const roots = Array.from(document.querySelectorAll('[data-leaves-coda]'));
+const story = document.querySelector<HTMLElement>('[data-leaves-story]');
+const prose = story?.querySelector<HTMLElement>('.archive-prose');
+const opening = prose?.querySelector<HTMLElement>('[data-leaves-opening]');
+const ending = prose?.querySelector<HTMLElement>('[data-leaves-ending]');
+const trigger = ending?.querySelector<HTMLButtonElement>('[data-leaves-trigger]');
+const restart = story?.querySelector<HTMLButtonElement>('[data-leaves-restart]');
+const roots = Array.from(document.querySelectorAll<HTMLElement>('[data-leaves-coda]'));
 
-if (story && prose && trigger && restart && roots.length &&
+if (story && prose && ending && trigger && restart && roots.length &&
     opening?.textContent.trim() === 'Memory of that day; sans utility, sans insight.' &&
     trigger.textContent.trim() === 'Release that day; therein utility, therein insight.') {
-  const header = document.querySelector('[data-site-header]');
+  initializeLeaves(story, prose, ending, trigger, restart, roots);
+}
+
+function initializeLeaves(story: HTMLElement, prose: HTMLElement, ending: HTMLElement, trigger: HTMLButtonElement, restart: HTMLButtonElement, roots: HTMLElement[]) {
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
   const mobile = window.matchMedia('(max-width: 860px)');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const actors = roots.map((root) => ({
-    root, sprite: root.querySelector('[data-leaves-sprite]'),
-    header: root.dataset.leavesCoda === 'header', width: 0, height: 0, size: 114,
-    x: 0, y: 0, angle: 0, frame: 0
-  }));
+  const actors = roots.flatMap((root) => {
+    const sprite = root.querySelector<HTMLElement>('[data-leaves-sprite]');
+    return sprite ? [{
+      root, sprite, header: root.dataset.leavesCoda === 'header',
+      width: 0, height: 0, size: 114, x: 0, y: 0, angle: 0, frame: 0
+    }] : [];
+  });
   const leafSheet = new Image();
-  leafSheet.src = roots[0].dataset.leavesSheet;
-  const clamp = (x) => Math.max(0, Math.min(1, x));
-  const random = (a, b) => a + Math.random() * (b - a);
+  leafSheet.src = roots[0].dataset.leavesSheet ?? '';
+  const random = (a: number, b: number) => a + Math.random() * (b - a);
   const frameCount = 24;
   const windHeadings = [
     { x: 1, y: 0 }, { x: -1, y: 0 },
@@ -39,13 +46,19 @@ if (story && prose && trigger && restart && roots.length &&
   let metricsDirty = true;
   let scrollDirty = true;
   let busy = false;
-  let burst = null;
-  let canvas = null;
-  let context = null;
+  type Character = { span: HTMLSpanElement; owner: HTMLElement; paragraph: HTMLParagraphElement; letter: string };
+  type Wind = ReturnType<typeof createWind>;
+  type Trajectory = ReturnType<typeof trajectory>;
+  type GlyphParticle = Trajectory & { leaf: false; letter: string; font: string; color: string; size: number; halfWidth: number; baseline: number };
+  type LeafParticle = Trajectory & { leaf: true; size: number; frame: number; angle: number };
+  type Particle = GlyphParticle | LeafParticle;
+  let burst: { start: number; particles: Particle[]; wind: Wind } | null = null;
+  let canvas: HTMLCanvasElement | null = null;
+  let context: CanvasRenderingContext2D | null = null;
   let pixelRatio = 1;
-  let characters = null;
-  let pool = [];
-  let reserved = [];
+  let characters: Character[] | null = null;
+  let pool: Character[] = [];
+  let reserved: Character[] = [];
   let third = 0;
 
   function measure() {
@@ -67,7 +80,7 @@ if (story && prose && trigger && restart && roots.length &&
     progress = clamp((window.scrollY - startScroll) / (endScroll - startScroll));
   }
 
-  function paintLeaf(now) {
+  function paintLeaf(now: number) {
     if (stage === 3) return;
     const reaction = burst ? clamp((now - burst.start) / 1050) : 1;
     const lift = reduced.matches ? 0 : Math.sin(Math.PI * reaction);
@@ -111,7 +124,7 @@ if (story && prose && trigger && restart && roots.length &&
     paintLeaf(performance.now());
   }
 
-  function tick(now) {
+  function tick(now: number) {
     frameRequest = 0;
     if (document.hidden) return;
     if (metricsDirty) measure();
@@ -130,14 +143,15 @@ if (story && prose && trigger && restart && roots.length &&
     const walker = document.createTreeWalker(prose, NodeFilter.SHOW_TEXT);
     const nodes = [];
     while (walker.nextNode()) {
-      const node = walker.currentNode;
+      const node = walker.currentNode as Text;
       if (node.parentElement?.closest('p') && /\S/u.test(node.data)) nodes.push(node);
     }
     const segmenter = typeof Intl.Segmenter === 'function'
       ? new Intl.Segmenter(undefined, { granularity: 'grapheme' }) : null;
     for (const node of nodes) {
       const owner = node.parentElement;
-      const paragraph = owner.closest('p');
+      const paragraph = owner?.closest('p');
+      if (!owner || !paragraph) continue;
       const fragment = document.createDocumentFragment();
       const units = segmenter
         ? Array.from(segmenter.segment(node.data), (unit) => unit.segment) : Array.from(node.data);
@@ -159,6 +173,7 @@ if (story && prose && trigger && restart && roots.length &&
   }
 
   function dealCharacters() {
+    if (!characters) return;
     pool = [];
     reserved = [];
     for (const character of characters) {
@@ -174,7 +189,7 @@ if (story && prose && trigger && restart && roots.length &&
   }
 
   function restartStory() {
-    if (busy || stage !== 3 || document.hidden) return;
+    if (busy || stage !== 3 || document.hidden || !characters) return;
     for (const character of characters) character.span.classList.remove('leaves-gone');
     dealCharacters();
     windDirections = windHeadings.slice();
@@ -231,7 +246,7 @@ if (story && prose && trigger && restart && roots.length &&
     };
   }
 
-  function sampleWind(wind, progress) {
+  function sampleWind(wind: Wind, progress: number) {
     let start = 0;
     for (const segment of wind.path) {
       if (progress > segment.end) { start = segment.end; continue; }
@@ -246,7 +261,7 @@ if (story && prose && trigger && restart && roots.length &&
     }
   }
 
-  function trajectory(x, y) {
+  function trajectory(x: number, y: number) {
     return {
       x, y, delay: random(0, 160), duration: random(3100, 4400),
       curlScale: random(0.5, 1.5), stretch: random(0.65, 1.4),
@@ -256,9 +271,10 @@ if (story && prose && trigger && restart && roots.length &&
     };
   }
 
-  function particlePosition(particle, wind, elapsed) {
+  function particlePosition(particle: Particle, wind: Wind, elapsed: number) {
     const t = clamp((elapsed - particle.delay) / particle.duration);
     const flow = sampleWind(wind, t);
+    if (!flow) return { t: 1, x: particle.x, y: particle.y, angle: 0 };
     const envelope = Math.sin(Math.PI * t);
     // Each letter catches the gust at its own moment and loosens quickly.
     // These offsets grow continuously from zero, then settle into the exit.
@@ -277,10 +293,11 @@ if (story && prose && trigger && restart && roots.length &&
     };
   }
 
-  function visibleParticles(selected) {
-    const particles = [];
-    const paragraphVisible = new Map();
-    const fonts = new Map();
+  function visibleParticles(selected: Character[]): Particle[] {
+    if (!context) return [];
+    const particles: GlyphParticle[] = [];
+    const paragraphVisible = new Map<HTMLParagraphElement, boolean>();
+    const fonts = new Map<HTMLElement, { font: string; color: string; size: number }>();
     for (const character of selected) {
       const { span, owner, paragraph, letter } = character;
       if (!paragraphVisible.has(paragraph)) {
@@ -297,7 +314,7 @@ if (story && prose && trigger && restart && roots.length &&
           color: css.color, size: parseFloat(css.fontSize)
         });
       }
-      const font = fonts.get(owner);
+      const font = fonts.get(owner)!;
       context.font = font.font;
       const metrics = context.measureText(letter);
       const descent = metrics.fontBoundingBoxDescent ?? font.size * 0.25;
@@ -310,7 +327,7 @@ if (story && prose && trigger && restart && roots.length &&
     return particles;
   }
 
-  function departingLeaf() {
+  function departingLeaf(): LeafParticle | null {
     const actor = actors.find((item) => item.header === mobile.matches);
     if (!actor || !leafSheet.complete || !leafSheet.naturalWidth) return null;
     if (actor.header && !header?.classList.contains('header-coda-on')) return null;
@@ -322,7 +339,8 @@ if (story && prose && trigger && restart && roots.length &&
     };
   }
 
-  function drawFlight(now) {
+  function drawFlight(now: number) {
+    if (!burst) return;
     if (!context || !canvas) { burst.particles = []; return; }
     context.setTransform(1, 0, 0, 1, 0, 0);
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -391,7 +409,7 @@ if (story && prose && trigger && restart && roots.length &&
         roots.forEach((root) => { root.dataset.leavesDeparted = ''; });
         trigger.blur();
       }
-      if (animated) {
+      if (animated && canvas && wind) {
         document.body.append(canvas);
         burst = { start: performance.now(), particles, wind };
         // Paint the first positions immediately, before yielding the frame.
@@ -436,9 +454,11 @@ if (story && prose && trigger && restart && roots.length &&
   if (typeof ResizeObserver === 'function') {
     const observer = new ResizeObserver(() => { metricsDirty = true; schedule(); });
     observer.observe(prose);
-    const cover = story.querySelector('.archive-cover-card');
+    const cover = story.querySelector<HTMLElement>('.archive-cover-card');
     if (cover) observer.observe(cover);
   }
   document.fonts?.ready.then(onResize);
   schedule();
 }
+
+export {};

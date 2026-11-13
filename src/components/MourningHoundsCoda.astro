@@ -5,7 +5,6 @@ import paw2 from '../assets/codas/mourning-hounds/paw-02.png';
 import paw3 from '../assets/codas/mourning-hounds/paw-03.png';
 import paw4 from '../assets/codas/mourning-hounds/paw-04.png';
 import paw5 from '../assets/codas/mourning-hounds/paw-05.png';
-import controllerUrl from '../scripts/mourning-hounds-coda.js?url';
 
 interface Props {
   variant: 'desktop' | 'header' | 'tablet';
@@ -32,7 +31,7 @@ const artwork = 'realistic';
 
 <!-- Only the story's cover instance emits the controller. Importing the
      header component on other pages must not download or run this script. -->
-{variant === 'desktop' && <script is:inline type="module" src={controllerUrl}></script>}
+{variant === 'desktop' && <script src="../scripts/mourning-hounds-coda.ts"></script>}
 
 <style>
   .mh-coda {

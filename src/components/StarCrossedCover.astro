@@ -2,7 +2,6 @@
 import { getImage } from 'astro:assets';
 import OptimizedImage from './OptimizedImage.astro';
 import { CARD_IMAGE_QUALITY, CARD_IMAGE_WIDTHS, imageAsset } from '../lib/image-assets';
-import controllerUrl from '../scripts/star-crossed-cover.js?url';
 
 interface Props { alt: string; cover: string; variants: string[]; }
 const { alt, cover, variants } = Astro.props;
@@ -38,7 +37,7 @@ const sources = await Promise.all(covers.map(async ({ number, image }) => {
   <div class="sc-cover-frame" data-sc-cover-frame aria-hidden="true"></div>
   <script is:inline type="application/json" data-sc-cover-sources set:html={JSON.stringify(sources).replace(/</g, '\\u003c')} />
 </div>
-<script is:inline type="module" src={controllerUrl}></script>
+<script src="../scripts/star-crossed-cover.ts"></script>
 
 <style is:global>
   [data-sc-story] .sc-cover-stack,

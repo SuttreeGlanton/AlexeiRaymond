@@ -1,13 +1,12 @@
 ---
 import variants from '../data/star-crossed-variants.json';
-import controllerUrl from '../scripts/star-crossed-coda.js?url';
 ---
 
 <span class="sc-sr-only" id="sc-help">Activate this passage to change its wording or colour.</span>
 <span class="sc-sr-only" data-sc-status role="status" aria-live="polite" aria-atomic="true"></span>
 
 <script is:inline type="application/json" data-sc-variants set:html={JSON.stringify(variants).replace(/</g, '\\u003c')} />
-<script is:inline type="module" src={controllerUrl}></script>
+<script src="../scripts/star-crossed-coda.ts"></script>
 
 <style is:global>
   [data-sc-story] .archive-prose {

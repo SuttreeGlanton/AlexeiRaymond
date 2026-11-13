@@ -1,90 +1,25 @@
 import rawData from '../../site-data.json';
 
-export type Tag = 'Online' | 'In print' | 'Upcoming' | 'Defunct';
+import type { z } from 'astro/zod';
+import {
+  siteDataSchema, tagSchema, genreSchema, pieceAccountSchema, socialObjectSchema,
+  socialSchema, siteMetaSchema, cycleSchema, pieceSchema, interviewSchema,
+} from './data-schema.mjs';
+import { parseDate, publishedNewestFirstFrom } from './data-rules.mjs';
+export { parseDate, formatIsoDate } from './data-rules.mjs';
 
-export type Genre = 'Short fiction' | 'Flash fiction' | 'Poem' | 'Non-fiction' | 'Other';
+export type Tag = z.infer<typeof tagSchema>;
+export type Genre = z.infer<typeof genreSchema>;
+export type PieceAccount = z.infer<typeof pieceAccountSchema>;
+export type SocialObject = z.infer<typeof socialObjectSchema>;
+export type Social = z.infer<typeof socialSchema>;
+export type SiteMeta = z.infer<typeof siteMetaSchema>;
+export type Cycle = z.infer<typeof cycleSchema>;
+export type Piece = z.infer<typeof pieceSchema>;
+export type Interview = z.infer<typeof interviewSchema>;
+export type SiteData = z.infer<typeof siteDataSchema>;
 
-export interface PieceAccount {
-  slug: string;
-  label?: string;
-  title?: string;
-}
-
-export interface SocialObject {
-  label?: string;
-  name?: string;
-  url?: string;
-  href?: string;
-}
-
-export type Social = string | SocialObject;
-
-export interface SiteMeta {
-  author: string;
-  bio: string;
-  email: string;
-  /** Base64-encoded contact address; keeps the plain address out of public source. */
-  emailEncoded?: string;
-  socials: Social[];
-  headerCover?: string;
-  socialCard?: string;
-  /** Ordered list of piece titles to feature on the Selected page. */
-  featured?: string[];
-}
-
-export interface Cycle {
-  id: string;
-  name: string;
-  blurb: string;
-  /** Search and sharing summary, separate from the visible literary blurb. */
-  description?: string;
-  cover: string;
-  /** Wide, pre-composed photograph used by the cycle page hero. */
-  banner: string;
-  /** Cycle-specific narrative sequence. Omitted for cycles without a fixed order. */
-  storyOrder?: string[];
-  disabled?: boolean;
-}
-
-export interface Piece {
-  title: string;
-  cycle: string;
-  /** Full cycle membership. When omitted, the primary cycle is the only cycle. */
-  cycles?: string[];
-  publication: string;
-  date: string | null;
-  tags: Tag[];
-  link: string;
-  cover: string;
-  /** Ordered cover variations used by a piece's presentation. Includes cover. */
-  coverVariants?: string[];
-  issue?: string;
-  awardNote?: string;
-  note?: string;
-  excerpt?: string;
-  genre?: Genre;
-  account?: PieceAccount;
-  /** Manual line breaks for card titles that need them. */
-  titleLines?: string[];
-}
-
-export interface Interview {
-  title: string;
-  publication: string;
-  date: string;
-  link: string;
-  cover?: string;
-  excerpt?: string;
-}
-
-export interface SiteData {
-  site: SiteMeta;
-  cycles: Cycle[];
-  pieces: Piece[];
-  interview: Interview;
-}
-
-export const siteData = rawData as SiteData;
+export const siteData = siteDataSchema.parse(rawData);
 export const site = siteData.site;
 export const cycles = siteData.cycles;
 export const pieces = siteData.pieces;
@@ -128,14 +63,6 @@ export function upcomingPieces(): Piece[] {
   return pieces.filter(isUpcoming);
 }
 
-/** Parse a DD/MM/YYYY date string (European order, never month/day/year). */
-export function parseDate(date: string | null): Date | null {
-  if (!date) return null;
-  const [day, month, year] = date.split('/').map(Number);
-  if (!day || !month || !year) return null;
-  return new Date(year, month - 1, day);
-}
-
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
@@ -152,14 +79,6 @@ export function formatLongDate(date: string | null): string {
   const parsed = parseDate(date);
   if (!parsed) return '';
   return `${parsed.getDate()} ${MONTHS[parsed.getMonth()]} ${parsed.getFullYear()}`;
-}
-
-/** ISO date for metadata and structured data, e.g. "2025-09-20". */
-export function formatIsoDate(date: string | null): string {
-  if (!date) return '';
-  const [day, month, year] = date.split('/').map(Number);
-  if (!day || !month || !year) return '';
-  return `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 }
 
 /**
@@ -190,9 +109,7 @@ export function formatShortDate(date: string | null): string {
 
 /** Published pieces sorted newest first by full parsed date. */
 export function publishedNewestFirst(): Piece[] {
-  return publishedPieces()
-    .slice()
-    .sort((a, b) => (parseDate(b.date)?.getTime() ?? 0) - (parseDate(a.date)?.getTime() ?? 0));
+  return publishedNewestFirstFrom(pieces);
 }
 
 export function socialLabel(social: Social): string {

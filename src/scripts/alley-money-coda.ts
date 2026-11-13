@@ -1,3 +1,4 @@
+import { clamp01 as clamp } from '../lib/motion';
 export {};
 
 // Both placements share the same sprite and kill/respawn state, including
@@ -30,7 +31,6 @@ if (story && prose && actors.length) {
   let metricsDirty = true;
   let startScroll = 0;
   let endScroll = 1;
-  const clamp = (value: number) => Math.max(0, Math.min(1, value));
   const wait = (milliseconds: number) =>
     new Promise<void>((resolve) => window.setTimeout(resolve, milliseconds));
 
@@ -45,7 +45,6 @@ if (story && prose && actors.length) {
     { x: 247, y: 771, width: 69, height: 66 },
     { x: 329, y: 783, width: 75, height: 49 }
   ];
-
 
   const clear = () => {
     for (const { context, canvas } of actors) context.clearRect(0, 0, canvas.width, canvas.height);

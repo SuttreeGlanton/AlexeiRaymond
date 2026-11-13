@@ -1,558 +1,105 @@
+// @ts-check
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { siteDataSchema, normalizeAssetPath } from '../src/lib/data-schema.mjs';
+import { STORY_PRESENTATIONS } from '../src/lib/story-registry.mjs';
 
-const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(scriptDir, '..');
-const siteDataPath = path.join(repoRoot, 'site-data.json');
-
-const rawSiteData = fs.readFileSync(siteDataPath, 'utf8').replace(/^\uFEFF/, '');
-const data = JSON.parse(rawSiteData);
-
-const errors = [];
-const warnings = [];
-
-const allowedTags = ['Online', 'In print', 'Upcoming', 'Defunct'];
-const allowedGenres = ['Short fiction', 'Flash fiction', 'Poem', 'Non-fiction', 'Other'];
-
-function addError(message) {
-  errors.push(message);
-}
-
-function addWarning(message) {
-  warnings.push(message);
-}
-
-function isPlainObject(value) {
-  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
-}
-
-function labelForPiece(piece, index) {
-  return piece?.title ? `piece "${piece.title}"` : `pieces[${index}]`;
-}
-
-function requireObject(value, label) {
-  if (!isPlainObject(value)) {
-    addError(`${label}: must be an object.`);
-    return false;
-  }
-
-  return true;
-}
-
-function requireArray(value, label) {
-  if (!Array.isArray(value)) {
-    addError(`${label}: must be an array.`);
-    return false;
-  }
-
-  return true;
-}
-
-function requireString(value, label, { allowEmpty = false } = {}) {
-  if (typeof value !== 'string') {
-    addError(`${label}: must be a string.`);
-    return false;
-  }
-
-  if (!allowEmpty && !value.trim()) {
-    addError(`${label}: must not be empty.`);
-    return false;
-  }
-
-  return true;
-}
-
-function collectStrings(value, currentPath = 'site-data') {
-  const found = [];
-
-  if (typeof value === 'string') {
-    found.push([currentPath, value]);
-    return found;
-  }
-
-  if (Array.isArray(value)) {
-    value.forEach((item, index) => {
-      found.push(...collectStrings(item, `${currentPath}[${index}]`));
-    });
-    return found;
-  }
-
-  if (value && typeof value === 'object') {
-    for (const [key, item] of Object.entries(value)) {
-      found.push(...collectStrings(item, `${currentPath}.${key}`));
-    }
-  }
-
-  return found;
-}
-
-function normalizePath(value) {
-  return String(value || '')
-    .replace(/\\/g, '/')
-    .replace(/^\/+/, '')
-    .replace(/^public\//, '')
-    .replace(/^assets\//, '');
-}
-
-function fileExists(relativePath) {
-  return fs.existsSync(path.join(repoRoot, relativePath));
-}
-
-function assetExists(assetPath, roots) {
-  const clean = normalizePath(assetPath);
-  return roots.some((root) => fileExists(`${root}/${clean}`.replace(/\/+/g, '/')));
-}
-
-function checkAsset(label, assetPath, roots) {
-  if (!requireString(assetPath, `${label} cover/path`)) return;
-
-  const clean = normalizePath(assetPath);
-  if (!assetExists(clean, roots)) {
-    addError(`${label}: missing asset "${clean}". Checked under: ${roots.join(', ')}.`);
-  }
-}
-
-function accountMarkdownPath(slug) {
-  const candidates = [
-    `src/content/accounts/${slug}.md`,
-    `src/content/accounts/${slug}.mdx`
-  ];
-  return candidates.find(fileExists) || '';
-}
-
-function accountMarkdownExists(slug) {
-  return Boolean(accountMarkdownPath(slug));
-}
-
-function accountMarkdownHasFullText(slug) {
-  const relativePath = accountMarkdownPath(slug);
-  if (!relativePath) return false;
-
-  const source = fs.readFileSync(path.join(repoRoot, relativePath), 'utf8').replace(/^\uFEFF/, '');
-  const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
-  return Boolean(frontmatter && /^fullText:\s*true\s*$/m.test(frontmatter[1]));
-}
-
-function isHttpUrl(value) {
-  return /^https?:\/\//i.test(String(value || ''));
-}
-
-function checkHttpUrl(value, label, { allowEmpty = false } = {}) {
-  if (!requireString(value, label, { allowEmpty })) return;
-
-  if (!value) return;
-
-  if (!isHttpUrl(value)) {
-    addError(`${label}: must be an http(s) URL.`);
-  }
-}
-
-function parseSiteDate(value, label, { allowNull = false } = {}) {
-  if (value === null) {
-    if (!allowNull) addError(`${label}: date must not be null.`);
-    return null;
-  }
-
-  if (typeof value !== 'string') {
-    addError(`${label}: date must be a DD/MM/YYYY string${allowNull ? ' or null' : ''}.`);
-    return null;
-  }
-
-  const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  if (!match) {
-    addError(`${label}: date "${value}" must use DD/MM/YYYY.`);
-    return null;
-  }
-
-  const day = Number(match[1]);
-  const month = Number(match[2]);
-  const year = Number(match[3]);
-  const parsed = new Date(year, month - 1, day);
-
-  if (
-    parsed.getFullYear() !== year ||
-    parsed.getMonth() !== month - 1 ||
-    parsed.getDate() !== day
-  ) {
-    addError(`${label}: date "${value}" is not a real calendar date.`);
-    return null;
-  }
-
-  return parsed;
-}
-
-function isSlug(value) {
-  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(String(value || ''));
-}
-
-for (const [stringPath, value] of collectStrings(data)) {
-  if (/\u00e2\u20ac|\u00c2/.test(value)) {
-    addError(`${stringPath}: possible mojibake/encoding damage.`);
-  }
-}
-
-if (rawSiteData.includes('gnarlyr=')) {
-  addError('site-data.json: damaged URL found: gnarlyr=');
-}
-
-if (rawSiteData.includes('detail.aspcatalog')) {
-  addError('site-data.json: damaged URL found: detail.aspcatalog');
-}
-
-if (!requireObject(data, 'site-data')) {
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const rawSiteData = fs.readFileSync(path.join(repoRoot, 'site-data.json'), 'utf8').replace(/^\uFEFF/, '');
+let input;
+try {
+  input = JSON.parse(rawSiteData);
+} catch (error) {
+  console.error('site-data.json: invalid JSON.', error instanceof Error ? error.message : error);
   process.exit(1);
 }
+const result = siteDataSchema.safeParse(input);
+if (!result.success) {
+  console.error('Site data verification failed:');
+  for (const issue of result.error.issues) console.error(`- ${issue.path.join('.')}: ${issue.message}`);
+  process.exit(1);
+}
+const data = result.data;
+/** @type {string[]} */
+const errors = [];
+/** @type {string[]} */
+const warnings = [];
 
-requireObject(data.site, 'site');
-requireArray(data.cycles, 'cycles');
-requireArray(data.pieces, 'pieces');
-requireObject(data.interview, 'interview');
-
-if (isPlainObject(data.site)) {
-  requireString(data.site.author, 'site.author');
-  requireString(data.site.bio, 'site.bio');
-  requireString(data.site.email, 'site.email', { allowEmpty: true });
-  requireArray(data.site.socials, 'site.socials');
-
-  if (data.site.headerCover) {
-    checkAsset('site.headerCover', data.site.headerCover, ['src/assets']);
-  }
-
-  if (data.site.socialCard) {
-    checkAsset('site.socialCard', data.site.socialCard, ['public']);
-  }
-
-  if (data.site.emailEncoded && typeof data.site.emailEncoded !== 'string') {
-    addError('site.emailEncoded: must be a string when present.');
+/** @param {unknown} value @param {string} [field] */
+function checkEncoding(value, field = 'site-data') {
+  if (typeof value === 'string' && /\u00e2\u20ac|\u00c2/.test(value)) {
+    errors.push(`${field}: possible mojibake/encoding damage.`);
+  } else if (Array.isArray(value)) {
+    value.forEach((item, index) => checkEncoding(item, `${field}[${index}]`));
+  } else if (value && typeof value === 'object') {
+    for (const [key, item] of Object.entries(value)) checkEncoding(item, `${field}.${key}`);
   }
 }
-
-const cycleNames = new Set();
-const cycleIds = new Set();
-
-if (Array.isArray(data.cycles)) {
-  data.cycles.forEach((cycle, index) => {
-    const label = cycle?.name ? `cycle "${cycle.name}"` : `cycles[${index}]`;
-
-    if (!requireObject(cycle, label)) return;
-
-    requireString(cycle.id, `${label}.id`);
-    requireString(cycle.name, `${label}.name`);
-    requireString(cycle.blurb, `${label}.blurb`);
-    if (cycle.description !== undefined) {
-      requireString(cycle.description, `${label}.description`);
-    }
-    checkAsset(label, cycle.cover, ['src/assets']);
-    checkAsset(`${label} banner`, cycle.banner, ['src/assets']);
-
-    if (cycle.id && !isSlug(cycle.id)) {
-      addError(`${label}.id: "${cycle.id}" should be a lowercase slug.`);
-    }
-
-    if (cycleIds.has(cycle.id)) {
-      addError(`${label}: duplicate cycle id "${cycle.id}".`);
-    }
-
-    if (cycleNames.has(cycle.name)) {
-      addError(`${label}: duplicate cycle name "${cycle.name}".`);
-    }
-
-    cycleIds.add(cycle.id);
-    cycleNames.add(cycle.name);
-  });
+checkEncoding(data);
+for (const damagedUrl of ['gnarlyr=', 'detail.aspcatalog']) {
+  if (rawSiteData.includes(damagedUrl)) errors.push(`site-data.json: damaged URL found: ${damagedUrl}`);
 }
 
-const pieceTitles = new Set();
-const accountSlugs = new Set();
-const totalByCycle = new Map([...cycleNames].map((cycleName) => [cycleName, 0]));
-
-if (Array.isArray(data.pieces)) {
-  data.pieces.forEach((piece, index) => {
-    const label = labelForPiece(piece, index);
-
-    if (!requireObject(piece, label)) return;
-
-    requireString(piece.title, `${label}.title`);
-    requireString(piece.cycle, `${label}.cycle`);
-    requireString(piece.publication, `${label}.publication`);
-    requireString(piece.link, `${label}.link`, { allowEmpty: true });
-    checkAsset(label, piece.cover, ['src/assets']);
-
-    if ('coverVariants' in piece && requireArray(piece.coverVariants, `${label}.coverVariants`)) {
-      const variants = piece.coverVariants.map(normalizePath);
-      if (variants.length < 2) {
-        addError(`${label}.coverVariants: must list at least two images.`);
-      }
-      if (new Set(variants).size !== variants.length) {
-        addError(`${label}.coverVariants: must not contain duplicate images.`);
-      }
-      if (!variants.includes(normalizePath(piece.cover))) {
-        addError(`${label}.coverVariants: must include the primary cover.`);
-      }
-      piece.coverVariants.forEach((cover, variantIndex) => {
-        checkAsset(`${label}.coverVariants[${variantIndex}]`, cover, ['src/assets']);
-      });
-    }
-
-    if (piece.title) {
-      if (pieceTitles.has(piece.title)) {
-        addError(`${label}: duplicate piece title.`);
-      }
-      pieceTitles.add(piece.title);
-    }
-
-    const membership = Array.isArray(piece.cycles) ? piece.cycles : [piece.cycle];
-
-    if ('cycles' in piece && !Array.isArray(piece.cycles)) {
-      addError(`${label}.cycles: must be an array when present.`);
-    }
-
-    if (Array.isArray(piece.cycles) && piece.cycle && !piece.cycles.includes(piece.cycle)) {
-      addError(`${label}.cycles: must include primary cycle "${piece.cycle}".`);
-    }
-
-    const seenPieceCycles = new Set();
-
-    for (const cycleName of membership) {
-      if (typeof cycleName !== 'string' || !cycleName.trim()) {
-        addError(`${label}.cycles: cycle names must be non-empty strings.`);
-        continue;
-      }
-
-      if (seenPieceCycles.has(cycleName)) {
-        addError(`${label}.cycles: duplicate cycle "${cycleName}".`);
-        continue;
-      }
-
-      seenPieceCycles.add(cycleName);
-
-      if (!cycleNames.has(cycleName)) {
-        addError(`${label}: cycle "${cycleName}" does not match any cycle name.`);
-      } else {
-        totalByCycle.set(cycleName, (totalByCycle.get(cycleName) || 0) + 1);
-      }
-    }
-
-    if (!Array.isArray(piece.tags)) {
-      addError(`${label}.tags: must be an array.`);
-    } else {
-      if (!piece.tags.length) {
-        addError(`${label}.tags: must contain at least one tag.`);
-      }
-
-      const seenTags = new Set();
-      for (const tag of piece.tags) {
-        if (!allowedTags.includes(tag)) {
-          addError(`${label}.tags: "${tag}" is not one of: ${allowedTags.join(', ')}.`);
-        }
-
-        if (seenTags.has(tag)) {
-          addError(`${label}.tags: duplicate tag "${tag}".`);
-        }
-
-        seenTags.add(tag);
-      }
-    }
-
-    const tags = Array.isArray(piece.tags) ? piece.tags : [];
-    const isUpcoming = tags.includes('Upcoming');
-    const isDefunct = tags.includes('Defunct');
-    const isOnline = tags.includes('Online');
-
-    if (isUpcoming && piece.date !== null) {
-      addError(`${label}: Upcoming pieces must have date set to null.`);
-    }
-
-    if (isUpcoming && piece.link) {
-      addError(`${label}: Upcoming pieces should not have an external link yet.`);
-    }
-
-    if (isDefunct && piece.link) {
-      addError(`${label}: Defunct pieces must not have an external link.`);
-    }
-
-    if (!isUpcoming) {
-      parseSiteDate(piece.date, `${label}.date`, { allowNull: false });
-    } else {
-      parseSiteDate(piece.date, `${label}.date`, { allowNull: true });
-    }
-
-    if (piece.link) {
-      checkHttpUrl(piece.link, `${label}.link`, { allowEmpty: true });
-    }
-
-    if (isOnline && !isUpcoming && !isDefunct && !piece.link) {
-      addError(`${label}: Online published pieces should have a link unless Upcoming or Defunct.`);
-    }
-
-    if (!piece.genre) {
-      addError(`${label}: missing genre.`);
-    } else if (!allowedGenres.includes(piece.genre)) {
-      addError(`${label}: genre "${piece.genre}" is not one of: ${allowedGenres.join(', ')}.`);
-    }
-
-    if ('excerpt' in piece && typeof piece.excerpt !== 'string') {
-      addError(`${label}.excerpt: must be a string when present.`);
-    }
-
-    if (!piece.excerpt || !piece.excerpt.trim()) {
-      addWarning(`${label}: excerpt is empty.`);
-    }
-
-    if ('awardNote' in piece) {
-      requireString(piece.awardNote, `${label}.awardNote`);
-    }
-
-    if (piece.account !== undefined) {
-      if (!requireObject(piece.account, `${label}.account`)) return;
-
-      requireString(piece.account.slug, `${label}.account.slug`);
-
-      if (piece.account.slug && !isSlug(piece.account.slug)) {
-        addError(`${label}.account.slug: "${piece.account.slug}" should be a lowercase slug.`);
-      }
-
-      if (piece.account.slug && accountSlugs.has(piece.account.slug)) {
-        addError(`${label}.account.slug: duplicate account slug "${piece.account.slug}".`);
-      }
-
-      if (piece.account.slug) {
-        accountSlugs.add(piece.account.slug);
-      }
-
-      if (piece.account.slug && !accountMarkdownExists(piece.account.slug)) {
-        addError(`${label}: missing archive markdown for account slug "${piece.account.slug}".`);
-      }
-
-      if ('label' in piece.account && typeof piece.account.label !== 'string') {
-        addError(`${label}.account.label: must be a string when present.`);
-      }
-
-      if ('title' in piece.account && typeof piece.account.title !== 'string') {
-        addError(`${label}.account.title: must be a string when present.`);
-      }
-
-      if (
-        piece.account.slug &&
-        piece.account.label === 'Read story' &&
-        accountMarkdownExists(piece.account.slug) &&
-        !accountMarkdownHasFullText(piece.account.slug)
-      ) {
-        addError(`${label}: "Read story" account markdown must declare fullText: true in frontmatter.`);
-      }
-    }
-  });
+/** @param {string} label @param {string} assetPath @param {string[]} [roots] */
+function checkAsset(label, assetPath, roots = ['src/assets']) {
+  const clean = normalizeAssetPath(assetPath);
+  if (!roots.some((root) => fs.existsSync(path.join(repoRoot, root, clean)))) {
+    errors.push(`${label}: missing asset "${clean}". Checked under: ${roots.join(', ')}.`);
+  }
 }
+const accountsDir = path.join(repoRoot, 'src/content/accounts');
+/** @param {string} slug */
+const accountPath = (slug) => ['md', 'mdx'].map((extension) => path.join(accountsDir, `${slug}.${extension}`)).find(fs.existsSync);
+const accountSlugs = new Set(data.pieces.flatMap((piece) => piece.account ? [piece.account.slug] : []));
 
-if (Array.isArray(data.cycles) && Array.isArray(data.pieces)) {
-  for (const cycle of data.cycles) {
-    const label = `cycle "${cycle.name}"`;
-
-    if (cycle.name === 'Dreams') {
-      if ('storyOrder' in cycle) {
-        addError(`${label}.storyOrder: Dreams must not define a narrative sequence.`);
-      }
-      continue;
-    }
-
-    if (!requireArray(cycle.storyOrder, `${label}.storyOrder`)) continue;
-
-    const expectedTitles = data.pieces
-      .filter((piece) => {
-        const membership = Array.isArray(piece.cycles) ? piece.cycles : [piece.cycle];
-        return membership.includes(cycle.name);
-      })
-      .map((piece) => piece.title);
-    const expectedSet = new Set(expectedTitles);
-    const seen = new Set();
-
-    for (const [index, title] of cycle.storyOrder.entries()) {
-      if (typeof title !== 'string' || !title.trim()) {
-        addError(`${label}.storyOrder[${index}]: must be a non-empty piece title.`);
-        continue;
-      }
-
-      if (seen.has(title)) {
-        addError(`${label}.storyOrder: duplicate title "${title}".`);
-      }
-
-      if (!expectedSet.has(title)) {
-        addError(`${label}.storyOrder: "${title}" is not a member of this cycle.`);
-      }
-
-      seen.add(title);
-    }
-
-    for (const title of expectedTitles) {
-      if (!seen.has(title)) {
-        addError(`${label}.storyOrder: missing cycle piece "${title}".`);
-      }
+if (data.site.headerCover) checkAsset('site.headerCover', data.site.headerCover);
+if (data.site.socialCard) checkAsset('site.socialCard', data.site.socialCard, ['public']);
+for (const cycle of data.cycles) {
+  checkAsset(`cycle "${cycle.name}"`, cycle.cover);
+  checkAsset(`cycle "${cycle.name}" banner`, cycle.banner);
+}
+for (const piece of data.pieces) {
+  const label = `piece "${piece.title}"`;
+  checkAsset(label, piece.cover);
+  piece.coverVariants?.forEach((cover, index) => checkAsset(`${label}.coverVariants[${index}]`, cover));
+  if (!piece.excerpt?.trim()) warnings.push(`${label}: excerpt is empty.`);
+  if (!piece.account) continue;
+  const sourcePath = accountPath(piece.account.slug);
+  if (!sourcePath) {
+    errors.push(`${label}: missing archive markdown for account slug "${piece.account.slug}".`);
+  } else if (piece.account.label === 'Read story') {
+    const source = fs.readFileSync(sourcePath, 'utf8').replace(/^\uFEFF/, '');
+    const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+    if (!frontmatter || !/^fullText:\s*true\s*$/m.test(frontmatter[1])) {
+      errors.push(`${label}: "Read story" account markdown must declare fullText: true in frontmatter.`);
     }
   }
 }
-
-if (isPlainObject(data.site) && Array.isArray(data.site.featured)) {
-  const featuredSeen = new Set();
-
-  data.site.featured.forEach((title, index) => {
-    if (typeof title !== 'string' || !title.trim()) {
-      addError(`site.featured[${index}]: must be a non-empty piece title.`);
-      return;
-    }
-
-    if (featuredSeen.has(title)) {
-      addError(`site.featured: duplicate featured title "${title}".`);
-    }
-
-    if (!pieceTitles.has(title)) {
-      addError(`site.featured: "${title}" does not match any piece title.`);
-    }
-
-    featuredSeen.add(title);
-  });
-}
-
-if (isPlainObject(data.interview)) {
-  requireString(data.interview.title, 'interview.title');
-  requireString(data.interview.publication, 'interview.publication');
-  parseSiteDate(data.interview.date, 'interview.date');
-  checkHttpUrl(data.interview.link, 'interview.link');
-
-  if (data.interview.cover) {
-    checkAsset('interview', data.interview.cover, ['src/assets']);
-  }
-
-  if ('excerpt' in data.interview && typeof data.interview.excerpt !== 'string') {
-    addError('interview.excerpt: must be a string when present.');
-  }
-}
-
-const accountsDir = path.join(repoRoot, 'src', 'content', 'accounts');
+if (data.interview.cover) checkAsset('interview', data.interview.cover);
 if (fs.existsSync(accountsDir)) {
   for (const file of fs.readdirSync(accountsDir)) {
-    if (!/\.mdx?$/i.test(file)) continue;
-
-    const slug = file.replace(/\.mdx?$/i, '');
-    if (!accountSlugs.has(slug)) {
-      addError(`src/content/accounts/${file}: no piece references account slug "${slug}".`);
+    if (/\.mdx?$/i.test(file) && !accountSlugs.has(file.replace(/\.mdx?$/i, ''))) {
+      errors.push(`src/content/accounts/${file}: no piece references this account slug.`);
     }
   }
 }
-
+for (const slug of Object.keys(STORY_PRESENTATIONS)) {
+  if (!accountSlugs.has(slug) || !accountPath(slug)) {
+    errors.push(`story-registry: "${slug}" must reference a piece and its account markdown.`);
+  }
+}
 if (warnings.length) {
   console.warn('Site data verification warnings:');
   for (const warning of warnings) console.warn(`- ${warning}`);
-  console.warn('');
 }
-
 if (errors.length) {
   console.error('Site data verification failed:');
   for (const error of errors) console.error(`- ${error}`);
   process.exit(1);
 }
-
 console.log('Site data verification passed.');
 for (const cycle of data.cycles) {
-  console.log(`${cycle.name}: ${totalByCycle.get(cycle.name) || 0} piece(s)`);
+  const count = data.pieces.filter((piece) => (piece.cycles ?? [piece.cycle]).includes(cycle.name)).length;
+  console.log(`${cycle.name}: ${count} piece(s)`);
 }

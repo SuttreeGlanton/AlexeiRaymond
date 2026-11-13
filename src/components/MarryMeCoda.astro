@@ -15,7 +15,6 @@ import ring09 from '../assets/codas/marry-me/native_114px/ring_09.png';
 import ring10 from '../assets/codas/marry-me/native_114px/ring_10.png';
 import ring11 from '../assets/codas/marry-me/native_114px/ring_11.png';
 import ring12 from '../assets/codas/marry-me/native_114px/ring_12.png';
-import controllerUrl from '../scripts/marry-me-coda.js?url';
 
 interface Props { variant: 'desktop' | 'header'; }
 const { variant } = Astro.props;
@@ -55,7 +54,7 @@ const waterImage = await getImage({ src: water, width: 2172, format: 'webp', qua
 )}
 
 <!-- Emit only on this account page, even though HeaderCoda is imported site-wide. -->
-{variant === 'desktop' && <script is:inline type="module" src={controllerUrl}></script>}
+{variant === 'desktop' && <script src="../scripts/marry-me-coda.ts"></script>}
 
 <style is:global>
   /* Two passing gold highlights on the existing white title. The effect

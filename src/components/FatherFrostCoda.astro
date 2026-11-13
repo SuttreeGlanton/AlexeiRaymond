@@ -4,6 +4,7 @@
 </div>
 
 <script>
+  import { clamp } from '../lib/motion';
   type Zone = {
     left: number;
     right: number;
@@ -95,9 +96,6 @@
     let previousFrame = 0;
     let pixelRatio = 1;
     let launchZone: Zone | null = null;
-
-    const clamp = (value: number, minimum: number, maximum: number) =>
-      Math.min(maximum, Math.max(minimum, value));
 
     const easeOutCubic = (value: number) => 1 - Math.pow(1 - value, 3);
     const easeOutQuad = (value: number) => 1 - Math.pow(1 - value, 2);

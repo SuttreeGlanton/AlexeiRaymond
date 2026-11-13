@@ -1,4 +1,5 @@
 ---
+import type { HeaderCodaVariant } from '../lib/story-registry.mjs';
 import MourningHoundsCoda from './MourningHoundsCoda.astro';
 import MarryMeCoda from './MarryMeCoda.astro';
 import LeavesCoda from './LeavesCoda.astro';
@@ -8,7 +9,7 @@ import AlleyMoneyCoda from './AlleyMoneyCoda.astro';
    slot in the sticky mobile header once the reader scrolls past the title.
    Mobile only (<= 640px); desktop never renders the slot (SiteHeader CSS). */
 interface Props {
-  type: 'moon' | 'counter' | 'pills' | 'eyes' | 'clock' | 'rabbit' | 'paws' | 'ring' | 'leaf' | 'cacodemon';
+  type: HeaderCodaVariant;
 }
 
 const { type } = Astro.props as Props;

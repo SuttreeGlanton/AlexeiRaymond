@@ -1,3 +1,4 @@
+import { clamp } from '../lib/motion';
 /* The two contacts on each seam share the resting fan geometry. Paint only
    their small raster regions, with the same reciprocal film and tongue motion
    as the fan's original overlay. */
@@ -28,7 +29,6 @@ type Spot = Bounds & {
   noiseX: number; noiseY: number; opacity: string;
 };
 
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 /* Make the exchange immediately legible without introducing jitter:
    every motion still follows long sine curves, but the liquid clock is

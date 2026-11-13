@@ -1,11 +1,12 @@
 ---
+import type { HeaderCodaVariant } from '../lib/story-registry.mjs';
 import { cycles, site } from '../lib/data';
 import { withBase } from '../lib/paths';
 import HeaderCoda from './HeaderCoda.astro';
 import CycleName from './CycleName.astro';
 
 interface Props {
-  headerCoda?: 'moon' | 'counter' | 'pills' | 'eyes' | 'clock' | 'rabbit' | 'paws' | 'ring' | 'leaf' | 'cacodemon';
+  headerCoda?: HeaderCodaVariant;
 }
 
 const { headerCoda } = Astro.props;

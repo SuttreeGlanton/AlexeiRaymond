@@ -1,11 +1,15 @@
-// Keep one next image ready, rather than downloading every variation at once.
-const cover = document.querySelector('[data-sc-cover]');
-const sourceData = cover?.querySelector('[data-sc-cover-sources]');
+interface CoverSource { src: string; srcset: string; sizes: string; width: number; height: number; number: number }
+interface PreparedCover { index: number; img: HTMLImageElement }
 
-if (cover && sourceData) {
-  let sources;
+// Keep one next image ready, rather than downloading every variation at once.
+const coverRoot = document.querySelector<HTMLElement>('[data-sc-cover]');
+const sourceData = coverRoot?.querySelector<HTMLElement>('[data-sc-cover-sources]');
+
+if (coverRoot && sourceData) {
+  const cover = coverRoot;
+  let sources: CoverSource[];
   try { sources = JSON.parse(sourceData.textContent || '[]'); } catch { sources = []; }
-  const frames = Array.from(cover.querySelectorAll('[data-sc-cover-frame]'));
+  const frames = Array.from(cover.querySelectorAll<HTMLElement>('[data-sc-cover-frame]'));
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let current = 0;
   let activeFrame = 0;
@@ -13,7 +17,7 @@ if (cover && sourceData) {
   let suspended = false;
   let timer = 0;
   let generation = 0;
-  let pending = null;
+  let pending: { index: number; promise: Promise<PreparedCover | null> } | null = null;
 
   function eligible() {
     return visible && !suspended && !document.hidden && !motion.matches;
@@ -48,7 +52,7 @@ if (cover && sourceData) {
     timer = window.setTimeout(() => changeCover(scheduledGeneration), 5000);
   }
 
-  async function changeCover(scheduledGeneration) {
+  async function changeCover(scheduledGeneration: number) {
     const next = await prepareNext();
     if (scheduledGeneration !== generation || !eligible()) return;
     if (!next) { schedule(); return; }
@@ -81,3 +85,5 @@ if (cover && sourceData) {
     window.addEventListener('pageshow', () => { suspended = false; schedule(); });
   }
 }
+
+export {};

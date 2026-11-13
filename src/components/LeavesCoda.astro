@@ -1,6 +1,5 @@
 ---
 import sheet from '../assets/codas/leaves/leaf-sheet.png';
-import controllerUrl from '../scripts/leaves-coda.js?url';
 
 interface Props {
   variant: 'desktop' | 'header';
@@ -13,7 +12,7 @@ const { variant } = Astro.props;
   </span>
 </span>
 
-{variant === 'desktop' && <script is:inline type="module" src={controllerUrl}></script>}
+{variant === 'desktop' && <script src="../scripts/leaves-coda.ts"></script>}
 
 <style>
   .leaves-coda {

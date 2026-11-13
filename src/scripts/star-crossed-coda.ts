@@ -1,16 +1,25 @@
+interface FragmentOption { text: string; color?: string; emphasis?: [number, number][] }
+type FragmentMode = 'click' | 'ambient' | 'color';
+interface FragmentDefinition { mode: FragmentMode; options: FragmentOption[] }
+interface FragmentState {
+  label: HTMLLabelElement; ink: HTMLSpanElement; text: HTMLSpanElement; button: HTMLButtonElement;
+  options: FragmentOption[]; mode: FragmentMode; index: number; visible: boolean; hovered: boolean;
+  period: number; delay: number; due: number; swapTimer: number; feedbackTimer: number;
+}
+
 // Star-Crossed: the page stays complete prose if this enhancement cannot load.
-const story = document.querySelector('[data-sc-story] .archive-prose');
-const data = document.querySelector('[data-sc-variants]');
-const announcement = document.querySelector('[data-sc-status]');
+const story = document.querySelector<HTMLElement>('[data-sc-story] .archive-prose');
+const data = document.querySelector<HTMLElement>('[data-sc-variants]');
+const announcement = document.querySelector<HTMLElement>('[data-sc-status]');
 
 if (story && data && announcement) {
-  let variants;
+  let variants: Record<string, FragmentDefinition>;
   try { variants = JSON.parse(data.textContent || '{}'); } catch { variants = {}; }
 
   // Descriptive words share a slow beat. Colours each have their own cadence.
   const BEAT = 8000;
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const ambient = new Map();
+  const ambient = new Map<Element, FragmentState>();
   let paused = motion.matches;
   let nextTextAt = performance.now() + BEAT;
   let timer = 0;
@@ -18,7 +27,7 @@ if (story && data && announcement) {
   let count = 0;
   let colorCount = 0;
 
-  function renderText(target, option) {
+  function renderText(target: HTMLElement, option: FragmentOption) {
     const nodes = [];
     let cursor = 0;
     for (const [start, end] of option.emphasis || []) {
@@ -32,7 +41,7 @@ if (story && data && announcement) {
     target.replaceChildren(...nodes);
   }
 
-  function show(state) {
+  function show(state: FragmentState) {
     const option = state.options[state.index];
     // In the hue-only fragment, keep the same text nodes and accessible name.
     if (state.text.textContent !== option.text) renderText(state.text, option);
@@ -42,18 +51,18 @@ if (story && data && announcement) {
     state.label.dataset.scIndex = String(state.index);
   }
 
-  function eligible(state) {
+  function eligible(state: FragmentState) {
     return state.visible && (state.mode === 'color' || !state.hovered) &&
       !state.label.contains(document.activeElement);
   }
 
-  function cancelChange(state) {
+  function cancelChange(state: FragmentState) {
     window.clearTimeout(state.swapTimer);
     state.swapTimer = 0;
     state.label.classList.remove('is-changing');
   }
 
-  function advance(state, automatic = false) {
+  function advance(state: FragmentState, automatic = false) {
     cancelChange(state);
     const commit = () => {
       state.swapTimer = 0;
@@ -84,7 +93,7 @@ if (story && data && announcement) {
 
   function tick() {
     const now = performance.now();
-    let candidate = null;
+    let candidate: FragmentState | null = null;
     for (const state of ambient.values()) {
       if (!eligible(state) || state.due > now + 8) continue;
       if (state.mode === 'color') {
@@ -109,8 +118,10 @@ if (story && data && announcement) {
 
   // No live announcements for ambient changes. The status speaks only when
   // the reader explicitly chooses an alternative.
-  for (const original of story.querySelectorAll('[data-sc]')) {
-    const definition = variants[original.dataset.sc];
+  for (const original of story.querySelectorAll<HTMLElement>('[data-sc]')) {
+    const key = original.dataset.sc;
+    if (!key) continue;
+    const definition = variants[key];
     if (!definition || definition.options?.length < 2) continue;
     const { mode, options } = definition;
     if (!['click', 'ambient', 'color'].includes(mode) ||
@@ -119,7 +130,7 @@ if (story && data && announcement) {
 
     const label = document.createElement('label');
     label.className = `sc-fragment${mode !== 'click' ? ' sc-ambient' : ''}${mode === 'color' ? ' sc-color' : ''}`;
-    label.dataset.sc = original.dataset.sc;
+    label.dataset.sc = key;
     label.dataset.scMode = mode;
     const ink = document.createElement('span');
     ink.className = 'sc-ink';
@@ -194,6 +205,7 @@ if (story && data && announcement) {
         const now = performance.now();
         for (const entry of entries) {
           const state = ambient.get(entry.target);
+          if (!state) continue;
           state.visible = entry.isIntersecting;
           state.due = now + state.delay;
         }
@@ -221,3 +233,5 @@ if (story && data && announcement) {
     });
   }
 }
+
+export {};

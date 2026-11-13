@@ -1,4 +1,5 @@
 ---
+import { cycleLabel as labelForCycle } from '../lib/data-rules.mjs';
 import TagList from './TagList.astro';
 import ReadArrow from './ReadArrow.astro';
 import CycleIcon from './CycleIcon.astro';
@@ -50,7 +51,7 @@ const cycleTitleFit = piece.title === '193 Thoughts of You';
 const className = `piece-card${upcoming ? ' is-upcoming' : ''}${defunct ? ' is-defunct' : ''}${longTitle ? ' has-long-title' : ''}${cycleTitleFit ? ' has-cycle-title-fit' : ''}`;
 
 const selected = variant === 'selected';
-const cycleLabel = selected ? `From ${/^the\s/i.test(piece.cycle) ? '' : 'the '}${piece.cycle} cycle` : '';
+const cycleLabel = selected ? labelForCycle(piece.cycle) : '';
 const cycle = selected ? cycleByName.get(piece.cycle) : undefined;
 // Keep the abbreviated publication date on the cover's attached label.
 const dateLabel = upcoming ? '' : formatShortDate(piece.date);
