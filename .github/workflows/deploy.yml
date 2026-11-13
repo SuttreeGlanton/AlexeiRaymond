@@ -26,9 +26,20 @@ jobs:
         with:
           node-version: ">=22.23.4 <23"
           check-latest: true
+          cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
+
+      - name: Cache optimized images
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .astro-cache/assets
+          # Source changes can introduce new image sizes even when the artwork is unchanged.
+          key: astro-images-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package-lock.json', 'astro.config.mjs') }}-${{ hashFiles('src/**', 'site-data.json') }}
+          restore-keys: |
+            astro-images-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package-lock.json', 'astro.config.mjs') }}-
 
       - name: Build site
         run: npm run build
@@ -48,6 +59,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

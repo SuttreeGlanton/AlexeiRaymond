@@ -5,6 +5,7 @@ export default defineConfig({
   site: 'https://alexeiraymond.com',
   base: '/',
   output: 'static',
+  cacheDir: './.astro-cache',
   server: { allowedHosts: ['terminal.local'] },
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   integrations: [
