@@ -3145,6 +3145,20 @@ img {
 }
 
 /* --- Astro optimized picture sizing --- */
+/* Touch artwork behaves like the non-interactive mobile banner image.
+   The surrounding links still receive ordinary taps and swipe gestures. */
+@media (hover: none) and (pointer: coarse) {
+  :is(.tile-media, .card-media, .archive-cover-media, .latest-release-cover) {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  :is(.tile-media, .card-media, .archive-cover-media, .latest-release-cover) img {
+    pointer-events: none;
+  }
+}
+
 .tile-media picture,
 .card-media picture {
   display: block;
