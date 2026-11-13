@@ -176,66 +176,39 @@ img {
   vertical-align: bottom;
 }
 
+/* Keep the header geometry still on every screen while the name slides and
+   fades. No animated widths, oversized max-width runway, or delayed surname. */
 .brand[data-brand-reveal] .brand-fold {
-  max-width: 0;
+  max-width: none;
   opacity: 0;
-  transition: max-width 460ms cubic-bezier(0.25, 0.8, 0.25, 1), opacity 260ms ease;
+  transition: opacity 220ms ease;
 }
 
+.brand[data-brand-reveal] .brand-initial:nth-child(3),
 .brand[data-brand-reveal] .brand-fold:last-child {
-  transition-delay: 80ms;
+  display: inline-block;
+  transform: translateX(calc(-1 * var(--brand-first-fold-width, 0px)));
+  transition: transform 300ms cubic-bezier(0.25, 0.8, 0.25, 1), opacity 220ms ease;
 }
 
-.brand[data-brand-reveal].brand-is-open .brand-fold,
-.brand[data-brand-reveal]:hover .brand-fold,
-.brand[data-brand-reveal]:focus-visible .brand-fold {
-  max-width: 12ch;
+.brand[data-brand-reveal]:is(.brand-is-open, :focus-visible) .brand-fold {
   opacity: 1;
 }
 
-/* On phones, keep the header geometry still while the name slides and fades.
-   No animated widths, oversized max-width runway, or delayed surname. */
-@media (max-width: 640px) {
-  .brand[data-brand-reveal] .brand-fold {
-    max-width: none;
-    transition: opacity 220ms ease;
-  }
+.brand[data-brand-reveal]:is(.brand-is-open, :focus-visible) .brand-initial:nth-child(3),
+.brand[data-brand-reveal]:is(.brand-is-open, :focus-visible) .brand-fold:last-child {
+  transform: translateX(0);
+}
 
-  .brand[data-brand-reveal] .brand-initial:nth-child(3),
-  .brand[data-brand-reveal] .brand-fold:last-child {
-    display: inline-block;
-    transform: translateX(calc(-1 * var(--brand-first-fold-width, 0px)));
-    transition: transform 300ms cubic-bezier(0.25, 0.8, 0.25, 1), opacity 220ms ease;
-  }
-
-  .brand[data-brand-reveal]:is(.brand-is-open, :focus-visible) .brand-fold {
-    max-width: none;
+/* Only pointers that support hover may reveal the name without scrolling. */
+@media (hover: hover) {
+  .brand[data-brand-reveal]:hover .brand-fold {
     opacity: 1;
   }
 
-  .brand[data-brand-reveal]:is(.brand-is-open, :focus-visible) .brand-initial:nth-child(3),
-  .brand[data-brand-reveal]:is(.brand-is-open, :focus-visible) .brand-fold:last-child {
+  .brand[data-brand-reveal]:hover .brand-initial:nth-child(3),
+  .brand[data-brand-reveal]:hover .brand-fold:last-child {
     transform: translateX(0);
-  }
-
-  /* Touch browsers can retain :hover after a tap; scroll owns the touch state. */
-  @media (hover: none) {
-    .brand[data-brand-reveal]:hover:not(.brand-is-open):not(:focus-visible) .brand-fold {
-      max-width: none;
-      opacity: 0;
-    }
-  }
-
-  @media (hover: hover) {
-    .brand[data-brand-reveal]:hover .brand-fold {
-      max-width: none;
-      opacity: 1;
-    }
-
-    .brand[data-brand-reveal]:hover .brand-initial:nth-child(3),
-    .brand[data-brand-reveal]:hover .brand-fold:last-child {
-      transform: translateX(0);
-    }
   }
 }
 
