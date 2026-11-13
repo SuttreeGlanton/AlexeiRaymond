@@ -4,6 +4,8 @@ import { withBase } from '../lib/paths';
 import InitialText from './InitialText.astro';
 
 const year = new Date().getFullYear();
+// Set to true to restore the coffee link. Its data and icon stay intact.
+const showCoffeeLink = false;
 
 const footerLinks = [
   { label: 'Cycles', href: withBase('') },
@@ -13,12 +15,13 @@ const footerLinks = [
   { label: 'Elsewhere', href: withBase('elsewhere/') }
 ];
 
-/* Every social with a label and a link shows up here; the icon is chosen
+/* Visible socials with a label and a link show up here; the icon is chosen
    by label, with a neutral globe for networks that have no dedicated glyph. */
 const socialLinks = site.socials.flatMap((social) => {
   if (typeof social === 'string') return [];
 
   const label = social.label ?? social.name ?? '';
+  if (label === 'Ko-fi' && !showCoffeeLink) return [];
   const href = social.url ?? social.href ?? '';
   const kind = label === 'X' ? 'x' : label === 'Ko-fi' ? 'kofi' : label === 'Instagram' ? 'instagram' : 'globe';
 
