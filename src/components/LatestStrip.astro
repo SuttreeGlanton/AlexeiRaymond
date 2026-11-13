@@ -81,7 +81,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
       <h2 class="latest-strip-heading" id="home-publications">Publications</h2>
       <article class:list={['latest-release-card', { 'has-cover': latest.cover }]}>
         {latest.cover && (
-          <div class="latest-release-cover date-cover" data-publication-year={latestPublicationYear}>
+          <div class="latest-release-cover date-cover" data-publication-year={latestPublicationYear} data-cover={latest.cover}>
             <div class="latest-release-media">
               <OptimizedImage
                 path={latest.cover}
@@ -469,6 +469,12 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
       overflow: hidden;
       clip-path: inset(50%);
       white-space: nowrap;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .latest-release-cover[data-cover='covers/pieces/zagagulyn.jpg'] .latest-release-media :global(img) {
+      object-position: center 50%;
     }
   }
 
