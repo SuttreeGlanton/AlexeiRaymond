@@ -50,7 +50,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
   <section class="page-shell latest-strip" aria-labelledby="home-publications">
     <div class="latest-strip-band">
       <h2 class="latest-strip-heading" id="home-publications">Publications</h2>
-      <article class:list={['latest-release-card', { 'has-cover': latest.cover }]}>
+      <article class:list={['latest-release-card', 'has-card-rim', { 'has-cover': latest.cover }]}>
         {latest.cover && (
           <div class="latest-release-cover date-cover" data-publication-year={latestPublicationYear} data-cover={latest.cover}>
             <div class="latest-release-media">
@@ -95,6 +95,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
             </a>
           )}
         </div>
+        <span class="card-rim" aria-hidden="true"></span>
       </article>
       <a class="latest-strip-chronology" href={withBase('chronology/')}>
         <span><InitialText text="Chronology" /></span> <span class="home-link-arrow" aria-hidden="true">→</span>
@@ -228,6 +229,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
   }
 
   .latest-release-card:is(.is-mobile-focus, :has(.latest-release-read:is(:hover, :focus-visible))) {
+    --card-rim-display: block;
     border-color: color-mix(in srgb, var(--initial-accent) 38%, var(--border-strong));
     box-shadow: 0 12px 24px -16px color-mix(in srgb, var(--initial-accent) 42%, transparent);
 
