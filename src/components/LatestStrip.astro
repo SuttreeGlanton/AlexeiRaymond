@@ -201,9 +201,10 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
   .latest-strip-band {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas: 'release release' 'soon chronology' 'credits credits';
+    grid-template-areas: 'heading heading' 'release release' 'soon chronology' 'credits credits';
     gap: 1.4rem 1rem;
-    padding: 0.5rem 0 2.5rem;
+    padding: 1.5rem 0 2.5rem;
+    background: var(--banner-divider);
   }
 
   .latest-strip-notes {
@@ -213,7 +214,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
   .latest-strip-heading {
     grid-area: heading;
     margin: 0;
-    font: 400 var(--home-section)/1.15 var(--serif);
+    font: 400 var(--home-section, clamp(2rem, 5vw, 2.25rem))/1.15 var(--serif);
   }
 
   .latest-release-card {
@@ -435,17 +436,6 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
     }
   }
 
-  @media (max-width: 860px) {
-    .latest-strip-heading {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-    }
-  }
-
   @media (max-width: 640px) {
     .latest-release-cover[data-cover='covers/pieces/zagagulyn.jpg'] .latest-release-media :global(img) {
       object-position: center 50%;
@@ -504,7 +494,6 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
       column-gap: clamp(1.5rem, 3.8vw, 3.25rem);
       row-gap: 1.05rem;
       padding: 1.75rem 0 0;
-      background: var(--banner-divider);
     }
 
     .latest-strip-notes {
