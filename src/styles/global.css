@@ -2276,6 +2276,16 @@ img {
   transition: color 320ms ease, background-color 320ms ease;
 }
 
+/* A shared width keeps SOON and all short publication dates identical. */
+.piece-card .date-mark,
+.archive-cover-card .date-mark {
+  width: 3.75rem;
+}
+
+.piece-card.is-upcoming:is(:focus-within, .is-mobile-focus) .date-mark {
+  color: #fff;
+}
+
 /* Preserve each publication year's color when the site's accent changes. */
 .date-cover[data-publication-year='2025'] {
   --date-accent: #408bff;
@@ -2285,20 +2295,24 @@ img {
   --date-accent: #ff4057;
 }
 
-:is(.piece-card, .archive-cover-card):is(:focus-within, .is-mobile-focus) .date-cover {
+:is(.piece-card:not(.is-upcoming), .archive-cover-card):is(:focus-within, .is-mobile-focus) .date-cover {
   --date-label: var(--date-accent);
 }
 
-:is(.piece-card, .archive-cover-card):is(:focus-within, .is-mobile-focus) .date-mark {
+:is(.piece-card:not(.is-upcoming), .archive-cover-card):is(:focus-within, .is-mobile-focus) .date-mark {
   color: #0a0a0a;
 }
 
 @media (hover: hover) {
-  :is(.piece-card, .archive-cover-card):hover .date-cover {
+  .piece-card.is-upcoming:hover .date-mark {
+    color: #fff;
+  }
+
+  :is(.piece-card:not(.is-upcoming), .archive-cover-card):hover .date-cover {
     --date-label: var(--date-accent);
   }
 
-  :is(.piece-card, .archive-cover-card):hover .date-mark {
+  :is(.piece-card:not(.is-upcoming), .archive-cover-card):hover .date-mark {
     color: #0a0a0a;
   }
 }

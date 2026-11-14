@@ -61,7 +61,7 @@ const selected = variant === 'selected';
 const cycleLabel = selected ? labelForCycle(piece.cycle) : '';
 const cycle = selected ? cycleByName.get(piece.cycle) : undefined;
 // Keep the abbreviated publication date on the cover's attached label.
-const dateLabel = upcoming ? '' : formatShortDate(piece.date);
+const dateLabel = upcoming ? 'SOON' : formatShortDate(piece.date);
 const publicationDate = parseDate(piece.date);
 const publicationTime = publicationDate?.getTime() ?? 0;
 const publicationYear = publicationDate?.getFullYear();
@@ -154,10 +154,9 @@ const metaParts = [
         {piece.awardNote && <strong class="award-note card-award-note">{piece.awardNote}</strong>}
       </div>
     )}
-    {upcoming && <p class="coming-soon">Coming soon</p>}
     {piece.excerpt && <p class="card-mobile-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>}
     {piece.note && <p class="card-note">{piece.note}</p>}
-    <TagList tags={piece.tags.filter((tag) => tag !== 'Online' && tag !== 'In print')} />
+    <TagList tags={piece.tags.filter((tag) => tag !== 'Online' && tag !== 'In print' && tag !== 'Upcoming')} />
   </div>
   {(piece.account || linked) && (
     <div class:list={['account-strip', 'card-reading-links', { 'has-two-destinations': hasBothDestinations }]}>
