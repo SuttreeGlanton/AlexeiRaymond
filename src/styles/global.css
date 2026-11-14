@@ -315,7 +315,7 @@ img {
 .hero-kicker {
   max-width: 25rem;
   margin: var(--page-heading-gap) 0 0;
-  color: var(--text-soft);
+  color: #fff;
   font-family: var(--serif);
   font-style: normal;
   font-size: clamp(1.12rem, 1.5vw, 1.25rem);
@@ -909,13 +909,13 @@ img {
 }
 
 .piece-card:is(:focus-within, .is-mobile-focus) .account-strip :is(.text-initial, .read-arrow),
-.chronology-read-link:focus-visible :is(.text-initial, .read-arrow) {
+.chronology-read-link:focus-visible .read-arrow {
   color: var(--initial-accent);
 }
 
 @media (hover: hover) {
   .piece-card:hover .account-strip :is(.text-initial, .read-arrow),
-  .chronology-read-link:hover :is(.text-initial, .read-arrow) {
+  .chronology-read-link:hover .read-arrow {
     color: var(--initial-accent);
   }
 }
@@ -1416,6 +1416,11 @@ img {
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 3px;
+}
+
+.chronology-sort {
+  /* Keep the whole control opaque over the photograph, including its gaps. */
+  background: var(--bg);
 }
 
 .sort-button {

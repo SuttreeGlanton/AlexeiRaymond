@@ -45,6 +45,10 @@ const sources = await Promise.all(covers.map(async ({ number, image }) => {
     position: absolute;
     inset: 0;
   }
+  [data-sc-story] .sc-cover-stack {
+    /* Keep both crossfade layers below the sibling quote overlay. */
+    isolation: isolate;
+  }
   [data-sc-story] .sc-cover-frame {
     opacity: 0;
     z-index: 0;
