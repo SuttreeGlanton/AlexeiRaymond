@@ -17,6 +17,8 @@ const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
 // 768px prevents high-density mobile screens from jumping from the 640px
 // source straight to 960px for a roughly 412px-wide viewport.
 const heroWidths = [640, 768, 960, 1280, 1440, 1600, 1800];
+// Keep both reveal layers identical so they share one image download.
+const heroQuality = 45;
 const homeDescription = 'Short stories, flash fiction and poems by Alexei Raymond. Read full texts, explore interconnected story cycles, and find work published in literary journals.';
 const homeUrl = absoluteSiteUrl('', Astro.site);
 const websiteSchema = {
@@ -49,7 +51,7 @@ const websiteSchema = {
           sizes="100vw"
           formats={['avif']}
           fallbackFormat="webp"
-          quality={55}
+          quality={heroQuality}
           priority
         />
         <Picture
@@ -61,7 +63,7 @@ const websiteSchema = {
           sizes="100vw"
           formats={['avif']}
           fallbackFormat="webp"
-          quality={55}
+          quality={heroQuality}
           loading="eager"
           decoding="async"
           aria-hidden="true"

@@ -58,7 +58,8 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
                 path={latest.cover}
                 image={latestCover}
                 alt=""
-                sizes="(max-width: 640px) calc(100vw - 24px), 212px"
+                sizes="(max-width: 640px) calc(100vw - 42px), 212px"
+                mobileAvifQuality={45}
               />
               {latest.excerpt && (
                 <div class="latest-release-cover-quote" aria-hidden="true">

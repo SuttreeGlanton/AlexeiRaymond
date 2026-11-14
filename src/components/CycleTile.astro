@@ -16,11 +16,10 @@ const cover = cycle.cover ? assetPath(cycle.cover) : '';
 const coverImage = imageAsset(cycle.cover);
 const disabled = Boolean(cycle.disabled);
 const href = disabled ? '' : withBase(`cycles/${cycle.id}/`);
-// Mobile covers are intentionally capped near 1.5x their rendered width. The
-// extra density is visually redundant here and previously made Lighthouse
-// choose a 760px source for a roughly 583px rendered image.
+// Match the actual card width so browsers can choose for the screen density.
 const cycleCoverSizes = '(max-width: 640px) 82vw, (max-width: 1120px) 33vw, 295px';
-const mobileAvifQuality = ['dreams', 'portici', 'the-real'].includes(cycle.id) ? 54 : undefined;
+// All mobile cycle covers use the lighter source; desktop keeps its WebP.
+const mobileAvifQuality = 48;
 ---
 
 {
