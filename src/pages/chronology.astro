@@ -70,7 +70,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
             {upcoming.map((piece) => {
               const pieceCycles = cycleLinksForPiece(piece);
               const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : undefined;
-              const readLabel = 'Read';
+              const readLabel = 'Read here';
 
               return (
                 <li class="chronology-item">
@@ -100,7 +100,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                   <div class="chronology-meta">
                     <TagList tags={piece.tags.filter((tag) => tag !== 'Upcoming').map((tag) => tag === 'In print' ? 'Print' : tag)} />
                     <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
-                      <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
+                      <span>{pieceCycles.length > 1 ? 'Cycles:' : 'Cycle:'}</span>
                       {pieceCycles.map((cycle, index) => (
                         <>
                           {index > 0 && <span aria-hidden="true">·</span>}
@@ -133,7 +133,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
             const pieceCycles = cycleLinksForPiece(piece);
             const monthYear = formatMonthYear(piece.date);
             const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : undefined;
-            const readLabel = 'Read';
+            const readLabel = 'Read here';
 
             return (
               <>
@@ -147,10 +147,10 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                 >
                   <div class="chronology-title-row">
                     <h3 class="chronology-piece-title">
-                      {canLinkToPiece(piece) ? (
-                        <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}><InitialText text={piece.title} capitalInitials /></a>
-                      ) : accountHref ? (
+                      {accountHref ? (
                         <a href={accountHref}><InitialText text={piece.title} capitalInitials /></a>
+                      ) : canLinkToPiece(piece) ? (
+                        <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}><InitialText text={piece.title} capitalInitials /></a>
                       ) : (
                         <InitialText text={piece.title} capitalInitials />
                       )}
@@ -162,7 +162,11 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                     )}
                   </div>
                   <p class="chronology-publication-line">
-                    First published in <span class="pub">{publicationLabel(piece)}</span>
+                    First published in {canLinkToPiece(piece) ? (
+                      <a class="pub chronology-original-link" href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Original publication: ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>
+                        {publicationLabel(piece)} <ReadArrow external />
+                      </a>
+                    ) : <span class="pub">{publicationLabel(piece)}</span>}
                     {monthYear && (
                       <>
                         <span class="chronology-publication-separator" aria-hidden="true">&middot;</span>
@@ -179,7 +183,7 @@ function cycleLinksForPiece(piece: (typeof pieces)[number]) {
                   <div class="chronology-meta">
                     <TagList tags={piece.tags.map((tag) => tag === 'In print' ? 'Print' : tag)} />
                     <div class="chronology-cycle-links" aria-label={`${pieceCycles.length > 1 ? 'Cycles' : 'Cycle'} for ${piece.title}`}>
-                      <span>{pieceCycles.length > 1 ? 'Cycles' : 'Cycle'}</span>
+                      <span>{pieceCycles.length > 1 ? 'Cycles:' : 'Cycle:'}</span>
                       {pieceCycles.map((cycle, index) => (
                         <>
                           {index > 0 && <span aria-hidden="true">·</span>}

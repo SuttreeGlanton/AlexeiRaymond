@@ -881,17 +881,78 @@ img {
   border-color: var(--text-soft);
 }
 
-/* A hidden drawer, not a button: dim, dotted seam, whispering. */
+/* Quiet reading destinations beneath the card's dotted seam. */
 .account-strip {
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   border-top: 1px dashed var(--border);
-  padding: 10px 18px 11px;
+  padding: 0;
   color: var(--muted);
-  font-size: 0.66rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+  font: 400 0.875rem/1.3 var(--serif);
   transition: color 240ms ease, border-color 240ms ease;
+}
+
+.card-reading-links.has-two-destinations {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+}
+
+.card-reading-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  min-height: 56px;
+  padding: 10px 12px;
+  gap: 0.25em;
+  text-wrap: balance;
+  border-radius: inherit;
+  transition: background-color 200ms ease, color 200ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card-reading-links.has-two-destinations a:first-child {
+  border-bottom-right-radius: 0;
+}
+
+.card-reading-links.has-two-destinations a + a {
+  justify-content: flex-end;
+  text-align: right;
+  border-left: 1px solid var(--border);
+  border-bottom-left-radius: 0;
+}
+
+.card-reading-links a:focus-visible {
+  outline: 1px solid var(--focus);
+  outline-offset: -4px;
+  background-color: #202020;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card-reading-links a:hover {
+    background-color: #202020;
+  }
+}
+
+.card-reading-links .card-read-here,
+.card-reading-links a:only-child {
+  color: var(--text);
+}
+
+.card-reading-links .card-read-original:not(:only-child) {
+  color: var(--muted);
+}
+
+.card-reading-links a:is(:hover, :focus-visible),
+.card-reading-links .card-read-original:not(:only-child):is(:hover, :focus-visible) {
+  color: var(--text);
+}
+
+.chronology-original-link {
+  text-decoration: none;
+}
+
+.chronology-original-link:is(:hover, :focus-visible) .read-arrow {
+  color: var(--initial-accent);
 }
 
 .account-strip:hover,
@@ -908,13 +969,14 @@ img {
   transition: color 240ms ease;
 }
 
-.piece-card:is(:focus-within, .is-mobile-focus) .account-strip :is(.text-initial, .read-arrow),
+.piece-card.is-mobile-focus .card-reading-links .read-arrow,
+.card-reading-links a:focus-visible .read-arrow,
 .chronology-read-link:focus-visible .read-arrow {
   color: var(--initial-accent);
 }
 
 @media (hover: hover) {
-  .piece-card:hover .account-strip :is(.text-initial, .read-arrow),
+  .card-reading-links a:hover .read-arrow,
   .chronology-read-link:hover .read-arrow {
     color: var(--initial-accent);
   }

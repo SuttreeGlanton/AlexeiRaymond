@@ -44,7 +44,14 @@ const mobileAvifQuality = [
   'covers/pieces/nazi.jpg',
 ].includes(piece.cover ?? '') ? 54 : undefined;
 const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : '';
-const accountLabel = /^read\b/i.test(piece.account?.label ?? '') ? 'Read' : piece.account?.label || 'Account';
+const accountLabel = 'Read here';
+const hasBothDestinations = Boolean(accountHref) && linked;
+const primaryHref = accountHref || (linked ? piece.link : '');
+const primaryExternal = !accountHref && linked;
+const primaryLinkProps = primaryExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+const primaryLabel = primaryExternal
+  ? `Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`
+  : `${accountLabel}: ${piece.title} on this site`;
 const displayTitleLines = titleLines ?? [piece.title];
 const longTitle = piece.title.length >= 18;
 const cycleTitleFit = piece.title === '193 Thoughts of You';
@@ -65,8 +72,7 @@ const imageFetchPriority = priority ? 'high' : undefined;
 const coverLinkLabel = [
   `${piece.title} cover`,
   dateLabel,
-  `Read ${piece.title} at ${publicationLabel(piece)}.`,
-  'Opens in a new tab.'
+  primaryLabel
 ].filter(Boolean).join(' ');
 const metaParts = [
   cycleLabel ? { text: cycleLabel, className: cycle ? 'card-cycle-label' : undefined } : null,
@@ -82,8 +88,8 @@ const metaParts = [
   data-publication-time={publicationTime}
   data-upcoming={upcoming ? 'true' : 'false'}
 >
-  {linked ? (
-    <a class="card-cover-link" href={piece.link} target="_blank" rel="noopener noreferrer" tabindex="-1" aria-label={coverLinkLabel}>
+  {primaryHref && !hasBothDestinations ? (
+    <a class="card-cover-link" href={primaryHref} {...primaryLinkProps} tabindex="-1" aria-label={coverLinkLabel}>
       <div class="date-cover" data-publication-year={publicationYear}>
         <div class="card-media">
           {cover ? (
@@ -125,8 +131,8 @@ const metaParts = [
   <div class="card-body">
     {storyOrderLabel && <span class="story-order-mark">{storyOrderLabel}</span>}
     <h2 class="card-title">
-      {linked ? (
-        <a href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>
+      {primaryHref && !hasBothDestinations ? (
+        <a href={primaryHref} {...primaryLinkProps} aria-label={primaryLabel}>
           {displayTitleLines.map((line, index) => (
             <>{index > 0 && <br />}{titleInitials ? <InitialText text={line} capitalInitials /> : line}</>
           ))}
@@ -153,8 +159,19 @@ const metaParts = [
     {piece.note && <p class="card-note">{piece.note}</p>}
     <TagList tags={piece.tags.filter((tag) => tag !== 'Online' && tag !== 'In print')} />
   </div>
-  {piece.account && (
-    <a class="account-strip" href={accountHref} aria-label={`${accountLabel}: ${piece.title} on this site`}><span><InitialText text={accountLabel} /></span> <ReadArrow /></a>
+  {(piece.account || linked) && (
+    <div class:list={['account-strip', 'card-reading-links', { 'has-two-destinations': hasBothDestinations }]}>
+      {piece.account && (
+        <a class="card-read-here" href={accountHref} aria-label={`${accountLabel}: ${piece.title} on this site`}>
+          <span>{accountLabel}</span> <ReadArrow />
+        </a>
+      )}
+      {linked && (
+        <a class="card-read-original" href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Original publication: ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>
+          <span>Original publication</span> <ReadArrow external />
+        </a>
+      )}
+    </div>
   )}
   {(selected || piece.awardNote) && <span class="card-rim" aria-hidden="true"></span>}
 </article>

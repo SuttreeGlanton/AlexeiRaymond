@@ -1,1 +1,5 @@
-<span class="read-arrow" aria-hidden="true">→</span>
+---
+interface Props { external?: boolean; }
+const { external = false } = Astro.props;
+---
+<span class="read-arrow" aria-hidden="true">{external ? '↗' : '→'}</span>

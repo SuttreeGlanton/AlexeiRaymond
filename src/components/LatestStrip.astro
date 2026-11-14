@@ -89,10 +89,10 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
             <a
               class="latest-release-read"
               href={latestHref}
-              aria-label={`Read ${latest.title}${latestExternal ? ' (opens in a new tab)' : ''}`}
+              aria-label={latestExternal ? `Visit publication: ${latest.title} at ${publicationLabel(latest)} (opens in a new tab)` : `Read ${latest.title} here`}
               {...(latestExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             >
-              Read <span class="home-link-arrow" aria-hidden="true">→</span>
+              {latestExternal ? 'Visit publication' : 'Read here'} <span class="home-link-arrow" aria-hidden="true">{latestExternal ? '↗' : '→'}</span>
             </a>
           )}
         </div>
