@@ -1,0 +1,155 @@
+---
+import InitialText from './InitialText.astro';
+import OptimizedImage from './OptimizedImage.astro';
+import { imageAsset } from '../lib/image-assets';
+interface Props { playlists: { title: string; url: string; cover: string }[] }
+const { playlists } = Astro.props;
+---
+
+<section class="page-shell about-playlists" aria-labelledby="moved-title">
+  <div class="playlist-section-head"><h2 class="about-section-heading" id="moved-title">Moved by</h2></div>
+  <div class="playlist-gallery" data-playlist-loop>
+    {playlists.map((playlist) => (
+      <a class="playlist-card has-card-rim" data-playlist-id={playlist.url} href={playlist.url} target="_blank" rel="noopener noreferrer" aria-label={`${playlist.title} on Spotify. Opens in a new tab.`}>
+        <span class="playlist-cover date-cover">
+          <span class="playlist-art">
+            <OptimizedImage image={imageAsset(playlist.cover)} alt="" widths={[275, 550]} sizes="275px" />
+          </span>
+          <span class="date-mark">Volume {playlist.title.match(/Vol\. (\d+)$/)?.[1]}</span>
+        </span>
+        <span class="spotify-glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false"><path fill="currentColor" d="M12 0a12 12 0 1 0 0 24 12 12 0 0 0 0-24Zm5.503 17.307a.75.75 0 0 1-1.032.249c-2.826-1.727-6.384-2.118-10.574-1.159a.75.75 0 1 1-.334-1.462c4.586-1.049 8.52-.598 11.692 1.34a.75.75 0 0 1 .248 1.032Zm1.469-3.267a.938.938 0 0 1-1.289.308c-3.235-1.988-8.167-2.564-11.994-1.402a.938.938 0 0 1-.545-1.794c4.371-1.326 9.805-.683 13.52 1.6a.938.938 0 0 1 .308 1.288Zm.126-3.402C15.22 8.336 8.82 8.124 5.117 9.248a1.125 1.125 0 1 1-.653-2.153c4.25-1.29 11.318-1.041 15.783 1.61a1.125 1.125 0 0 1-1.149 1.933Z" /></svg>
+        </span>
+        <h3><InitialText text={playlist.title.replace(/ Vol\. \d+$/, '')} capitalInitials /></h3>
+        <span class="card-rim" aria-hidden="true"></span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<script>
+  import '../scripts/playlist-loop';
+  const gallery = document.querySelector<HTMLElement>('.playlist-gallery');
+  gallery?.addEventListener('focusin', (event) => {
+    if (!window.matchMedia('(max-width: 640px)').matches) return;
+    const link = event.target;
+    if (link instanceof HTMLElement && link.matches(':focus-visible')) {
+      link.scrollIntoView({ block: 'nearest', inline: 'center' });
+    }
+  });
+</script>
+
+<style>
+  .about-playlists { padding-bottom: 44px; }
+  .playlist-section-head {
+    background: var(--banner-divider);
+    padding-top: 28px;
+  }
+
+  .playlist-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 275px));
+    gap: 24px;
+    justify-content: space-between;
+  }
+  .playlist-card {
+    position: relative;
+    isolation: isolate;
+    display: block;
+    aspect-ratio: 1;
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel);
+    color: var(--text);
+    text-decoration: none;
+    box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.26);
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color 320ms ease;
+  }
+  .playlist-cover.date-cover {
+    position: absolute;
+    inset: 0;
+    --date-label: #ff4057;
+  }
+  .playlist-cover .date-mark { color: #0a0a0a; }
+  .playlist-art { z-index: 1; position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
+  .playlist-art::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,.08) 25%, rgba(0,0,0,.12) 48%, rgba(0,0,0,.88) 100%);
+  }
+  .playlist-art :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) brightness(.78);
+    transition: filter 450ms ease;
+  }
+  .playlist-art :global(picture) { display: block; width: 100%; height: 100%; }
+  .spotify-glyph {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 28px;
+    height: 28px;
+    z-index: 2;
+    color: #101010;
+    filter: drop-shadow(0 1px 2px rgba(255,255,255,.25));
+    transition: color 320ms ease, filter 320ms ease;
+  }
+  .spotify-glyph svg { display: block; width: 100%; height: 100%; }
+  h3 {
+    position: absolute;
+    inset: auto 18px 14px;
+    z-index: 2;
+    margin: 0;
+    max-width: 12ch;
+    font-family: var(--serif);
+    font-size: clamp(1.2rem, 2.1vw, 1.65rem);
+    font-weight: 400;
+    line-height: 1.13;
+    text-wrap: balance;
+    text-shadow: 0 2px 8px #000;
+  }
+  .playlist-card:is(:focus-visible, .is-mobile-focus) {
+    --card-rim-display: block;
+    border-color: var(--initial-accent);
+  }
+  .playlist-card:is(:focus-visible, .is-mobile-focus) .playlist-art :global(img) { filter: grayscale(0) brightness(1); }
+  .playlist-card:is(:focus-visible, .is-mobile-focus) .spotify-glyph { color: #1ed760; filter: drop-shadow(0 2px 5px rgba(0,0,0,.8)); }
+  .playlist-card:is(:focus-visible, .is-mobile-focus) :global(.text-initial) { color: var(--initial-accent); }
+  @media (hover: hover) and (pointer: fine) {
+    .playlist-card:hover { --card-rim-display: block; border-color: var(--initial-accent); }
+    .playlist-card:hover .playlist-art :global(img) { filter: grayscale(0) brightness(1); }
+    .playlist-card:hover .spotify-glyph { color: #1ed760; filter: drop-shadow(0 2px 5px rgba(0,0,0,.8)); }
+    .playlist-card:hover :global(.text-initial) { color: var(--initial-accent); }
+  }
+  @media (min-width: 641px) and (max-width: 900px) {
+    .playlist-gallery { grid-template-columns: repeat(2, minmax(0, 275px)); justify-content: start; }
+  }
+  @media (max-width: 640px) {
+    .about-playlists { padding-bottom: 10px; }
+    .playlist-gallery {
+      display: flex;
+      gap: 22px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      margin: -16px -11px 0;
+      padding: 22px calc((100% + 22px - min(275px, 78vw)) / 2) 34px;
+    }
+    .playlist-gallery::-webkit-scrollbar { display: none; }
+    .playlist-card { flex: 0 0 min(275px, 78vw); scroll-snap-align: center; }
+    h3 { font-size: 1.65rem; }
+  }
+  @media (hover: none), (pointer: coarse) {
+    .playlist-card { -webkit-touch-callout: none; user-select: none; }
+    .playlist-art { -webkit-touch-callout: none; }
+    .playlist-art :global(img) { pointer-events: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .playlist-card, .spotify-glyph, .playlist-art :global(img) { transition: none; }
+  }
+</style>

@@ -1243,7 +1243,8 @@ img {
   margin-top: clamp(28px, 5vw, 56px);
 }
 
-.chronology-section h2 {
+.chronology-section h2,
+h2.about-section-heading {
   margin: 0 0 18px;
   font-family: var(--serif);
   font-size: clamp(1.6rem, 3.5vw, 2.4rem);

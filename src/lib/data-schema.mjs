@@ -23,6 +23,8 @@ export const siteMetaSchema = z.looseObject({
   author: text, bio: text, email: z.string(), emailEncoded: z.string().optional(),
   socials: z.array(socialSchema), headerCover: z.string().optional(), socialCard: z.string().optional(),
   featured: z.array(text).optional(),
+  inspirations: z.array(text).optional(),
+  playlists: z.array(z.object({ title: text, url: httpUrl, cover: text })).optional(),
 });
 export const cycleSchema = z.looseObject({
   id: slug, name: text, blurb: text, description: text.optional(), cover: text, banner: text,

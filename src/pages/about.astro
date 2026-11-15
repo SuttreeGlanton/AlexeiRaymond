@@ -1,12 +1,16 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import InspirationHeartbeat from '../components/InspirationHeartbeat.astro';
+import PlaylistGallery from '../components/PlaylistGallery.astro';
 import aboutVisual from '../assets/page-visuals/about-portrait.jpg';
 import { site, socialHref, socialLabel } from '../lib/data';
 import { absoluteSiteUrl, withBase } from '../lib/paths';
 
 const publicationsPhrase = 'a variety of publications';
-const [bioBefore, bioAfter] = site.bio.split(publicationsPhrase);
+// Bind the final two words without changing the authored biography.
+const displayBio = site.bio.replace(/(\S+)\s+(\S+)$/, '$1\u00a0$2');
+const [bioBefore, bioAfter] = displayBio.split(publicationsPhrase);
 const canLinkPublications = typeof bioAfter === 'string';
 const siteUrl = absoluteSiteUrl('', Astro.site);
 const aboutUrl = absoluteSiteUrl('about/', Astro.site);
@@ -50,14 +54,35 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
               {bioBefore}<a class="about-publications-link" href={withBase('chronology/')}>{publicationsPhrase}</a>{bioAfter}
             </>
           ) : (
-            site.bio
+            displayBio
           )}
         </p>
       </div>
 
+      {site.inspirations?.length && <InspirationHeartbeat names={site.inspirations} />}
+
+    </section>
+
+    <aside class="page-visual about-visual" aria-hidden="true">
+      <Image
+        src={aboutVisual}
+        alt=""
+        widths={[320, 480, 640, 914]}
+        sizes="(max-width: 1080px) 1px, (max-width: 1600px) 40vw, 640px"
+        format="webp"
+        quality={82}
+        loading="lazy"
+        decoding="async"
+      />
+    </aside>
+  </div>
+
+  {site.playlists?.length && <PlaylistGallery playlists={site.playlists} />}
+
+  <div class="page-shell about-connections">
       {site.socials.length > 0 && (
         <section class="social-block" aria-labelledby="socials-title">
-          <h2 id="socials-title">Socials</h2>
+          <h2 class="about-section-heading" id="socials-title">Socials</h2>
           <ul class="social-list about-social-icon-list" aria-label="Social links">
             {site.socials.map((social) => {
               const href = socialHref(social);
@@ -94,26 +119,12 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
 
       {emailEncoded && (
         <section class="social-block" aria-labelledby="contact-title">
-          <h2 id="contact-title">Contact</h2>
+          <h2 class="about-section-heading" id="contact-title">Contact</h2>
           <p class="contact-line">
             <button type="button" class="contact-reveal" data-email={emailEncoded}>Show email address</button>
           </p>
         </section>
       )}
-    </section>
-
-    <aside class="page-visual about-visual" aria-hidden="true">
-      <Image
-        src={aboutVisual}
-        alt=""
-        widths={[320, 480, 640, 914]}
-        sizes="(max-width: 1080px) 1px, (max-width: 1600px) 40vw, 640px"
-        format="webp"
-        quality={82}
-        loading="lazy"
-        decoding="async"
-      />
-    </aside>
   </div>
 
   <script>
@@ -135,6 +146,40 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
 </BaseLayout>
 
 <style>
+  .about-with-visual {
+    min-height: 0;
+    padding-bottom: 44px;
+  }
+
+  .about-copy.page-hero {
+    padding-bottom: 0;
+    max-width: 680px;
+  }
+
+  .about-visual {
+    top: 40px;
+    bottom: 0;
+    height: calc(100% - 40px);
+  }
+
+  .about-connections {
+    display: grid;
+    grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+    gap: 24px clamp(28px, 7vw, 80px);
+    padding: 12px 0 48px;
+  }
+
+  .about-connections .social-block { margin: 0; }
+  .about-connections h2 { margin-bottom: 18px; }
+  .about-connections :is(.social-list, .contact-line) { margin: 0; }
+  .about-connections :global(.contact-email) { overflow-wrap: anywhere; }
+  .about-copy .prose { text-wrap: pretty; }
+
+  @media (max-width: 640px) {
+    .about-with-visual { padding-bottom: 30px; }
+    .about-connections { column-gap: 28px; }
+  }
+
   .prose .about-publications-link {
     border-bottom: 0;
   }

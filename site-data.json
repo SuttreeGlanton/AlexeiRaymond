@@ -17,6 +17,43 @@
         "url": "https://ko-fi.com/alexeiraymond"
       }
     ],
+    "inspirations": [
+      "John Updike",
+      "Fernando Pessoa",
+      "James Salter",
+      "Philip Roth",
+      "John Donne",
+      "Cormac McCarthy",
+      "Don DeLillo",
+      "Adam Curtis",
+      "Fyodor Dostoevsky",
+      "Bret Easton Ellis",
+      "Lev Tolstoy",
+      "Erich Maria Remarque",
+      "Salman Rushdie"
+    ],
+    "playlists": [
+      {
+        "title": "Ruski Contemporary Vol. 1",
+        "url": "https://open.spotify.com/playlist/4jnnZl34SJklGNxFmqJvQL",
+        "cover": "playlists/ruski_1.jpg"
+      },
+      {
+        "title": "Ruski Contemporary Vol. 2",
+        "url": "https://open.spotify.com/playlist/41dXZFkAaviHW7sCOeLuQU",
+        "cover": "playlists/ruski_2.jpg"
+      },
+      {
+        "title": "Ruski Contemporary Vol. 3",
+        "url": "https://open.spotify.com/playlist/07v6k00dvS8wfYmKJO3bk6",
+        "cover": "playlists/ruski_3.jpg"
+      },
+      {
+        "title": "Italia Contemporary Vol. 1",
+        "url": "https://open.spotify.com/playlist/17WhXYFxkC5rKKvRZNYRGh",
+        "cover": "playlists/italia_1.jpg"
+      }
+    ],
     "headerCover": "covers/header.jpg",
     "socialCard": "social-card.jpg",
     "featured": [

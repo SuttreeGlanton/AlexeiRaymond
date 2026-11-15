@@ -1,0 +1,40 @@
+---
+interface Props { names: string[] }
+const { names } = Astro.props;
+const pool = [...new Set(names)];
+const opening = pool.slice(0, 3);
+const longest = [...pool].sort((a, b) => b.length - a.length).slice(0, 3);
+---
+
+<section class="inspiration-heartbeat" aria-labelledby="inspired-title" data-inspiration-heartbeat data-names={JSON.stringify(pool)}>
+  <h2 class="about-section-heading" id="inspired-title">Inspired by</h2>
+  <p class="sr-only">{pool.join(', ')}.</p>
+  <div class="inspiration-names prose" aria-hidden="true">
+    {[{ values: opening, reserve: false }, { values: longest, reserve: true }].map(({ values, reserve }) => (
+      <p class:list={['inspiration-copy', { 'inspiration-reserve': reserve }]}>
+        {values.map((name, index) => <>{index > 0 ? ' ' : ''}<span class="inspiration-unit">{index === 2 ? 'and\u00a0' : ''}<span data-inspiration-name={reserve ? undefined : ''}>{name}</span>{index === 2 ? '.' : ','}</span></>)}
+      </p>
+    ))}
+  </div>
+</section>
+
+<script src="../scripts/inspiration-heartbeat.ts"></script>
+
+<style>
+  .inspiration-heartbeat {
+    margin-top: 32px;
+  }
+  .inspiration-names { display: grid; margin-top: 0; font-family: var(--serif); }
+  .inspiration-copy {
+    grid-area: 1 / 1;
+    margin: 0;
+    color: var(--text-soft);
+    font-family: var(--serif);
+    text-wrap: pretty;
+  }
+  .inspiration-unit { display: inline-block; white-space: nowrap; }
+  .inspiration-reserve { visibility: hidden; pointer-events: none; user-select: none; }
+  @media print, (prefers-reduced-motion: reduce) {
+    .inspiration-reserve { display: none; }
+  }
+</style>
