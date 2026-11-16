@@ -59,6 +59,18 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
   <div class="page-shell page-with-visual about-with-visual">
     <section class="page-hero page-hero--index text-page page-copy about-copy" aria-labelledby="about-title">
       <h1 class="page-heading" id="about-title" data-title-shimmer>About</h1>
+      <figure class="page-visual about-visual">
+        <Image
+          src={aboutVisual}
+          alt={`Portrait of ${site.author}`}
+          widths={[320, 480, 640, 768, 914]}
+          sizes="(max-width: 728px) calc(100vw - 48px), (max-width: 1080px) 680px, (max-width: 1600px) 40vw, 640px"
+          format="webp"
+          quality={82}
+          loading="eager"
+          decoding="async"
+        />
+      </figure>
       <div class="prose biography">
         {typeof bioTail === 'string' && (
           <p class="bio-opening">
@@ -77,22 +89,13 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
         </p>
       </div>
 
-      {site.inspirations?.length && <InspirationHeartbeat names={site.inspirations} />}
+      {site.inspirations?.length && (
+        <div class="about-inspiration">
+          <InspirationHeartbeat names={site.inspirations} />
+        </div>
+      )}
 
     </section>
-
-    <aside class="page-visual about-visual" aria-hidden="true">
-      <Image
-        src={aboutVisual}
-        alt=""
-        widths={[320, 480, 640, 914]}
-        sizes="(max-width: 1080px) 1px, (max-width: 1600px) 40vw, 640px"
-        format="webp"
-        quality={82}
-        loading="lazy"
-        decoding="async"
-      />
-    </aside>
   </div>
 
   {site.playlists?.length && <PlaylistGallery playlists={site.playlists} />}
@@ -169,6 +172,15 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
     padding-bottom: 44px;
   }
 
+  /* Keep the desktop portrait anchored to the outer shell after moving it
+     beside the heading in reading order. */
+  .about-with-visual .about-copy { position: static; }
+  .about-copy > :is(.page-heading, .biography, .about-inspiration) {
+    position: relative;
+    z-index: 2;
+  }
+  .about-copy .biography { margin-top: var(--page-heading-gap); }
+
   .about-copy.page-hero {
     padding-bottom: 0;
     max-width: 680px;
@@ -202,9 +214,72 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
     .bio-reserve { display: none; }
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 1080px) {
+    .about-with-visual,
+    .about-connections {
+      width: min(680px, calc(100% - 48px));
+    }
+
     .about-with-visual { padding-bottom: 30px; }
-    .about-connections { column-gap: 28px; }
+    .about-copy.page-hero { padding-top: 30px; }
+
+    .about-with-visual .about-visual {
+      display: block;
+      position: relative;
+      inset: auto;
+      z-index: auto;
+      width: 100%;
+      height: clamp(240px, 66.67vw, 340px);
+      margin: 24px 0;
+      border-radius: 10px;
+      background: var(--panel);
+    }
+
+    .about-visual :global(img) {
+      opacity: 1;
+      object-position: 100% 5%;
+      filter: grayscale(1) brightness(0.73) contrast(1.05);
+      border-radius: inherit;
+      clip-path: none;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+
+    .about-visual::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 65%, rgba(10, 10, 10, 0.6));
+    }
+
+    .about-copy .biography {
+      margin-top: 0;
+    }
+    .biography .bio-opening { margin-bottom: 14px; }
+
+    .about-inspiration {
+      margin-top: 30px;
+      padding-top: 25px;
+      background: var(--banner-divider);
+    }
+    .about-inspiration :global(.inspiration-heartbeat) { margin-top: 0; }
+    .about-inspiration :global(.about-section-heading) { margin-bottom: 15px; }
+
+    .about-connections {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr);
+      gap: 22px;
+      padding: 25px 0 30px;
+      background: var(--banner-divider);
+    }
+    .about-connections h2 { margin-bottom: 12px; }
+    .about-connections .social-block { min-width: 0; }
+    .about-connections .contact-reveal {
+      min-height: 44px;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+    .about-connections :global(.contact-email) { font-size: 0.85rem; }
+    .about-social-icon-list .about-social-icon { width: 36px; height: 44px; }
   }
 
   .prose .about-publications-link {

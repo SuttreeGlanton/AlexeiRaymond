@@ -13,7 +13,7 @@ const { playlists } = Astro.props;
       <a class="playlist-card has-card-rim" data-playlist-id={playlist.url} href={playlist.url} target="_blank" rel="noopener noreferrer" aria-label={`${playlist.title} on Spotify. Opens in a new tab.`}>
         <span class="playlist-cover date-cover">
           <span class="playlist-art">
-            <OptimizedImage image={imageAsset(playlist.cover)} alt="" widths={[275, 550]} sizes="275px" />
+            <OptimizedImage image={imageAsset(playlist.cover)} alt="" widths={[275, 400, 550, 768]} sizes="(max-width: 640px) calc(100vw - 48px), (max-width: 1080px) 328px, 275px" />
           </span>
           <span class="date-mark">Volume {playlist.title.match(/Vol\. (\d+)$/)?.[1]}</span>
         </span>
@@ -129,22 +129,27 @@ const { playlists } = Astro.props;
     .playlist-card:hover .spotify-glyph { color: #1ed760; filter: drop-shadow(0 2px 5px rgba(0,0,0,.8)); }
     .playlist-card:hover :global(.text-initial) { color: var(--initial-accent); }
   }
-  @media (min-width: 641px) and (max-width: 900px) {
-    .playlist-gallery { grid-template-columns: repeat(2, minmax(0, 275px)); justify-content: start; }
+  @media (max-width: 1080px) {
+    .about-playlists { width: min(680px, calc(100% - 48px)); padding-bottom: 30px; }
+    .playlist-section-head { padding-top: 25px; }
+    .playlist-section-head .about-section-heading { margin-bottom: 15px; }
+  }
+  @media (min-width: 641px) and (max-width: 1080px) {
+    .playlist-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 640px) {
-    .about-playlists { padding-bottom: 10px; }
+    .about-playlists { padding-bottom: 6px; }
     .playlist-gallery {
       display: flex;
       gap: 22px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
-      margin: -16px -11px 0;
-      padding: 22px calc((100% + 22px - min(275px, 78vw)) / 2) 34px;
+      margin: -16px -24px 0;
+      padding: 22px 24px 24px;
     }
     .playlist-gallery::-webkit-scrollbar { display: none; }
-    .playlist-card { flex: 0 0 min(275px, 78vw); scroll-snap-align: center; }
+    .playlist-card { flex: 0 0 calc(100vw - 48px); scroll-snap-align: center; }
     h3 { font-size: 1.65rem; }
   }
   @media (hover: none), (pointer: coarse) {

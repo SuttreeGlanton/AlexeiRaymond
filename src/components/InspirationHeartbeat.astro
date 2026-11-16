@@ -12,7 +12,7 @@ const longest = [...pool].sort((a, b) => b.length - a.length).slice(0, 3);
   <div class="inspiration-names prose" aria-hidden="true">
     {[{ values: opening, reserve: false }, { values: longest, reserve: true }].map(({ values, reserve }) => (
       <p class:list={['inspiration-copy', { 'inspiration-reserve': reserve }]}>
-        {values.map((name, index) => <>{index > 0 ? ' ' : ''}<span class="inspiration-unit">{index === 2 ? 'and\u00a0' : ''}<span data-inspiration-name={reserve ? undefined : ''}>{name}</span>{index === 2 ? '.' : ','}</span></>)}
+        {values.map((name, index) => <>{index === 2 ? <br /> : index > 0 ? ' ' : ''}<span class="inspiration-unit">{index === 2 ? 'and\u00a0' : ''}<span data-inspiration-name={reserve ? undefined : ''}>{name}</span>{index === 2 ? '.' : ','}</span></>)}
       </p>
     ))}
   </div>
