@@ -75,7 +75,6 @@ const coverLinkLabel = [
   primaryLabel
 ].filter(Boolean).join(' ');
 const metaParts = [
-  cycleLabel ? { text: cycleLabel, className: cycle ? 'card-cycle-label' : undefined } : null,
   piece.publication ? { text: publicationLabel(piece), className: 'card-publication' } : null
 ].filter((part) => part !== null);
 ---

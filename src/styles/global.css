@@ -2530,8 +2530,36 @@ h2.about-section-heading {
   }
 }
 
-.card-cycle-glyph {
-  display: none;
+.selected-piece-grid .card-cycle-glyph {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  display: grid;
+  color: #000;
+  pointer-events: none;
+}
+
+.selected-piece-grid .card-cycle-glyph .cycle-icon {
+  width: 30px;
+  height: 30px;
+  margin: 0;
+}
+
+.selected-piece-grid .card-cycle-glyph svg {
+  stroke-width: 2;
+}
+
+.selected-piece-grid > .piece-card:is(.is-mobile-focus, :has(:focus-visible)) .card-cycle-glyph {
+  color: var(--card-rim-color);
+  filter: drop-shadow(0 0 0.8px #000) drop-shadow(0 1px 1.2px rgb(0 0 0 / 80%));
+}
+
+@media (hover: hover) {
+  .selected-piece-grid > .piece-card:hover .card-cycle-glyph {
+    color: var(--card-rim-color);
+    filter: drop-shadow(0 0 0.8px #000) drop-shadow(0 1px 1.2px rgb(0 0 0 / 80%));
+  }
 }
 
 /* --- Selected Works mobile gallery --- */
@@ -2546,41 +2574,12 @@ h2.about-section-heading {
     flex-basis: 82vw;
   }
 
-  .selected-piece-grid .card-cycle-label,
-  .selected-piece-grid .card-cycle-label + .meta-separator {
-    display: none;
-  }
-
-  .selected-piece-grid .card-cycle-glyph {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    z-index: 2;
-    display: grid;
-    color: #000;
-    pointer-events: none;
-  }
-
-  .selected-piece-grid .card-cycle-glyph .cycle-icon {
-    width: 30px;
-    height: 30px;
-    margin: 0;
-  }
-
-  .selected-piece-grid .card-cycle-glyph svg {
-    stroke-width: 2;
-  }
-
   .selected-piece-grid > .piece-card:is(.is-mobile-focus, :has(:focus-visible)) {
     --card-rim-display: block;
     overflow: visible;
     z-index: 1;
   }
 
-  .selected-piece-grid > .piece-card:is(.is-mobile-focus, :has(:focus-visible)) .card-cycle-glyph {
-    color: var(--card-rim-color);
-    filter: drop-shadow(0 0 0.8px #000) drop-shadow(0 1px 1.2px rgb(0 0 0 / 80%));
-  }
 }
 
 /* --- Cycle carousel and award card focus --- */

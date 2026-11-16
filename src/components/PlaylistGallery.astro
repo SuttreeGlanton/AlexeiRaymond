@@ -70,9 +70,8 @@ const { playlists } = Astro.props;
   .playlist-cover.date-cover {
     position: absolute;
     inset: 0;
-    --date-label: #ff4057;
+    --date-accent: #ff4057;
   }
-  .playlist-cover .date-mark { color: #0a0a0a; }
   .playlist-art { z-index: 1; position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
   .playlist-art::after {
     content: '';
@@ -118,11 +117,15 @@ const { playlists } = Astro.props;
     border-color: var(--initial-accent);
   }
   .playlist-card:is(:focus-visible, .is-mobile-focus) .playlist-art :global(img) { filter: grayscale(0) brightness(1); }
+  .playlist-card:is(:focus-visible, .is-mobile-focus) .date-cover { --date-label: var(--date-accent); }
+  .playlist-card:is(:focus-visible, .is-mobile-focus) .date-mark { color: #0a0a0a; }
   .playlist-card:is(:focus-visible, .is-mobile-focus) .spotify-glyph { color: #1ed760; filter: drop-shadow(0 2px 5px rgba(0,0,0,.8)); }
   .playlist-card:is(:focus-visible, .is-mobile-focus) :global(.text-initial) { color: var(--initial-accent); }
   @media (hover: hover) and (pointer: fine) {
     .playlist-card:hover { --card-rim-display: block; border-color: var(--initial-accent); }
     .playlist-card:hover .playlist-art :global(img) { filter: grayscale(0) brightness(1); }
+    .playlist-card:hover .date-cover { --date-label: var(--date-accent); }
+    .playlist-card:hover .date-mark { color: #0a0a0a; }
     .playlist-card:hover .spotify-glyph { color: #1ed760; filter: drop-shadow(0 2px 5px rgba(0,0,0,.8)); }
     .playlist-card:hover :global(.text-initial) { color: var(--initial-accent); }
   }
