@@ -1,8 +1,8 @@
 export {};
 
-// Both About-page tickers share the same animation and visibility lifecycle.
-for (const credit of document.querySelectorAll<HTMLElement>('[data-inspiration-heartbeat], [data-location-heartbeat]')) {
-  const slots = [...credit.querySelectorAll<HTMLElement>('[data-inspiration-name], [data-heartbeat-location]')];
+// The About-page tickers share the same animation and visibility lifecycle.
+for (const credit of document.querySelectorAll<HTMLElement>('[data-inspiration-heartbeat], [data-location-heartbeat], [data-love-heartbeat]')) {
+  const slots = [...credit.querySelectorAll<HTMLElement>('[data-inspiration-name], [data-heartbeat-location], [data-heartbeat-love]')];
   const venues: string[] = JSON.parse(credit.dataset.names ?? '[]');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const print = window.matchMedia('print');
@@ -15,10 +15,10 @@ for (const credit of document.querySelectorAll<HTMLElement>('[data-inspiration-h
     return result;
   }
 
-  // Keep the authored opening location; inspiration names start shuffled.
+  // Keep the authored opening biography; inspiration names start shuffled.
   // Refill only after the queue is exhausted, excluding visible values.
   let queue: string[];
-  if (credit.hasAttribute('data-location-heartbeat')) {
+  if (!credit.hasAttribute('data-inspiration-heartbeat')) {
     queue = shuffled(venues.filter((name) => !slots.some((slot) => slot.textContent === name)));
   } else {
     queue = shuffled(venues);

@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import InspirationHeartbeat from '../components/InspirationHeartbeat.astro';
 import LocationHeartbeat from '../components/LocationHeartbeat.astro';
+import LoveHeartbeat from '../components/LoveHeartbeat.astro';
 import PlaylistGallery from '../components/PlaylistGallery.astro';
 import aboutVisual from '../assets/page-visuals/about-portrait.jpg';
 import { site, socialHref, socialLabel } from '../lib/data';
@@ -17,11 +18,12 @@ const locations = site.bioLocations ?? [];
 const openingLocation = locations[0];
 const locationPhrase = openingLocation ? `in ${openingLocation.replace(/\.$/, '')}.` : '';
 const [bioLead, bioTail] = locationPhrase ? bioBefore.split(locationPhrase) : [bioBefore];
-// Reserve paragraph height, rather than leaving a gap after short place names.
-const longestLocation = [...locations].sort((a, b) => b.length - a.length)[0];
-const reserveBio = longestLocation && locationPhrase
-  ? displayBio.replace(locationPhrase, `in ${longestLocation.replace(/\.$/, '')}.`.replaceAll(' ', '\u00a0'))
-  : displayBio;
+// Give the opening its own line and reserve the tallest actual location variant.
+const loves = site.bioLoves ?? [];
+const loveLead = "He's been known to love ";
+const [bioAfterPublications, loveList] = (bioAfter ?? '').split(loveLead);
+const openingLoves = (loveList ?? '').replace(/\.$/, '').split(/,\s*(?:and\s+)?/);
+const canRotateLoves = loves.length > openingLoves.length && openingLoves.every((item) => loves.includes(item));
 const siteUrl = absoluteSiteUrl('', Astro.site);
 const aboutUrl = absoluteSiteUrl('about/', Astro.site);
 const profileSchema = {
@@ -58,16 +60,21 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
     <section class="page-hero page-hero--index text-page page-copy about-copy" aria-labelledby="about-title">
       <h1 class="page-heading" id="about-title" data-title-shimmer>About</h1>
       <div class="prose biography">
-        <p>
+        {typeof bioTail === 'string' && (
+          <p class="bio-opening">
+            <span>{bioLead}<LocationHeartbeat locations={locations} /></span>
+            {locations.map((place) => <span class="bio-reserve" aria-hidden="true">{bioLead}<span class="bio-location-phrase">in&nbsp;{place.replace(/\.$/, '')}.</span></span>)}
+          </p>
+        )}
+        <p class="bio-rest">
           {canLinkPublications ? (
             <>
-              {typeof bioTail === 'string' ? <>{bioLead}<LocationHeartbeat locations={locations} />{bioTail}</> : bioBefore}<a class="about-publications-link" href={withBase('chronology/')}>{publicationsPhrase}</a>{bioAfter}
+              {typeof bioTail === 'string' ? bioTail.trimStart() : bioBefore}<a class="about-publications-link" href={withBase('chronology/')}>{publicationsPhrase}</a>{canRotateLoves ? <>{bioAfterPublications}{loveLead}<LoveHeartbeat items={loves} opening={openingLoves} /></> : bioAfter}
             </>
           ) : (
             displayBio
           )}
         </p>
-        {typeof bioTail === 'string' && <p class="bio-reserve" aria-hidden="true">{reserveBio}</p>}
       </div>
 
       {site.inspirations?.length && <InspirationHeartbeat names={site.inspirations} />}
@@ -185,8 +192,10 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
   .about-connections :is(.social-list, .contact-line) { margin: 0; }
   .about-connections :global(.contact-email) { overflow-wrap: anywhere; }
   .about-copy .prose { text-wrap: pretty; }
-  .biography { display: grid; }
-  .biography > p { grid-area: 1 / 1; }
+  .biography > p { margin: 0; }
+  .bio-opening { display: grid; }
+  .bio-opening > span { grid-area: 1 / 1; min-width: 0; }
+  .bio-location-phrase { white-space: nowrap; }
   .bio-reserve { visibility: hidden; pointer-events: none; user-select: none; }
 
   @media print, (prefers-reduced-motion: reduce) {

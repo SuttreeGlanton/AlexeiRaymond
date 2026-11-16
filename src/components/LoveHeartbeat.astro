@@ -1,0 +1,19 @@
+---
+interface Props { items: string[]; opening: string[] }
+const { items, opening } = Astro.props;
+const pool = [...new Set(items)];
+const accessibleList = `${pool.slice(0, -1).join(', ')}, and ${pool.at(-1)}.`;
+---
+
+<span data-love-heartbeat data-names={JSON.stringify(pool)}>
+  <span class="sr-only">{accessibleList}</span>
+  <span aria-hidden="true">
+    {opening.map((item, index) => <>{index > 0 ? ' ' : ''}<span class="love-unit">{index === opening.length - 1 ? 'and\u00a0' : ''}<span data-heartbeat-love>{item}</span>{index === opening.length - 1 ? '.' : ','}</span></>)}
+  </span>
+</span>
+
+<script src="../scripts/inspiration-heartbeat.ts"></script>
+
+<style>
+  .love-unit { white-space: nowrap; }
+</style>

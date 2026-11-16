@@ -2,6 +2,20 @@
   "site": {
     "author": "Alexei Raymond",
     "bio": "Alexei Raymond is a writer shaped by life and love in the Middle East. He chases visions of unspeakable loveliness. You can find pieces of him in a variety of publications. He's been known to love cuberdons, insects, rabbits, and zabaione.",
+    "bioLoves": [
+      "cuberdons",
+      "insects",
+      "lizards",
+      "rabbits",
+      "monkeys",
+      "apes",
+      "zabaione",
+      "blinchiki",
+      "pilmeni",
+      "dogs",
+      "cats",
+      "hedgehogs"
+    ],
     "bioLocations": [
       "the Middle East",
       "Japan",
@@ -48,7 +62,8 @@
       "Lev Tolstoy",
       "Erich Maria Remarque",
       "Salman Rushdie",
-      "Brian Limond"
+      "Brian Limond",
+      "Disco Elysium"
     ],
     "playlists": [
       {
