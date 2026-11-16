@@ -1,6 +1,7 @@
 ---
 interface Props { items: string[]; opening: string[] }
 const { items, opening } = Astro.props;
+const visibleOpening = opening.slice(0, 3);
 const pool = [...new Set(items)];
 const accessibleList = `${pool.slice(0, -1).join(', ')}, and ${pool.at(-1)}.`;
 ---
@@ -8,12 +9,19 @@ const accessibleList = `${pool.slice(0, -1).join(', ')}, and ${pool.at(-1)}.`;
 <span data-love-heartbeat data-names={JSON.stringify(pool)}>
   <span class="sr-only">{accessibleList}</span>
   <span aria-hidden="true">
-    {opening.map((item, index) => <>{index > 0 ? ' ' : ''}<span class="love-unit">{index === opening.length - 1 ? 'and\u00a0' : ''}<span data-heartbeat-love>{item}</span>{index === opening.length - 1 ? '.' : ','}</span></>)}
+    {visibleOpening.map((item, index) => <>{index > 0 ? ' ' : ''}<span class="love-unit"><span>{index === visibleOpening.length - 1 ? 'and\u00a0' : ''}<span data-heartbeat-love>{item}</span>{index === visibleOpening.length - 1 ? '.' : ','}</span>{pool.map((value) => <span class="love-reserve">{index === visibleOpening.length - 1 ? 'and\u00a0' : ''}{value}{index === visibleOpening.length - 1 ? '.' : ','}</span>)}</span></>)}
   </span>
 </span>
 
 <script src="../scripts/inspiration-heartbeat.ts"></script>
 
 <style>
-  .love-unit { white-space: nowrap; }
+  .love-unit { display: inline-grid; vertical-align: baseline; white-space: nowrap; }
+  /* Every slot reserves the widest bank entry in the actual font. Changes
+     cannot alter line wrapping, including after fonts load or on resize. */
+  .love-unit > span { grid-area: 1 / 1; }
+  .love-reserve { visibility: hidden; pointer-events: none; user-select: none; }
+  @media print, (prefers-reduced-motion: reduce) {
+    .love-reserve { display: none; }
+  }
 </style>
