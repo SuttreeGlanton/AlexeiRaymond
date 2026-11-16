@@ -1,15 +1,19 @@
 ---
-interface Props { items: string[]; opening: string[] }
-const { items, opening } = Astro.props;
+interface Props { items: string[]; opening: string[]; lead: string }
+const { items, opening, lead } = Astro.props;
+const leadParts = lead.match(/^(.*?)(to\s+love\s*)$/);
+const leadStart = leadParts?.[1] ?? lead;
+const leadEnd = leadParts?.[2] ?? '';
 const visibleOpening = opening.slice(0, 3);
 const pool = [...new Set(items)];
 const accessibleList = `${pool.slice(0, -1).join(', ')}, and ${pool.at(-1)}.`;
 ---
 
 <span class="love-heartbeat" data-love-heartbeat data-names={JSON.stringify(pool)}>
-  <span class="sr-only">{accessibleList}</span>
+  <span class="sr-only">{lead}{accessibleList}</span>
+  <span aria-hidden="true">{leadStart}<span class="love-desktop-prefix">{leadEnd}</span></span><span class="love-lines">
   <span class="love-line" aria-hidden="true">
-    {visibleOpening.map((item, index) => <>{index > 0 ? ' ' : ''}<span class="love-unit">{index === visibleOpening.length - 1 ? 'and\u00a0' : ''}<span data-heartbeat-love>{item}</span>{index === visibleOpening.length - 1 ? '.' : ','}</span></>)}
+    {visibleOpening.map((item, index) => <>{index > 0 ? ' ' : ''}<span class="love-unit">{index === 0 && <span class="love-mobile-prefix">{leadEnd.replaceAll(' ', '\u00a0')}</span>}{index === visibleOpening.length - 1 ? 'and\u00a0' : ''}<span data-heartbeat-love>{item}</span>{index === visibleOpening.length - 1 ? '.' : ','}</span></>)}
   </span>
   {/* Reserve the height of the whole line, never the width of individual items.
       Repeating each candidate covers the widest possible three-item line in
@@ -17,15 +21,22 @@ const accessibleList = `${pool.slice(0, -1).join(', ')}, and ${pool.at(-1)}.`;
   {pool.map((value) => <span class="love-line love-reserve" aria-hidden="true">
     {visibleOpening.map((_, index) => <>{index > 0 ? ' ' : ''}<span class="love-unit">{index === visibleOpening.length - 1 ? 'and\u00a0' : ''}{value}{index === visibleOpening.length - 1 ? '.' : ','}</span></>)}
   </span>)}
+  </span>
 </span>
 
 <script src="../scripts/inspiration-heartbeat.ts"></script>
 
 <style>
-  .love-heartbeat { display: grid; }
+  .love-lines { display: grid; }
+  .love-mobile-prefix { display: none; }
   .love-line { grid-area: 1 / 1; min-width: 0; text-wrap: wrap; }
   .love-unit { white-space: nowrap; }
   .love-reserve { visibility: hidden; pointer-events: none; user-select: none; }
+  @media (max-width: 640px) {
+    .love-lines { display: inline; }
+    .love-desktop-prefix, .love-reserve { display: none; }
+    .love-mobile-prefix { display: inline; }
+  }
   @media print, (prefers-reduced-motion: reduce) {
     .love-reserve { display: none; }
   }

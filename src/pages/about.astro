@@ -81,7 +81,7 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
         <p class="bio-rest">
           {canLinkPublications ? (
             <>
-              {typeof bioTail === 'string' ? bioTail.trimStart() : bioBefore}<a class="about-publications-link" href={withBase('chronology/')}>{publicationsPhrase}</a>{canRotateLoves ? <>{bioAfterPublications}{loveLead}<LoveHeartbeat items={loves} opening={openingLoves} /></> : bioAfter}
+              {typeof bioTail === 'string' ? bioTail.trimStart() : bioBefore}<a class="about-publications-link" href={withBase('chronology/')}>{publicationsPhrase}</a>{canRotateLoves ? <>{bioAfterPublications}<LoveHeartbeat items={loves} opening={openingLoves} lead={loveLead} /></> : bioAfter}
             </>
           ) : (
             displayBio
