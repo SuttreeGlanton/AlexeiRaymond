@@ -1,0 +1,21 @@
+---
+interface Props { locations: string[] }
+const { locations } = Astro.props;
+const pool = [...new Set(locations)];
+// The abbreviation in "the U.S." already supplies the sentence's final period.
+const phrases = pool.map((place) => place.endsWith('.') ? place : `${place}.`);
+const accessiblePlaces = pool.length > 1
+  ? `${pool.slice(0, -1).join(', ')}, and ${pool.at(-1)}`
+  : pool[0] ?? '';
+---
+
+<span class="location-heartbeat" data-location-heartbeat data-names={JSON.stringify(phrases)}>
+  <span class="sr-only">in {accessiblePlaces.replace(/\.$/, '')}.</span>
+  <span aria-hidden="true">in&nbsp;<span data-heartbeat-location>{phrases[0]}</span></span>
+</span>
+
+<script src="../scripts/inspiration-heartbeat.ts"></script>
+
+<style>
+  .location-heartbeat { white-space: nowrap; }
+</style>

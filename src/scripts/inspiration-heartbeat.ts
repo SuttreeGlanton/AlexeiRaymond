@@ -1,9 +1,8 @@
 export {};
 
-const credit = document.querySelector<HTMLElement>('[data-inspiration-heartbeat]');
-
-if (credit) {
-  const slots = [...credit.querySelectorAll<HTMLElement>('[data-inspiration-name]')];
+// Both About-page tickers share the same animation and visibility lifecycle.
+for (const credit of document.querySelectorAll<HTMLElement>('[data-inspiration-heartbeat], [data-location-heartbeat]')) {
+  const slots = [...credit.querySelectorAll<HTMLElement>('[data-inspiration-name], [data-heartbeat-location]')];
   const venues: string[] = JSON.parse(credit.dataset.names ?? '[]');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const print = window.matchMedia('print');
@@ -16,13 +15,17 @@ if (credit) {
     return result;
   }
 
-  // Shuffle in the browser so every visit gets a fresh opening and order.
-  // Refill only after the queue is exhausted, excluding all visible names.
-  // Each position still keeps its name for three beats.
-  let queue = shuffled(venues);
-  for (const slot of slots) {
-    const name = queue.shift();
-    if (name) slot.textContent = name;
+  // Keep the authored opening location; inspiration names start shuffled.
+  // Refill only after the queue is exhausted, excluding visible values.
+  let queue: string[];
+  if (credit.hasAttribute('data-location-heartbeat')) {
+    queue = shuffled(venues.filter((name) => !slots.some((slot) => slot.textContent === name)));
+  } else {
+    queue = shuffled(venues);
+    for (const slot of slots) {
+      const name = queue.shift();
+      if (name) slot.textContent = name;
+    }
   }
   let nextSlot = 0;
   let visible = false;
@@ -82,7 +85,7 @@ if (credit) {
     if (running()) timer = window.setTimeout(beat, 2600);
   }
 
-  if (slots.length === 3 && queue.length > 0 && typeof slots[0]!.animate === 'function') {
+  if (slots.length > 0 && queue.length > 0 && typeof slots[0]!.animate === 'function') {
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry?.isIntersecting ?? false;
       sync();

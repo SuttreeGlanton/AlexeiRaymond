@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import InspirationHeartbeat from '../components/InspirationHeartbeat.astro';
+import LocationHeartbeat from '../components/LocationHeartbeat.astro';
 import PlaylistGallery from '../components/PlaylistGallery.astro';
 import aboutVisual from '../assets/page-visuals/about-portrait.jpg';
 import { site, socialHref, socialLabel } from '../lib/data';
@@ -12,6 +13,15 @@ const publicationsPhrase = 'a variety of publications';
 const displayBio = site.bio.replace(/(\S+)\s+(\S+)$/, '$1\u00a0$2');
 const [bioBefore, bioAfter] = displayBio.split(publicationsPhrase);
 const canLinkPublications = typeof bioAfter === 'string';
+const locations = site.bioLocations ?? [];
+const openingLocation = locations[0];
+const locationPhrase = openingLocation ? `in ${openingLocation.replace(/\.$/, '')}.` : '';
+const [bioLead, bioTail] = locationPhrase ? bioBefore.split(locationPhrase) : [bioBefore];
+// Reserve paragraph height, rather than leaving a gap after short place names.
+const longestLocation = [...locations].sort((a, b) => b.length - a.length)[0];
+const reserveBio = longestLocation && locationPhrase
+  ? displayBio.replace(locationPhrase, `in ${longestLocation.replace(/\.$/, '')}.`.replaceAll(' ', '\u00a0'))
+  : displayBio;
 const siteUrl = absoluteSiteUrl('', Astro.site);
 const aboutUrl = absoluteSiteUrl('about/', Astro.site);
 const profileSchema = {
@@ -47,16 +57,17 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
   <div class="page-shell page-with-visual about-with-visual">
     <section class="page-hero page-hero--index text-page page-copy about-copy" aria-labelledby="about-title">
       <h1 class="page-heading" id="about-title" data-title-shimmer>About</h1>
-      <div class="prose">
+      <div class="prose biography">
         <p>
           {canLinkPublications ? (
             <>
-              {bioBefore}<a class="about-publications-link" href={withBase('chronology/')}>{publicationsPhrase}</a>{bioAfter}
+              {typeof bioTail === 'string' ? <>{bioLead}<LocationHeartbeat locations={locations} />{bioTail}</> : bioBefore}<a class="about-publications-link" href={withBase('chronology/')}>{publicationsPhrase}</a>{bioAfter}
             </>
           ) : (
             displayBio
           )}
         </p>
+        {typeof bioTail === 'string' && <p class="bio-reserve" aria-hidden="true">{reserveBio}</p>}
       </div>
 
       {site.inspirations?.length && <InspirationHeartbeat names={site.inspirations} />}
@@ -174,6 +185,13 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
   .about-connections :is(.social-list, .contact-line) { margin: 0; }
   .about-connections :global(.contact-email) { overflow-wrap: anywhere; }
   .about-copy .prose { text-wrap: pretty; }
+  .biography { display: grid; }
+  .biography > p { grid-area: 1 / 1; }
+  .bio-reserve { visibility: hidden; pointer-events: none; user-select: none; }
+
+  @media print, (prefers-reduced-motion: reduce) {
+    .bio-reserve { display: none; }
+  }
 
   @media (max-width: 640px) {
     .about-with-visual { padding-bottom: 30px; }

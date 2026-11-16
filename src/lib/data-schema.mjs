@@ -24,6 +24,7 @@ export const siteMetaSchema = z.looseObject({
   socials: z.array(socialSchema), headerCover: z.string().optional(), socialCard: z.string().optional(),
   featured: z.array(text).optional(),
   inspirations: z.array(text).optional(),
+  bioLocations: z.array(text).optional(),
   playlists: z.array(z.object({ title: text, url: httpUrl, cover: text })).optional(),
 });
 export const cycleSchema = z.looseObject({
