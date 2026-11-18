@@ -28,6 +28,10 @@ const accessibleList = `${pool.slice(0, -1).join(', ')}, and ${pool.at(-1)}.`;
 
 <style>
   .love-lines { display: grid; }
+  @media (min-width: 1081px) {
+    .love-lines { display: inline; }
+    .love-reserve { display: none; }
+  }
   .love-mobile-prefix { display: none; }
   .love-line { grid-area: 1 / 1; min-width: 0; text-wrap: wrap; }
   .love-unit { white-space: nowrap; }
