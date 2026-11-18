@@ -41,6 +41,7 @@ const SAMPLE_PADDING = 31;
 const NOISE_SIZE = 256;
 const NOISE_PADDING = 11;
 const DISSOLVE_MS = 420;
+const DISSOLVE_FALLBACK_MS = 1000; // Guard missed animationend events without cutting the fade short.
 const CACHE_LIMIT = 4; // Four active cycles, at most eight small cached zones.
 const CONTACT_HEIGHT: Record<string, number> = {
   'conscription:portici': 0.34, 'portici:the-real': 0.54,
@@ -401,6 +402,7 @@ export function mountMobileCycleFlux(grid: HTMLElement, eligible: MediaQueryList
   let onScreen = false, running = false, pageActive = true;
   let raf = 0, started = 0, elapsed = 0, previousFrame = 0, revision = 0, preparing = 0;
   let outgoingTimer = 0, resizeTimer = 0;
+  let unwatchOutgoing: (() => void) | undefined;
   let width = grid.clientWidth;
 
   function stop() {
@@ -431,11 +433,33 @@ export function mountMobileCycleFlux(grid: HTMLElement, eligible: MediaQueryList
     refreshHost(layer.host);
   }
 
-  function dropOutgoing() {
+  function clearOutgoingCleanup() {
     window.clearTimeout(outgoingTimer);
     outgoingTimer = 0;
+    unwatchOutgoing?.();
+    unwatchOutgoing = undefined;
+  }
+
+  function dropOutgoing() {
+    clearOutgoingCleanup();
     release(outgoing);
     outgoing = undefined;
+  }
+
+  function watchOutgoing(layer: Layer) {
+    clearOutgoingCleanup();
+    const canvases = layer.spots.map(({ ctx }) => ctx.canvas);
+    const pending = new Set(canvases);
+    const ended = (event: AnimationEvent) => {
+      if (event.animationName !== 'mobile-flux-leave' ||
+          !pending.delete(event.target as HTMLCanvasElement)) return;
+      if (!pending.size && outgoing === layer) dropOutgoing();
+    };
+    canvases.forEach((canvas) => canvas.addEventListener('animationend', ended));
+    unwatchOutgoing = () => canvases.forEach((canvas) => canvas.removeEventListener('animationend', ended));
+    outgoingTimer = window.setTimeout(() => {
+      if (outgoing === layer) dropOutgoing();
+    }, DISSOLVE_FALLBACK_MS);
   }
 
   function fadeOutgoing() {
@@ -450,10 +474,7 @@ export function mountMobileCycleFlux(grid: HTMLElement, eligible: MediaQueryList
       ctx.canvas.classList.remove('is-mobile-flux-pending', 'is-mobile-flux-entering');
       ctx.canvas.classList.add('is-mobile-flux-leaving');
     });
-    window.clearTimeout(outgoingTimer);
-    outgoingTimer = window.setTimeout(() => {
-      if (outgoing === layer) dropOutgoing();
-    }, DISSOLVE_MS + 50);
+    watchOutgoing(layer);
   }
 
   function hide() {
@@ -476,11 +497,19 @@ export function mountMobileCycleFlux(grid: HTMLElement, eligible: MediaQueryList
     if (!layer) return;
     const host = triplet.find((tile) => tile.dataset.cycleId === layer.host.dataset.cycleId);
     if (!host || host === layer.host) return;
+    // Reparenting restarts CSS animations. Preserve the visible opacity so
+    // an infinite-loop swap cannot restart a completed fade from zero.
+    const opacity = layer.spots.map(({ ctx }) => getComputedStyle(ctx.canvas).opacity);
     const previous = layer.host;
     layer.host = host;
     host.classList.add('is-mobile-flux-host');
     if (layer.painted) host.classList.add('is-mobile-flux-visible');
-    layer.spots.forEach(({ ctx }) => host.append(ctx.canvas));
+    layer.spots.forEach(({ ctx }, i) => {
+      ctx.canvas.style.setProperty('--mobile-flux-from', opacity[i]);
+      host.append(ctx.canvas);
+    });
+    if (layer === outgoing && layer.spots.some(({ ctx }) =>
+      ctx.canvas.classList.contains('is-mobile-flux-leaving'))) watchOutgoing(layer);
     refreshHost(previous);
   }
 
@@ -541,6 +570,14 @@ export function mountMobileCycleFlux(grid: HTMLElement, eligible: MediaQueryList
       const key = covers.map((cover, i) => cover
         ? `${triplet[i].dataset.cycleId}:${cover.image.currentSrc}:${cover.media.width.toFixed(2)}:${cover.media.height.toFixed(2)}:${cover.textTop - cover.media.top}`
         : `${triplet[i].dataset.cycleId}:unavailable`).join('|');
+      // A second gesture can supersede a replacement before its first frame.
+      // Keep the last painted layer instead of promoting the empty canvases.
+      if (current && !current.painted && current.key !== key) {
+        release(current);
+        current = outgoing;
+        outgoing = undefined;
+        clearOutgoingCleanup();
+      }
       let next = cache.get(key);
       if (!next) {
         const box = active.getBoundingClientRect();
@@ -554,10 +591,12 @@ export function mountMobileCycleFlux(grid: HTMLElement, eligible: MediaQueryList
           if (spot) next.push(spot);
         }
         if (!next.length) {
-          dropOutgoing();
-          outgoing = current;
-          current = undefined;
-          fadeOutgoing();
+          if (current) {
+            dropOutgoing();
+            outgoing = current;
+            current = undefined;
+            fadeOutgoing();
+          }
           return;
         }
       }
@@ -573,8 +612,7 @@ export function mountMobileCycleFlux(grid: HTMLElement, eligible: MediaQueryList
         const returning = outgoing?.spots === next ? outgoing : undefined;
         const opacity = returning?.spots.map(({ ctx }) => getComputedStyle(ctx.canvas).opacity);
         if (returning) {
-          window.clearTimeout(outgoingTimer);
-          outgoingTimer = 0;
+          clearOutgoingCleanup();
           outgoing = undefined;
         } else dropOutgoing();
         outgoing = current;
@@ -602,7 +640,9 @@ export function mountMobileCycleFlux(grid: HTMLElement, eligible: MediaQueryList
     void prepare().catch(() => { hide(); });
   }
 
-  const observer = new IntersectionObserver(([entry]) => {
+  const observer = new IntersectionObserver((entries) => {
+    const entry = entries[entries.length - 1];
+    if (!entry) return;
     onScreen = entry.isIntersecting;
     if (onScreen) resume();
     else hide();
