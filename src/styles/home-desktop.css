@@ -1,10 +1,51 @@
-/* Homepage desktop composition. Mobile retains its existing layout and controls. */
+/* Homepage type roles are shared across layouts; display titles keep their own scale. */
+.home-page {
+  --home-reading: 1.125rem;
+  --home-link: 1.125rem;
+  --home-detail: 1rem;
+  --home-attribution: var(--home-detail);
+  --home-cover-copy: 1.0625rem;
+  /* Paired mobile venue columns need a compact supporting tier. */
+  --home-compact-detail: 0.9375rem;
+  --home-section: clamp(2rem, 5vw, 2.25rem);
+}
+
+.home-page .hero-kicker,
+.home-page .hero-teaser-feed .teaser-accordion-line,
+.home-page .home-cycles .section-note {
+  font-size: var(--home-reading);
+}
+
+.home-page .main-nav,
+.home-page .nav-cycle-panel a,
+.home-page .hero-start,
+.home-page .home-cycle-index a {
+  font-size: var(--home-link);
+}
+
+.home-page .hero-teaser-feed .teaser-accordion-source {
+  font-size: var(--home-attribution);
+}
+
+.home-page .home-cycle-grid .tile-blurb {
+  font-size: var(--home-cover-copy);
+}
+
+.home-page .footer-inner {
+  font-size: var(--home-detail);
+}
+
+.home-page .home-cycles .section-head h2 {
+  margin: 0;
+  font: 400 var(--home-section)/1.15 var(--serif);
+  letter-spacing: 0;
+}
+
+/* Desktop composition. Mobile retains its existing layout and controls. */
 @media (min-width: 861px) {
   .home-page {
     --home-reading: 1.375rem;
-    --home-link: 1.125rem;
-    --home-detail: 1rem;
-    --home-section: 2.25rem;
+    --home-attribution: var(--home-link);
   }
 
   .home-page .site-header { border-bottom: 0; }
@@ -26,13 +67,11 @@
   .home-page .main-nav,
   .home-page .hero-start,
   .home-page .teaser-accordion-source {
-    font-size: var(--home-link);
     line-height: 1.45;
   }
   .home-page .hero-kicker,
   .home-page .hero-teaser-feed .teaser-accordion-line,
   .home-page .home-cycles .section-note {
-    font-size: var(--home-reading);
     line-height: 1.45;
   }
 
@@ -53,12 +92,6 @@
     top: auto;
     right: max(20px, calc((100% - 1180px) / 2));
     bottom: 56px;
-  }
-
-  .home-page .home-cycles .section-head h2 {
-    margin: 0;
-    font: 400 var(--home-section)/1.15 var(--serif);
-    letter-spacing: 0;
   }
 
   .home-page .home-cycles {
@@ -94,7 +127,6 @@
     justify-content: flex-start;
     min-height: 34px;
     padding: 4px 0;
-    font-size: var(--home-link);
   }
   .home-page .home-cycle-index-numeral {
     flex-basis: 2rem;

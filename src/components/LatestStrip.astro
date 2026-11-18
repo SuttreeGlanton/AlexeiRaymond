@@ -178,7 +178,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
     .latest-release-cover-quote p {
       margin: 0;
       color: var(--text-soft);
-      font: italic 0.98rem/1.35 var(--serif);
+      font: italic var(--home-cover-copy)/1.35 var(--serif);
       text-wrap: pretty;
       white-space: pre-line;
     }
@@ -214,7 +214,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
   .latest-strip-heading {
     grid-area: heading;
     margin: 0;
-    font: 400 var(--home-section, clamp(2rem, 5vw, 2.25rem))/1.15 var(--serif);
+    font: 400 var(--home-section)/1.15 var(--serif);
   }
 
   .latest-release-card {
@@ -335,7 +335,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
   .latest-release-meta {
     margin: 0.3rem 0 0;
     color: var(--text-soft);
-    font-size: 0.96rem;
+    font-size: var(--home-detail);
     line-height: 1.35;
   }
 
@@ -343,7 +343,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
     max-width: 55ch;
     margin: 0.95rem 0 0;
     color: var(--text-soft);
-    font: italic 1.12rem/1.3 var(--serif);
+    font: italic var(--home-reading)/1.3 var(--serif);
     text-wrap: balance;
   }
 
@@ -358,7 +358,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
   .latest-release-read {
     margin-top: 0.95rem;
     color: var(--text);
-    font-size: 1.12rem;
+    font-size: var(--home-link);
     line-height: 1.2;
     -webkit-tap-highlight-color: transparent;
   }
@@ -387,7 +387,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
     min-width: 0;
     margin: 0;
     color: var(--text-soft);
-    font: 400 0.94rem/1.35 var(--serif);
+    font: 400 var(--home-detail)/1.35 var(--serif);
   }
 
   .latest-strip-title {
@@ -404,7 +404,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
     justify-self: end;
     min-height: 44px;
     color: var(--text-soft);
-    font: 400 0.94rem/1.4 var(--serif);
+    font: 400 var(--home-link)/1.4 var(--serif);
     transition: color 200ms ease;
   }
 
@@ -418,7 +418,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
     padding-top: 1rem;
     background: var(--banner-divider);
     color: var(--muted);
-    font: 400 0.94rem/1.45 var(--serif);
+    font: 400 var(--home-detail)/1.45 var(--serif);
   }
 
   .latest-strip-credit-line {
@@ -472,18 +472,12 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
       font-size: clamp(2.5rem, 3.75vw, 3.2rem);
     }
 
-    .latest-release-meta {
-      font-size: 1.03rem;
-    }
-
     .latest-release-excerpt {
       margin-top: 1.35rem;
-      font-size: 1.3rem;
     }
 
     .latest-release-read {
       margin-top: 1.25rem;
-      font-size: 1.22rem;
     }
   }
 
@@ -504,24 +498,15 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
       padding-top: 1rem;
     }
 
-    .latest-strip-forthcoming {
-      font-size: var(--home-detail);
-    }
-
     .latest-strip-forthcoming .latest-strip-overline {
       font: 400 var(--home-detail)/1.4 var(--serif);
       letter-spacing: 0;
       text-transform: none;
     }
 
-    .latest-strip-chronology {
-      font-size: var(--home-link);
-    }
-
     .latest-strip-credit {
       padding-top: 0;
       background: none;
-      font-size: var(--home-detail);
     }
   }
 
@@ -550,7 +535,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
     .latest-strip-credit :global(i) {
       display: block;
       color: var(--text-soft);
-      font: italic 1rem/1.4 var(--serif);
+      font: italic var(--home-detail)/1.4 var(--serif);
       letter-spacing: 0;
       white-space: nowrap;
     }
@@ -573,7 +558,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
     }
 
     .latest-strip-credit--paired :global(i) {
-      font-size: 0.9375rem;
+      font-size: var(--home-compact-detail);
       white-space: normal;
     }
   }
