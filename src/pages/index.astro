@@ -438,6 +438,7 @@ const websiteSchema = {
   </script>
 
   <script>
+    import type { MobileFluxController } from '../scripts/home-cycle-mobile-flux';
     /* Homepage mobile cycle loop and focus color. */
     (() => {
       const media = window.matchMedia('(max-width: 640px)');
@@ -446,6 +447,18 @@ const websiteSchema = {
       if (!gridElement) return;
 
       const grid: HTMLElement = gridElement;
+      // Preview comparisons: off keeps the new layout; original restores
+      // the existing layout too. These switches never alter desktop.
+      const liquidMode = new URLSearchParams(window.location.search).get('mobile-liquid');
+      const centeredLayout = liquidMode !== 'original';
+      grid.toggleAttribute('data-mobile-flux-layout', centeredLayout);
+      const liquidEligible = window.matchMedia('(max-width: 640px) and (prefers-reduced-motion: no-preference)');
+      let liquid: MobileFluxController | undefined;
+      let loadingLiquid = false;
+      let moving = false, touching = false;
+      let resetTarget: number | undefined;
+      let settleTimer = 0;
+      const nativeScrollEnd = Reflect.has(grid, 'onscrollend');
 
       const tiles = Array.from(grid.querySelectorAll<HTMLElement>(':scope > .tile'));
       if (!tiles.length) return;
@@ -456,6 +469,36 @@ const websiteSchema = {
       let focused: HTMLElement[] = [];
       let gridVisible = false;
       let frame = 0;
+
+      function notifyLiquidSettled() {
+        if (moving || touching || !media.matches || !gridVisible || !loop || !liquidEligible.matches || document.hidden) return;
+        if (liquidMode === 'off' || liquidMode === 'original') return;
+        if (!liquid) {
+          if (loadingLiquid || !('IntersectionObserver' in window)) return;
+          loadingLiquid = true;
+          void import('../scripts/home-cycle-mobile-flux')
+            .then(({ mountMobileCycleFlux }) => {
+              liquid = mountMobileCycleFlux(grid, liquidEligible);
+              notifyLiquidSettled();
+            })
+            .catch(() => { /* Keep the native gallery if decoration fails. */ });
+          return;
+        }
+        const { centers, viewportHalf, period } = geometry ?? measureGeometry();
+        const logical = loop.ordered.findIndex((tile) => tile.dataset.cycleId === centeredCycleId);
+        if (logical < 0 || !period) return;
+        const copy = Math.round((grid.scrollLeft + viewportHalf - centers[logical]) / period);
+        const visible = [...loop.before, ...loop.ordered, ...loop.after];
+        const index = (copy + 1) * loop.ordered.length + logical;
+        if (index <= 0 || index >= visible.length - 1) return;
+        liquid.settled(visible[index - 1], visible[index], visible[index + 1]);
+      }
+
+      function jumpTo(left: number) {
+        if (Math.abs(grid.scrollLeft - left) < 0.5) return;
+        resetTarget = left;
+        grid.scrollTo({ left, behavior: 'instant' });
+      }
 
       function clearFocus() {
         focused.forEach((tile) => tile.classList.remove('is-mobile-focus'));
@@ -483,8 +526,9 @@ const websiteSchema = {
         grid.append(...after);
         const { centers, viewportHalf, period } = measureGeometry();
         const restoredIndex = ordered.findIndex((tile) => tile.dataset.cycleId === centeredCycleId);
-        const left = restoredIndex >= 0 ? centers[restoredIndex] - viewportHalf : position + period;
-        grid.scrollTo({ left, behavior: 'instant' });
+        const left = restoredIndex >= 0 ? centers[restoredIndex] - viewportHalf
+          : centeredLayout ? centers[0] - viewportHalf : position + period;
+        jumpTo(left);
       }
 
       function measureGeometry() {
@@ -502,6 +546,10 @@ const websiteSchema = {
       function invalidateGeometry() {
         geometry = undefined;
         scheduleUpdate();
+        if (!moving && !touching && media.matches && gridVisible) {
+          window.clearTimeout(settleTimer);
+          settleTimer = window.setTimeout(settle, 180);
+        }
       }
 
       function recenterLoop() {
@@ -513,9 +561,9 @@ const websiteSchema = {
         // Wait for the native swipe and snap to finish, then shift to the
         // same view in the original set. Allow for fractional snap positions.
         if (position < width - 1) {
-          grid.scrollTo({ left: position + width, behavior: 'instant' });
+          jumpTo(position + width);
         } else if (position >= 2 * width - 1) {
-          grid.scrollTo({ left: position - width, behavior: 'instant' });
+          jumpTo(position - width);
         }
       }
 
@@ -544,13 +592,17 @@ const websiteSchema = {
           }
         });
 
-        if (focused[0] === ordered[closestIndex]) return;
+        if (focused[0] === ordered[closestIndex]) {
+          notifyLiquidSettled();
+          return;
+        }
         centeredCycleId = ordered[closestIndex].dataset.cycleId;
         clearFocus();
         // Keep the visual state matched when a copy becomes an original.
         focused = [ordered[closestIndex]];
         if (loop) focused.push(loop.before[closestIndex], loop.after[closestIndex]);
         focused.forEach((tile) => tile.classList.add('is-mobile-focus'));
+        notifyLiquidSettled();
       }
 
       function scheduleUpdate() {
@@ -570,33 +622,77 @@ const websiteSchema = {
 
         cancelAnimationFrame(frame);
         frame = 0;
+        window.clearTimeout(settleTimer);
+        moving = false;
+        liquid?.suspend();
         clearFocus();
       }
 
-      grid.addEventListener('scroll', scheduleUpdate, { passive: true });
-      if (Reflect.has(grid, 'onscrollend')) {
-        grid.addEventListener('scrollend', recenterLoop);
-      } else {
-        let settleTimer = 0;
-        let touching = false;
-
-        function scheduleRecenter() {
-          window.clearTimeout(settleTimer);
-          if (!touching && loop) settleTimer = window.setTimeout(recenterLoop, 150);
-        }
-
-        grid.addEventListener('scroll', scheduleRecenter, { passive: true });
-        grid.addEventListener('touchstart', () => {
-          touching = true;
-          scheduleRecenter();
-        }, { passive: true });
-        function finishTouch(event: TouchEvent) {
-          touching = event.targetTouches.length > 0;
-          scheduleRecenter();
-        }
-        grid.addEventListener('touchend', finishTouch, { passive: true });
-        grid.addEventListener('touchcancel', finishTouch, { passive: true });
+      function settle() {
+        window.clearTimeout(settleTimer);
+        if (touching || !media.matches || !gridVisible) return;
+        // Native momentum owns the gesture. Once it ends, use the exact
+        // cached center so fractional scroll rounding cannot accumulate.
+        moving = true;
+        cancelAnimationFrame(frame);
+        updateFocus();
+        if (centeredLayout && loop) {
+          const index = loop.ordered.findIndex((tile) => tile.dataset.cycleId === centeredCycleId);
+          const { centers, viewportHalf } = geometry ?? measureGeometry();
+          if (index >= 0) jumpTo(centers[index] - viewportHalf);
+        } else recenterLoop();
+        moving = false;
+        notifyLiquidSettled();
       }
+
+      function scheduleSettle() {
+        window.clearTimeout(settleTimer);
+        if (!touching && loop) settleTimer = window.setTimeout(settle, 150);
+      }
+
+      grid.addEventListener('scroll', () => {
+        scheduleUpdate();
+        if (!media.matches || !gridVisible) return;
+        // A duplicate-to-original jump is not a fresh swipe. A genuine
+        // gesture at any other position still immediately stops the painter.
+        if (resetTarget !== undefined && Math.abs(grid.scrollLeft - resetTarget) < 1) {
+          resetTarget = undefined;
+          return;
+        }
+        resetTarget = undefined;
+        window.clearTimeout(settleTimer);
+        if (!moving) liquid?.moving();
+        moving = true;
+        if (!nativeScrollEnd) scheduleSettle();
+      }, { passive: true });
+      if (nativeScrollEnd) grid.addEventListener('scrollend', settle);
+      grid.addEventListener('touchstart', () => {
+        if (!media.matches) return;
+        touching = true;
+        moving = true;
+        liquid?.moving();
+        window.clearTimeout(settleTimer);
+      }, { passive: true });
+      function finishTouch(event: TouchEvent) {
+        touching = event.targetTouches.length > 0;
+        // Also handles a tap/vertical gesture that produces no scrollend.
+        // Any subsequent momentum scroll cancels this timer on native paths.
+        scheduleSettle();
+      }
+      grid.addEventListener('touchend', finishTouch, { passive: true });
+      grid.addEventListener('touchcancel', finishTouch, { passive: true });
+      liquidEligible.addEventListener('change', () => {
+        if (liquidEligible.matches) settle();
+        else liquid?.discard();
+      });
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          touching = false;
+          window.clearTimeout(settleTimer);
+        } else settle();
+      });
+      window.addEventListener('pagehide', () => { touching = false; });
+      window.addEventListener('pageshow', settle);
       window.addEventListener('resize', invalidateGeometry);
       if ('ResizeObserver' in window) new ResizeObserver(invalidateGeometry).observe(grid);
 
@@ -607,6 +703,11 @@ const websiteSchema = {
           return;
         }
 
+        window.clearTimeout(settleTimer);
+        moving = false;
+        touching = false;
+        resetTarget = undefined;
+        liquid?.discard();
         clearFocus();
         loop?.before.forEach((tile) => tile.remove());
         loop?.after.forEach((tile) => tile.remove());

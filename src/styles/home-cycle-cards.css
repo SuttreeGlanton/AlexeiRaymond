@@ -88,3 +88,56 @@
     display: none;
   }
 }
+
+/* Mobile liquid experiment. Keep the native 82vw cards and give both
+   neighbors equal room. The original layout remains available by URL. */
+@media (max-width: 640px) {
+  .home-cycle-grid[data-home-cycle-focus][data-mobile-flux-layout] {
+    gap: 8px;
+    padding-inline: 9vw;
+    scroll-padding-inline: 9vw;
+
+    & > .tile { scroll-snap-align: center; }
+  }
+
+  .home-cycle-grid[data-home-cycle-focus] > .tile.is-mobile-flux-host {
+    /* Retain overflow during the fade even if focus has already moved. */
+    overflow: visible;
+    z-index: 2;
+  }
+
+  .home-cycle-mobile-flux {
+    position: absolute;
+    display: block;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 1;
+  }
+
+  .home-cycle-mobile-flux.is-mobile-flux-pending {
+    opacity: var(--mobile-flux-from, 0);
+  }
+
+  .home-cycle-mobile-flux.is-mobile-flux-entering {
+    /* Keyframes establish a real fade even on a freshly attached canvas. */
+    animation: mobile-flux-enter var(--mobile-flux-duration, 420ms) ease both;
+  }
+
+  .home-cycle-mobile-flux.is-mobile-flux-leaving {
+    animation: mobile-flux-leave var(--mobile-flux-duration, 420ms) ease both;
+  }
+
+  @keyframes mobile-flux-enter {
+    from { opacity: var(--mobile-flux-from, 0); }
+    to { opacity: 1; }
+  }
+
+  @keyframes mobile-flux-leave {
+    from { opacity: var(--mobile-flux-from, 1); }
+    to { opacity: 0; }
+  }
+}
+
+@media (min-width: 641px), (prefers-reduced-motion: reduce) {
+  .home-cycle-mobile-flux { display: none; }
+}
