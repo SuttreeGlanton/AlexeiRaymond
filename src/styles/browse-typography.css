@@ -1,0 +1,70 @@
+/* Page-scoped roles: keep shared cards and reading pages outside this pass. */
+:is(.chronology-page, .about-page, .selected-page) {
+  --browse-section: clamp(2rem, 5vw, 2.25rem);
+  --browse-intro: 1.125rem;
+  --browse-detail: 1rem;
+  --browse-compact: 0.875rem;
+  --browse-label: 0.75rem;
+  --browse-cover-copy: 1.0625rem;
+}
+
+@media (min-width: 861px) {
+  :is(.chronology-page, .about-page, .selected-page) {
+    --browse-intro: 1.375rem;
+  }
+}
+
+.chronology-page .chronology-section h2,
+.about-page h2.about-section-heading {
+  font-size: var(--browse-section);
+  line-height: 1.15;
+}
+
+.chronology-page .chronology-hero .page-intro,
+.selected-page .selected-hero .page-intro {
+  font-size: var(--browse-intro);
+}
+
+/* A bibliography remains denser than a gallery, with readable row actions. */
+.chronology-page .chronology-piece-title {
+  font-size: clamp(1.5rem, 2.5vw, 1.75rem);
+}
+
+.chronology-page .chronology-read-link,
+.chronology-page .chron-year-sep {
+  font-size: var(--browse-compact);
+}
+
+.chronology-page .chronology-sort .sort-button,
+.chronology-page .chronology-item .tag,
+.chronology-page .chronology-cycle-links {
+  font-size: var(--browse-label);
+}
+
+.chronology-page .chronology-publication-line {
+  font-size: var(--browse-detail);
+}
+
+@media (max-width: 640px) {
+  .chronology-page .chronology-publication-line {
+    font-size: var(--browse-compact);
+  }
+}
+
+/* Preserve the biography, rotating text, and playlist carousel geometry. */
+.about-page .contact-reveal,
+.about-page .contact-email {
+  font-size: var(--browse-detail);
+}
+
+.selected-page .selected-piece-grid .card-meta {
+  font-size: var(--browse-compact);
+}
+
+.selected-page .selected-piece-grid .piece-card .card-excerpt {
+  font-size: var(--browse-cover-copy);
+}
+
+.selected-page .selected-piece-grid .account-strip {
+  font-size: var(--browse-detail);
+}

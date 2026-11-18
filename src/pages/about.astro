@@ -8,6 +8,7 @@ import PlaylistGallery from '../components/PlaylistGallery.astro';
 import aboutVisual from '../assets/page-visuals/about-portrait.jpg';
 import { site, socialHref, socialLabel } from '../lib/data';
 import { absoluteSiteUrl, withBase } from '../lib/paths';
+import '../styles/browse-typography.css';
 
 const publicationsPhrase = 'a variety of publications';
 // Bind the final two words without changing the authored biography.
@@ -55,6 +56,7 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
   title={`About — ${site.author}`}
   description="About Alexei Raymond, his writing, editorial work, social profiles, and contact information."
   structuredData={profileSchema}
+  bodyClass="about-page"
 >
   <div class="page-shell page-with-visual about-with-visual">
     <section class="page-hero page-hero--index text-page page-copy about-copy" aria-labelledby="about-title">
@@ -275,10 +277,8 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
     .about-connections .social-block { min-width: 0; }
     .about-connections .contact-reveal {
       min-height: 44px;
-      font-size: 0.85rem;
       text-align: left;
     }
-    .about-connections :global(.contact-email) { font-size: 0.85rem; }
     .about-social-icon-list .about-social-icon { width: 36px; height: 44px; }
   }
 
