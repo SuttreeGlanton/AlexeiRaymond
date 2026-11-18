@@ -432,6 +432,7 @@ export function mountHomeCycleFlux(grid: HTMLElement, eligible: MediaQueryList) 
   let spots: Spot[] = [];
   let noise: Float32Array | undefined;
   let onScreen = false;
+  let pageActive = true;
   let running = false;
   let raf = 0;
   let start = 0;
@@ -440,6 +441,9 @@ export function mountHomeCycleFlux(grid: HTMLElement, eligible: MediaQueryList) 
   let settleTimer = 0;
   let resizeTimer = 0;
   let tileFocus: boolean[] = [];
+  let viewportWidth = window.innerWidth;
+  let gridWidth = grid.clientWidth;
+  let gridHeight = grid.clientHeight;
 
   function build() {
     tiles = Array.from(grid.querySelectorAll<HTMLElement>(':scope > .tile'));
@@ -607,7 +611,7 @@ export function mountHomeCycleFlux(grid: HTMLElement, eligible: MediaQueryList) 
   // Visible and settled starts the effect. Leaving view or hiding the tab
   // pauses it. A resize discards geometry, and ineligibility removes it.
   function play() {
-    if (running || resizeTimer || !eligible.matches || !onScreen || document.hidden) return;
+    if (running || resizeTimer || !eligible.matches || !onScreen || !pageActive || document.hidden) return;
     const fanMoving = grid.classList.contains('is-fan-pending') || grid.classList.contains('is-fan-entering');
     const cardsMoving = !overlay && Array.from(grid.querySelectorAll<HTMLElement>(':scope > .tile')).some(
       (tile) => tile.classList.contains('is-fan-focus') ||
@@ -642,7 +646,9 @@ export function mountHomeCycleFlux(grid: HTMLElement, eligible: MediaQueryList) 
     resizeTimer = 0;
   }
 
-  const observer = new IntersectionObserver(([entry]) => {
+  const observer = new IntersectionObserver((entries) => {
+    const entry = entries[entries.length - 1];
+    if (!entry) return;
     onScreen = entry.isIntersecting;
     if (onScreen) play();
     else stop();
@@ -653,20 +659,30 @@ export function mountHomeCycleFlux(grid: HTMLElement, eligible: MediaQueryList) 
     if (eligible.matches) play();
     else discard();
   });
-  window.addEventListener('resize', () => {
+  function resize() {
+    const nextViewportWidth = window.innerWidth;
+    const nextGridWidth = grid.clientWidth, nextGridHeight = grid.clientHeight;
+    // The fan uses vw positions even when its container is capped. Keep that
+    // width in the key, but retain valid pixels on height-only window changes.
+    if (nextViewportWidth === viewportWidth && nextGridWidth === gridWidth && nextGridHeight === gridHeight) return;
+    viewportWidth = nextViewportWidth;
+    gridWidth = nextGridWidth;
+    gridHeight = nextGridHeight;
     discard();
     if (!eligible.matches) return;
     resizeTimer = window.setTimeout(() => {
       resizeTimer = 0;
       play();
     }, 200);
-  });
+  }
+  window.addEventListener('resize', resize);
+  if ('ResizeObserver' in window) new ResizeObserver(resize).observe(grid);
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stop();
     else play();
   });
-  window.addEventListener('pagehide', stop);
-  window.addEventListener('pageshow', play);
+  window.addEventListener('pagehide', () => { pageActive = false; stop(); });
+  window.addEventListener('pageshow', () => { pageActive = true; play(); });
   grid.addEventListener('load', play, true);
   grid.addEventListener('error', play, true);
 }
