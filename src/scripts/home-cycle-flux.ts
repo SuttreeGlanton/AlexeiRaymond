@@ -622,6 +622,7 @@ export function mountHomeCycleFlux(grid: HTMLElement, eligible: MediaQueryList) 
       settleTimer = window.setTimeout(play, 150);
       return;
     }
+    window.clearTimeout(settleTimer);
     if (!overlay) build();
     if (!overlay) return;
     running = true;
@@ -685,4 +686,6 @@ export function mountHomeCycleFlux(grid: HTMLElement, eligible: MediaQueryList) 
   window.addEventListener('pageshow', () => { pageActive = true; play(); });
   grid.addEventListener('load', play, true);
   grid.addEventListener('error', play, true);
+  // Start on the entrance handoff instead of waiting for the next settling poll.
+  grid.addEventListener('home-cycle-fan-ready', play);
 }

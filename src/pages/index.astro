@@ -331,7 +331,12 @@ const websiteSchema = {
       function finishFanEntrance() {
         window.clearTimeout(entranceTimer);
         entranceObserver?.disconnect();
+        const wasMoving = fan.classList.contains('is-fan-pending') || fan.classList.contains('is-fan-entering');
         fan.classList.remove('is-fan-pending', 'is-fan-entering');
+        if (wasMoving) {
+          // Let the caller restore focus before the liquid checks the resting geometry.
+          requestAnimationFrame(() => fan.dispatchEvent(new Event('home-cycle-fan-ready')));
+        }
       }
 
       function playFanEntrance() {
@@ -749,12 +754,13 @@ const websiteSchema = {
           .catch(() => { /* The decorative overlay is optional. */ });
       }
 
+      // Fetch ahead of the entrance; the renderer still waits for visible, settled cards.
       const approach = new IntersectionObserver((entries) => {
         const entry = entries[entries.length - 1];
         if (!entry) return;
         near = entry.isIntersecting;
         loadFlux();
-      }, { rootMargin: '24px 0px' });
+      }, { rootMargin: '320px 0px' });
       approach.observe(grid);
       eligible.addEventListener('change', loadFlux);
       document.addEventListener('visibilitychange', loadFlux);

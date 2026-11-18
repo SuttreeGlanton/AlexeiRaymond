@@ -71,11 +71,18 @@
   pointer-events: none;
   z-index: 5;
   opacity: 0;
-  transition: opacity 600ms ease;
 }
 
 .home-cycle-flux.is-visible {
   opacity: 1;
+  /* Insertion and the first painted frame can share a style update. An explicit
+     start value keeps the reveal smooth even when no initial style was painted. */
+  animation: home-cycle-flux-in 600ms ease both;
+}
+
+@keyframes home-cycle-flux-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .home-cycle-flux > canvas {
