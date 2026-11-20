@@ -119,8 +119,20 @@
 }
 
 .archive-cover-card:hover .card-overlay,
-.archive-cover-card:focus-visible .card-overlay {
+.archive-cover-card:focus-within .card-overlay,
+.archive-cover-card.is-mobile-focus .card-overlay {
   opacity: 1;
+}
+
+/* Override the shared mobile card rule only on hosted reading pages. */
+.archive-cover-card .card-overlay { display: flex; pointer-events: none; }
+.archive-cover-card:is(:hover, :focus-within, .is-mobile-focus) .reading-clip { pointer-events: auto; }
+.account-meta .account-date { text-transform: none; }
+
+@media (hover: none) and (pointer: coarse) {
+  /* Touch hover/focus may stick after a tap; viewport focus owns the reveal. */
+  .archive-cover-card:not(.is-mobile-focus) .card-overlay { opacity: 0; pointer-events: none; }
+  .archive-cover-card:not(.is-mobile-focus):has(:focus-visible) .card-overlay { opacity: 1; pointer-events: auto; }
 }
 
 

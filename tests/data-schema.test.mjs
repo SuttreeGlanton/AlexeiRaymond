@@ -77,3 +77,26 @@ test('cross-references and narrative sequences cannot silently drift', async (t)
   Object.assign(multiCycle.pieces[0], { cycles: ['Example', 'Dreams'], coverVariants: ['cover.jpg', 'second.jpg'] });
   assert.equal(siteDataSchema.safeParse(multiCycle).success, true);
 });
+
+test('recordings are optional, local and tied to a visible excerpt', () => {
+  const data = fixture();
+  data.pieces[0].excerpt = 'A quoted fragment.';
+  data.pieces[0].account.audio = 'audio/readings/published.mp3';
+  data.pieces[0].account.excerptAudio = 'audio/excerpts/published.mp3';
+  assert.deepEqual(siteDataSchema.parse(data), data);
+  for (const field of ['audio', 'excerptAudio']) {
+    const folder = field === 'audio' ? 'readings' : 'excerpts';
+    for (const extension of ['mp3', 'm4a', 'ogg', 'wav']) {
+      const valid = structuredClone(data);
+      valid.pieces[0].account[field] = `audio/${folder}/published.${extension}`;
+      assert.equal(siteDataSchema.safeParse(valid).success, true);
+    }
+    for (const value of ['', null, 'https://example.com/story.mp3', `audio/${folder}/../story.mp3`, `audio/${folder}/Story.mp3`, `audio/${folder}/story.mp3?x=1`, 'public/audio/excerpts/story.mp3']) {
+      const invalid = structuredClone(data);
+      invalid.pieces[0].account[field] = value;
+      assert.equal(siteDataSchema.safeParse(invalid).success, false, String(value));
+    }
+  }
+  delete data.pieces[0].excerpt;
+  assert.equal(siteDataSchema.safeParse(data).success, false);
+});

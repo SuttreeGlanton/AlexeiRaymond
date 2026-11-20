@@ -6,11 +6,12 @@ import InitialText from '../../components/InitialText.astro';
 import ReadArrow from '../../components/ReadArrow.astro';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 import StarCrossedCover from '../../components/StarCrossedCover.astro';
-import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatShortDate, publicationLabel } from '../../lib/data';
+import { canLinkToPiece, cycleByName, isDefunct, pieces, site, formatIsoDate, formatLongDate, formatReadingDate, formatShortDate, publicationLabel } from '../../lib/data';
 import { absoluteSiteUrl, withBase } from '../../lib/paths';
 import { imageAsset } from '../../lib/image-assets';
 import { storyPresentation } from '../../lib/story-registry.mjs';
 import StoryCoda from '../../components/StoryCoda.astro';
+import ReadingAudio from '../../components/ReadingAudio.astro';
 
 export async function getStaticPaths() {
   const entries = await getCollection('accounts');
@@ -163,12 +164,13 @@ const breadcrumbSchema = piece ? {
       <p class="account-meta">
         {piece.publication && <span class="card-publication">{piece.publication}</span>}
         {piece.issue && <> {piece.issue}</>}
-        {formatLongDate(piece.date) && <> &middot; {formatLongDate(piece.date)}</>}
+        {formatReadingDate(piece.date) && <> &middot; <time class="account-date" datetime={formatIsoDate(piece.date)}>{formatReadingDate(piece.date)}</time></>}
       </p>
     )}
     {piece?.awardNote && (
       <p class="account-award-note"><strong class="award-note">{piece.awardNote}</strong></p>
     )}
+    {fullText && piece?.account?.audio && <ReadingAudio src={piece.account.audio} title={piece.title} slug={entry.id} />}
     {presentation.beforeBody?.map((coda) => <StoryCoda {...coda} />)}
     <div class={`archive-body-shell${piece?.cover ? ' has-archive-cover' : ''}`}>
       {piece?.cover && (
@@ -184,11 +186,13 @@ const breadcrumbSchema = piece ? {
                   fetchpriority="high"
                   sizes="(max-width: 640px) 76vw, (max-width: 860px) 42vw, 280px"
                 />}
-                {piece.excerpt && (
+                {piece.excerpt && (fullText && piece.account?.excerptAudio ? (
+                  <ReadingAudio src={piece.account.excerptAudio} title={piece.title} slug={entry.id} excerpt={piece.excerpt} />
+                ) : (
                   <div class="card-overlay" aria-hidden="true">
                     <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
                   </div>
-                )}
+                ))}
               </div>
               {archiveDateLabel && <span class="date-mark" data-publication-year={archivePublicationYear}>{archiveDateLabel}</span>}
             </div>
@@ -221,9 +225,15 @@ const breadcrumbSchema = piece ? {
   </article>
 
   <script>
+    // Pages without recordings do not request the optional controller.
+    if (document.querySelector('[data-reading-audio]')) {
+      import('../../scripts/reading-audio').then(({ initReadingAudio }) => initReadingAudio()).catch(() => {
+        // Direct recording links remain available if enhancement cannot load.
+      });
+    }
     /* Archive cover mobile color focus. */
     const archiveCover = document.querySelector('[data-archive-mobile-focus]');
-    const archiveCoverQuery = window.matchMedia('(max-width: 640px)');
+    const archiveCoverQuery = window.matchMedia('(max-width: 640px), (hover: none) and (pointer: coarse)');
     let archiveCoverTicking = false;
 
     function updateArchiveCoverFocus() {

@@ -13,6 +13,8 @@ export const genreSchema = z.enum(/** @type {const} */ (['Short fiction', 'Flash
 // Preserve optional editorial fields, including fields added before a schema update.
 export const pieceAccountSchema = z.looseObject({
   slug, label: z.string().optional(), title: z.string().optional(),
+  audio: z.string().regex(/^audio\/readings\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:mp3|m4a|ogg|wav)$/, 'Use audio/readings/<slug>.mp3 (or .m4a, .ogg, .wav).').optional(),
+  excerptAudio: z.string().regex(/^audio\/excerpts\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:mp3|m4a|ogg|wav)$/, 'Use audio/excerpts/<slug>.mp3 (or .m4a, .ogg, .wav).').optional(),
 });
 export const socialObjectSchema = z.looseObject({
   label: z.string().optional(), name: z.string().optional(),
@@ -50,6 +52,9 @@ export const pieceSchema = z.looseObject({
   excerpt: z.string().optional(), genre: genreSchema, account: pieceAccountSchema.optional(),
   titleLines: z.array(z.string()).optional(),
 }).superRefine((piece, context) => {
+  if (piece.account?.excerptAudio && !piece.excerpt?.trim()) {
+    issue(context, ['excerpt'], 'A recorded excerpt requires cover quote text.');
+  }
   const upcoming = piece.tags.includes('Upcoming');
   const defunct = piece.tags.includes('Defunct');
   if (new Set(piece.tags).size !== piece.tags.length) issue(context, ['tags'], 'Must not contain duplicate tags.');

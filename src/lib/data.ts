@@ -6,7 +6,7 @@ import {
   socialSchema, siteMetaSchema, cycleSchema, pieceSchema, interviewSchema,
 } from './data-schema.mjs';
 import { parseDate, publishedNewestFirstFrom } from './data-rules.mjs';
-export { parseDate, formatIsoDate } from './data-rules.mjs';
+export { parseDate, formatIsoDate, formatReadingDate } from './data-rules.mjs';
 
 export type Tag = z.infer<typeof tagSchema>;
 export type Genre = z.infer<typeof genreSchema>;

@@ -65,10 +65,17 @@ for (const piece of data.pieces) {
   piece.coverVariants?.forEach((cover, index) => checkAsset(`${label}.coverVariants[${index}]`, cover));
   if (!piece.excerpt?.trim()) warnings.push(`${label}: excerpt is empty.`);
   if (!piece.account) continue;
+  for (const field of ['audio', 'excerptAudio']) {
+    const source = piece.account[field];
+    if (typeof source !== 'string') continue;
+    const recording = path.join(repoRoot, 'public', source);
+    const stats = fs.existsSync(recording) ? fs.statSync(recording) : null;
+    if (!stats?.isFile() || !stats.size) errors.push(`${label}.${field}: "public/${source}" must be a non-empty file.`);
+  }
   const sourcePath = accountPath(piece.account.slug);
   if (!sourcePath) {
     errors.push(`${label}: missing archive markdown for account slug "${piece.account.slug}".`);
-  } else if (piece.account.label === 'Read story') {
+  } else if (piece.account.label === 'Read story' || piece.account.audio || piece.account.excerptAudio) {
     const source = fs.readFileSync(sourcePath, 'utf8').replace(/^\uFEFF/, '');
     const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
     if (!frontmatter || !/^fullText:\s*true\s*$/m.test(frontmatter[1])) {

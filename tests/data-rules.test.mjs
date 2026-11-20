@@ -37,3 +37,16 @@ test('cycle labels do not duplicate an existing article', () => {
   assert.equal(cycleLabel('The Real'), 'From The Real cycle');
   assert.equal(cycleLabel('Mythmaking'), 'From the Mythmaking cycle');
 });
+
+test('hosted story dates use month-first ordinals, including teen exceptions', async () => {
+  const { formatReadingDate } = await import('../src/lib/data-rules.mjs');
+  const suffixes = ['st','nd','rd','th','th','th','th','th','th','th','th','th','th','th','th','th','th','th','th','th','st','nd','rd','th','th','th','th','th','th','th','st'];
+  suffixes.forEach((suffix, index) => {
+    const day = index + 1;
+    assert.equal(formatReadingDate(`${String(day).padStart(2, '0')}/10/2026`), `October ${day}${suffix}, 2026`);
+  });
+  assert.equal(formatReadingDate('01/01/2025'), 'January 1st, 2025');
+  assert.equal(formatReadingDate('29/02/2024'), 'February 29th, 2024');
+  assert.equal(formatReadingDate(null), '');
+  assert.equal(formatReadingDate('31/02/2026'), '');
+});

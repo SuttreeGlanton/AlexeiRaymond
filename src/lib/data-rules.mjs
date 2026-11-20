@@ -19,6 +19,16 @@ export function formatIsoDate(value) {
   return `${String(date.getFullYear()).padStart(4, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 }
 
+/** Reading-page display, e.g. October 17th, 2026. Stored dates remain DD/MM/YYYY. @param {string | null} value */
+export function formatReadingDate(value) {
+  const date = parseDate(value);
+  if (!date) return '';
+  const day = date.getDate();
+  const suffix = day >= 11 && day <= 13 ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[day % 10] ?? 'th');
+  const month = date.toLocaleString('en-US', { month: 'long' });
+  return `${month} ${day}${suffix}, ${date.getFullYear()}`;
+}
+
 /** @typedef {{date: string | null, tags: readonly string[]}} DatedPiece */
 
 /** @template {DatedPiece} T @param {readonly T[]} pieces @returns {T[]} */
