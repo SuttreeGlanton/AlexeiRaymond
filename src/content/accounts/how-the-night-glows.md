@@ -4,7 +4,7 @@ fullText: true
 ---
 *The trip would be over in less than a week. And then. Home?*
 
-<p style="text-indent: 2.6em;">“I’m taking the bathroom!” Natalie exclaimed as she opened the hotel room door. Adam followed, carrying the combined weight of shopping bags and backpacks equipped for travel. Both removed their shoes, and their freed feet sank into the carpeted floor. A mercy. Adam murmured a recap of the day, mostly to himself, as Natalie ducked into the bathroom.</p>
+<p>“I’m taking the bathroom!” Natalie exclaimed as she opened the hotel room door. Adam followed, carrying the combined weight of shopping bags and backpacks equipped for travel. Both removed their shoes, and their freed feet sank into the carpeted floor. A mercy. Adam murmured a recap of the day, mostly to himself, as Natalie ducked into the bathroom.</p>
 
 “Man, we actually managed to spend the entire day out, huh? Good thing we decided to not come back and take a nap. Wish I could just shut off the need to sleep altogether...”
 
@@ -16,7 +16,9 @@ The door of the bathroom slid open, and Adam exchanged places with Natalie. In t
 
 “I’ll go chill until you’re done.”
 
-“What?” She turned his way, blinded with water, and stood, thereby unwittingly beckoning Adam to embrace her, to touch, no matter whether he was still clothed. Still, he held back and answered louder, “I said I’m gonna go wait on the bed.”
+“What?” She turned his way, blinded with water, and stood, thereby unwittingly beckoning Adam to embrace her, to touch, no matter whether he was still clothed.
+
+Still, he held back and answered louder, “I said I’m gonna go wait on the bed.”
 
 “Ok! I’ll be quick!”
 

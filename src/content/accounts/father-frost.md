@@ -16,13 +16,18 @@ Swear I could just stomp, the brakes, get out, smash a face. But whatever-the-*f
 
 “H-hello…?”
 
-“Sash, *privet*! *S’nastupayushim*! N’sleepin’?!”<br>
+“Sash, *privet*! *S’nastupayushim*! N’sleepin’?!”
+
 “S’nastupayushim...? Sleeping? We’re eating. Who is this?”
 
-“S’me, uncle Volodya! *N’recognize?*”<br>
-“Oh—*oh!* Privet, Volodya!”<br>
-“L’sten, m’gonna over in couple, m’kay? Y’tell mama I wanna give, give gift you sumthin’ *Horosh?*”<br>
-“Oh, now? Okay.”<br>
+“S’me, uncle Volodya! *N’recognize?*”
+
+“Oh—*oh!* Privet, Volodya!”
+
+“L’sten, m’gonna over in couple, m’kay? Y’tell mama I wanna give, give gift you sumthin’ *Horosh?*”
+
+“Oh, now? Okay.”
+
 “*Davai*, theresoon. *Paka!*”
 
 Toss phone in back seat. Back on the road—not far. Call Andrei, make sure...? Got this. Street’s familiar, makes sense. Picked up wi’ Danik ‘round here, to pool… Left here and sure and always, same *shitbox* streets. E’thin’s in place. Rollin’ down the lil’, slow, road—stop. Wallet’s cash—what’s left of the paycheck. Notes fall between legs. I feel, rummage. By window I count by streetlight while straightenin’ ‘em out: twenty, forty, eighty… Not enough. Must have more. Flap of the coin pocket. Out a five, another. Ten! Good, clean hundred.

@@ -45,7 +45,8 @@ He stops by a row of dense, dark-green bushes with spark-like white flowers peek
 
 Then, with an inkling of tears forced into the corners of his eyes by sheer frustration over meaning’s spurning of him—of their moment—he places the lizard on a patch of shaded, soft earth, and watches as it lies there unmoving. 
 
-The phone buzzes, and Valentin stands and regains the brisk pace he initially intended back at school. The phone buzzes, and he strains not to turn back, missing the lizard’s rustling escape. The phone buzzes, and he ascends via elevator, attempting to rid himself of all thought. The phone buzzes, and he knocks and a door opens and—<br>
+The phone buzzes, and Valentin stands and regains the brisk pace he initially intended back at school. The phone buzzes, and he strains not to turn back, missing the lizard’s rustling escape. The phone buzzes, and he ascends via elevator, attempting to rid himself of all thought. The phone buzzes, and he knocks and a door opens and—
+
 “Valen—”
 
 And her. Her he simply hugs.
