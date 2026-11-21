@@ -59,8 +59,8 @@ const WARP_PADDING = (WARP_BASE + WARP_VARIATION) / 2 + 2;
    them to an unrelated part of the photograph on every rebuild. */
 const CONTACT_PLACEMENT: Record<string, readonly [number, number]> = {
   'mythbreaking:mythmaking': [0.55, 0.88],
-  'mythmaking:fools-gold': [0.24, 0.76],
-  'fools-gold:dreams': [0.32, 0.82],
+  'mythmaking:half-life': [0.24, 0.76],
+  'half-life:dreams': [0.32, 0.82],
   'dreams:portici': [0.20, 0.75],
   'portici:valentines-star': [0.22, 0.78],
   'valentines-star:conscription': [0.18, 0.80],

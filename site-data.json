@@ -156,10 +156,10 @@
       ]
     },
     {
-      "id": "fools-gold",
-      "name": "Fool's Gold",
-      "blurb": "The Adam persona; its partitions and the gold in the center.",
-      "description": "Short stories and flash fiction by Alexei Raymond in the \"Fool's Gold\", the Adam persona cycle; early adulthood, gnarled way forward, with excerpts and publication links.",
+      "id": "half-life",
+      "name": "Half-Life",
+      "blurb": "The Adam persona; the golden, the endless, and the gnarled",
+      "description": "Short stories and flash fiction by Alexei Raymond in the Half-Life cycle; the Adam persona, the golden, the endless, and the gnarled.",
       "cover": "covers/cycles/fools-gold.jpg",
       "banner": "cycle-banners/fools-gold.jpg",
       "storyOrder": [
@@ -394,7 +394,7 @@
     },
     {
       "title": "Leaves",
-      "cycle": "Fool's Gold",
+      "cycle": "Half-Life",
       "publication": "Loser",
       "date": "17/10/2026",
       "tags": [
@@ -412,7 +412,7 @@
     },
     {
       "title": "Now",
-      "cycle": "Fool's Gold",
+      "cycle": "Half-Life",
       "publication": "Eulogy Press",
       "date": "25/07/2025",
       "tags": [
@@ -816,7 +816,7 @@
     },
     {
       "title": "Genesis",
-      "cycle": "Fool's Gold",
+      "cycle": "Half-Life",
       "publication": "Discretionary Love",
       "date": "05/01/2026",
       "tags": [
@@ -833,13 +833,13 @@
         "excerptAudio": "audio/excerpts/genesis-v3.mp3"
       },
       "cycles": [
-        "Fool's Gold",
+        "Half-Life",
         "Valentine's Star"
       ]
     },
     {
       "title": "Heart's Surge",
-      "cycle": "Fool's Gold",
+      "cycle": "Half-Life",
       "publication": "Litbreak Magazine",
       "date": "14/07/2025",
       "tags": [
@@ -853,7 +853,7 @@
     },
     {
       "title": "His Green Delight",
-      "cycle": "Fool's Gold",
+      "cycle": "Half-Life",
       "publication": "Blue Daisies Journal",
       "date": "05/07/2025",
       "tags": [
@@ -873,7 +873,7 @@
     },
     {
       "title": "How the Night Glows",
-      "cycle": "Fool's Gold",
+      "cycle": "Half-Life",
       "publication": "miniMAG",
       "date": "14/11/2025",
       "tags": [
@@ -894,7 +894,7 @@
     },
     {
       "title": "LothariOnline",
-      "cycle": "Fool's Gold",
+      "cycle": "Half-Life",
       "publication": "Some Words",
       "date": "06/03/2026",
       "tags": [
@@ -913,7 +913,7 @@
     },
     {
       "title": "The Pale and the Green",
-      "cycle": "Fool's Gold",
+      "cycle": "Half-Life",
       "publication": "Suburban Witchcraft Magazine",
       "date": "16/09/2025",
       "tags": [
@@ -925,14 +925,14 @@
       "genre": "Short fiction",
       "issue": "Issue 10",
       "cycles": [
-        "Fool's Gold",
+        "Half-Life",
         "Mythbreaking"
       ],
       "excerptAudio": "audio/excerpts/the-pale-and-the-green-v1.mp3"
     },
     {
       "title": "Witnesses",
-      "cycle": "Fool's Gold",
+      "cycle": "Half-Life",
       "publication": "Underbelly Press",
       "date": "13/03/2026",
       "tags": [
@@ -952,7 +952,7 @@
     },
     {
       "title": "Paradigm of the Tyrant",
-      "cycle": "Fool's Gold",
+      "cycle": "Half-Life",
       "publication": "For Page & Screen",
       "date": "15/08/2026",
       "tags": [
@@ -967,7 +967,7 @@
     },
     {
       "title": "The Iron Crown",
-      "cycle": "Fool's Gold",
+      "cycle": "Half-Life",
       "publication": "Some Words",
       "date": "10/08/2026",
       "tags": [
@@ -981,7 +981,7 @@
     },
     {
       "title": "Death Of",
-      "cycle": "Fool's Gold",
+      "cycle": "Half-Life",
       "publication": "The Yesterday Review",
       "date": "09/11/2026",
       "tags": [

@@ -46,7 +46,7 @@ const CACHE_LIMIT = 4; // Four active cycles, at most eight small cached zones.
 const CONTACT_HEIGHT: Record<string, number> = {
   'conscription:portici': 0.34, 'portici:the-real': 0.54,
   'the-real:dreams': 0.33, 'dreams:mythbreaking': 0.52,
-  'mythbreaking:fools-gold': 0.34, 'fools-gold:valentines-star': 0.53,
+  'mythbreaking:half-life': 0.34, 'half-life:valentines-star': 0.53,
   'valentines-star:mythmaking': 0.32, 'mythmaking:conscription': 0.52,
 };
 

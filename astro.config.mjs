@@ -12,6 +12,7 @@ export default defineConfig({
     sitemap({
       filter: (page) =>
         !page.endsWith('/interview/') &&
+        !page.endsWith('/cycles/fools-gold/') &&
         !page.includes('/prototype/')
     })
   ]
