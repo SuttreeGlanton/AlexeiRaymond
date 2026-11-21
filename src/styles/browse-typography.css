@@ -66,5 +66,5 @@
 }
 
 .selected-page .selected-piece-grid .account-strip {
-  font-size: var(--browse-detail);
+  font-size: var(--browse-compact);
 }
