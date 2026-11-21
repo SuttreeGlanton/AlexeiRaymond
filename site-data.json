@@ -332,7 +332,8 @@
       "cover": "covers/pieces/another-year-of-love.jpg",
       "excerpt": "Maudlin mother, do you not drown?",
       "genre": "Short fiction",
-      "issue": "Summer 2025 Anthology"
+      "issue": "Summer 2025 Anthology",
+      "excerptAudio": "audio/excerpts/another-year-of-love-v1.mp3"
     },
     {
       "title": "Betrayal",
@@ -346,7 +347,8 @@
       "cover": "covers/pieces/betrayal.jpg",
       "excerpt": "Tonight he is a nameless consciousness.",
       "genre": "Flash fiction",
-      "issue": "Issue 180"
+      "issue": "Issue 180",
+      "excerptAudio": "audio/excerpts/betrayal-v1.mp3"
     },
     {
       "title": "Deathwish",
@@ -385,7 +387,8 @@
       "cover": "covers/pieces/from-home.jpg",
       "excerpt": "The room hung with stagnant air, and seemed final, somehow.",
       "genre": "Flash fiction",
-      "issue": "Issue 24"
+      "issue": "Issue 24",
+      "excerptAudio": "audio/excerpts/from-home-v1.mp3"
     },
     {
       "title": "Leaves",
@@ -439,7 +442,8 @@
       "cycles": [
         "Mythbreaking",
         "Conscription"
-      ]
+      ],
+      "excerptAudio": "audio/excerpts/of-lips-and-war-v1.mp3"
     },
     {
       "title": "She Loves Her Mother",
@@ -492,7 +496,8 @@
       "cover": "covers/pieces/the-boxer.jpg",
       "excerpt": "I broke my image in her eyes and became unlovable.",
       "genre": "Short fiction",
-      "issue": "Issue 14"
+      "issue": "Issue 14",
+      "excerptAudio": "audio/excerpts/boxer-v1.mp3"
     },
     {
       "title": "Flagellant",
@@ -505,7 +510,8 @@
       "link": "https://citywidelunch.wordpress.com/the-flagellant-by-alexei-raymond/",
       "cover": "covers/pieces/the-flagellant.jpg",
       "excerpt": "…the agony is no longer mere unseen sensation but a red serpent blooming out of the white void.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "excerptAudio": "audio/excerpts/flagellant-v1.mp3"
     },
     {
       "title": "The Guests Are Here",
@@ -577,7 +583,8 @@
       "link": "https://mrbullbull.com/newbull/flash-fiction/last-sight-of-her/",
       "cover": "covers/pieces/last-sight-of-her.jpg",
       "excerpt": "I can make it to the supermarket and back before more missiles.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "excerptAudio": "audio/excerpts/last-sight-of-her-v1.mp3"
     },
     {
       "title": "Alley Money",
@@ -609,7 +616,8 @@
       "cover": "covers/pieces/arboreal-queen.jpg",
       "excerpt": "Cat‑killer, pig‑faced hound, Arboreal Queen—Monroe.",
       "genre": "Short fiction",
-      "issue": "Issue 21.1"
+      "issue": "Issue 21.1",
+      "excerptAudio": "audio/excerpts/arboreal-queen-v1.mp3"
     },
     {
       "title": "Blackbird",
@@ -626,7 +634,8 @@
       "cycles": [
         "Mythmaking",
         "Conscription"
-      ]
+      ],
+      "excerptAudio": "audio/excerpts/blackbird-v1.mp3"
     },
     {
       "title": "Clothesline Divorce",
@@ -658,7 +667,8 @@
       "link": "https://www.theargylelitmag.com/fiction-3/death-of-legions",
       "cover": "covers/pieces/death-to-legions.jpg",
       "excerpt": "He delivers death to legions—whence, he does not know, and why never crosses his mind. The only questions are how and to whom.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "excerptAudio": "audio/excerpts/death-to-legions-v1.mp3"
     },
     {
       "title": "God Underground",
@@ -701,7 +711,8 @@
       "cycles": [
         "Mythmaking",
         "Conscription"
-      ]
+      ],
+      "excerptAudio": "audio/excerpts/minors-militia-v1.mp3"
     },
     {
       "title": "At the Window",
@@ -715,7 +726,8 @@
       "cover": "covers/pieces/at-the-window.jpg",
       "excerpt": "Why does the room tilt so?",
       "genre": "Flash fiction",
-      "issue": "Issue 4"
+      "issue": "Issue 4",
+      "excerptAudio": "audio/excerpts/at-the-window-v1.mp3"
     },
     {
       "title": "The Duet",
@@ -728,7 +740,8 @@
       "link": "https://citywidelunch.wordpress.com/the-duet-by-alexei-raymond/",
       "cover": "covers/pieces/the-duet.jpg",
       "excerpt": "The day is simple; it isn’t meant to be recollected.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "excerptAudio": "audio/excerpts/the-duet-v1.mp3"
     },
     {
       "title": "The Flower and the Beetle",
@@ -742,7 +755,8 @@
       "cover": "covers/pieces/the-flower-and-the-beetle.jpg",
       "excerpt": "In the passenger seat, Valentin felt the grandeur of movement.",
       "genre": "Short fiction",
-      "issue": "Issue 21.1"
+      "issue": "Issue 21.1",
+      "excerptAudio": "audio/excerpts/the-flower-and-the-beetle-v1.mp3"
     },
     {
       "title": "The Nutcracker's Charge",
@@ -795,7 +809,8 @@
       "link": "https://exclamationmarklit.com/out-of-bounds/",
       "cover": "covers/pieces/out-of-bounds.jpg",
       "excerpt": "In smoke, a world has fallen.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "excerptAudio": "audio/excerpts/out-of-bounds-v1.mp3"
     },
     {
       "title": "Genesis",
@@ -831,7 +846,8 @@
       "link": "https://litbreak.com/hearts-surge/",
       "cover": "covers/pieces/hearts-surge.jpg",
       "excerpt": "Adam didn’t know what to offer of himself to counterbalance a terror unknowable to him.",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "excerptAudio": "audio/excerpts/hearts-surge-v1.mp3"
     },
     {
       "title": "His Green Delight",
@@ -909,7 +925,8 @@
       "cycles": [
         "Fool's Gold",
         "Mythbreaking"
-      ]
+      ],
+      "excerptAudio": "audio/excerpts/the-pale-and-the-green-v1.mp3"
     },
     {
       "title": "Witnesses",
@@ -943,7 +960,8 @@
       "cover": "covers/pieces/paradigm-of-the-tyrant.jpg",
       "excerpt": "Her golden earth to his sea.",
       "genre": "Short fiction",
-      "issue": "Issue 10"
+      "issue": "Issue 10",
+      "excerptAudio": "audio/excerpts/paradigm-of-the-tyrant-v1.mp3"
     },
     {
       "title": "The Iron Crown",
@@ -956,7 +974,8 @@
       "link": "https://somewords.boards.net/thread/91/alexei-raymond",
       "cover": "covers/pieces/the-iron-crown.jpg",
       "excerpt": "Something is dead, or someone.",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "excerptAudio": "audio/excerpts/the-iron-crown-v1.mp3"
     },
     {
       "title": "Death Of",
@@ -970,7 +989,8 @@
       "cover": "covers/pieces/death-of.jpg",
       "excerpt": "...perhaps what Mother says in times of need really is true—it does mend and right, this morning light.",
       "genre": "Flash fiction",
-      "issue": "Issue 3"
+      "issue": "Issue 3",
+      "excerptAudio": "audio/excerpts/death-of-v1.mp3"
     },
     {
       "title": "(6,080)",
@@ -1021,7 +1041,8 @@
       "link": "https://ricjournal.com/2025/08/27/how-it-ends-alexei-raymond/",
       "cover": "covers/pieces/how-it-ends.jpg",
       "excerpt": "I can never find my way back.",
-      "genre": "Other"
+      "genre": "Other",
+      "excerptAudio": "audio/excerpts/how-it-ends-v1.mp3"
     },
     {
       "title": "No, Rabbit",
@@ -1057,7 +1078,8 @@
       "link": "https://plaguecircuspress.com/of-lies-and-frogs-by-alexei-raymond",
       "cover": "covers/pieces/of-lies-and-frogs.jpg",
       "excerpt": "He lied, of course; he lied.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "excerptAudio": "audio/excerpts/of-lies-and-frogs-v1.mp3"
     },
     {
       "title": "On the Nature of Sleep",
@@ -1134,7 +1156,8 @@
       "link": "https://somewords.boards.net/thread/91/alexei-raymond?page=1&scrollTo=211",
       "cover": "covers/pieces/ember.jpg",
       "excerpt": "So, wander elsewhere, nurse what is, a faint ember.",
-      "genre": "Short fiction"
+      "genre": "Short fiction",
+      "excerptAudio": "audio/excerpts/embers-v1.mp3"
     },
     {
       "title": "Zagagulyn",
@@ -1149,7 +1172,8 @@
       "cover": "covers/pieces/zagagulyn.jpg",
       "excerpt": "His rough black hair stands on end, giving him a mean, underworldly look.",
       "genre": "Short fiction",
-      "issue": "Issue 1: Silt"
+      "issue": "Issue 1: Silt",
+      "excerptAudio": "audio/excerpts/zagagulyn-v1.mp3"
     },
     {
       "title": "Смерть моя",
@@ -1182,7 +1206,8 @@
       "link": "https://www.tinymolecules.com/issues/twentynine#alexei-raymond",
       "cover": "covers/pieces/the-mountains-have-fallen.jpg",
       "excerpt": "Does the world spill over, rimless?",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "excerptAudio": "audio/excerpts/the-mountains-have-fallen-v1.mp3"
     },
     {
       "title": "A Loss Hard-Won",
@@ -1195,7 +1220,8 @@
       "link": "https://theleaflinemag.wordpress.com/2026/06/26/a-loss-hard-won-poetry-by-alexei-raymond/",
       "cover": "covers/pieces/a-loss-hard-won.jpg",
       "excerpt": "Is thirty no age to die?",
-      "genre": "Poem"
+      "genre": "Poem",
+      "excerptAudio": "audio/excerpts/a-loss-hard-won-v1.mp3"
     },
     {
       "title": "Desire, Discovered",
@@ -1208,7 +1234,8 @@
       "link": "https://chatloglit.com/entry009",
       "cover": "covers/pieces/desire-discovered.jpg",
       "excerpt": "New day after darker-than-dark night",
-      "genre": "Poem"
+      "genre": "Poem",
+      "excerptAudio": "audio/excerpts/desire-discovered-v1.mp3"
     },
     {
       "title": "Mothhead",
@@ -1241,7 +1268,8 @@
       "cover": "covers/pieces/glassdom.jpg",
       "excerpt": "It’s glassfall—a rain that chimes and glitters the street come first rays of brilliant-cut sun, heralding glasnost.",
       "genre": "Flash fiction",
-      "issue": "Issue 52"
+      "issue": "Issue 52",
+      "excerptAudio": "audio/excerpts/glassdom-v1.mp3"
     },
     {
       "title": "La Luna",
@@ -1253,8 +1281,9 @@
       ],
       "link": "https://mcrb.neocities.org/laluna",
       "cover": "covers/pieces/la-luna.jpg",
-      "excerpt": "He will pause use the excuse and goal entire of the journey to attempt a capture of the luring satellite.",
-      "genre": "Short fiction"
+      "excerpt": "He will pause, use the excuse and goal of the entire journey to attempt a capture of the luring satellite.",
+      "genre": "Short fiction",
+      "excerptAudio": "audio/excerpts/la-luna-v1.mp3"
     },
     {
       "title": "Speaking Terms",
@@ -1268,7 +1297,8 @@
       "cover": "covers/pieces/speaking-terms.jpg",
       "excerpt": "A whisper-quiet treatment.",
       "genre": "Poem",
-      "issue": "Pets Issue"
+      "issue": "Pets Issue",
+      "excerptAudio": "audio/excerpts/speaking-terms-v1.mp3"
     },
     {
       "title": "Life to Dragons",
@@ -1330,7 +1360,8 @@
       "cover": "covers/pieces/under-street-sign-and-star.jpg",
       "excerpt": "And her lips met his—and bliss, bliss, bliss.",
       "genre": "Flash fiction",
-      "issue": "Issue 5"
+      "issue": "Issue 5",
+      "excerptAudio": "audio/excerpts/under-street-sign-and-star-v1.mp3"
     },
     {
       "title": "Waiting for Beloved",
@@ -1343,7 +1374,8 @@
       "link": "https://micromancemagazine.substack.com/p/waiting-for-beloved",
       "cover": "covers/pieces/waiting-for-beloved.jpg",
       "excerpt": "He knows he is lovely to her.",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "excerptAudio": "audio/excerpts/waiting-for-beloved-v1.mp3"
     },
     {
       "title": "Nazi",
@@ -1357,7 +1389,8 @@
       "cover": "covers/pieces/nazi.jpg",
       "excerpt": "I can actually imagine going along with it. Giving in to it.",
       "genre": "Short fiction",
-      "issue": "Issue 163"
+      "issue": "Issue 163",
+      "excerptAudio": "audio/excerpts/nazi-v1.mp3"
     },
     {
       "title": "Fond Memories",
@@ -1372,7 +1405,8 @@
       "cover": "covers/pieces/fond-memories.jpg",
       "excerpt": "It welcomes me, this earth—Remarque’s Earth.",
       "genre": "Short fiction",
-      "issue": "Volume 7: Borderline"
+      "issue": "Volume 7: Borderline",
+      "excerptAudio": "audio/excerpts/fond-memories-v1.mp3"
     },
     {
       "title": "The Trail",
@@ -1406,7 +1440,8 @@
       "cover": "covers/pieces/whether-yossarian.jpg",
       "excerpt": "The lone soldier—whether Yossarian, or any other name—plunges into great bewilderment the moment war begins.",
       "genre": "Short fiction",
-      "issue": "Issue 41.1"
+      "issue": "Issue 41.1",
+      "excerptAudio": "audio/excerpts/whether-yossarian-v1.mp3"
     }
   ],
   "interview": {

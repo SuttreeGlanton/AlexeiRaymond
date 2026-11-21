@@ -1,15 +1,18 @@
 # Author readings
 
 Recordings are optional. No audio or playback cue is published until its field
-is added to the piece's existing `account` object in `site-data.json`.
+is configured in `site-data.json`. Cover excerpts belong to the piece itself;
+a hosted story page is not required. Full readings still belong to `account`.
 
 ## Add a short cover reading
 
 1. Save the finished excerpt as `public/audio/excerpts/leaves.mp3` (replace the
    slug for each piece). Record the actual quote in that piece's `excerpt` field.
-2. Add `"excerptAudio": "audio/excerpts/leaves.mp3"` inside its existing `account`
-   object, keeping its other fields. Commit the data and recording together.
-3. Run the usual checks and preview the hosted piece. Confirm hover/mobile-center
+2. Add `"excerptAudio": "audio/excerpts/leaves.mp3"` directly to the piece, next
+   to its `excerpt` field. Do not create an `account` merely to attach a clip.
+   Existing `account.excerptAudio` recordings remain supported; use only one
+   location per piece. Commit the data and recording together.
+3. Run the usual checks and preview the cycle card and any hosted piece. Confirm hover/mobile-center
    quote reveal, play/pause/resume, completion, rapid taps and keyboard activation.
 
 The quote becomes a button on the hosted story cover, cycle cards and Selected
@@ -37,7 +40,9 @@ keys, Page Up/Down, and Home/End. Seeking while paused keeps playback paused.
 Use lowercase filenames with hyphens. MP3, M4A, OGG and WAV paths are accepted;
 MP3 is the default delivery choice. Keep editing masters out of the repository.
 Recordings are ordinary public static files. The build rejects malformed paths,
-missing/empty files, excerpts without quote text, and audio on non-full-text pages.
+missing/empty files, excerpts without quote text, duplicate excerpt configuration,
+and account recordings on non-full-text pages. Piece-level cover audio also works
+for print-only, unavailable and Upcoming works without adding reading links.
 It does not validate codecs or audio quality. Test actual recordings in desktop
 and mobile browsers, including iOS, before publishing them.
 
@@ -59,7 +64,9 @@ Without JavaScript (or if enhancement fails), a direct recording link remains.
 Leaving the page pauses playback. Shared account CSS may include the player
 styles even on stories without recordings.
 
-The 32 excerpts use `-v3.mp3` filenames so browsers request the rebuilt files.
+The first 32 excerpts use `-v3.mp3` filenames; the second batch adds 35
+`-v1.mp3` files, bringing cover audio to all 67 current works. New recordings
+use piece-level `excerptAudio`; existing account-based recordings stay intact.
 They are mono 192 kbps MP3 copies made directly from the supplied OGG recordings,
 with the existing start/end padding trims and internal pauses preserved.
 
@@ -98,3 +105,8 @@ focus even without a clip. Only configured recordings have a pulse/play cue.
 The existing small cover date tabs are unchanged. The journal credit's date uses
 month, ordinal day and comma/year: `October 17th, 2026`, with `11th/12th/13th`
 exceptions. Stored DD/MM/YYYY values and machine-readable ISO dates stay intact.
+
+The second batch was decoded explicitly with floating-point libopus and checked
+against libsndfile with Opus pre-skip alignment. All 35 finished MP3s passed
+full-waveform comparison and the oversampled peak check. Only external padding
+was trimmed; internal pauses are preserved.

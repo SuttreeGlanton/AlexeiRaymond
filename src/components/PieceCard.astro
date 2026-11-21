@@ -47,7 +47,8 @@ const mobileAvifQuality = [
 const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : '';
 const accountLabel = 'Read here';
 const hasBothDestinations = Boolean(accountHref) && linked;
-const excerptAudio = piece.excerpt && piece.account?.excerptAudio;
+const excerptAudio = piece.excerpt && (piece.excerptAudio || piece.account?.excerptAudio);
+const excerptSlug = piece.account?.slug || excerptAudio?.split('/').pop()?.replace(/\.[^.]+$/, '') || '';
 const primaryHref = accountHref || (linked ? piece.link : '');
 const primaryExternal = !accountHref && linked;
 const primaryLinkProps = primaryExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {};
@@ -118,8 +119,8 @@ const metaParts = [
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
         )}
-        {piece.excerpt && (excerptAudio && piece.account ? (
-          <ReadingAudio src={excerptAudio} title={piece.title} slug={piece.account.slug} excerpt={piece.excerpt} />
+        {piece.excerpt && (excerptAudio ? (
+          <ReadingAudio src={excerptAudio} title={piece.title} slug={excerptSlug} excerpt={piece.excerpt} />
         ) : (
           <div class="card-overlay" aria-hidden="true">
             <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>

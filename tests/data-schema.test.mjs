@@ -100,3 +100,23 @@ test('recordings are optional, local and tied to a visible excerpt', () => {
   delete data.pieces[0].excerpt;
   assert.equal(siteDataSchema.safeParse(data).success, false);
 });
+
+test('cover excerpts can belong to an unhosted work without creating an account', () => {
+  const data = fixture();
+  const piece = data.pieces[0];
+  delete piece.account;
+  piece.excerpt = 'A quoted fragment.';
+  piece.excerptAudio = 'audio/excerpts/example-v1.mp3';
+  assert.equal(siteDataSchema.safeParse(data).success, true);
+  assert.equal(siteDataSchema.parse(data).pieces[0].account, undefined);
+  for (const path of ['https://example.com/a.mp3', 'audio/excerpts/../a.mp3', '', null]) {
+    piece.excerptAudio = path;
+    assert.equal(siteDataSchema.safeParse(data).success, false);
+  }
+  piece.excerptAudio = 'audio/excerpts/example-v1.mp3';
+  piece.excerpt = '  ';
+  assert.equal(siteDataSchema.safeParse(data).success, false);
+  piece.excerpt = 'A quoted fragment.';
+  piece.account = { slug: 'example', excerptAudio: 'audio/excerpts/duplicate.mp3' };
+  assert.equal(siteDataSchema.safeParse(data).success, false);
+});

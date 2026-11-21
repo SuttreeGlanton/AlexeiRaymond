@@ -49,11 +49,16 @@ export const pieceSchema = z.looseObject({
   date: date.nullable(), tags: z.array(tagSchema).min(1), link: z.union([z.literal(''), httpUrl]),
   cover: text, coverVariants: z.array(text).min(2).optional(),
   issue: z.string().optional(), awardNote: text.optional(), note: z.string().optional(),
-  excerpt: z.string().optional(), genre: genreSchema, account: pieceAccountSchema.optional(),
+  excerpt: z.string().optional(),
+  excerptAudio: pieceAccountSchema.shape.excerptAudio,
+  genre: genreSchema, account: pieceAccountSchema.optional(),
   titleLines: z.array(z.string()).optional(),
 }).superRefine((piece, context) => {
-  if (piece.account?.excerptAudio && !piece.excerpt?.trim()) {
+  if ((piece.excerptAudio || piece.account?.excerptAudio) && !piece.excerpt?.trim()) {
     issue(context, ['excerpt'], 'A recorded excerpt requires cover quote text.');
+  }
+  if (piece.excerptAudio && piece.account?.excerptAudio) {
+    issue(context, ['excerptAudio'], 'Configure the excerpt recording once, on the piece or its account.');
   }
   const upcoming = piece.tags.includes('Upcoming');
   const defunct = piece.tags.includes('Defunct');

@@ -64,14 +64,17 @@ for (const piece of data.pieces) {
   checkAsset(label, piece.cover);
   piece.coverVariants?.forEach((cover, index) => checkAsset(`${label}.coverVariants[${index}]`, cover));
   if (!piece.excerpt?.trim()) warnings.push(`${label}: excerpt is empty.`);
-  if (!piece.account) continue;
-  for (const field of ['audio', 'excerptAudio']) {
-    const source = piece.account[field];
+  for (const [field, source] of [
+    ['excerptAudio', piece.excerptAudio],
+    ['account.audio', piece.account?.audio],
+    ['account.excerptAudio', piece.account?.excerptAudio],
+  ]) {
     if (typeof source !== 'string') continue;
     const recording = path.join(repoRoot, 'public', source);
     const stats = fs.existsSync(recording) ? fs.statSync(recording) : null;
     if (!stats?.isFile() || !stats.size) errors.push(`${label}.${field}: "public/${source}" must be a non-empty file.`);
   }
+  if (!piece.account) continue;
   const sourcePath = accountPath(piece.account.slug);
   if (!sourcePath) {
     errors.push(`${label}: missing archive markdown for account slug "${piece.account.slug}".`);

@@ -186,8 +186,8 @@ const breadcrumbSchema = piece ? {
                   fetchpriority="high"
                   sizes="(max-width: 640px) 76vw, (max-width: 860px) 42vw, 280px"
                 />}
-                {piece.excerpt && (fullText && piece.account?.excerptAudio ? (
-                  <ReadingAudio src={piece.account.excerptAudio} title={piece.title} slug={entry.id} excerpt={piece.excerpt} />
+                {piece.excerpt && (fullText && (piece.excerptAudio || piece.account?.excerptAudio) ? (
+                  <ReadingAudio src={(piece.excerptAudio || piece.account?.excerptAudio)!} title={piece.title} slug={entry.id} excerpt={piece.excerpt} />
                 ) : (
                   <div class="card-overlay" aria-hidden="true">
                     <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
