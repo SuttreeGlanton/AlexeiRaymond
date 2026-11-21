@@ -225,12 +225,6 @@ const breadcrumbSchema = piece ? {
   </article>
 
   <script>
-    // Pages without recordings do not request the optional controller.
-    if (document.querySelector('[data-reading-audio]')) {
-      import('../../scripts/reading-audio').then(({ initReadingAudio }) => initReadingAudio()).catch(() => {
-        // Direct recording links remain available if enhancement cannot load.
-      });
-    }
     /* Archive cover mobile color focus. */
     const archiveCover = document.querySelector('[data-archive-mobile-focus]');
     const archiveCoverQuery = window.matchMedia('(max-width: 640px), (hover: none) and (pointer: coarse)');

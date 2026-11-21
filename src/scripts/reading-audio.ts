@@ -10,7 +10,7 @@ export function initReadingAudio() {
     const fallback = root.querySelector<HTMLAnchorElement>('[data-reading-fallback]');
     const labelElement = root.querySelector<HTMLElement>('[data-reading-label]');
     const statusElement = root.querySelector<HTMLElement>('[data-reading-status]');
-    if (!audioElement || !toggleElement || !controls || !fallback || !labelElement || !statusElement || !audioElement.dataset.src) return;
+    if (!audioElement || !toggleElement || !controls || !fallback || !statusElement || !audioElement.dataset.src) return;
     const audio = audioElement, toggle = toggleElement, label = labelElement, status = statusElement;
 
     type State = 'idle' | 'loading' | 'playing' | 'paused' | 'ended' | 'error';
@@ -31,7 +31,7 @@ export function initReadingAudio() {
       toggle.setAttribute('aria-label', next === 'loading' ? `Cancel loading ${description}`
         : next === 'playing' ? `Pause ${description}`
         : next === 'error' ? `Retry ${description}` : `Play ${description}`);
-      label.textContent = next === 'loading' ? 'Loading…' : next === 'playing' ? 'Pause' : 'Listen';
+      if (label) label.textContent = next === 'loading' ? 'Loading…' : next === 'playing' ? 'Pause' : 'Listen';
       const message = next === 'error' ? 'The recording could not play. Try again.' : '';
       if (status.textContent !== message) status.textContent = message;
       status.hidden = !message;
@@ -75,7 +75,7 @@ export function initReadingAudio() {
       wantsPlay = true;
       setState('loading');
       try {
-        // No request, including metadata, until an explicit Play.
+        // Excerpts already have a preloading src; full readings attach on Play.
         if (!audio.getAttribute('src')) audio.src = audio.dataset.src!;
         if (retry) audio.load();
         if (audio.ended || (duration() && audio.currentTime >= duration())) audio.currentTime = 0;
@@ -161,5 +161,7 @@ export function initReadingAudio() {
     updateVisibility();
     fallback.hidden = true;
     controls.hidden = false;
+    // A preloaded clip may have failed before the controller was attached.
+    if (audio.error) fail();
   });
 }

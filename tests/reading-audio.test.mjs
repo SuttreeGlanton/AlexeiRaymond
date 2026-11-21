@@ -29,13 +29,15 @@ class Media extends Element {
 }
 function player(kind = 'full') {
   const root = new Element(); root.dataset = { readingKind: kind, readingTitle: 'Example' };
-  const nodes = Object.fromEntries(['toggle', 'controls', 'fallback', 'label', 'status', ...(kind === 'full' ? ['seek'] : [])].map(key => [key, new Element()]));
+  const nodes = Object.fromEntries(['toggle', 'controls', 'fallback', 'status', ...(kind === 'full' ? ['seek', 'label'] : [])].map(key => [key, new Element()]));
   nodes.media = new Media(); nodes.media.dataset.src = `/audio/${kind}.mp3`;
+  if (kind === 'excerpt') { nodes.media.src = nodes.media.dataset.src; nodes.media.preload = 'auto'; }
   root.querySelector = selector => nodes[selector.slice('[data-reading-'.length, -1)] ?? null;
   return { root, ...nodes };
 }
-function setup(kinds = ['full']) {
+function setup(kinds = ['full'], beforeInit = () => {}) {
   const players = kinds.map(player); const document = new Element(); const window = new Element();
+  beforeInit(players);
   document.querySelectorAll = () => players.map(p => p.root); document.hidden = false;
   let now = 0; const exports = {};
   vm.runInNewContext(source, { exports, document, window, performance: { now: () => now } });
@@ -45,12 +47,47 @@ function setup(kinds = ['full']) {
 }
 const flush = async () => { await Promise.resolve(); await Promise.resolve(); };
 
-test('idle players do not request audio; repeated initialization does not duplicate handlers', () => {
+test('full readings do not request audio until Play; repeated initialization does not duplicate handlers', () => {
   const { players: [p], click, init } = setup();
   assert.equal(p.media.getAttribute('src'), null); assert.equal(p.media.playCalls, 0);
   assert.equal(p.seek.disabled, true); assert.equal(p.fallback.hidden, true); assert.equal(p.controls.hidden, false);
   init(); click(); assert.equal(p.media.playCalls, 1); assert.equal(p.root.dataset.state, 'loading');
   assert.equal(p.toggle.getAttribute('aria-pressed'), 'false');
+});
+
+test('preloaded excerpts stay silent until interaction and reuse the same media source', () => {
+  const { players: [p], click } = setup(['excerpt']);
+  assert.equal(p.media.getAttribute('src'), '/audio/excerpt.mp3');
+  assert.equal(p.media.preload, 'auto');
+  assert.equal(p.media.playCalls, 0);
+  assert.equal(p.media.loadCalls, 0);
+  p.media.metadata(5);
+  click(); p.media.playing();
+  assert.equal(p.media.getAttribute('src'), '/audio/excerpt.mp3');
+  assert.equal(p.media.loadCalls, 0);
+  assert.equal(p.media.playCalls, 1);
+});
+
+test('a preload failure before initialization remains recoverable on the first tap', () => {
+  const { players: [p], click } = setup(['excerpt'], ([p]) => { p.media.error = { code: 2 }; });
+  assert.equal(p.root.dataset.state, 'error');
+  assert.equal(p.status.hidden, false);
+  assert.equal(p.media.playCalls, 0);
+  click();
+  assert.equal(p.media.loadCalls, 1);
+  p.media.error = null; p.media.metadata(5); p.media.playing();
+  assert.equal(p.root.dataset.state, 'playing');
+  assert.equal(p.status.hidden, true);
+});
+
+test('switching between card excerpts pauses the previous one without resetting it', () => {
+  const { players: [first, second], click } = setup(['excerpt', 'excerpt']);
+  click(first); first.media.metadata(6); first.media.playing(); first.media.currentTime = 2;
+  click(second); second.media.metadata(5); second.media.playing();
+  assert.equal(first.media.paused, true); assert.equal(first.media.currentTime, 2);
+  assert.equal(second.media.paused, false);
+  click(first); first.media.playing();
+  assert.equal(second.media.paused, true); assert.equal(first.media.currentTime, 2);
 });
 
 test('rapid quote taps do not restart or layer playback; deliberate taps pause/resume', async () => {

@@ -5,6 +5,7 @@ import ReadArrow from './ReadArrow.astro';
 import CycleIcon from './CycleIcon.astro';
 import InitialText from './InitialText.astro';
 import OptimizedImage from './OptimizedImage.astro';
+import ReadingAudio from './ReadingAudio.astro';
 import type { Piece } from '../lib/data';
 import { canLinkToPiece, cycleByName, formatShortDate, isDefunct, isUpcoming, parseDate, publicationLabel } from '../lib/data';
 import { assetPath, withBase } from '../lib/paths';
@@ -46,6 +47,7 @@ const mobileAvifQuality = [
 const accountHref = piece.account ? withBase(`accounts/${piece.account.slug}/`) : '';
 const accountLabel = 'Read here';
 const hasBothDestinations = Boolean(accountHref) && linked;
+const excerptAudio = piece.excerpt && piece.account?.excerptAudio;
 const primaryHref = accountHref || (linked ? piece.link : '');
 const primaryExternal = !accountHref && linked;
 const primaryLinkProps = primaryExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {};
@@ -87,7 +89,7 @@ const metaParts = [
   data-publication-time={publicationTime}
   data-upcoming={upcoming ? 'true' : 'false'}
 >
-  {primaryHref && !hasBothDestinations ? (
+  {primaryHref && !hasBothDestinations && !excerptAudio ? (
     <a class="card-cover-link" href={primaryHref} {...primaryLinkProps} tabindex="-1" aria-label={coverLinkLabel}>
       <div class="date-cover" data-publication-year={publicationYear}>
         <div class="card-media">
@@ -108,16 +110,21 @@ const metaParts = [
   ) : (
     <div class="date-cover" data-publication-year={publicationYear}>
       <div class="card-media">
+        {primaryHref && !hasBothDestinations && (
+          <a class="reading-cover-link" href={primaryHref} {...primaryLinkProps} tabindex="-1" aria-label={coverLinkLabel}></a>
+        )}
         {cover ? (
           <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} mobileAvifQuality={mobileAvifQuality} />
         ) : (
           <div class="placeholder" aria-hidden="true"><span>{piece.title}</span></div>
         )}
-        {piece.excerpt && (
+        {piece.excerpt && (excerptAudio && piece.account ? (
+          <ReadingAudio src={excerptAudio} title={piece.title} slug={piece.account.slug} excerpt={piece.excerpt} />
+        ) : (
           <div class="card-overlay" aria-hidden="true">
             <p class="card-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>
           </div>
-        )}
+        ))}
       </div>
       {dateLabel && <span class="date-mark" data-publication-year={publicationYear}>{dateLabel}</span>}
     </div>
@@ -153,7 +160,7 @@ const metaParts = [
         {piece.awardNote && <strong class="award-note card-award-note">{piece.awardNote}</strong>}
       </div>
     )}
-    {piece.excerpt && <p class="card-mobile-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>}
+    {piece.excerpt && !excerptAudio && <p class="card-mobile-excerpt">&ldquo;{piece.excerpt}&rdquo;</p>}
     {piece.note && <p class="card-note">{piece.note}</p>}
     <TagList tags={piece.tags.filter((tag) => tag !== 'Online' && tag !== 'In print' && tag !== 'Upcoming')} />
   </div>
@@ -173,3 +180,8 @@ const metaParts = [
   )}
   {(selected || piece.awardNote) && <span class="card-rim" aria-hidden="true"></span>}
 </article>
+
+<style>
+  /* The reading button is a sibling of the cover link, never nested inside it. */
+  .reading-cover-link { position: absolute; inset: 0; z-index: 1; }
+</style>

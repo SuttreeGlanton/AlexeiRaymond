@@ -269,7 +269,8 @@
       "account": {
         "slug": "193-lines-of-sight",
         "label": "Read story",
-        "title": "193 Lines of Sight"
+        "title": "193 Lines of Sight",
+        "excerptAudio": "audio/excerpts/193-lines-of-sight-v3.mp3"
       },
       "cycles": [
         "Conscription",
@@ -286,13 +287,14 @@
       ],
       "link": "https://neonorigami.co/2025/07/14/issue-8-is-here/",
       "cover": "covers/pieces/193-thoughts-of-you.jpg",
-      "excerpt": "Hello, Ms. Tom Latin.",
+      "excerpt": "Yes, it’s me, and yes, it’s you. I work there—where do you?",
       "genre": "Short fiction",
       "issue": "Issue 8",
       "account": {
         "slug": "193-thoughts-of-you",
         "label": "Read story",
-        "title": "193 Thoughts of You"
+        "title": "193 Thoughts of You",
+        "excerptAudio": "audio/excerpts/193-thoughts-of-you-v3.mp3"
       },
       "cycles": [
         "Conscription",
@@ -314,7 +316,8 @@
       "account": {
         "slug": "alpha",
         "label": "Read story",
-        "title": "Alpha"
+        "title": "Alpha",
+        "excerptAudio": "audio/excerpts/alpha-v3.mp3"
       }
     },
     {
@@ -362,7 +365,8 @@
       "account": {
         "slug": "deathwish",
         "label": "Read story",
-        "title": "Deathwish"
+        "title": "Deathwish",
+        "excerptAudio": "audio/excerpts/deathwish-v3.mp3"
       },
       "cycles": [
         "Mythbreaking",
@@ -397,7 +401,8 @@
       "genre": "Flash fiction",
       "issue": "Anthology IX",
       "account": {
-        "slug": "leaves"
+        "slug": "leaves",
+        "excerptAudio": "audio/excerpts/leaves-v3.mp3"
       }
     },
     {
@@ -415,7 +420,8 @@
       "account": {
         "slug": "now",
         "label": "Read story",
-        "title": "Now"
+        "title": "Now",
+        "excerptAudio": "audio/excerpts/now-v3.mp3"
       }
     },
     {
@@ -450,7 +456,8 @@
       "account": {
         "slug": "she-loves-her-mother",
         "label": "Read story",
-        "title": "She Loves Her Mother"
+        "title": "She Loves Her Mother",
+        "excerptAudio": "audio/excerpts/she-loves-her-mother-v3.mp3"
       }
     },
     {
@@ -469,7 +476,8 @@
       "account": {
         "slug": "marry-me",
         "label": "Read story",
-        "title": "Marry Me?"
+        "title": "Marry Me?",
+        "excerptAudio": "audio/excerpts/marry-me-v3.mp3"
       }
     },
     {
@@ -514,7 +522,8 @@
       "account": {
         "slug": "the-guests-are-here",
         "label": "Read story",
-        "title": "The Guests Are Here"
+        "title": "The Guests Are Here",
+        "excerptAudio": "audio/excerpts/the-guests-are-here-v3.mp3"
       }
     },
     {
@@ -533,7 +542,8 @@
       "account": {
         "slug": "the-hunt",
         "label": "Read story",
-        "title": "The Hunt"
+        "title": "The Hunt",
+        "excerptAudio": "audio/excerpts/the-hunt-v3.mp3"
       }
     },
     {
@@ -546,13 +556,14 @@
       ],
       "link": "",
       "cover": "covers/pieces/the-mourning-hounds.jpg",
-      "excerpt": "The hounds are his wards and tethers.",
+      "excerpt": "The man’s five hounds are restless, they are his wards and tethers.",
       "genre": "Short fiction",
       "issue": "Issue 11",
       "account": {
         "slug": "the-mourning-hounds",
         "label": "Read story",
-        "title": "The Mourning Hounds"
+        "title": "The Mourning Hounds",
+        "excerptAudio": "audio/excerpts/the-mourning-hounds-v3.mp3"
       }
     },
     {
@@ -582,7 +593,8 @@
       "genre": "Short fiction",
       "account": {
         "slug": "alley-money",
-        "label": "Read story"
+        "label": "Read story",
+        "excerptAudio": "audio/excerpts/alley-money-v3.mp3"
       }
     },
     {
@@ -631,7 +643,8 @@
       "account": {
         "slug": "clothesline-divorce",
         "label": "Read story",
-        "title": "Clothesline Divorce"
+        "title": "Clothesline Divorce",
+        "excerptAudio": "audio/excerpts/clothesline-divorce-v3.mp3"
       }
     },
     {
@@ -664,7 +677,8 @@
       "account": {
         "slug": "god-underground",
         "label": "Read story",
-        "title": "God Underground"
+        "title": "God Underground",
+        "excerptAudio": "audio/excerpts/god-underground-v3.mp3"
       },
       "issue": "Issue 2",
       "cycles": [
@@ -746,7 +760,8 @@
       "account": {
         "slug": "the-nutcrackers-charge",
         "label": "Read story",
-        "title": "The Nutcracker's Charge"
+        "title": "The Nutcracker's Charge",
+        "excerptAudio": "audio/excerpts/the-nutcrackers-charge-v3.mp3"
       }
     },
     {
@@ -765,7 +780,8 @@
       "account": {
         "slug": "truth-or-its-evidence",
         "label": "Read story",
-        "title": "Truth, or Its Evidence"
+        "title": "Truth, or Its Evidence",
+        "excerptAudio": "audio/excerpts/truth-or-its-evidence-v3.mp3"
       }
     },
     {
@@ -796,7 +812,8 @@
       "account": {
         "slug": "genesis",
         "label": "Read story",
-        "title": "Genesis"
+        "title": "Genesis",
+        "excerptAudio": "audio/excerpts/genesis-v3.mp3"
       },
       "cycles": [
         "Fool's Gold",
@@ -832,7 +849,8 @@
       "account": {
         "slug": "his-green-delight",
         "label": "Read story",
-        "title": "His Green Delight"
+        "title": "His Green Delight",
+        "excerptAudio": "audio/excerpts/his-green-delight-v3.mp3"
       }
     },
     {
@@ -852,7 +870,8 @@
       "account": {
         "slug": "how-the-night-glows",
         "label": "Read story",
-        "title": "How the Night Glows"
+        "title": "How the Night Glows",
+        "excerptAudio": "audio/excerpts/how-the-night-glows-v3.mp3"
       }
     },
     {
@@ -870,7 +889,8 @@
       "account": {
         "slug": "lotharionline",
         "label": "Read story",
-        "title": "LothariOnline"
+        "title": "LothariOnline",
+        "excerptAudio": "audio/excerpts/lotharionline-v3.mp3"
       }
     },
     {
@@ -907,7 +927,8 @@
       "account": {
         "slug": "witnesses",
         "label": "Read story",
-        "title": "Witnesses"
+        "title": "Witnesses",
+        "excerptAudio": "audio/excerpts/witnesses-v3.mp3"
       }
     },
     {
@@ -966,7 +987,8 @@
       "account": {
         "slug": "6080",
         "label": "Read story",
-        "title": "(6,080)"
+        "title": "(6,080)",
+        "excerptAudio": "audio/excerpts/6080-v3.mp3"
       }
     },
     {
@@ -984,7 +1006,8 @@
       "account": {
         "slug": "father-frost",
         "label": "Read story",
-        "title": "Father Frost"
+        "title": "Father Frost",
+        "excerptAudio": "audio/excerpts/father-frost-v3.mp3"
       }
     },
     {
@@ -1015,7 +1038,8 @@
       "account": {
         "slug": "no-rabbit",
         "label": "Read story",
-        "title": "No, Rabbit"
+        "title": "No, Rabbit",
+        "excerptAudio": "audio/excerpts/no-rabbit-v3.mp3"
       },
       "cycles": [
         "Mythbreaking",
@@ -1051,7 +1075,8 @@
       "account": {
         "slug": "on-the-nature-of-sleep",
         "label": "Read story",
-        "title": "On the Nature of Sleep"
+        "title": "On the Nature of Sleep",
+        "excerptAudio": "audio/excerpts/on-the-nature-of-sleep-v3.mp3"
       }
     },
     {
@@ -1069,7 +1094,8 @@
       "account": {
         "slug": "red-they-are-cherry-red",
         "label": "Read story",
-        "title": "Red, They Are Cherry Red"
+        "title": "Red, They Are Cherry Red",
+        "excerptAudio": "audio/excerpts/red-they-are-cherry-red-v3.mp3"
       },
       "titleLines": [
         "Red, They Are",
@@ -1093,7 +1119,8 @@
       "account": {
         "slug": "remediation",
         "label": "Read story",
-        "title": "Remediation"
+        "title": "Remediation",
+        "excerptAudio": "audio/excerpts/remediation-v3.mp3"
       }
     },
     {
@@ -1139,7 +1166,8 @@
       "account": {
         "slug": "smert-moya",
         "label": "Read poem",
-        "title": "Смерть моя"
+        "title": "Смерть моя",
+        "excerptAudio": "audio/excerpts/smert-moya-v3.mp3"
       }
     },
     {
@@ -1197,7 +1225,8 @@
       "account": {
         "slug": "mothhead",
         "label": "Read story",
-        "title": "Mothhead"
+        "title": "Mothhead",
+        "excerptAudio": "audio/excerpts/mothhead-v3.mp3"
       }
     },
     {
@@ -1257,7 +1286,8 @@
       "account": {
         "slug": "life-to-dragons",
         "label": "Read story",
-        "title": "Life to Dragons"
+        "title": "Life to Dragons",
+        "excerptAudio": "audio/excerpts/life-to-dragons-v3.mp3"
       }
     },
     {
@@ -1284,7 +1314,8 @@
       "account": {
         "slug": "star-crossed",
         "label": "Read story",
-        "title": "Star-Crossed"
+        "title": "Star-Crossed",
+        "excerptAudio": "audio/excerpts/star-crossed-v3.mp3"
       }
     },
     {
@@ -1358,7 +1389,8 @@
       "account": {
         "slug": "the-trail",
         "label": "Read on site",
-        "title": "The Trail"
+        "title": "The Trail",
+        "excerptAudio": "audio/excerpts/the-trail-v3.mp3"
       },
       "issue": "Volume 6, Issue 4"
     },
