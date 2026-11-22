@@ -1,4 +1,5 @@
 ---
+import ExcerptText from './ExcerptText.astro';
 import {
   publishedPieces,
   upcomingPieces,
@@ -63,7 +64,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
               />
               {latest.excerpt && (
                 <div class="latest-release-cover-quote" aria-hidden="true">
-                  <p>&ldquo;{latest.excerpt}&rdquo;</p>
+                  <p>&ldquo;<ExcerptText text={latest.excerpt} italics={latest.excerptItalics} />&rdquo;</p>
                 </div>
               )}
             </div>
@@ -84,7 +85,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
             {publicationLabel(latest)}
             {!latest.cover && latestDateLabel && <> · <time datetime={formatIsoDate(latest.date)}>{latestDateLabel}</time></>}
           </p>
-          {latest.excerpt && <p class="latest-release-excerpt">&ldquo;{latest.excerpt}&rdquo;</p>}
+          {latest.excerpt && <p class="latest-release-excerpt">&ldquo;<ExcerptText text={latest.excerpt} italics={latest.excerptItalics} />&rdquo;</p>}
           {latestHref && (
             <a
               class="latest-release-read"

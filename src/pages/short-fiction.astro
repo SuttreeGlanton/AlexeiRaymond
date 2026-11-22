@@ -1,4 +1,5 @@
 ---
+import ExcerptText from '../components/ExcerptText.astro';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { canLinkToPiece, cycleByName, formatIsoDate, formatMonthYear, publicationLabel, publishedNewestFirst, site } from '../lib/data';
@@ -93,7 +94,7 @@ const breadcrumbSchema = {
                   ) : publicationLabel(piece)}
                   {date && <> &middot; <time datetime={formatIsoDate(piece.date)}>{date}</time></>}
                 </p>
-                {piece.excerpt && <p class="fiction-excerpt">{piece.excerpt}</p>}
+                {piece.excerpt && <p class="fiction-excerpt"><ExcerptText text={piece.excerpt} italics={piece.excerptItalics} /></p>}
                 {cycle && <p class="fiction-cycle">From <a href={withBase(`cycles/${cycle.id}/`)}>{cycle.name}</a></p>}
               </li>
             );

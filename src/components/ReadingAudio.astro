@@ -1,23 +1,27 @@
 ---
+import ExcerptText from './ExcerptText.astro';
 import { assetPath } from '../lib/paths';
-interface Props { src: string; title: string; slug: string; excerpt?: string; }
-const { src, title, slug, excerpt } = Astro.props;
+interface Props { src: string; title: string; slug: string; excerpt?: string; excerptItalics?: string[]; }
+const { src, title, slug, excerpt, excerptItalics = [] } = Astro.props;
 const clip = Boolean(excerpt);
 const seekId = `reading-seek-${slug}`;
 const source = assetPath(src);
 // Keep the final word, closing quote and glyph together when the teaser wraps.
-const excerptParts = excerpt?.match(/^(.*?)(\S+\s*)$/s);
+const italicEnding = excerptItalics.find((phrase) => excerpt?.endsWith(phrase));
+const excerptParts = italicEnding && excerpt
+  ? [excerpt, excerpt.slice(0, -italicEnding.length), italicEnding]
+  : excerpt?.match(/^(.*?)(\S+\s*)$/s);
 const excerptLead = excerptParts?.[1] ?? '';
 const excerptEnd = excerptParts?.[2] ?? excerpt ?? '';
 ---
 
 <div class:list={['reading-audio', { 'card-overlay reading-clip': clip, 'reading-full': !clip }]} data-reading-audio data-reading-title={title} data-reading-kind={clip ? 'excerpt' : 'full'}>
   <a data-reading-fallback class:list={['reading-fallback', { 'card-excerpt': clip }]} href={source}>
-    {clip ? <>&ldquo;{excerpt}&rdquo;</> : <>Listen to &ldquo;{title}&rdquo;</>}
+    {clip ? <>&ldquo;<ExcerptText text={excerpt ?? ''} italics={excerptItalics} />&rdquo;</> : <>Listen to &ldquo;{title}&rdquo;</>}
   </a>
   <div class="reading-controls" data-reading-controls hidden>
     <button type="button" class:list={['reading-toggle', { 'hero-sound-toggle': !clip }]} data-reading-toggle aria-label={`Play ${clip ? 'excerpt from' : 'reading of'} ${title}`} aria-describedby={clip ? `reading-quote-${slug}` : undefined}>
-      {clip ? <span id={`reading-quote-${slug}`} class="card-excerpt reading-quote">&ldquo;{excerptLead}<span class="reading-ending">{excerptEnd}&rdquo;<span class="reading-cue" aria-hidden="true">
+      {clip ? <span id={`reading-quote-${slug}`} class="card-excerpt reading-quote">&ldquo;<ExcerptText text={excerptLead ?? ''} italics={excerptItalics} /><span class="reading-ending"><ExcerptText text={excerptEnd ?? ''} italics={excerptItalics} />&rdquo;<span class="reading-cue" aria-hidden="true">
         <svg class="reading-play" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M8 5v14l11-7z" /></svg>
         <svg class="reading-pause" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6 5h4v14H6zm8 0h4v14h-4z" /></svg>
       </span></span></span> : <span class="reading-cue">

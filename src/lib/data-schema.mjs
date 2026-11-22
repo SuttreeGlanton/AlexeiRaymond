@@ -50,6 +50,7 @@ export const pieceSchema = z.looseObject({
   cover: text, coverVariants: z.array(text).min(2).optional(),
   issue: z.string().optional(), awardNote: text.optional(), note: z.string().optional(),
   excerpt: z.string().optional(),
+  excerptItalics: z.array(text).optional(),
   excerptAudio: pieceAccountSchema.shape.excerptAudio,
   genre: genreSchema, account: pieceAccountSchema.optional(),
   titleLines: z.array(z.string()).optional(),
@@ -59,6 +60,9 @@ export const pieceSchema = z.looseObject({
   }
   if (piece.excerptAudio && piece.account?.excerptAudio) {
     issue(context, ['excerptAudio'], 'Configure the excerpt recording once, on the piece or its account.');
+  }
+  for (const phrase of piece.excerptItalics ?? []) {
+    if (!piece.excerpt?.includes(phrase)) issue(context, ['excerptItalics'], 'Italic text must occur in the excerpt.');
   }
   const upcoming = piece.tags.includes('Upcoming');
   const defunct = piece.tags.includes('Defunct');

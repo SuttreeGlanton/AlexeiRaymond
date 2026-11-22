@@ -1,4 +1,5 @@
 ---
+import ExcerptText from './ExcerptText.astro';
 import InitialText from './InitialText.astro';
 import { pieces, canLinkToPiece, cycleByName } from '../lib/data';
 import { withBase } from '../lib/paths';
@@ -13,6 +14,7 @@ const teasers = pieces
     const external = !piece.account && canLinkToPiece(piece);
     return {
       excerpt: keepLastTwoWordsTogether(piece.excerpt!),
+      italics: piece.excerptItalics,
       title: piece.title,
       href: piece.account
         ? withBase(`accounts/${piece.account.slug}/`)
@@ -36,7 +38,7 @@ const firstTeaser = teasers[0];
   >
     <p class="teaser-accordion-line" aria-live="off">
       <span class="teaser-accordion-anchor" aria-hidden="true">“</span><span class="teaser-accordion-fold" data-teaser-fold>
-        <span class="teaser-accordion-copy" data-teaser-copy>{firstTeaser.excerpt}”</span>
+        <span class="teaser-accordion-copy" data-teaser-copy><ExcerptText text={firstTeaser.excerpt} italics={firstTeaser.italics} />”</span>
       </span>
     </p>
     <p class="teaser-accordion-source">
@@ -51,6 +53,7 @@ const firstTeaser = teasers[0];
 )}
 
 <script>
+  import { splitExcerpt } from '../lib/excerpt-text';
   import { splitInitialText } from '../lib/initial-text';
 
   (() => {
@@ -67,7 +70,7 @@ const firstTeaser = teasers[0];
 
       if (!fold || !copy || !source || !sourceTitle || !rawTeasers) return;
 
-      type Teaser = { excerpt: string; title: string; href: string; external: boolean };
+      type Teaser = { excerpt: string; italics?: string[]; title: string; href: string; external: boolean };
       let teasers: Teaser[] = [];
 
       try {
@@ -104,7 +107,12 @@ const firstTeaser = teasers[0];
       function showTeaser(nextIndex: number) {
         if (!copy || !source || !sourceTitle) return;
         const teaser = teasers[nextIndex];
-        copy.textContent = `${teaser.excerpt}”`;
+        copy.replaceChildren(...splitExcerpt(`${teaser.excerpt}”`, teaser.italics).map((part) => {
+          if (!part.italic) return document.createTextNode(part.text);
+          const emphasis = document.createElement('em');
+          emphasis.textContent = part.text;
+          return emphasis;
+        }));
         sourceTitle.replaceChildren(...splitInitialText(teaser.title, true).flatMap(({ prefix, initial, rest }) => {
           if (!initial) return [rest];
           const letter = document.createElement('span');

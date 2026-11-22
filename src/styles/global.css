@@ -653,6 +653,12 @@ img {
   text-wrap: pretty;
 }
 
+/* Reverse editorial italics only where the surrounding teaser is italic. */
+:is(.card-excerpt, .card-mobile-excerpt, .latest-release-excerpt,
+    .latest-release-cover-quote, .teaser-accordion-copy) em {
+  font-style: normal;
+}
+
 .card-mobile-excerpt {
   display: none;
   margin: 12px 0 0;

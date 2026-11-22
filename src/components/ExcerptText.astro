@@ -1,0 +1,6 @@
+---
+import { splitExcerpt } from '../lib/excerpt-text';
+interface Props { text: string; italics?: string[]; }
+const { text, italics } = Astro.props;
+---
+{splitExcerpt(text, italics).map((part) => part.italic ? <em>{part.text}</em> : part.text)}
