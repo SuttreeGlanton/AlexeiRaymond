@@ -3458,7 +3458,8 @@ h2.about-section-heading {
 
   .archive-body-shell.has-archive-cover {
     display: grid;
-    grid-template-columns: minmax(0, 68ch) minmax(220px, 280px);
+    /* Preserve the original 68ch Inter track without coupling layout to the UI font. */
+    grid-template-columns: minmax(0, 686.375px) minmax(220px, 280px);
     gap: clamp(42px, 7vw, 86px);
     align-items: start;
   }

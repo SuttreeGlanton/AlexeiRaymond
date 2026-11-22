@@ -1464,7 +1464,10 @@
         "La Svolta"
       ],
       "excerptAudio": "audio/excerpts/mans-anguish-v2.mp3",
-      "genre": "Flash fiction"
+      "genre": "Flash fiction",
+      "account": {
+        "slug": "mans-anguish"
+      }
     }
   ],
   "interview": {
