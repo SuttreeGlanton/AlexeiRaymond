@@ -366,7 +366,7 @@
       "cover": "covers/pieces/deathwish.jpg",
       "excerpt": "Never imagined strangling or killing her.",
       "genre": "Short fiction",
-      "issue": "Anthology II",
+      "issue": "II",
       "account": {
         "slug": "deathwish",
         "label": "Read story",
@@ -406,7 +406,7 @@
       "cover": "covers/pieces/leaves.jpg",
       "excerpt": "He turns to her delicate, lovely ear, offering unbelievable, desecrated gospel.",
       "genre": "Flash fiction",
-      "issue": "Anthology IX",
+      "issue": "IX",
       "account": {
         "slug": "leaves",
         "excerptAudio": "audio/excerpts/leaves-v3.mp3"
@@ -481,7 +481,7 @@
       "cover": "covers/pieces/marry-me.jpg",
       "excerpt": "The cathedral before you sprawled upward, carved from night in streaks of golden light.",
       "genre": "Flash fiction",
-      "issue": "Anthology IX",
+      "issue": "IX",
       "account": {
         "slug": "marry-me",
         "label": "Read story",
@@ -1142,7 +1142,7 @@
       "cover": "covers/pieces/remediation.jpg",
       "excerpt": "Question queued: whose fault is this?",
       "genre": "Short fiction",
-      "issue": "Anthology II",
+      "issue": "II",
       "account": {
         "slug": "remediation",
         "label": "Read story",
