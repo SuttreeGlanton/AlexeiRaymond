@@ -237,7 +237,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
     box-shadow: 0 12px 24px -16px color-mix(in srgb, var(--initial-accent) 42%, transparent);
 
     & .latest-release-media :global(img) {
-      filter: brightness(0.98);
+      filter: grayscale(0) brightness(0.98);
     }
 
     & .latest-release-title :global(.text-initial),
@@ -278,7 +278,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
     height: 100%;
     object-fit: cover;
     object-position: center 73%;
-    filter: saturate(0.86) brightness(0.88);
+    filter: grayscale(1) brightness(0.88);
     transition: filter 280ms ease, transform 280ms ease;
   }
 
@@ -461,7 +461,7 @@ const latestDateLabel = latest && parseDate(latest.date)?.toLocaleDateString('en
 
     .latest-release-media :global(img) {
       object-position: center;
-      filter: saturate(0.75) brightness(0.86);
+      filter: grayscale(1) brightness(0.86);
     }
 
     .latest-release-body {
