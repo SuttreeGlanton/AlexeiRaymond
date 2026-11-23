@@ -16,6 +16,24 @@
   font-size: var(--home-reading);
 }
 
+.home-page .home-cycles .section-note .home-cycle-note-line {
+  display: block;
+  white-space: nowrap;
+}
+
+/* Preserve both full lines even when a viewport narrows. */
+@media (max-width: 860px) {
+  .home-page .home-cycles .section-note {
+    font-size: min(var(--home-reading), 4.7vw);
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1020px) {
+  .home-page .home-cycles .section-note {
+    font-size: min(var(--home-reading), 2.15vw);
+  }
+}
+
 .home-page .main-nav,
 .home-page .nav-cycle-panel a,
 .home-page .hero-start,
