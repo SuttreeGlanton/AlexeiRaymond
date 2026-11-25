@@ -52,8 +52,11 @@ const excerptAudio = piece.excerpt && (piece.excerptAudio || piece.account?.exce
 const excerptSlug = piece.account?.slug || excerptAudio?.split('/').pop()?.replace(/\.[^.]+$/, '') || '';
 const primaryHref = accountHref || (linked ? piece.link : '');
 const primaryExternal = !accountHref && linked;
+const printOnlyDestination = variant === 'selected' && primaryExternal && piece.tags.includes('In print') && !piece.tags.includes('Online');
 const primaryLinkProps = primaryExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {};
-const primaryLabel = primaryExternal
+const primaryLabel = printOnlyDestination
+  ? `Print edition: ${piece.title} in ${publicationLabel(piece)}. Opens in a new tab.`
+  : primaryExternal
   ? `Read ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`
   : `${accountLabel}: ${piece.title} on this site`;
 const displayTitleLines = titleLines ?? [piece.title];
@@ -174,8 +177,8 @@ const metaParts = [
         </a>
       )}
       {linked && (
-        <a class="card-read-original" href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={`Original publication: ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>
-          <span>Original<span class="card-original-detail"> publication</span></span> <ReadArrow external />
+        <a class="card-read-original" href={piece.link} target="_blank" rel="noopener noreferrer" aria-label={printOnlyDestination ? primaryLabel : `Original publication: ${piece.title} at ${publicationLabel(piece)}. Opens in a new tab.`}>
+          {printOnlyDestination ? <span>Print edition</span> : <span>Original<span class="card-original-detail"> publication</span></span>} <ReadArrow external />
         </a>
       )}
     </div>
