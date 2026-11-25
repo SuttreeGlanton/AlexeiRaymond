@@ -3696,7 +3696,7 @@ h2.about-section-heading {
 @media (min-width: 641px) {
   .selected-piece-grid .piece-card.has-long-title .card-title {
     font-size: clamp(1.4rem, 2.65vw, 2.15rem);
-    text-wrap: nowrap;
+    text-wrap: balance;
   }
 }
 
