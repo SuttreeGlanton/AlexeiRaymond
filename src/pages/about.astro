@@ -102,6 +102,17 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
 
   {site.playlists?.length && <PlaylistGallery playlists={site.playlists} />}
 
+  <div class="page-shell about-directory about-directory--desktop">
+    <p>
+      Listed in the <a
+        href="https://www.pw.org/directory/writers/alexei_raymond"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Poets & Writers Directory. Opens in a new tab."
+      >Poets &amp; Writers Directory</a>.
+    </p>
+  </div>
+
   <div class="page-shell about-connections">
       {site.socials.length > 0 && (
         <section class="social-block" aria-labelledby="socials-title">
@@ -148,6 +159,17 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
           </p>
         </section>
       )}
+
+    <div class="about-directory about-directory--mobile">
+      <p>
+        Listed in the <a
+          href="https://www.pw.org/directory/writers/alexei_raymond"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Poets & Writers Directory. Opens in a new tab."
+        >Poets &amp; Writers Directory</a>.
+      </p>
+    </div>
   </div>
 
   <script>
@@ -194,6 +216,20 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
     height: calc(100% - 40px);
   }
 
+  .about-directory {
+    padding-bottom: 24px;
+    color: var(--muted);
+    font-family: var(--serif);
+    font-size: var(--browse-detail);
+    line-height: 1.5;
+  }
+
+  .about-directory--mobile { display: none; }
+
+  .about-directory p { margin: 0; }
+  .about-directory a { -webkit-tap-highlight-color: transparent; }
+  .about-directory a:is(:hover, :focus-visible) { color: var(--initial-accent); }
+
   .about-connections {
     display: grid;
     grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
@@ -218,6 +254,7 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
 
   @media (max-width: 1080px) {
     .about-with-visual,
+    .about-directory,
     .about-connections {
       width: min(680px, calc(100% - 48px));
     }
@@ -280,6 +317,16 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
       text-align: left;
     }
     .about-social-icon-list .about-social-icon { width: 36px; height: 44px; }
+  }
+
+  @media (max-width: 640px) {
+    .about-directory--desktop { display: none; }
+    .about-directory--mobile {
+      display: block;
+      grid-column: 1 / -1;
+      width: auto;
+      padding-bottom: 0;
+    }
   }
 
   .prose .about-publications-link {
