@@ -77,6 +77,7 @@ function initCommonplace(root: HTMLElement) {
   root.toggleAttribute('data-browsable', !nav.hidden);
   showPassage();
   function move(step: number) {
+    if (entries.length < 2 || cursor + step < 0) return;
     cursor += step;
     transition(showPassage, true);
     status.textContent = view.querySelector('blockquote p')!.textContent!.trim().split(/\s+/).slice(0, 8).join(' ')
@@ -84,6 +85,28 @@ function initCommonplace(root: HTMLElement) {
   }
   previous.addEventListener('click', () => move(-1));
   next.addEventListener('click', () => move(1));
+
+  const swipeLayout = matchMedia('(max-width: 1080px) and (any-pointer: coarse)');
+  let swipe: { id: number; x: number; y: number } | undefined;
+  view.addEventListener('touchstart', event => {
+    swipe = undefined;
+    if (!swipeLayout.matches || entries.length < 2 || event.touches.length !== 1 ||
+        (event.target instanceof Element && event.target.closest('button, a'))) return;
+    const touch = event.touches[0];
+    swipe = { id: touch.identifier, x: touch.clientX, y: touch.clientY };
+  }, { passive: true });
+  view.addEventListener('touchcancel', () => { swipe = undefined; }, { passive: true });
+  view.addEventListener('touchend', event => {
+    const start = swipe;
+    swipe = undefined;
+    if (!start || !swipeLayout.matches || event.touches.length || window.getSelection()?.type === 'Range') return;
+    const touch = Array.from(event.changedTouches).find(touch => touch.identifier === start.id);
+    if (!touch) return;
+    const dx = touch.clientX - start.x;
+    const dy = touch.clientY - start.y;
+    if (Math.abs(dx) >= 44 && Math.abs(dx) > 1.5 * Math.abs(dy)) move(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
   view.addEventListener('click', event => {
     if (!(event.target instanceof Element) || !event.target.closest('.commonplace-expand')) return;
     history[cursor].expanded = !history[cursor].expanded;

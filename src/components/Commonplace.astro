@@ -4,6 +4,16 @@ import CommonplaceEntry from './CommonplaceEntry.astro';
 import ReadArrow from './ReadArrow.astro';
 const entries = bank.flatMap(author => author.works.flatMap(work =>
   work.passages.map(passage => ({ author: author.name, work, passage }))));
+// Each drawing occupies one 28-unit row of the SVG, deepest fold first.
+const curlFrames = [
+  { edge: 'M1 2H14Q17 2 20.5 5.5L25 10Q28 13 28 16V21',
+    flap: 'M14 2Q18 2 20.5 5.5L25 10Q28 13 28 16Q26 13 21 13H18Q15 13 15.5 10Q17 4.5 14 2Z' },
+  { edge: 'M1 2H18Q21 2 23.5 4.5L26 7Q28 9 28 12V21',
+    flap: 'M18 2Q21 2 23.5 4.5L26 7Q28 9 28 12Q26 10 22 10Q19 10 19.5 7Q20 3.5 18 2Z' },
+  { edge: 'M1 2H21Q24 2 26 4Q28 6 28 9V21',
+    flap: 'M21 2Q24 2 26 4Q28 6 28 9Q26.5 7 24 7Q22.5 7 22.5 5Q22.5 3 21 2Z' },
+  { edge: 'M1 2H23Q28 2 28 7V21', flap: '' },
+];
 ---
 {entries.length > 0 && (
   <section class="page-shell commonplace" id="commonplace" aria-labelledby="commonplace-title">
@@ -11,7 +21,29 @@ const entries = bank.flatMap(author => author.works.flatMap(work =>
       <h2 class="about-section-heading" id="commonplace-title">From the Commonplace</h2>
       <div class="commonplace-reader">
         <div class="commonplace-view"><CommonplaceEntry {...entries[0]} /></div>
-        <div class="commonplace-nav" role="group" aria-label="Passage navigation" hidden>
+        <svg class="commonplace-page-corner" viewBox="0 0 36 28" fill="none" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="commonplace-paper-edge" x1="0" y1="0" x2="1" y2="0.8" gradientUnits="objectBoundingBox">
+              <stop stop-color="var(--border)" stop-opacity="0" />
+              <stop offset=".55" stop-color="var(--muted)" stop-opacity=".78" />
+              <stop offset="1" stop-color="var(--border-strong)" />
+            </linearGradient>
+          </defs>
+          <g stroke-linejoin="round" stroke-linecap="round">
+            <path d="M9 8H28Q34 8 34 14V26" stroke="var(--border)" />
+            <path d="M5 5H25Q31 5 31 11V23" stroke="var(--border-strong)" />
+            <g class="commonplace-curl">
+              {curlFrames.map(({ edge, flap }, i) => (
+                <g transform={`translate(0 ${i * 28})`}>
+                  <path d={edge + 'H0V2Z'} fill="var(--bg)" />
+                  <path d={edge} stroke="url(#commonplace-paper-edge)" />
+                  {flap && <path d={flap} fill="var(--border)" stroke="var(--muted)" stroke-opacity=".65" />}
+                </g>
+              ))}
+            </g>
+          </g>
+        </svg>
+        <div class="commonplace-nav prose" role="group" aria-label="Passage navigation" hidden>
           <button type="button" data-previous aria-label="Previous passage" title="Previous passage" disabled><ReadArrow /></button>
           <button type="button" data-next aria-label="Next passage" title="Next passage"><ReadArrow /></button>
         </div>
@@ -25,13 +57,60 @@ const entries = bank.flatMap(author => author.works.flatMap(work =>
 
 <style>
   .commonplace { padding-bottom: 44px; scroll-margin-top: 100px; }
-  .commonplace-inner { max-width: 680px; }
-  .commonplace-reader { position: relative; }
+  .commonplace-reader {
+    display: grid;
+    grid-template-columns: minmax(0, 680px) max-content;
+    column-gap: 15px;
+    align-items: start;
+  }
+  .commonplace-page-corner { display: none; }
   .commonplace-nav:not([hidden]) {
-    position: absolute;
-    inset-inline-end: 0;
-    bottom: 0;
     display: flex;
+    align-items: center;
+    margin: 0;
+    height: 1lh;
+  }
+  @media (max-width: 1080px) and (any-pointer: coarse) {
+    .commonplace-reader { display: block; position: relative; }
+    [data-browsable] .commonplace-page-corner {
+      display: block;
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-end: 0;
+      width: 36px;
+      height: 28px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    /* Only the opening line(s) wrap around the stack. */
+    [data-browsable] .commonplace-view :global(blockquote > p:first-child)::before {
+      content: '';
+      float: inline-end;
+      width: 44px;
+      height: 28px;
+    }
+    [data-browsable] .commonplace-view { touch-action: pan-y pinch-zoom; }
+    .commonplace-nav:not([hidden]) { height: auto; justify-content: flex-end; }
+    /* Touch uses the passage itself. Keep the buttons accessible to assistive
+       technology and reveal them when someone tabs to them. */
+    .commonplace-nav:not([hidden]):not(:focus-within) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+  }
+  @media (max-width: 1080px) and (any-pointer: coarse) and (prefers-reduced-motion: no-preference) {
+    [data-browsable] .commonplace-curl {
+      animation: commonplace-page-turn 2.8s steps(1, end) infinite;
+    }
+    @keyframes commonplace-page-turn {
+      0%, 100% { transform: translateY(0); }
+      24%, 86% { transform: translateY(-28px); }
+      36%, 74% { transform: translateY(-56px); }
+      48% { transform: translateY(-84px); }
+    }
   }
   .commonplace-nav button {
     display: grid;

@@ -12,6 +12,17 @@ interface Props {
   passage: string;
 }
 const { author, work, passage } = Astro.props;
+const storyTitle = `“${work.title}”`;
+const storyInCollection = work.kind === 'story' && work.collection;
+const foreword = work.kind === 'foreword';
+const creditLead = `— ${author},` + (storyInCollection ? ` ${storyTitle}, in` : foreword ? ' foreword to' : '');
+const plainStory = work.kind === 'story' && !storyInCollection;
+const Title = plainStory ? 'span' : 'cite';
+const creditTitle = plainStory ? storyTitle : ((storyInCollection || foreword) && work.collection) || work.title;
+const titleEnding = creditTitle.match(/(?:\S+\s+)?\S+$/u)?.[0] ?? creditTitle;
+const titleStart = creditTitle.slice(0, creditTitle.length - titleEnding.length);
+// For a one-word title the preceding word belongs to the credit lead.
+const titleSeparator = /\s/u.test(creditTitle) ? ' ' : '\u00a0';
 // A bank entry may set [[more]] at an editorial break. New entries without
 // a marker use their first paragraph or a complete sentence as a preview.
 const marker = '[[more]]';
@@ -76,7 +87,7 @@ const paragraphs = displayText.split('\n\n').map(paragraph => {
     <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m3.5 6 4.5 4.5L12.5 6" /></svg>
   </button>
   <figcaption>
-    — {author}, {work.kind === 'foreword' ? 'foreword to ' : null}{work.kind === 'story' ? <>“{work.title}”</> : <cite>{work.kind === 'foreword' ? work.collection : work.title}</cite>}{work.kind === 'story' && work.collection && <>, in <cite>{work.collection}</cite></>}{work.translator && ` (tr. ${work.translator})`}
+    {creditLead}{titleSeparator}<Title>{titleStart}<span class="ending">{titleEnding}</span></Title>{work.translator && <> <span class="translator">(tr. {work.translator})</span></>}
   </figcaption>
 </figure>
 
@@ -95,12 +106,11 @@ const paragraphs = displayText.split('\n\n').map(paragraph => {
     font-size: var(--browse-detail);
     line-height: 1.5;
   }
-  figcaption { margin-top: 15px; }
-  :global([data-browsable]) figcaption {
-    align-content: center;
-    box-sizing: border-box;
-    min-height: 44px;
-    padding-inline-end: calc(88px + 9px);
+  figcaption { margin-top: 15px; text-wrap: pretty; }
+  .translator {
+    display: inline-block;
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
   }
   .commonplace-expand:not([hidden]) {
     display: grid;
