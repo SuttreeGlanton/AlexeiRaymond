@@ -1,0 +1,140 @@
+---
+interface Props {
+  author: string;
+  work: {
+    title: string;
+    kind?: string;
+    collection?: string;
+    translator?: string;
+    edition?: string;
+    source?: string;
+  };
+  passage: string;
+}
+const { author, work, passage } = Astro.props;
+// A bank entry may set [[more]] at an editorial break. New entries without
+// a marker use their first paragraph or a complete sentence as a preview.
+const marker = '[[more]]';
+const text = passage.replace(marker, '');
+let cut = passage.indexOf(marker);
+if (cut < 0) cut = text.indexOf('\n\n');
+if (cut < 0) {
+  const sentences = new Intl.Segmenter('en', { granularity: 'sentence' }).segment(text);
+  for (const { index, segment } of sentences) {
+    const end = index + segment.trimEnd().length;
+    if (end >= 65 && end < text.length) { cut = end; break; }
+  }
+}
+// Use the same nonbreaking final space as the site's teasers. Apply it to
+// each authored line and to the visible ending at the fold. Offsets stay intact.
+const bindEnding = (value: string) => value.replace(/ (?=\S+$)/gmu, '\u00a0');
+const fullText = bindEnding(text);
+// At a fold, replace terminal stops with one ellipsis inside any closing
+// quotation marks. The original ending stays in the tail for the full text.
+const prefix = cut < 0 ? '' : fullText.slice(0, cut).trimEnd();
+const closers = prefix.match(/[”’"'*)\]]+$/u)?.[0] ?? '';
+const beforeClosers = prefix.slice(0, prefix.length - closers.length).trimEnd();
+const hasEllipsis = /(?:…|\.{3})$/u.test(beforeClosers);
+const continuation = hasEllipsis ? '' : '…' + closers.replaceAll('*', '');
+if (cut >= 0 && !hasEllipsis) cut = beforeClosers.replace(/[.,;:–—]+$/u, '').trimEnd().length;
+const displayText = cut < 0 ? fullText : bindEnding(fullText.slice(0, cut)) + fullText.slice(cut);
+let offset = 0;
+const paragraphs = displayText.split('\n\n').map(paragraph => {
+  const start = offset;
+  offset += paragraph.length + 2;
+  // Preserve emphasis even if an editorial break falls inside an italic run.
+  let position = start;
+  const runs = paragraph.split(/(\*[^*]+\*)/g).filter(Boolean).flatMap(raw => {
+    const italic = raw.startsWith('*') && raw.endsWith('*');
+    const content = italic ? raw.slice(1, -1) : raw;
+    const contentStart = position + Number(italic);
+    position += raw.length;
+    const split = cut < 0 ? content.length : Math.max(0, cut - contentStart);
+    return [
+      { text: content.slice(0, split), italic, tail: false },
+      { text: content.slice(split), italic, tail: true },
+    ].filter(run => run.text);
+  });
+  const continued = cut > start && cut <= start + paragraph.length ? continuation : '';
+  // A nonbreaking space binds across inline markup. Also keep a hyphenated
+  // ending together so a word such as “machine-intellect” cannot split.
+  const pieces = runs.flatMap(run => run.text.split(/([^\s]*\u00a0[^\s]*)/u)
+    .filter(Boolean).map(value => ({ ...run, text: value, ending: value.includes('\u00a0') })));
+  return { pieces, tail: cut >= 0 && start >= cut, continued };
+});
+---
+<figure class="commonplace-entry">
+  <blockquote class="prose" cite={work.source}>
+    {paragraphs.map(({ pieces, tail, continued }) => (
+      <p data-tail={tail || undefined} data-continued={continued || undefined}>{pieces.map(run => (
+        run.italic ? <em class:list={{ ending: run.ending }} data-tail={run.tail || undefined}>{run.text}</em>
+        : run.tail || run.ending ? <span class:list={{ ending: run.ending }} data-tail={run.tail || undefined}>{run.text}</span> : run.text
+      ))}</p>
+    ))}
+  </blockquote>
+  <button type="button" class="commonplace-expand" aria-expanded="false" aria-controls="commonplace-passage" aria-label="Expand passage" title="Expand passage" hidden>
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m3.5 6 4.5 4.5L12.5 6" /></svg>
+  </button>
+  <figcaption>
+    — {author}, {work.kind === 'foreword' ? 'foreword to ' : null}{work.kind === 'story' ? <>“{work.title}”</> : <cite>{work.kind === 'foreword' ? work.collection : work.title}</cite>}{work.kind === 'story' && work.collection && <>, in <cite>{work.collection}</cite></>}{work.translator && ` (tr. ${work.translator})`}
+  </figcaption>
+</figure>
+
+<style>
+  .commonplace-entry, .commonplace-entry blockquote { margin: 0; }
+  .commonplace-entry blockquote { font-family: var(--serif); text-wrap: pretty; white-space: pre-line; }
+  .commonplace-entry p { margin: 0; }
+  .ending { white-space: nowrap; }
+  .commonplace-entry p + p { margin-top: 1.25em; }
+  .commonplace-entry[data-folded] [data-tail] { display: none; }
+  .commonplace-entry[data-folded] [data-continued]::after { content: '\2060' attr(data-continued); }
+  figcaption {
+    color: var(--muted);
+    font: inherit;
+    font-family: var(--serif);
+    font-size: var(--browse-detail);
+    line-height: 1.5;
+  }
+  figcaption { margin-top: 15px; }
+  :global([data-browsable]) figcaption {
+    align-content: center;
+    box-sizing: border-box;
+    min-height: 44px;
+    padding-inline-end: calc(88px + 9px);
+  }
+  .commonplace-expand:not([hidden]) {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin: 0 auto;
+    padding: 0;
+    color: var(--muted);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .commonplace-expand svg { transition: transform 180ms ease; }
+  .commonplace-expand[aria-expanded="true"] svg {
+    transform: rotate(180deg);
+    color: var(--initial-accent);
+  }
+  .commonplace-expand:not([hidden]) + figcaption { margin-top: 0; }
+  .commonplace-expand:focus-visible, .commonplace-expand:active { color: var(--initial-accent); }
+  @media (hover: hover) {
+    .commonplace-expand:hover { color: var(--initial-accent); }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .commonplace-expand[aria-expanded="false"]:not([hidden]) svg {
+      animation: commonplace-pulse 2.8s ease-in-out infinite;
+    }
+    @keyframes commonplace-pulse {
+      0%, 100% { color: inherit; }
+      50% { color: var(--initial-accent); }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .commonplace-expand svg { transition: none; color: var(--initial-accent); }
+  }
+</style>

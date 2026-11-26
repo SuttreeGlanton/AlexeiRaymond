@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import InspirationHeartbeat from '../components/InspirationHeartbeat.astro';
 import LocationHeartbeat from '../components/LocationHeartbeat.astro';
 import LoveHeartbeat from '../components/LoveHeartbeat.astro';
+import Commonplace from '../components/Commonplace.astro';
 import PlaylistGallery from '../components/PlaylistGallery.astro';
 import aboutVisual from '../assets/page-visuals/about-portrait.jpg';
 import { site, socialHref, socialLabel } from '../lib/data';
@@ -99,6 +100,8 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
 
     </section>
   </div>
+
+  <Commonplace />
 
   {site.playlists?.length && <PlaylistGallery playlists={site.playlists} />}
 
@@ -298,9 +301,8 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
 
     .about-inspiration {
       margin-top: 30px;
-      padding-top: 25px;
-      background: var(--banner-divider);
     }
+    :global(.about-page .about-playlists .playlist-section-head) { background: none; padding-top: 0; }
     .about-inspiration :global(.inspiration-heartbeat) { margin-top: 0; }
     .about-inspiration :global(.about-section-heading) { margin-bottom: 15px; }
 

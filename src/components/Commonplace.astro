@@ -1,0 +1,59 @@
+---
+import bank from '../data/commonplace.json';
+import CommonplaceEntry from './CommonplaceEntry.astro';
+import ReadArrow from './ReadArrow.astro';
+const entries = bank.flatMap(author => author.works.flatMap(work =>
+  work.passages.map(passage => ({ author: author.name, work, passage }))));
+---
+{entries.length > 0 && (
+  <section class="page-shell commonplace" id="commonplace" aria-labelledby="commonplace-title">
+    <div class="commonplace-inner">
+      <h2 class="about-section-heading" id="commonplace-title">From the Commonplace</h2>
+      <div class="commonplace-reader">
+        <div class="commonplace-view"><CommonplaceEntry {...entries[0]} /></div>
+        <div class="commonplace-nav" role="group" aria-label="Passage navigation" hidden>
+          <button type="button" data-previous aria-label="Previous passage" title="Previous passage" disabled><ReadArrow /></button>
+          <button type="button" data-next aria-label="Next passage" title="Next passage"><ReadArrow /></button>
+        </div>
+      </div>
+      <span class="sr-only" role="status"></span>
+      {entries.map(entry => <template data-author={entry.author}><CommonplaceEntry {...entry} /></template>)}
+    </div>
+  </section>
+)}
+<script src="../scripts/commonplace.ts"></script>
+
+<style>
+  .commonplace { padding-bottom: 44px; scroll-margin-top: 100px; }
+  .commonplace-inner { max-width: 680px; }
+  .commonplace-reader { position: relative; }
+  .commonplace-nav:not([hidden]) {
+    position: absolute;
+    inset-inline-end: 0;
+    bottom: 0;
+    display: flex;
+  }
+  .commonplace-nav button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    color: var(--muted);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .commonplace-nav button:disabled { opacity: 0.35; cursor: default; }
+  .commonplace-nav :global(.read-arrow) { margin: 0; }
+  [data-previous] :global(.read-arrow) { transform: rotate(180deg); }
+  .commonplace-nav button:enabled:is(:focus-visible, :active) :global(.read-arrow) { color: var(--initial-accent); }
+  @media (hover: hover) {
+    .commonplace-nav button:enabled:hover :global(.read-arrow) { color: var(--initial-accent); }
+  }
+  @media (max-width: 1080px) {
+    .commonplace { width: min(680px, calc(100% - 48px)); padding-bottom: 30px; }
+    .commonplace h2 { margin-bottom: 15px; }
+  }
+</style>
