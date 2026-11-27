@@ -121,3 +121,11 @@ export function socialHref(social: Social): string {
   if (typeof social === 'string') return social.startsWith('http') || social.startsWith('mailto:') ? social : '';
   return social.url || social.href || '';
 }
+
+/** Public author identities; keep the dormant support link out of structured data. */
+export const authorProfileUrls = [
+  ...site.socials.map(socialHref).filter((url) =>
+    Boolean(url) && !/^https?:\/\/(?:www\.)?ko-fi\.com(?:\/|$)/i.test(url)
+  ),
+  'https://www.pw.org/directory/writers/alexei_raymond'
+];

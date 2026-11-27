@@ -11,7 +11,7 @@ import '@fontsource/eb-garamond/400-italic.css';
 import sourceSansLatinFont from '@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2?url';
 import goudyRomanFont from '@fontsource/sorts-mill-goudy/files/sorts-mill-goudy-latin-400-normal.woff2?url';
 import goudyItalicFont from '@fontsource/sorts-mill-goudy/files/sorts-mill-goudy-latin-400-italic.woff2?url';
-import { site, socialHref } from '../lib/data';
+import { site, authorProfileUrls } from '../lib/data';
 import { absoluteSiteUrl, withBase } from '../lib/paths';
 
 interface Props {
@@ -58,7 +58,7 @@ const socialImageHeight = pageSocialImage?.height ?? (site.socialCard ? 630 : un
 const resolvedSocialImageAlt = socialImageAlt || `${site.author} author site`;
 const twitterCard = socialImage ? 'summary_large_image' : 'summary';
 const siteUrl = absoluteSiteUrl('', Astro.site);
-const sameAs = site.socials.map(socialHref).filter(Boolean);
+const sameAs = authorProfileUrls;
 const serializeJsonLd = (value: Record<string, unknown>) =>
   JSON.stringify(value).replace(/</g, '\\u003c');
 const personSchema = serializeJsonLd({

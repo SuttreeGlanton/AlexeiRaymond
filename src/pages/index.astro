@@ -19,7 +19,7 @@ const headerCover = site.headerCover ? assetPath(site.headerCover) : '';
 const heroWidths = [640, 768, 960, 1280, 1440, 1600, 1800];
 // Keep both reveal layers identical so they share one image download.
 const heroQuality = 45;
-const homeDescription = 'Short stories, flash fiction and poems by Alexei Raymond. Read full texts, explore interconnected story cycles, and find work published in literary journals.';
+const homeDescription = 'Short stories and poems by Alexei Raymond. Read online, listen to the author’s recorded excerpts, and explore interconnected literary cycles.';
 const homeUrl = absoluteSiteUrl('', Astro.site);
 const websiteSchema = {
   '@context': 'https://schema.org',
@@ -34,7 +34,7 @@ const websiteSchema = {
 ---
 
 <BaseLayout
-  title={`${site.author} | Short Fiction, Flash Fiction & Poetry`}
+  title={`${site.author} | Short Stories and Poetry`}
   description={homeDescription}
   structuredData={websiteSchema}
   bodyClass="home-page"

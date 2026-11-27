@@ -28,7 +28,7 @@ const groups = [
 const orderedFiction = groups.flatMap((group) => group.items);
 const pageUrl = absoluteSiteUrl('short-fiction/', Astro.site);
 const homeUrl = absoluteSiteUrl('', Astro.site);
-const description = 'Read short stories and flash fiction by Alexei Raymond online, in full. Explore work first published in literary journals and anthologies.';
+const description = 'Short stories and flash fiction by Alexei Raymond, available to read in full, with original publication details.';
 const collectionSchema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
@@ -61,7 +61,7 @@ const breadcrumbSchema = {
 ---
 
 <BaseLayout
-  title={`Read Short Stories & Flash Fiction — ${site.author}`}
+  title={`Read Short Stories and Flash Fiction | ${site.author}`}
   description={description}
   structuredData={[collectionSchema, breadcrumbSchema]}
 >

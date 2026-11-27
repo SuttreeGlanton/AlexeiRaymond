@@ -7,7 +7,7 @@ import LoveHeartbeat from '../components/LoveHeartbeat.astro';
 import Commonplace from '../components/Commonplace.astro';
 import PlaylistGallery from '../components/PlaylistGallery.astro';
 import aboutVisual from '../assets/page-visuals/about-portrait.jpg';
-import { site, socialHref, socialLabel } from '../lib/data';
+import { site, socialHref, socialLabel, authorProfileUrls } from '../lib/data';
 import { absoluteSiteUrl, withBase } from '../lib/paths';
 import '../styles/browse-typography.css';
 
@@ -42,7 +42,7 @@ const profileSchema = {
     description: site.bio,
     jobTitle: 'Writer',
     sameAs: [
-      ...site.socials.map(socialHref).filter(Boolean),
+      ...authorProfileUrls,
       'https://www.bloodhoneylit.com/alexei-raymond',
       'https://www.discretionarylove.com/author/alexeiraymond/'
     ]
@@ -55,7 +55,7 @@ const emailEncoded = site.emailEncoded || (site.email ? Buffer.from(site.email).
 
 <BaseLayout
   title={`About — ${site.author}`}
-  description="About Alexei Raymond, his writing, editorial work, social profiles, and contact information."
+  description="About Alexei Raymond: biography, literary influences, commonplace excerpts, playlists, and contact information."
   structuredData={profileSchema}
   bodyClass="about-page"
 >

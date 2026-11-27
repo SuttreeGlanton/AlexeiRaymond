@@ -21,7 +21,7 @@ const [heroAvif, heroWebp, mobileAvif, mobileWebp] = await Promise.all([
 const mobileHeroMedia = '(min-width: 360px) and (max-width: 640px)';
 ---
 
-<BaseLayout title={`Selected Stories & Poems — ${site.author}`} description="Read a selection of short stories, flash fiction and poems by Alexei Raymond, with original publication credits and links to the full texts." bodyClass="selected-page">
+<BaseLayout title={`Selected Works | ${site.author}`} description="Selected stories by Alexei Raymond, with original publication credits and links to read." bodyClass="selected-page">
   <section class="selected-hero" aria-labelledby="selected-title" data-color-reveal>
     {['selected-hero-backdrop--mono', 'selected-hero-color-reveal'].map((layer, index) => (
       <picture style="display: contents">
