@@ -40,6 +40,7 @@ const defunct = isDefunct(piece);
 const linked = canLinkToPiece(piece);
 const cover = piece.cover ? assetPath(piece.cover) : '';
 const coverImage = imageAsset(piece.cover);
+const fullCoverFrame = piece.cover === 'covers/pieces/betrayal.jpg';
 const mobileAvifQuality = [
   'covers/pieces/glassdom.jpg',
   'covers/pieces/last-sight-of-her.jpg',
@@ -97,7 +98,7 @@ const metaParts = [
   {primaryHref && !hasBothDestinations && !excerptAudio ? (
     <a class="card-cover-link" href={primaryHref} {...primaryLinkProps} tabindex="-1" aria-label={coverLinkLabel}>
       <div class="date-cover" data-publication-year={publicationYear}>
-        <div class="card-media">
+        <div class:list={['card-media', { 'card-media-full-frame': fullCoverFrame }]}>
           {cover ? (
             <OptimizedImage path={piece.cover} image={coverImage} alt={`${piece.title} cover`} loading={imageLoading} fetchpriority={imageFetchPriority} sizes={imageSizes} widths={imageWidths} mobileAvifQuality={mobileAvifQuality} />
           ) : (
@@ -114,7 +115,7 @@ const metaParts = [
     </a>
   ) : (
     <div class="date-cover" data-publication-year={publicationYear}>
-      <div class="card-media">
+      <div class:list={['card-media', { 'card-media-full-frame': fullCoverFrame }]}>
         {primaryHref && !hasBothDestinations && (
           <a class="reading-cover-link" href={primaryHref} {...primaryLinkProps} tabindex="-1" aria-label={coverLinkLabel}></a>
         )}
@@ -187,6 +188,14 @@ const metaParts = [
 </article>
 
 <style>
+  /* Center Betrayal's oval while filling the shared card frame. */
+  .card-media-full-frame :global(img) {
+    position: absolute;
+    inset: 0;
+    object-fit: cover;
+    object-position: center;
+  }
+
   /* The reading button is a sibling of the cover link, never nested inside it. */
   .reading-cover-link { position: absolute; inset: 0; z-index: 1; }
 </style>
